@@ -6,6 +6,7 @@ import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
+import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
@@ -86,6 +87,14 @@ final GoRouter _router = GoRouter(
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
           const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/qr/create',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/qr/create'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) => const CreateQR(),
     ),
   ],
 );

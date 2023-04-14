@@ -22,6 +22,7 @@ import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -203,84 +204,96 @@ class _HomeScreen extends State<HomeScreen> {
             const Padding(padding: EdgeInsets.only(bottom: 20)),
           ],
         ),
-        widget2: ListView(
-          shrinkWrap: true,
-          children: [
-            const Padding(padding: EdgeInsets.only(top: 30)),
-            Consumer<MenuCardProvider>(
-              builder: (context, provider, child) {
-                return (provider.qrGeneratedDTO.qrCode.trim().isEmpty)
-                    ? const SizedBox()
-                    : UnconstrainedBox(
+        widget2: Consumer<MenuCardProvider>(
+          builder: (context, provider, child) {
+            return (provider.qrGeneratedDTO.qrCode.trim().isEmpty)
+                ? const SizedBox()
+                : ListView(
+                    shrinkWrap: true,
+                    children: [
+                      const Padding(padding: EdgeInsets.only(top: 30)),
+                      UnconstrainedBox(
                         child: VietQRWidget(
                           width: 400,
                           qrGeneratedDTO: provider.qrGeneratedDTO,
                           content: '',
                         ),
-                      );
-              },
-            ),
-            const Padding(padding: EdgeInsets.only(top: 30)),
-            UnconstrainedBox(
-              child: SizedBox(
-                width: 350,
-                child: Row(
-                  children: [
-                    Tooltip(
-                      message: 'In',
-                      child: ButtonIconWidget(
-                        width: 350 / 3 - (20 / 3),
-                        height: 40,
-                        icon: Icons.print_rounded,
-                        title: '',
-                        function: () {},
-                        bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                        textColor: Theme.of(context).hintColor,
                       ),
-                    ),
-                    const Spacer(),
-                    Tooltip(
-                      message: 'Lưu ảnh',
-                      child: ButtonIconWidget(
-                        width: 350 / 3 - (20 / 3),
-                        height: 40,
-                        icon: Icons.photo_rounded,
-                        title: '',
-                        function: () {},
-                        bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                        textColor: Theme.of(context).hintColor,
+                      const Padding(padding: EdgeInsets.only(top: 30)),
+                      UnconstrainedBox(
+                        child: SizedBox(
+                          width: 350,
+                          child: Row(
+                            children: [
+                              Tooltip(
+                                message: 'In',
+                                child: ButtonIconWidget(
+                                  width: 350 / 3 - (20 / 3),
+                                  height: 40,
+                                  icon: Icons.print_rounded,
+                                  title: '',
+                                  function: () {},
+                                  bgColor: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.3),
+                                  textColor: Theme.of(context).hintColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              Tooltip(
+                                message: 'Lưu ảnh',
+                                child: ButtonIconWidget(
+                                  width: 350 / 3 - (20 / 3),
+                                  height: 40,
+                                  icon: Icons.photo_rounded,
+                                  title: '',
+                                  function: () {},
+                                  bgColor: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.3),
+                                  textColor: Theme.of(context).hintColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              Tooltip(
+                                message: 'Sao chép mã QR',
+                                child: ButtonIconWidget(
+                                  width: 350 / 3 - (20 / 3),
+                                  height: 40,
+                                  icon: Icons.copy_rounded,
+                                  title: '',
+                                  function: () {},
+                                  bgColor: Theme.of(context)
+                                      .cardColor
+                                      .withOpacity(0.3),
+                                  textColor: Theme.of(context).hintColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    Tooltip(
-                      message: 'Sao chép mã QR',
-                      child: ButtonIconWidget(
-                        width: 350 / 3 - (20 / 3),
-                        height: 40,
-                        icon: Icons.copy_rounded,
-                        title: '',
-                        function: () {},
-                        bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                        textColor: Theme.of(context).hintColor,
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      UnconstrainedBox(
+                        child: Tooltip(
+                          message: 'Tạo QR giao dịch',
+                          child: ButtonIconWidget(
+                            width: 350,
+                            height: 40,
+                            icon: Icons.add_rounded,
+                            title: 'Tạo QR giao dịch',
+                            function: () {
+                              context.go('/qr/create');
+                            },
+                            bgColor:
+                                Theme.of(context).cardColor.withOpacity(0.3),
+                            textColor: DefaultTheme.GREEN,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(top: 10)),
-            UnconstrainedBox(
-              child: ButtonIconWidget(
-                width: 350,
-                height: 40,
-                icon: Icons.add_rounded,
-                title: 'Tạo QR giao dịch',
-                function: () {},
-                bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                textColor: DefaultTheme.GREEN,
-              ),
-            ),
-          ],
+                    ],
+                  );
+          },
         ),
         menu: BlocConsumer<BankBloc, BankState>(
           listener: (context, state) {

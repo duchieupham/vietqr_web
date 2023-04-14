@@ -54,7 +54,6 @@ class _Login extends State<Login> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 0),
       body: BlocListener<LoginBloc, LoginState>(
         listener: ((context, state) {
           if (state is LoginLoadingState) {

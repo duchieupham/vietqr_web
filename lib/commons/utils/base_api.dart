@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:VietQR/commons/constants/configurations/numeral.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
@@ -18,6 +18,9 @@ class BaseAPIClient {
     AuthenticationType? type,
     Map<String, String>? header,
   }) async {
+    HttpClient client = HttpClient();
+    client.badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => true);
     final http.Response result = await http
         .get(
       Uri.parse(url),
@@ -135,8 +138,9 @@ class BaseAPIClient {
         result['Content-Type'] = 'application/json';
         result['Accept'] = '*/*';
         result['Access-Control-Allow-Origin'] = '*';
-        result['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
-        result['Access-Control-Allow-Headers'] = 'X-Requested-With';
+        result['Access-Control-Allow-Methods'] = 'GET,PUT,PATCH,POST,DELETE';
+        result['Access-Control-Allow-Headers'] =
+            'Origin, X-Requested-With, Content-Type, Accept';
         result['Access-Control-Allow-Credentials'] = 'true';
         // header('Access-Control-Allow-Origin: *');
         // header('Access-Control-Allow-Methods: GET, POST');
@@ -146,8 +150,9 @@ class BaseAPIClient {
         result['Content-Type'] = 'application/json';
         result['Accept'] = '*/*';
         result['Access-Control-Allow-Origin'] = '*';
-        result['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
-        result['Access-Control-Allow-Headers'] = 'X-Requested-With';
+        result['Access-Control-Allow-Methods'] = 'GET,PUT,PATCH,POST,DELETE';
+        result['Access-Control-Allow-Headers'] =
+            'Origin, X-Requested-With, Content-Type, Accept';
         result['Access-Control-Allow-Credentials'] = 'true';
         break;
       case AuthenticationType.CUSTOM:
