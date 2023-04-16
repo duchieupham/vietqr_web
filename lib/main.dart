@@ -1,13 +1,19 @@
+import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
+import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
+import 'package:VietQR/models/notification_transaction_success_dto.dart';
+import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/providers/theme_provider.dart';
@@ -16,6 +22,7 @@ import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -35,7 +42,7 @@ void main() async {
     options: EnvConfig.getFirebaseConfig(),
   );
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
-  runApp(VietQRApp());
+  runApp(const VietQRApp());
 }
 
 Future<void> _initialServiceHelper() async {
@@ -89,24 +96,76 @@ final GoRouter _router = GoRouter(
           const HomeScreen(),
     ),
     GoRoute(
-      path: '/qr/create',
+      path: '/qr/create/:id',
       redirect: (context, state) =>
           (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/qr/create'
+              ? '/qr/create/${state.params['id'] ?? ''}'
               : '/login',
-      builder: (BuildContext context, GoRouterState state) => const CreateQR(),
+      builder: (BuildContext context, GoRouterState state) => CreateQR(
+        bankId: state.params['id'] ?? '',
+      ),
     ),
   ],
 );
 
-class VietQRApp extends StatelessWidget {
+class VietQRApp extends StatefulWidget {
   const VietQRApp({super.key});
 
-  void _initialServices(BuildContext context) {}
+  @override
+  State<StatefulWidget> createState() => _VietQRApp();
+}
+
+class _VietQRApp extends State<VietQRApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Đăng ký callback onMessage
+    onFcmMessage();
+    // Đăng ký callback onMessageOpenedApp
+    onFcmMessageOpenedApp();
+  }
+
+  void onFcmMessage() async {
+    // await NotificationServic.initialNotification();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // Xử lý push notification nếu ứng dụng đang chạy
+      LOG.info(
+          "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
+      LOG.info("receive data: ${message.data}");
+
+      // NotificationService().showNotification(
+      //   title: message.notification?.title,
+      //   body: message.notification?.body,
+      // );
+
+      //process when receive data
+      if (message.data.isNotEmpty) {
+        //process success transcation
+        if (message.data['notificationType'] != null &&
+            message.data['notificationType'] ==
+                Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+          DialogWidget.instance.openWidgetDialog(
+            child: TransactionSuccessWidget(
+              dto: NotificationTransactionSuccessDTO.fromJson(message.data),
+            ),
+          );
+        }
+      }
+    });
+  }
+
+  void onFcmMessageOpenedApp() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // Xử lý push notification nếu ứng dụng không đang chạy
+      if (message.notification != null) {
+        LOG.info(
+            "Push notification clicked: ${message.notification?.title.toString()} - ${message.notification?.body}");
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _initialServices(context);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -122,12 +181,16 @@ class VietQRApp extends StatelessWidget {
           BlocProvider<TransactionBloc>(
             create: (BuildContext context) => TransactionBloc(),
           ),
+          BlocProvider<QRBloc>(
+            create: (BuildContext context) => QRBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => ThemeProvider()),
             ChangeNotifierProvider(create: (context) => PinProvider()),
             ChangeNotifierProvider(create: (context) => MenuCardProvider()),
+            ChangeNotifierProvider(create: (context) => CreateQRProvider()),
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
           ],

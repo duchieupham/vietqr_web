@@ -625,28 +625,26 @@ class DialogWidget {
 
   openWidgetDialog({required Widget child}) {
     final BuildContext context = NavigationService.navigatorKey.currentContext!;
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
     return showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return Material(
-            color: DefaultTheme.TRANSPARENT,
-            child: Center(
-                child: Container(
-              width: width - 20,
-              height: height * 0.8,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: child,
-            )),
-          );
-        });
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Material(
+          color: DefaultTheme.TRANSPARENT,
+          child: Center(
+              child: Container(
+            width: 800,
+            height: 600,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: child,
+          )),
+        );
+      },
+    );
   }
 
   openTransactionDialog(String address, String body) {

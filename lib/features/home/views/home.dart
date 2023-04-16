@@ -283,7 +283,8 @@ class _HomeScreen extends State<HomeScreen> {
                             icon: Icons.add_rounded,
                             title: 'Tạo QR giao dịch',
                             function: () {
-                              context.go('/qr/create');
+                              String id = provider.bankDetailDTO.id;
+                              context.push('/qr/create/$id');
                             },
                             bgColor:
                                 Theme.of(context).cardColor.withOpacity(0.3),
@@ -419,8 +420,7 @@ class _HomeScreen extends State<HomeScreen> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(5),
-                                                color:
-                                                    Theme.of(context).cardColor,
+                                                color: DefaultTheme.WHITE,
                                                 image: DecorationImage(
                                                   image: ImageUtils.instance
                                                       .getImageNetWork(
@@ -485,42 +485,6 @@ class _HomeScreen extends State<HomeScreen> {
                                                   ],
                                                 ),
                                               ),
-                                              // InkWell(
-                                              //   onTap: () {},
-                                              //   child: BoxLayout(
-                                              //     width: 100,
-                                              //     borderRadius: 5,
-                                              //     alignment: Alignment.center,
-                                              //     bgColor: Theme.of(context)
-                                              //         .cardColor
-                                              //         .withOpacity(0.3),
-                                              //     child: Row(
-                                              //       mainAxisAlignment:
-                                              //           MainAxisAlignment
-                                              //               .center,
-                                              //       children: const [
-                                              //         Icon(
-                                              //           Icons.add_rounded,
-                                              //           color:
-                                              //               DefaultTheme.WHITE,
-                                              //           size: 15,
-                                              //         ),
-                                              //         Padding(
-                                              //             padding:
-                                              //                 EdgeInsets.only(
-                                              //                     left: 5)),
-                                              //         Text(
-                                              //           'Tạo QR',
-                                              //           style: TextStyle(
-                                              //             fontSize: 12,
-                                              //             color: DefaultTheme
-                                              //                 .WHITE,
-                                              //           ),
-                                              //         ),
-                                              //       ],
-                                              //     ),
-                                              //   ),
-                                              // ),
                                             ],
                                           ),
                                         ),

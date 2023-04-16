@@ -73,7 +73,7 @@ class TextFieldWidget extends StatelessWidget {
                     onSubmitted: onSubmitted,
                     maxLength: maxLength,
                     autofocus: (autoFocus != null) ? autoFocus! : false,
-                    focusNode: null,
+                    focusNode: focusNode,
                     keyboardType: inputType,
                     maxLines: (maxLines == null) ? 1 : maxLines,
                     textInputAction: keyboardAction,
@@ -113,7 +113,7 @@ class TextFieldWidget extends StatelessWidget {
               maxLength: maxLength,
               textInputAction: keyboardAction,
               autofocus: false,
-              focusNode: null,
+              focusNode: focusNode,
               decoration: InputDecoration(
                 hintText: hintText,
                 counterText: '',

@@ -18,9 +18,6 @@ class BaseAPIClient {
     AuthenticationType? type,
     Map<String, String>? header,
   }) async {
-    HttpClient client = HttpClient();
-    client.badCertificateCallback =
-        ((X509Certificate cert, String host, int port) => true);
     final http.Response result = await http
         .get(
       Uri.parse(url),
@@ -142,6 +139,7 @@ class BaseAPIClient {
         result['Access-Control-Allow-Headers'] =
             'Origin, X-Requested-With, Content-Type, Accept';
         result['Access-Control-Allow-Credentials'] = 'true';
+        result['Cache-Control'] = 'no-cache';
         // header('Access-Control-Allow-Origin: *');
         // header('Access-Control-Allow-Methods: GET, POST');
         // header("Access-Control-Allow-Headers: X-Requested-With");
@@ -154,6 +152,7 @@ class BaseAPIClient {
         result['Access-Control-Allow-Headers'] =
             'Origin, X-Requested-With, Content-Type, Accept';
         result['Access-Control-Allow-Credentials'] = 'true';
+        result['Cache-Control'] = 'no-cache';
         break;
       case AuthenticationType.CUSTOM:
         result = header;

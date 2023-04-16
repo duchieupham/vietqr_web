@@ -1,6 +1,9 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/models/notification_transaction_success_dto.dart';
 // import 'package:VietQR/services/providers/clock_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -35,35 +38,7 @@ class HeaderFullWidget extends StatelessWidget {
       child: Row(
         children: [
           (isSubHeader != null && isSubHeader!)
-              ? Tooltip(
-                  message: 'Trở về',
-                  child: Consumer<MenuCardProvider>(
-                    builder: (context, provider, child) {
-                      return InkWell(
-                        onTap: () {
-                          if (context.canPop()) {
-                            context.pop();
-                          }
-                        },
-                        child: BoxLayout(
-                          width: 35,
-                          height: 35,
-                          borderRadius: 35,
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(0),
-                          bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                          child: Icon(
-                            (provider.showMenu)
-                                ? Icons.close_rounded
-                                : Icons.menu_rounded,
-                            size: 20,
-                            color: Theme.of(context).hintColor,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
+              ? const SizedBox()
               : Tooltip(
                   message: 'Menu',
                   child: Consumer<MenuCardProvider>(
@@ -93,17 +68,27 @@ class HeaderFullWidget extends StatelessWidget {
                 ),
           const Padding(padding: EdgeInsets.only(right: 10)),
           //logo
-          BoxLayout(
-            width: 100,
-            height: 35,
-            padding: const EdgeInsets.all(5),
-            bgColor: DefaultTheme.TRANSPARENT,
-            borderRadius: 10,
-            child: Image.asset(
-              'assets/images/ic-viet-qr.png',
-              width: 80,
-              height: 35,
-              fit: BoxFit.contain,
+          Tooltip(
+            message: 'Trang chủ',
+            child: InkWell(
+              onTap: () {
+                if (isSubHeader != null && !isSubHeader!) {
+                  context.push('/');
+                }
+              },
+              child: BoxLayout(
+                width: 100,
+                height: 35,
+                padding: const EdgeInsets.all(5),
+                bgColor: DefaultTheme.TRANSPARENT,
+                borderRadius: 10,
+                child: Image.asset(
+                  'assets/images/ic-viet-qr.png',
+                  width: 80,
+                  height: 35,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
           // _buildTitle('Trang chủ'),
@@ -112,17 +97,44 @@ class HeaderFullWidget extends StatelessWidget {
           if (isSubHeader == null || !isSubHeader!) ...[
             Tooltip(
               message: 'Sao chép mã QR',
-              child: BoxLayout(
-                width: 35,
-                height: 35,
-                borderRadius: 35,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(0),
-                bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                child: Icon(
-                  Icons.qr_code_rounded,
-                  size: 20,
-                  color: Theme.of(context).hintColor,
+              child: InkWell(
+                onTap: () {
+                  NotificationTransactionSuccessDTO dto =
+                      NotificationTransactionSuccessDTO(
+                    notificationType: 'N04',
+                    traceId: '',
+                    bankAccount: '1123355589',
+                    bankName: 'Ngan hang TMCP Quan Doi',
+                    bankCode: 'MB',
+                    amount: '100000',
+                    bankId: '',
+                    branchName: 'Chi nhanh so 1',
+                    businessName: 'Cong ty 1',
+                    notificationId: '',
+                    time: 0,
+                    refId: '',
+                    transactionReceiveId: '',
+                    content:
+                        'Noi dung thanh toan dai 99 ky tu. Noi dung thanh toan dai 99 ky tu.',
+                    status: 0,
+                    transType: 'D',
+                  );
+                  DialogWidget.instance.openWidgetDialog(
+                    child: TransactionSuccessWidget(dto: dto),
+                  );
+                },
+                child: BoxLayout(
+                  width: 35,
+                  height: 35,
+                  borderRadius: 35,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(0),
+                  bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+                  child: Icon(
+                    Icons.qr_code_rounded,
+                    size: 20,
+                    color: Theme.of(context).hintColor,
+                  ),
                 ),
               ),
             ),
