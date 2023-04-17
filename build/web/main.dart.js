@@ -46667,7 +46667,7 @@ A.VF.prototype={
 gp(a){return a.length}}
 A.a_T.prototype={}
 A.amH.prototype={
-oa(){return"http://112.78.1.209:8084/vqr/api/"},
+oa(){return"https://api.vietqr.org/vqr/api/"},
 a07(){return B.LW}}
 A.BM.prototype={
 H(){return"AuthenticationType."+this.b}}
