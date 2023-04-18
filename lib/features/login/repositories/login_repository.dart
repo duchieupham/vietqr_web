@@ -8,7 +8,7 @@ import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LoginRepository {
@@ -21,11 +21,12 @@ class LoginRepository {
     try {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       String url = '${EnvConfig.getBaseUrl()}accounts';
-      String fcmToken = await FirebaseMessaging.instance.getToken(
-              vapidKey:
-                  'BM0G0etV7C-Bb_LZj2YYt2cVwJVox9wde7rVtgLL47yMZMr-vhe4EGa2ihf8EsNkC_Mc74KNVKSaJpR83vjqCRg') ??
-          '';
-      print('fcm token: $fcmToken');
+      String fcmToken = '';
+      //  await FirebaseMessaging.instance.getToken(
+      //         vapidKey:
+      //             'BM0G0etV7C-Bb_LZj2YYt2cVwJVox9wde7rVtgLL47yMZMr-vhe4EGa2ihf8EsNkC_Mc74KNVKSaJpR83vjqCRg') ??
+      //     '';
+      // print('fcm token: $fcmToken');
 
       String platform = '';
       String device = '';

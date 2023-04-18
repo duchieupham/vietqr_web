@@ -22,7 +22,7 @@ import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -119,50 +119,50 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
-    // Đăng ký callback onMessage
-    onFcmMessage();
-    // Đăng ký callback onMessageOpenedApp
-    onFcmMessageOpenedApp();
+    // // Đăng ký callback onMessage
+    // onFcmMessage();
+    // // Đăng ký callback onMessageOpenedApp
+    // onFcmMessageOpenedApp();
   }
 
-  void onFcmMessage() async {
-    // await NotificationServic.initialNotification();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // Xử lý push notification nếu ứng dụng đang chạy
-      LOG.info(
-          "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
-      LOG.info("receive data: ${message.data}");
+  // void onFcmMessage() async {
+  //   // await NotificationServic.initialNotification();
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     // Xử lý push notification nếu ứng dụng đang chạy
+  //     LOG.info(
+  //         "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
+  //     LOG.info("receive data: ${message.data}");
 
-      // NotificationService().showNotification(
-      //   title: message.notification?.title,
-      //   body: message.notification?.body,
-      // );
+  //     // NotificationService().showNotification(
+  //     //   title: message.notification?.title,
+  //     //   body: message.notification?.body,
+  //     // );
 
-      //process when receive data
-      if (message.data.isNotEmpty) {
-        //process success transcation
-        if (message.data['notificationType'] != null &&
-            message.data['notificationType'] ==
-                Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-          DialogWidget.instance.openWidgetDialog(
-            child: TransactionSuccessWidget(
-              dto: NotificationTransactionSuccessDTO.fromJson(message.data),
-            ),
-          );
-        }
-      }
-    });
-  }
+  //     //process when receive data
+  //     if (message.data.isNotEmpty) {
+  //       //process success transcation
+  //       if (message.data['notificationType'] != null &&
+  //           message.data['notificationType'] ==
+  //               Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+  //         DialogWidget.instance.openWidgetDialog(
+  //           child: TransactionSuccessWidget(
+  //             dto: NotificationTransactionSuccessDTO.fromJson(message.data),
+  //           ),
+  //         );
+  //       }
+  //     }
+  //   });
+  // }
 
-  void onFcmMessageOpenedApp() {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // Xử lý push notification nếu ứng dụng không đang chạy
-      if (message.notification != null) {
-        LOG.info(
-            "Push notification clicked: ${message.notification?.title.toString()} - ${message.notification?.body}");
-      }
-    });
-  }
+  // void onFcmMessageOpenedApp() {
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     // Xử lý push notification nếu ứng dụng không đang chạy
+  //     if (message.notification != null) {
+  //       LOG.info(
+  //           "Push notification clicked: ${message.notification?.title.toString()} - ${message.notification?.body}");
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
