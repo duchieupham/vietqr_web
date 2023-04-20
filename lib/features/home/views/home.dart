@@ -1,9 +1,14 @@
+import 'dart:convert';
+
+import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
@@ -13,17 +18,21 @@ import 'package:VietQR/features/home/frames/home_frame.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
+import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -38,15 +47,52 @@ class _HomeScreen extends State<HomeScreen> {
   List<BankAccountDTO> bankAccounts = [];
   List<Color> cardColors = [];
 
+  late WebSocketChannel channel;
+
   List<RelatedTransactionReceiveDTO> transactions = [];
 
   @override
   void initState() {
     super.initState();
     String userId = UserInformationHelper.instance.getUserId();
+    listenWebSocket(userId);
     _bankBloc = BlocProvider.of(context);
     _transactionBloc = BlocProvider.of(context);
     _bankBloc.add(BankEventGetList(userId: userId));
+  }
+
+  void listenWebSocket(String userId) {
+    if (userId.isNotEmpty) {
+      bool isListenWebSocket = WebSocketHelper.instance.isListenWs();
+      if (!isListenWebSocket) {
+        try {
+          WebSocketHelper.instance.setListenWs(true);
+          final wsUrl =
+              Uri.parse('ws://api.vietqr.org/vqr/socket?userId=$userId');
+          channel = WebSocketChannel.connect(wsUrl);
+          print('channel.closeCode: ${channel.closeCode}');
+          if (channel.closeCode == null) {
+            channel.stream.listen((event) {
+              var data = jsonDecode(event);
+              if (data['notificationType'] != null &&
+                  data['notificationType'] ==
+                      Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+                DialogWidget.instance.openWidgetDialog(
+                  child: TransactionSuccessWidget(
+                    dto: NotificationTransactionSuccessDTO.fromJson(data),
+                  ),
+                );
+              }
+            });
+          } else {
+            WebSocketHelper.instance.setListenWs(false);
+          }
+        } catch (e) {
+          print('WS: $e');
+          LOG.error('WS: $e');
+        }
+      }
+    }
   }
 
   @override
@@ -383,6 +429,7 @@ class _HomeScreen extends State<HomeScreen> {
                                   );
                                   _transactionBloc.add(TransactionEventGetList(
                                       dto: transactionInputDTO));
+                                  provider.updateShowMenu(!provider.showMenu);
                                 },
                                 child: AnimatedContainer(
                                   width: 300,

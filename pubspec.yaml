@@ -60,6 +60,7 @@ dependencies:
   device_info_plus: ^8.1.0
   palette_generator: ^0.3.3+2
   rive: ^0.10.1
+  web_socket_channel: ^2.4.0
 
 dev_dependencies:
   flutter_test:

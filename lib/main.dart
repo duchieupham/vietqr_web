@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
@@ -21,6 +23,7 @@ import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +32,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -46,6 +50,7 @@ void main() async {
 }
 
 Future<void> _initialServiceHelper() async {
+  await WebSocketHelper.instance.initialWebSocket();
   if (!sharedPrefs.containsKey('THEME_SYSTEM') ||
       sharedPrefs.getString('THEME_SYSTEM') == null) {
     await ThemeHelper.instance.initialTheme();
@@ -116,13 +121,47 @@ class VietQRApp extends StatefulWidget {
 }
 
 class _VietQRApp extends State<VietQRApp> {
+  late WebSocketChannel channel;
+
   @override
   void initState() {
     super.initState();
-    // // Đăng ký callback onMessage
-    // onFcmMessage();
-    // // Đăng ký callback onMessageOpenedApp
-    // onFcmMessageOpenedApp();
+    String userId = UserInformationHelper.instance.getUserId();
+    listenWebSocket(userId);
+  }
+
+  void listenWebSocket(String userId) {
+    if (userId.isNotEmpty) {
+      bool isListenWebSocket = WebSocketHelper.instance.isListenWs();
+      if (!isListenWebSocket) {
+        try {
+          WebSocketHelper.instance.setListenWs(true);
+          final wsUrl =
+              Uri.parse('ws://api.vietqr.org/vqr/socket?userId=$userId');
+          channel = WebSocketChannel.connect(wsUrl);
+          print('channel.closeCode: ${channel.closeCode}');
+          if (channel.closeCode != null) {
+            channel.stream.listen((event) {
+              var data = jsonDecode(event);
+              if (data['notificationType'] != null &&
+                  data['notificationType'] ==
+                      Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+                DialogWidget.instance.openWidgetDialog(
+                  child: TransactionSuccessWidget(
+                    dto: NotificationTransactionSuccessDTO.fromJson(data),
+                  ),
+                );
+              }
+            });
+          } else {
+            WebSocketHelper.instance.setListenWs(false);
+          }
+        } catch (e) {
+          print('WS: $e');
+          LOG.error('WS: $e');
+        }
+      }
+    }
   }
 
   // void onFcmMessage() async {

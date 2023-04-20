@@ -15,7 +15,7 @@ class TransactionRepository {
     List<RelatedTransactionReceiveDTO> result = [];
     try {
       final String url = '${EnvConfig.getBaseUrl()}transaction/list';
-      print('------${dto.bankId} - ${dto.offset}');
+
       final response = await BaseAPIClient.postAPI(
         url: url,
         body: dto.toJson(),
