@@ -137,7 +137,7 @@ class _VietQRApp extends State<VietQRApp> {
         try {
           WebSocketHelper.instance.setListenWs(true);
           final wsUrl =
-              Uri.parse('ws://api.vietqr.org/vqr/socket?userId=$userId');
+              Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
           channel = WebSocketChannel.connect(wsUrl);
           print('channel.closeCode: ${channel.closeCode}');
           if (channel.closeCode == null) {

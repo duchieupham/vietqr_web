@@ -47632,7 +47632,7 @@ s.toString
 this.K0(s)},
 K0(a){var s,r,q,p
 if(a.length!==0)if(!B.cV.XX())try{B.cV.on(!0)
-s=A.h8("ws://api.vietqr.org/vqr/socket?userId="+a)
+s=A.h8("wss://api.vietqr.org/vqr/socket?userId="+a)
 q=A.aM8(s,null)
 this.d=q
 A.j4("channel.closeCode: "+A.i(q.b))
