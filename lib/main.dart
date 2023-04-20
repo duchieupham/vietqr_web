@@ -140,7 +140,7 @@ class _VietQRApp extends State<VietQRApp> {
               Uri.parse('ws://api.vietqr.org/vqr/socket?userId=$userId');
           channel = WebSocketChannel.connect(wsUrl);
           print('channel.closeCode: ${channel.closeCode}');
-          if (channel.closeCode != null) {
+          if (channel.closeCode == null) {
             channel.stream.listen((event) {
               var data = jsonDecode(event);
               if (data['notificationType'] != null &&

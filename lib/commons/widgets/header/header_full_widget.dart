@@ -73,7 +73,7 @@ class HeaderFullWidget extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 if (isSubHeader != null && !isSubHeader!) {
-                  context.push('/');
+                  context.go('/');
                 }
               },
               child: BoxLayout(
