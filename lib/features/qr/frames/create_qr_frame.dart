@@ -30,7 +30,7 @@ class CreateQRFrame extends StatelessWidget {
                 Row(
                   children: [
                     SizedBox(
-                      width: 350,
+                      width: 380,
                       height: height - 60,
                       child: ListView(
                         padding: const EdgeInsets.symmetric(horizontal: 20),

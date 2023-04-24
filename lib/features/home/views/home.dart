@@ -70,7 +70,7 @@ class _HomeScreen extends State<HomeScreen> {
           final wsUrl =
               Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
           channel = WebSocketChannel.connect(wsUrl);
-          print('channel.closeCode: ${channel.closeCode}');
+          print('---channel.closeCode: ${channel.closeCode}');
           if (channel.closeCode == null) {
             channel.stream.listen((event) {
               var data = jsonDecode(event);

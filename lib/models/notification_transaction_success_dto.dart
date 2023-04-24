@@ -15,6 +15,7 @@ class NotificationTransactionSuccessDTO {
   final String content;
   final int status;
   final String transType;
+  final String audioLink;
 
   NotificationTransactionSuccessDTO({
     required this.notificationType,
@@ -33,6 +34,7 @@ class NotificationTransactionSuccessDTO {
     required this.content,
     required this.status,
     required this.transType,
+    required this.audioLink,
   });
 
   factory NotificationTransactionSuccessDTO.fromJson(
@@ -54,6 +56,7 @@ class NotificationTransactionSuccessDTO {
       content: json['content'] ?? '',
       status: int.tryParse(json['status'] ?? '') ?? 0,
       transType: json['transType'] ?? '',
+      audioLink: json['audioLink'] ?? '',
     );
   }
 
@@ -75,6 +78,7 @@ class NotificationTransactionSuccessDTO {
     data['content'] = content;
     data['status'] = status;
     data['transType'] = transType;
+    data['audioLink'] = audioLink;
     return data;
   }
 }

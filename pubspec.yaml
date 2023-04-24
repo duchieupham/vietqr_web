@@ -61,6 +61,7 @@ dependencies:
   palette_generator: ^0.3.3+2
   rive: ^0.10.1
   web_socket_channel: ^2.4.0
+  audioplayers: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
       - assets/rives/
+      - assets/sounds/prefix_transaction.mp3
       - assets/images/ic-pop.png
       - assets/images/ic-light-theme.png
       - assets/images/ic-dark-theme.png

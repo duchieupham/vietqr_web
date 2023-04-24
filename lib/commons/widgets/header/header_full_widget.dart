@@ -1,9 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
-import 'package:VietQR/models/notification_transaction_success_dto.dart';
 // import 'package:VietQR/services/providers/clock_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -72,7 +69,7 @@ class HeaderFullWidget extends StatelessWidget {
             message: 'Trang chủ',
             child: InkWell(
               onTap: () {
-                if (isSubHeader != null && !isSubHeader!) {
+                if (isSubHeader != null && isSubHeader!) {
                   context.go('/');
                 }
               },
@@ -98,31 +95,7 @@ class HeaderFullWidget extends StatelessWidget {
             Tooltip(
               message: 'Sao chép mã QR',
               child: InkWell(
-                onTap: () {
-                  NotificationTransactionSuccessDTO dto =
-                      NotificationTransactionSuccessDTO(
-                    notificationType: 'N04',
-                    traceId: '',
-                    bankAccount: '1123355589',
-                    bankName: 'Ngan hang TMCP Quan Doi',
-                    bankCode: 'MB',
-                    amount: '100000',
-                    bankId: '',
-                    branchName: 'Chi nhanh so 1',
-                    businessName: 'Cong ty 1',
-                    notificationId: '',
-                    time: 0,
-                    refId: '',
-                    transactionReceiveId: '',
-                    content:
-                        'Noi dung thanh toan dai 99 ky tu. Noi dung thanh toan dai 99 ky tu.',
-                    status: 0,
-                    transType: 'D',
-                  );
-                  DialogWidget.instance.openWidgetDialog(
-                    child: TransactionSuccessWidget(dto: dto),
-                  );
-                },
+                onTap: () {},
                 child: BoxLayout(
                   width: 35,
                   height: 35,
