@@ -43,7 +43,7 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
       Future.delayed(const Duration(milliseconds: 0), () async {
         await playMusicFromUrl(
             'https://cdn.jsdelivr.net/gh/duchieupham/vietqr_sound@main/prefix_transaction.mp3');
-        await Future.delayed(const Duration(milliseconds: 500), () async {
+        await Future.delayed(const Duration(milliseconds: 2000), () async {
           await playMusicFromUrl(widget.dto.audioLink);
         });
       });
