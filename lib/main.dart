@@ -12,12 +12,15 @@ import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
+import 'package:VietQR/features/register/blocs/register_bloc.dart';
+import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
+import 'package:VietQR/services/providers/register_provider.dart';
 import 'package:VietQR/services/providers/theme_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
@@ -90,6 +93,12 @@ final GoRouter _router = GoRouter(
               ? '/home'
               : '/login',
       builder: (BuildContext context, GoRouterState state) => const Login(),
+    ),
+    GoRoute(
+      path: '/register',
+      redirect: (context, state) => '/register',
+      builder: (BuildContext context, GoRouterState state) =>
+          const RegisterView(),
     ),
     GoRoute(
       path: '/home',
@@ -224,6 +233,9 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<QRBloc>(
             create: (BuildContext context) => QRBloc(),
           ),
+          BlocProvider<RegisterBloc>(
+            create: (BuildContext context) => RegisterBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
@@ -231,6 +243,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => PinProvider()),
             ChangeNotifierProvider(create: (context) => MenuCardProvider()),
             ChangeNotifierProvider(create: (context) => CreateQRProvider()),
+            ChangeNotifierProvider(create: (context) => RegisterProvider()),
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
           ],

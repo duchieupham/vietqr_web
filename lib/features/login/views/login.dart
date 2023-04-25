@@ -221,13 +221,7 @@ class _Login extends State<Login> {
           textColor: DefaultTheme.WHITE,
           bgColor: DefaultTheme.BLUE_TEXT,
           function: () {
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => RegisterView(
-            //       phoneNo: phoneNoController.text,
-            //     ),
-            //   ),
-            // );
+            context.go('/register');
           },
         )
       ],
