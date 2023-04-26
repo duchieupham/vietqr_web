@@ -6,6 +6,8 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
+import 'package:VietQR/models/response_message_dto.dart';
 
 class BankRepository {
   const BankRepository();
@@ -33,7 +35,7 @@ class BankRepository {
   }
 
   Future<AccountBankDetailDTO> getAccountBankDetail(String bankId) async {
-    AccountBankDetailDTO result = AccountBankDetailDTO(
+    AccountBankDetailDTO result = const AccountBankDetailDTO(
       id: '',
       bankAccount: '',
       userBankName: '',
@@ -64,6 +66,55 @@ class BankRepository {
       }
     } catch (e) {
       LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<ResponseMessageDTO> checkExistedBank(
+      String bankAccount, String bankTypeId) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      final String url =
+          '${EnvConfig.getBaseUrl()}account-bank/check/$bankAccount/$bankTypeId';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        var data = jsonDecode(response.body);
+        result = ResponseMessageDTO.fromJson(data);
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+    }
+    return result;
+  }
+
+  Future<ResponseMessageDTO> insertBankUnauthenticated(
+      BankCardInsertUnauthenticatedDTO dto) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      final String url =
+          '${EnvConfig.getBaseUrl()}account-bank/unauthenticated';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        body: dto.toJson(),
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        var data = jsonDecode(response.body);
+        result = ResponseMessageDTO.fromJson(data);
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
     }
     return result;
   }

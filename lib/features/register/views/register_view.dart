@@ -252,7 +252,7 @@ class RegisterView extends StatelessWidget {
             textColor: DefaultTheme.GREEN,
             bgColor: Theme.of(context).canvasColor,
             function: () {
-              context.go('/login');
+              backToPreviousPage(context);
             },
           ),
           const Padding(padding: EdgeInsets.only(left: 10)),

@@ -7,6 +7,8 @@ import 'package:VietQR/commons/constants/env/url_strategy.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
+import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
+import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
@@ -17,6 +19,7 @@ import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
+import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
@@ -117,6 +120,16 @@ final GoRouter _router = GoRouter(
               : '/login',
       builder: (BuildContext context, GoRouterState state) => CreateQR(
         bankId: state.params['id'] ?? '',
+      ),
+    ),
+    GoRoute(
+      path: '/bank/create/:id',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/bank/create/${state.params['id'] ?? ''}'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) => AddBankView(
+        userId: state.params['id'] ?? '',
       ),
     ),
   ],
@@ -236,6 +249,9 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<RegisterBloc>(
             create: (BuildContext context) => RegisterBloc(),
           ),
+          BlocProvider<BankTypeBloc>(
+            create: (BuildContext context) => BankTypeBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
@@ -244,6 +260,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => MenuCardProvider()),
             ChangeNotifierProvider(create: (context) => CreateQRProvider()),
             ChangeNotifierProvider(create: (context) => RegisterProvider()),
+            ChangeNotifierProvider(create: (context) => BankTypeProvider()),
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
           ],

@@ -14,6 +14,8 @@ class BankInitialState extends BankState {}
 
 class BankLoadingState extends BankState {}
 
+class BankLoadingInsertState extends BankState {}
+
 class BankGetListSuccessState extends BankState {
   final List<BankAccountDTO> list;
   final List<Color> colors;
@@ -43,3 +45,42 @@ class BankDetailSuccessState extends BankState {
 }
 
 class BankDetailFailedState extends BankState {}
+
+//
+
+class BankCheckExistedState extends BankState {
+  final String msg;
+
+  const BankCheckExistedState({
+    required this.msg,
+  });
+
+  @override
+  List<Object?> get props => [msg];
+}
+
+class BankCheckNotExistedState extends BankState {}
+
+class BankCheckFailedState extends BankState {}
+
+class BankInsertUnauthenticatedSuccessState extends BankState {
+  final String bankId;
+  final String qr;
+
+  const BankInsertUnauthenticatedSuccessState({
+    required this.bankId,
+    required this.qr,
+  });
+
+  @override
+  List<Object?> get props => [bankId, qr];
+}
+
+class BankInsertUnauthenticatedFailedState extends BankState {
+  final String msg;
+
+  const BankInsertUnauthenticatedFailedState({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+}

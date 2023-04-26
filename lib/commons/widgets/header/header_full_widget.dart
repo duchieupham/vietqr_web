@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 // import 'package:VietQR/services/providers/clock_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
@@ -114,17 +115,23 @@ class HeaderFullWidget extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(right: 10)),
             Tooltip(
               message: 'Thêm TK ngân hàng',
-              child: BoxLayout(
-                width: 35,
-                height: 35,
-                borderRadius: 35,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(0),
-                bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                child: Icon(
-                  Icons.credit_card_rounded,
-                  size: 20,
-                  color: Theme.of(context).hintColor,
+              child: InkWell(
+                onTap: () {
+                  String userId = UserInformationHelper.instance.getUserId();
+                  context.go('/bank/create/$userId');
+                },
+                child: BoxLayout(
+                  width: 35,
+                  height: 35,
+                  borderRadius: 35,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(0),
+                  bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+                  child: Icon(
+                    Icons.credit_card_rounded,
+                    size: 20,
+                    color: Theme.of(context).hintColor,
+                  ),
                 ),
               ),
             ),
@@ -195,7 +202,7 @@ class HeaderFullWidget extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.only(right: 10)),
           //shortcut
-          _buildAvatar(imgId, 35),
+          _buildAvatar(context, imgId, 35),
         ],
       ),
     );
@@ -211,17 +218,22 @@ class HeaderFullWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar(String imgId, double size) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: (imgId.trim().isNotEmpty)
-              ? ImageUtils.instance.getImageNetWork(imgId)
-              : Image.asset('assets/images/ic-avatar.png').image,
+  Widget _buildAvatar(BuildContext context, String imgId, double size) {
+    return InkWell(
+      onTap: () {
+        PopupMenuWebWidget.instance.showPopupMenu(context, imgId);
+      },
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(size),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: (imgId.trim().isNotEmpty)
+                ? ImageUtils.instance.getImageNetWork(imgId)
+                : Image.asset('assets/images/ic-avatar.png').image,
+          ),
         ),
       ),
     );
