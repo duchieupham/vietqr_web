@@ -6,7 +6,10 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
+import 'package:VietQR/models/bank_card_request_otp.dart';
+import 'package:VietQR/models/confirm_otp_bank_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 
 class BankRepository {
@@ -101,6 +104,75 @@ class BankRepository {
     try {
       final String url =
           '${EnvConfig.getBaseUrl()}account-bank/unauthenticated';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        body: dto.toJson(),
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        var data = jsonDecode(response.body);
+        result = ResponseMessageDTO.fromJson(data);
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+    }
+    return result;
+  }
+
+  //request OTP
+  Future<ResponseMessageDTO> requestOTP(BankCardRequestOTP dto) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      final String url = '${EnvConfig.getUrl()}bank/api/request_otp_bank';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        body: dto.toJson(),
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        var data = jsonDecode(response.body);
+        result = ResponseMessageDTO.fromJson(data);
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  //confirm OTP
+  Future<ResponseMessageDTO> confirmOTP(ConfirmOTPBankDTO dto) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      final String url = '${EnvConfig.getUrl()}bank/api/confirm_otp_bank';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        body: dto.toJson(),
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        var data = jsonDecode(response.body);
+        result = ResponseMessageDTO.fromJson(data);
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<ResponseMessageDTO> insertBankCard(BankCardInsertDTO dto) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}account-bank';
       final response = await BaseAPIClient.postAPI(
         url: url,
         body: dto.toJson(),

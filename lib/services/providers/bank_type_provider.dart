@@ -14,15 +14,30 @@ class BankTypeProvider with ChangeNotifier {
   bool _isBankAccountErr = false;
   bool _isNationalErr = false;
   bool _isPhoneErr = false;
+  bool _isAgreeWithPolicy = false;
 
   BankTypeDTO get bankType => _bankType;
   bool get nameErr => _isNameErr;
   bool get bankAccountErr => _isBankAccountErr;
   bool get nationalErr => _isNationalErr;
   bool get phoneErr => _isPhoneErr;
+  bool get agreeWithPolicy => _isAgreeWithPolicy;
+
+  void updateAgreePolicy(bool value) {
+    _isAgreeWithPolicy = value;
+    notifyListeners();
+  }
 
   bool isValidUnauthenticateForm() {
     return (_bankType.id.isNotEmpty && !_isNameErr && !_isBankAccountErr);
+  }
+
+  bool isValidAuthenticateForm() {
+    return (_bankType.id.isNotEmpty &&
+        !_isNameErr &&
+        !_isBankAccountErr &&
+        !_isNationalErr &&
+        !_isPhoneErr);
   }
 
   void updateBankType(BankTypeDTO value) {
@@ -62,5 +77,6 @@ class BankTypeProvider with ChangeNotifier {
     _isBankAccountErr = false;
     _isNationalErr = false;
     _isPhoneErr = false;
+    _isAgreeWithPolicy = false;
   }
 }

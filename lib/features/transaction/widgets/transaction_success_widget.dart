@@ -41,11 +41,12 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
     // print('---audiolink: ${widget.dto.audioLink}');
     if (widget.dto.audioLink.isNotEmpty) {
       Future.delayed(const Duration(milliseconds: 0), () async {
-        await playMusicFromUrl(
-            'https://cdn.jsdelivr.net/gh/duchieupham/vietqr_sound@main/prefix_transaction.mp3');
-        await Future.delayed(const Duration(milliseconds: 2000), () async {
-          await playMusicFromUrl(widget.dto.audioLink);
-        });
+        await playMusicFromUrl(widget.dto.audioLink);
+        // await playMusicFromUrl(
+        //     'https://cdn.jsdelivr.net/gh/duchieupham/vietqr_sound@main/prefix_transaction.mp3');
+        // await Future.delayed(const Duration(milliseconds: 2000), () async {
+
+        // });
       });
     }
   }

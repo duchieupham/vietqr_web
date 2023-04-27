@@ -1,5 +1,6 @@
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -59,7 +60,14 @@ class BankCheckExistedState extends BankState {
   List<Object?> get props => [msg];
 }
 
-class BankCheckNotExistedState extends BankState {}
+class BankCheckNotExistedState extends BankState {
+  final bool isAuthenticated;
+
+  const BankCheckNotExistedState({required this.isAuthenticated});
+
+  @override
+  List<Object?> get props => [isAuthenticated];
+}
 
 class BankCheckFailedState extends BankState {}
 
@@ -83,4 +91,64 @@ class BankInsertUnauthenticatedFailedState extends BankState {
 
   @override
   List<Object?> get props => [msg];
+}
+
+//for request OTP
+class BankReuqestOTPLoadingState extends BankState {}
+
+class BankRequestOTPSuccessState extends BankState {
+  final BankCardRequestOTP dto;
+  final String requestId;
+
+  const BankRequestOTPSuccessState({
+    required this.dto,
+    required this.requestId,
+  });
+
+  @override
+  List<Object?> get props => [dto, requestId];
+}
+
+class BankRequestOTPFailedState extends BankState {
+  final String message;
+
+  const BankRequestOTPFailedState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+//
+class BankConfirmOTPLoadingState extends BankState {}
+
+class BankConfirmOTPSuccessState extends BankState {}
+
+class BankConfirmOTPFailedState extends BankState {
+  final String message;
+
+  const BankConfirmOTPFailedState({
+    required this.message,
+  });
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class BankInsertSuccessfulState extends BankState {
+  final String bankId;
+  final String qr;
+
+  const BankInsertSuccessfulState({required this.bankId, required this.qr});
+
+  @override
+  List<Object?> get props => [bankId, qr];
+}
+
+class BankInsertFailedState extends BankState {
+  final String message;
+
+  const BankInsertFailedState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

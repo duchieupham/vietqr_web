@@ -8,10 +8,14 @@ import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/frames/add_bank_frame.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
+import 'package:VietQR/features/bank/widgets/confirm_opt_widget.dart';
+import 'package:VietQR/features/bank/widgets/policy_bank_widget.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
+import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -54,22 +58,38 @@ class AddBankView extends StatelessWidget {
           if (state is BankCheckNotExistedState) {
             //pop loading
             Navigator.pop(context);
-            String bankTypeId =
-                Provider.of<BankTypeProvider>(context, listen: false)
-                    .bankType
-                    .id;
-            String userId = UserInformationHelper.instance.getUserId();
-            String formattedName = StringUtils.instance.removeDiacritic(
-                StringUtils.instance
-                    .capitalFirstCharacter(nameController.text));
-            BankCardInsertUnauthenticatedDTO dto =
-                BankCardInsertUnauthenticatedDTO(
-              bankTypeId: bankTypeId,
-              userId: userId,
-              userBankName: formattedName,
-              bankAccount: bankAccountController.text,
-            );
-            bankBloc.add(BankEventInsertUnauthenticated(dto: dto));
+            if (state.isAuthenticated) {
+              //add event request OTP
+              bankBloc.add(
+                BankEventRequestOTP(
+                  dto: BankCardRequestOTP(
+                    nationalId: nationalController.text,
+                    accountNumber: bankAccountController.text,
+                    accountName: nameController.text,
+                    applicationType: 'WEB_APP',
+                    phoneNumber: phoneController.text,
+                  ),
+                ),
+              );
+            } else {
+              //insert bank unauthenticated
+              String bankTypeId =
+                  Provider.of<BankTypeProvider>(context, listen: false)
+                      .bankType
+                      .id;
+              String userId = UserInformationHelper.instance.getUserId();
+              String formattedName = StringUtils.instance.removeDiacritic(
+                  StringUtils.instance
+                      .capitalFirstCharacter(nameController.text));
+              BankCardInsertUnauthenticatedDTO dto =
+                  BankCardInsertUnauthenticatedDTO(
+                bankTypeId: bankTypeId,
+                userId: userId,
+                userBankName: formattedName,
+                bankAccount: bankAccountController.text,
+              );
+              bankBloc.add(BankEventInsertUnauthenticated(dto: dto));
+            }
           }
           if (state is BankCheckFailedState) {
             //pop loading
@@ -80,8 +100,8 @@ class AddBankView extends StatelessWidget {
           if (state is BankCheckExistedState) {
             //pop loading
             Navigator.pop(context);
-            DialogWidget.instance
-                .openMsgDialog(title: 'Không thể thêm TK', msg: state.msg);
+            DialogWidget.instance.openMsgDialog(
+                title: 'Không thể thêm/liên kết TK', msg: state.msg);
           }
           if (state is BankInsertUnauthenticatedSuccessState) {
             //pop loading
@@ -109,6 +129,100 @@ class AddBankView extends StatelessWidget {
             Navigator.pop(context);
             DialogWidget.instance
                 .openMsgDialog(title: 'Không thể thêm TK', msg: state.msg);
+          }
+          if (state is BankReuqestOTPLoadingState) {
+            DialogWidget.instance.openLoadingDialog();
+          }
+          if (state is BankRequestOTPSuccessState) {
+            Navigator.pop(context);
+            DialogWidget.instance.openPopup(
+              width: 300,
+              height: 400,
+              child: ConfirmOTPWidget(
+                requestId: state.requestId,
+                phone: phoneController.text,
+                bankBloc: bankBloc,
+                dto: state.dto,
+              ),
+            );
+          }
+          if (state is BankRequestOTPFailedState) {
+            Navigator.pop(context);
+            DialogWidget.instance.openMsgDialog(
+              title: 'Xác thực thất bại',
+              msg: state.message,
+              function: () {
+                Navigator.pop(context);
+              },
+            );
+          }
+          if (state is BankConfirmOTPLoadingState) {
+            DialogWidget.instance.openLoadingDialog();
+          }
+          if (state is BankConfirmOTPSuccessState) {
+            // Navigator.pop(context);
+            // String bankId =
+            //     Provider.of<AddBankProvider>(context, listen: false).bankId;
+            // if (bankId.trim().isEmpty) {
+            BankTypeDTO bankTypeDTO =
+                Provider.of<BankTypeProvider>(context, listen: false).bankType;
+            String userId = UserInformationHelper.instance.getUserId();
+            String formattedName = StringUtils.instance.removeDiacritic(
+                StringUtils.instance
+                    .capitalFirstCharacter(nameController.text));
+            BankCardInsertDTO dto = BankCardInsertDTO(
+              bankTypeId: bankTypeDTO.id,
+              userId: userId,
+              userBankName: formattedName,
+              bankAccount: bankAccountController.text,
+              type: 0,
+              branchId: '',
+              nationalId: nationalController.text,
+              phoneAuthenticated: phoneController.text,
+            );
+            bankBloc.add(BankEventInsert(dto: dto));
+            // } else {
+            //   RegisterAuthenticationDTO dto = RegisterAuthenticationDTO(
+            //     bankId: bankId,
+            //     nationalId: nationalController.text,
+            //     phoneAuthenticated: phoneAuthenController.text,
+            //     bankAccountName: nameController.text,
+            //     bankAccount: bankAccountController.text,
+            //   );
+            //   bankCardBloc.add(BankEventRegisterAuthentication(dto: dto));
+            // }
+          }
+          if (state is BankConfirmOTPFailedState) {
+            Navigator.pop(context);
+            DialogWidget.instance.openMsgDialog(
+              title: 'Lỗi',
+              msg: state.message,
+            );
+          }
+          if (state is BankInsertSuccessfulState) {
+            //pop loading
+            Navigator.pop(context);
+            phoneController.clear();
+            nameController.clear();
+            nationalController.clear();
+            bankAccountController.clear();
+            //navigate
+            Fluttertoast.showToast(
+              msg: 'Liên kết tài khoản ngân hàng thành công',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Theme.of(context).primaryColor,
+              textColor: Theme.of(context).hintColor,
+              fontSize: 15,
+              webBgColor: 'rgba(255, 255, 255, 0.5)',
+              webPosition: 'center',
+            );
+            context.go('/');
+          }
+          if (state is BankInsertFailedState) {
+            DialogWidget.instance.openMsgDialog(
+                title: 'Không thể thêm tài khoản', msg: state.message);
           }
         },
         child: AddBankFrame(
@@ -272,8 +386,7 @@ class AddBankView extends StatelessWidget {
                     BorderLayout(
                       width: width,
                       height: 50,
-                      // isError: value.phoneErr,
-                      isError: false,
+                      isError: provider.nationalErr,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextFieldWidget(
                         width: width,
@@ -284,8 +397,21 @@ class AddBankView extends StatelessWidget {
                         inputType: TextInputType.number,
                         keyboardAction: TextInputAction.next,
                         onChange: (vavlue) {
-                          // _isChangePhone = true;
+                          provider.updateNationalErr(
+                              !(nationalController.text.length >= 9 &&
+                                  nationalController.text.length <= 12));
                         },
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 5)),
+                    Visibility(
+                      visible: provider.nationalErr,
+                      child: const Text(
+                        'CCCD/CMT không hợp lệ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: DefaultTheme.RED_TEXT,
+                        ),
                       ),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 20)),
@@ -304,8 +430,23 @@ class AddBankView extends StatelessWidget {
                         inputType: TextInputType.number,
                         keyboardAction: TextInputAction.next,
                         onChange: (vavlue) {
-                          // _isChangePhone = true;
+                          provider.updatePhoneErr(
+                            !(phoneController.text.isNotEmpty &&
+                                StringUtils.instance
+                                    .isNumeric(phoneController.text)),
+                          );
                         },
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 5)),
+                    Visibility(
+                      visible: provider.phoneErr,
+                      child: const Text(
+                        'Số điện thoại xác thực không hợp lệ',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: DefaultTheme.RED_TEXT,
+                        ),
                       ),
                     ),
                   ],
@@ -342,6 +483,7 @@ class AddBankView extends StatelessWidget {
                                         .id;
                                 bankBloc.add(
                                   BankCheckExistedEvent(
+                                      isAuthenticated: false,
                                       bankAccount: bankAccountController.text,
                                       bankTypeId: bankTypeId),
                                 );
@@ -363,7 +505,53 @@ class AddBankView extends StatelessWidget {
                             borderRadius: 5,
                             textColor: DefaultTheme.WHITE,
                             bgColor: DefaultTheme.PURPLE_NEON,
-                            function: () {},
+                            function: () async {
+                              provider.updateBankAccountErr(
+                                (bankAccountController.text.isEmpty ||
+                                    !StringUtils.instance
+                                        .isNumeric(bankAccountController.text)),
+                              );
+                              provider.updateNameErr(
+                                !StringUtils.instance
+                                    .isValidFullName(nameController.text),
+                              );
+                              provider.updateNationalErr(
+                                  !(nationalController.text.length >= 9 &&
+                                      nationalController.text.length <= 12));
+                              provider.updatePhoneErr(
+                                !(phoneController.text.isNotEmpty &&
+                                    StringUtils.instance
+                                        .isNumeric(phoneController.text)),
+                              );
+                              if (provider.isValidUnauthenticateForm()) {
+                                await DialogWidget.instance
+                                    .openPopup(
+                                  child: PolicyBankWidget(
+                                    bankAccount: bankAccountController.text,
+                                  ),
+                                  width: 600,
+                                  height: 400,
+                                )
+                                    .then((value) {
+                                  provider.updateAgreePolicy(false);
+                                  bool check = value ?? false;
+                                  if (check) {
+                                    String bankTypeId =
+                                        Provider.of<BankTypeProvider>(context,
+                                                listen: false)
+                                            .bankType
+                                            .id;
+                                    bankBloc.add(
+                                      BankCheckExistedEvent(
+                                          isAuthenticated: true,
+                                          bankAccount:
+                                              bankAccountController.text,
+                                          bankTypeId: bankTypeId),
+                                    );
+                                  }
+                                });
+                              }
+                            },
                           ),
                         ],
                       ],
