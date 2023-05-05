@@ -58,7 +58,6 @@ class LoginRepository {
         body: loginDTO.toJson(),
         type: AuthenticationType.NONE,
       );
-      print('response: $response');
       if (response.statusCode == 200) {
         String token = response.body;
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);

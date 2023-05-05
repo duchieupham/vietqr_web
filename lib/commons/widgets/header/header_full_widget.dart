@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 // import 'package:VietQR/services/providers/clock_provider.dart';
@@ -96,7 +97,12 @@ class HeaderFullWidget extends StatelessWidget {
             Tooltip(
               message: 'Sao chép mã QR',
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  DialogWidget.instance.openMsgDialog(
+                    title: 'Tính năng đang bảo trì',
+                    msg: 'Vui lòng thử lại sau',
+                  );
+                },
                 child: BoxLayout(
                   width: 35,
                   height: 35,
@@ -135,68 +141,76 @@ class HeaderFullWidget extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.only(right: 10)),
-            Tooltip(
-              message: 'Tạo doanh nghiệp',
-              child: BoxLayout(
-                width: 35,
-                height: 35,
-                borderRadius: 35,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(0),
-                bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                child: Icon(
-                  Icons.business_rounded,
-                  size: 20,
-                  color: Theme.of(context).hintColor,
-                ),
-              ),
-            ),
+            // const Padding(padding: EdgeInsets.only(right: 10)),
+            // Tooltip(
+            //   message: 'Tạo doanh nghiệp',
+            //   child: BoxLayout(
+            //     width: 35,
+            //     height: 35,
+            //     borderRadius: 35,
+            //     alignment: Alignment.center,
+            //     padding: const EdgeInsets.all(0),
+            //     bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+            //     child: Icon(
+            //       Icons.business_rounded,
+            //       size: 20,
+            //       color: Theme.of(context).hintColor,
+            //     ),
+            //   ),
+            // ),
             const Padding(padding: EdgeInsets.only(right: 30)),
           ],
           Tooltip(
             message: 'Thông báo',
-            child: SizedBox(
-              width: 40,
-              height: 60,
-              child: Stack(
-                fit: StackFit.loose,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: BoxLayout(
-                      width: 35,
-                      height: 35,
-                      borderRadius: 35,
+            child: InkWell(
+              onTap: () {
+                DialogWidget.instance.openMsgDialog(
+                  title: 'Tính năng đang bảo trì',
+                  msg: 'Vui lòng thử lại sau',
+                );
+              },
+              child: SizedBox(
+                width: 40,
+                height: 60,
+                child: Stack(
+                  fit: StackFit.loose,
+                  children: [
+                    Align(
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.all(0),
-                      bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                      child: Icon(
-                        Icons.notifications_none_rounded,
-                        size: 20,
-                        color: Theme.of(context).hintColor,
+                      child: BoxLayout(
+                        width: 35,
+                        height: 35,
+                        borderRadius: 35,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(0),
+                        bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+                        child: Icon(
+                          Icons.notifications_none_rounded,
+                          size: 20,
+                          color: Theme.of(context).hintColor,
+                        ),
                       ),
                     ),
-                  ),
-                  // const Positioned(
-                  //   bottom: 0,
-                  //   right: 0,
-                  //   child: BoxLayout(
-                  //     width: 20,
-                  //     height: 20,
-                  //     padding: EdgeInsets.all(0),
-                  //     alignment: Alignment.center,
-                  //     bgColor: DefaultTheme.RED_CALENDAR,
-                  //     child: Text(
-                  //       '100',
-                  //       style: TextStyle(
-                  //         fontSize: 8,
-                  //         color: DefaultTheme.WHITE,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                    // const Positioned(
+                    //   bottom: 0,
+                    //   right: 0,
+                    //   child: BoxLayout(
+                    //     width: 20,
+                    //     height: 20,
+                    //     padding: EdgeInsets.all(0),
+                    //     alignment: Alignment.center,
+                    //     bgColor: DefaultTheme.RED_CALENDAR,
+                    //     child: Text(
+                    //       '100',
+                    //       style: TextStyle(
+                    //         fontSize: 8,
+                    //         color: DefaultTheme.WHITE,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ),
           ),

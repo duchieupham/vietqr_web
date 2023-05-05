@@ -1,7 +1,14 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
+import 'package:VietQR/features/logout/events/log_out_event.dart';
+import 'package:VietQR/features/logout/states/log_out_state.dart';
+import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class PopupMenuWebWidget {
   const PopupMenuWebWidget._privateConsrtructor();
@@ -12,12 +19,13 @@ class PopupMenuWebWidget {
 
   Future<void> showPopupMenu(BuildContext context, String imgId) async {
     final RelativeRect position = _buttonMenuPosition(context);
+    final LogoutBloc logoutBloc = BlocProvider.of(context);
     await showMenu(
       context: context,
       position: position,
       items: [
         PopupMenuItem<int>(
-          value: 0,
+          value: 1,
           child: Row(
             children: [
               Container(
@@ -62,44 +70,83 @@ class PopupMenuWebWidget {
             ],
           ),
         ),
-        PopupMenuItem<int>(
-          value: 1,
-          child: Row(
-            children: const [
-              Icon(
-                Icons.layers_outlined,
-                size: 15,
-              ),
-              Padding(padding: EdgeInsets.only(left: 10)),
-              Text(
-                'Giao diện',
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
+        const PopupMenuItem<int>(
+          value: 0,
+          height: 10,
+          child: SizedBox(),
         ),
         PopupMenuItem<int>(
           value: 2,
-          child: Row(
-            children: const [
-              Icon(
-                Icons.logout_rounded,
-                color: DefaultTheme.RED_CALENDAR,
-                size: 15,
-              ),
-              Padding(padding: EdgeInsets.only(left: 10)),
-              Text(
-                'Đăng xuất',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: DefaultTheme.RED_CALENDAR,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              DialogWidget.instance.openPopup(
+                width: 600,
+                height: 350,
+                child: const ThemeSettingWidget(),
+              );
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.layers_outlined,
+                  size: 15,
                 ),
-              ),
-            ],
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Giao diện',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        PopupMenuItem<int>(
+            value: 3,
+            height: 40,
+            child: BlocListener<LogoutBloc, LogoutState>(
+              listener: (context, state) {
+                if (state is LogoutLoadingState) {
+                  DialogWidget.instance.openLoadingDialog();
+                }
+                if (state is LogoutSuccessfulState) {
+                  Navigator.pop(context);
+                  context.push('/login');
+                }
+                if (state is LogoutFailedState) {
+                  Navigator.pop(context);
+                  DialogWidget.instance.openMsgDialog(
+                    title: 'Không thể đăng xuất',
+                    msg: 'Vui lòng thử lại sau.',
+                  );
+                }
+              },
+              child: InkWell(
+                onTap: () {
+                  logoutBloc.add(const LogoutEventSubmit());
+                },
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.logout_rounded,
+                      color: DefaultTheme.RED_CALENDAR,
+                      size: 15,
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 10)),
+                    Text(
+                      'Đăng xuất',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: DefaultTheme.RED_CALENDAR,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )),
       ],
     );
   }
@@ -118,14 +165,4 @@ class PopupMenuWebWidget {
     );
     return position;
   }
-
-  // Future<void> resetAll(BuildContext context) async {
-  //   Provider.of<CreateQRProvider>(context, listen: false).reset();
-  //   Provider.of<CreateQRPageSelectProvider>(context, listen: false).reset();
-  //   Provider.of<BankAccountProvider>(context, listen: false).reset();
-  //   Provider.of<UserEditProvider>(context, listen: false).reset();
-  //   Provider.of<RegisterProvider>(context, listen: false).reset();
-  //   await EventBlocHelper.instance.initialEventBlocHelper();
-  //   await UserInformationHelper.instance.initialUserInformationHelper();
-  // }
 }

@@ -25,8 +25,19 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class AddBankView extends StatelessWidget {
+class AddBankView extends StatefulWidget {
   final String userId;
+
+  const AddBankView({
+    super.key,
+    required this.userId,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _AddBankView();
+}
+
+class _AddBankView extends State<AddBankView> {
   static final TextEditingController phoneController = TextEditingController();
   static final TextEditingController nationalController =
       TextEditingController();
@@ -35,12 +46,9 @@ class AddBankView extends StatelessWidget {
   static final TextEditingController nameController = TextEditingController();
   static late BankBloc bankBloc;
 
-  const AddBankView({
-    super.key,
-    required this.userId,
-  });
-
-  void initialServices(BuildContext context) {
+  @override
+  void initState() {
+    super.initState();
     Provider.of<BankTypeProvider>(context, listen: false).reset();
     bankBloc = BlocProvider.of(context);
   }
@@ -48,7 +56,6 @@ class AddBankView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    initialServices(context);
     return Scaffold(
       body: BlocListener<BankBloc, BankState>(
         listener: (context, state) {
@@ -60,12 +67,15 @@ class AddBankView extends StatelessWidget {
             Navigator.pop(context);
             if (state.isAuthenticated) {
               //add event request OTP
+              String formattedName = StringUtils.instance.removeDiacritic(
+                  StringUtils.instance
+                      .capitalFirstCharacter(nameController.text));
               bankBloc.add(
                 BankEventRequestOTP(
                   dto: BankCardRequestOTP(
                     nationalId: nationalController.text,
                     accountNumber: bankAccountController.text,
-                    accountName: nameController.text,
+                    accountName: formattedName,
                     applicationType: 'WEB_APP',
                     phoneNumber: phoneController.text,
                   ),
@@ -116,10 +126,10 @@ class AddBankView extends StatelessWidget {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
-              backgroundColor: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).hintColor,
+              backgroundColor: DefaultTheme.WHITE,
+              textColor: DefaultTheme.BLACK,
               fontSize: 15,
-              webBgColor: 'rgba(255, 255, 255, 0.5)',
+              webBgColor: 'rgba(255, 255, 255)',
               webPosition: 'center',
             );
             context.go('/');
@@ -212,10 +222,10 @@ class AddBankView extends StatelessWidget {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
-              backgroundColor: Theme.of(context).primaryColor,
-              textColor: Theme.of(context).hintColor,
+              backgroundColor: DefaultTheme.WHITE,
+              textColor: DefaultTheme.BLACK,
               fontSize: 15,
-              webBgColor: 'rgba(255, 255, 255, 0.5)',
+              webBgColor: 'rgba(255, 255, 255)',
               webPosition: 'center',
             );
             context.go('/');
@@ -418,8 +428,7 @@ class AddBankView extends StatelessWidget {
                     BorderLayout(
                       width: width,
                       height: 50,
-                      // isError: value.phoneErr,
-                      isError: false,
+                      isError: provider.phoneErr,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: TextFieldWidget(
                         width: width,

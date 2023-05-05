@@ -12,6 +12,7 @@ import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
+import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/register/blocs/register_bloc.dart';
@@ -21,12 +22,14 @@ import 'package:VietQR/features/transaction/widgets/transaction_success_widget.d
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
+import 'package:VietQR/services/providers/guide_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/providers/register_provider.dart';
 import 'package:VietQR/services/providers/theme_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
+import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
@@ -68,6 +71,10 @@ Future<void> _initialServiceHelper() async {
   if (!sharedPrefs.containsKey('TOKEN') ||
       sharedPrefs.getString('TOKEN') == null) {
     await AccountHelper.instance.initialAccountHelper();
+  }
+  if (!sharedPrefs.containsKey('GUIDE_DISABLE') ||
+      sharedPrefs.getBool('GUIDE_DISABLE') == null) {
+    await GuideHelper.instance.initialGuide();
   }
 }
 
@@ -125,9 +132,12 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/bank/create/:id',
       redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/bank/create/${state.params['id'] ?? ''}'
-              : '/login',
+          (UserInformationHelper.instance.getUserId().trim().isEmpty)
+              ? '/login'
+              : (UserInformationHelper.instance.getUserId().trim() ==
+                      state.params['id'])
+                  ? '/bank/create/${state.params['id'] ?? ''}'
+                  : '/home',
       builder: (BuildContext context, GoRouterState state) => AddBankView(
         userId: state.params['id'] ?? '',
       ),
@@ -161,7 +171,7 @@ class _VietQRApp extends State<VietQRApp> {
           final wsUrl =
               Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
           channel = WebSocketChannel.connect(wsUrl);
-          print('---channel.closeCode: ${channel.closeCode}');
+          // print('---channel.closeCode: ${channel.closeCode}');
           if (channel.closeCode == null) {
             channel.stream.listen((event) {
               var data = jsonDecode(event);
@@ -186,45 +196,6 @@ class _VietQRApp extends State<VietQRApp> {
       }
     }
   }
-
-  // void onFcmMessage() async {
-  //   // await NotificationServic.initialNotification();
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     // Xử lý push notification nếu ứng dụng đang chạy
-  //     LOG.info(
-  //         "Push notification received: ${message.notification?.title} - ${message.notification?.body}");
-  //     LOG.info("receive data: ${message.data}");
-
-  //     // NotificationService().showNotification(
-  //     //   title: message.notification?.title,
-  //     //   body: message.notification?.body,
-  //     // );
-
-  //     //process when receive data
-  //     if (message.data.isNotEmpty) {
-  //       //process success transcation
-  //       if (message.data['notificationType'] != null &&
-  //           message.data['notificationType'] ==
-  //               Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-  //         DialogWidget.instance.openWidgetDialog(
-  //           child: TransactionSuccessWidget(
-  //             dto: NotificationTransactionSuccessDTO.fromJson(message.data),
-  //           ),
-  //         );
-  //       }
-  //     }
-  //   });
-  // }
-
-  // void onFcmMessageOpenedApp() {
-  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  //     // Xử lý push notification nếu ứng dụng không đang chạy
-  //     if (message.notification != null) {
-  //       LOG.info(
-  //           "Push notification clicked: ${message.notification?.title.toString()} - ${message.notification?.body}");
-  //     }
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -252,6 +223,9 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<BankTypeBloc>(
             create: (BuildContext context) => BankTypeBloc(),
           ),
+          BlocProvider<LogoutBloc>(
+            create: (BuildContext context) => LogoutBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
@@ -261,6 +235,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => CreateQRProvider()),
             ChangeNotifierProvider(create: (context) => RegisterProvider()),
             ChangeNotifierProvider(create: (context) => BankTypeProvider()),
+            ChangeNotifierProvider(create: (context) => GuideProvider()),
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
           ],

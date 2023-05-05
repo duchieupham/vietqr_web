@@ -63,6 +63,7 @@ dependencies:
   web_socket_channel: ^2.4.0
   audioplayers: ^4.0.1
   fluttertoast: ^8.2.1
+  clipboard: ^0.1.3
 
 dev_dependencies:
   flutter_test:
@@ -91,9 +92,9 @@ flutter:
       - assets/rives/
       - assets/sounds/prefix_transaction.mp3
       - assets/images/ic-pop.png
-      - assets/images/ic-light-theme.png
-      - assets/images/ic-dark-theme.png
-      - assets/images/ic-system-theme.png
+      - assets/images/ic-light-web.png
+      - assets/images/ic-dark-web.png
+      - assets/images/ic-auto-theme-web.png
       - assets/images/ic-checked.png
       - assets/images/ic-uncheck.png
       - assets/images/ic-dashboard.png
@@ -130,6 +131,11 @@ flutter:
       - assets/images/ic-qr-payment-unselect.png
       - assets/images/ic-printer.png
       - assets/images/bg-home-web.png
+      - assets/images/ic-guide1.png
+      - assets/images/ic-guide2.png
+      - assets/images/ic-guide3.png
+      - assets/images/ic-guide4.png
+      - assets/images/ic-guide5.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

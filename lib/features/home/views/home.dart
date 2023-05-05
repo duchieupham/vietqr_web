@@ -5,6 +5,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -14,6 +15,7 @@ import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
+import 'package:VietQR/features/bank/widgets/detail_bank_widget.dart';
 import 'package:VietQR/features/home/frames/home_frame.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
@@ -28,8 +30,10 @@ import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -70,7 +74,7 @@ class _HomeScreen extends State<HomeScreen> {
           final wsUrl =
               Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
           channel = WebSocketChannel.connect(wsUrl);
-          print('---channel.closeCode: ${channel.closeCode}');
+          // print('---channel.closeCode: ${channel.closeCode}');
           if (channel.closeCode == null) {
             channel.stream.listen((event) {
               var data = jsonDecode(event);
@@ -180,9 +184,9 @@ class _HomeScreen extends State<HomeScreen> {
                                         TransactionInputDTO
                                             transactionInputDTO =
                                             TransactionInputDTO(
-                                                bankId: bankId,
-                                                offset: prevPage);
-
+                                          bankId: bankId,
+                                          offset: prevPage,
+                                        );
                                         _transactionBloc.add(
                                             TransactionEventFetch(
                                                 dto: transactionInputDTO));
@@ -278,7 +282,12 @@ class _HomeScreen extends State<HomeScreen> {
                                   height: 40,
                                   icon: Icons.print_rounded,
                                   title: '',
-                                  function: () {},
+                                  function: () {
+                                    DialogWidget.instance.openMsgDialog(
+                                      title: 'Tính năng đang bảo trì',
+                                      msg: 'Vui lòng thử lại sau',
+                                    );
+                                  },
                                   bgColor: Theme.of(context)
                                       .cardColor
                                       .withOpacity(0.3),
@@ -293,7 +302,12 @@ class _HomeScreen extends State<HomeScreen> {
                                   height: 40,
                                   icon: Icons.photo_rounded,
                                   title: '',
-                                  function: () {},
+                                  function: () {
+                                    DialogWidget.instance.openMsgDialog(
+                                      title: 'Tính năng đang bảo trì',
+                                      msg: 'Vui lòng thử lại sau',
+                                    );
+                                  },
                                   bgColor: Theme.of(context)
                                       .cardColor
                                       .withOpacity(0.3),
@@ -308,7 +322,24 @@ class _HomeScreen extends State<HomeScreen> {
                                   height: 40,
                                   icon: Icons.copy_rounded,
                                   title: '',
-                                  function: () {},
+                                  function: () async {
+                                    await FlutterClipboard.copy(
+                                            ShareUtils.instance.getTextSharing(
+                                                provider.qrGeneratedDTO))
+                                        .then(
+                                      (value) => Fluttertoast.showToast(
+                                        msg: 'Đã sao chép',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: DefaultTheme.WHITE,
+                                        textColor: DefaultTheme.BLACK,
+                                        fontSize: 15,
+                                        webBgColor: 'rgba(255, 255, 255)',
+                                        webPosition: 'center',
+                                      ),
+                                    );
+                                  },
                                   bgColor: Theme.of(context)
                                       .cardColor
                                       .withOpacity(0.3),
@@ -338,6 +369,31 @@ class _HomeScreen extends State<HomeScreen> {
                           ),
                         ),
                       ),
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      UnconstrainedBox(
+                        child: Tooltip(
+                          message: 'Chi tiết TK ngân hàng',
+                          child: ButtonIconWidget(
+                            width: 350,
+                            height: 40,
+                            icon: Icons.info_outline_rounded,
+                            title: 'Chi tiết',
+                            function: () {
+                              DialogWidget.instance.openPopup(
+                                child: BankDetailWidget(
+                                  accountBankDetailDTO: provider.bankDetailDTO,
+                                  qrGeneratedDTO: provider.qrGeneratedDTO,
+                                ),
+                                width: 750,
+                                height: 450,
+                              );
+                            },
+                            bgColor:
+                                Theme.of(context).canvasColor.withOpacity(0.3),
+                            textColor: Theme.of(context).hintColor,
+                          ),
+                        ),
+                      ),
                     ],
                   );
           },
@@ -349,14 +405,16 @@ class _HomeScreen extends State<HomeScreen> {
               if (bankAccounts.isEmpty) {
                 bankAccounts.addAll(state.list);
                 cardColors.addAll(state.colors);
-                TransactionInputDTO transactionInputDTO = TransactionInputDTO(
-                  bankId: bankAccounts.first.id,
-                  offset: 0,
-                );
-                _bankBloc
-                    .add(BankEventGetDetail(bankId: bankAccounts.first.id));
-                _transactionBloc
-                    .add(TransactionEventGetList(dto: transactionInputDTO));
+                if (state.list.isNotEmpty) {
+                  TransactionInputDTO transactionInputDTO = TransactionInputDTO(
+                    bankId: bankAccounts.first.id,
+                    offset: 0,
+                  );
+                  _bankBloc
+                      .add(BankEventGetDetail(bankId: bankAccounts.first.id));
+                  _transactionBloc
+                      .add(TransactionEventGetList(dto: transactionInputDTO));
+                }
               }
             }
             if (state is BankDetailSuccessState) {
@@ -401,147 +459,209 @@ class _HomeScreen extends State<HomeScreen> {
                 const Padding(padding: EdgeInsets.only(top: 10)),
                 Expanded(child: Consumer<MenuCardProvider>(
                   builder: (context, provider, child) {
-                    return (bankAccounts.isEmpty)
-                        ? const SizedBox()
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: bankAccounts.length,
-                            itemBuilder: (context, index) {
-                              ScrollController scrollController =
-                                  ScrollController();
-                              scrollController.addListener(() {
-                                if (scrollController.hasClients) {
-                                  scrollController.jumpTo(0);
-                                }
-                              });
-                              return InkWell(
-                                onTap: () {
-                                  provider.updateIndex(index);
-                                  _bankBloc.add(BankEventGetDetail(
-                                      bankId: bankAccounts[index].id));
-                                  Provider.of<TransactionListProvider>(context,
-                                          listen: false)
-                                      .reset();
-                                  TransactionInputDTO transactionInputDTO =
-                                      TransactionInputDTO(
-                                    bankId: bankAccounts[index].id,
-                                    offset: 0,
-                                  );
-                                  _transactionBloc.add(TransactionEventGetList(
-                                      dto: transactionInputDTO));
-                                  provider.updateShowMenu(!provider.showMenu);
-                                },
-                                child: AnimatedContainer(
-                                  width: 300,
-                                  height: (provider.index == index) ? 150 : 80,
-                                  duration: const Duration(milliseconds: 100),
-                                  curve: Curves.easeInOut,
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 10,
+                    return (bankAccounts.isEmpty &&
+                            (state is BankGetListSuccessState ||
+                                state is BankDetailSuccessState))
+                        ? SizedBox(
+                            width: width - 60,
+                            // borderRadius: 15,
+                            // alignment: Alignment.center,
+                            // bgColor: DefaultTheme.TRANSPARENT,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  'assets/images/ic-card.png',
+                                  width: width * 0.4,
+                                  height: 150,
+                                ),
+                                const Text(
+                                  'Chưa có tài khoản ngân hàng được thêm.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 13),
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
+                                UnconstrainedBox(
+                                  child: Tooltip(
+                                    message: 'Thêm TK ngân hàng',
+                                    child: ButtonIconWidget(
+                                      width: 300,
+                                      height: 40,
+                                      icon: Icons.add_rounded,
+                                      title: 'Thêm TK ngân hàng',
+                                      function: () {
+                                        String userId = UserInformationHelper
+                                            .instance
+                                            .getUserId();
+                                        context.go('/bank/create/$userId');
+                                      },
+                                      bgColor: Theme.of(context)
+                                          .canvasColor
+                                          .withOpacity(0.3),
+                                      textColor: DefaultTheme.GREEN,
+                                    ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: (provider.index == index)
-                                        ? cardColors[index]
-                                        : cardColors[index].withOpacity(0.7),
-                                  ),
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    key: Key('card$index'),
-                                    controller: scrollController,
-                                    children: [
-                                      SizedBox(
-                                        width: 300,
-                                        height: 35,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 60,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: DefaultTheme.WHITE,
-                                                image: DecorationImage(
-                                                  image: ImageUtils.instance
-                                                      .getImageNetWork(
-                                                    bankAccounts[index].imgId,
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
+                              ],
+                            ),
+                          )
+                        : (bankAccounts.isEmpty)
+                            ? const SizedBox()
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: bankAccounts.length,
+                                itemBuilder: (context, index) {
+                                  ScrollController scrollController =
+                                      ScrollController();
+                                  scrollController.addListener(() {
+                                    if (scrollController.hasClients) {
+                                      scrollController.jumpTo(0);
+                                    }
+                                  });
+                                  return InkWell(
+                                    onTap: () {
+                                      provider.updateIndex(index);
+                                      _bankBloc.add(BankEventGetDetail(
+                                          bankId: bankAccounts[index].id));
+                                      Provider.of<TransactionListProvider>(
+                                              context,
+                                              listen: false)
+                                          .reset();
+                                      TransactionInputDTO transactionInputDTO =
+                                          TransactionInputDTO(
+                                        bankId: bankAccounts[index].id,
+                                        offset: 0,
+                                      );
+                                      _transactionBloc.add(
+                                          TransactionEventGetList(
+                                              dto: transactionInputDTO));
+                                      provider
+                                          .updateShowMenu(!provider.showMenu);
+                                    },
+                                    child: AnimatedContainer(
+                                      width: 300,
+                                      height:
+                                          (provider.index == index) ? 150 : 80,
+                                      duration:
+                                          const Duration(milliseconds: 100),
+                                      curve: Curves.easeInOut,
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: (provider.index == index)
+                                            ? cardColors[index]
+                                            : cardColors[index]
+                                                .withOpacity(0.7),
+                                      ),
+                                      child: ListView(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        key: Key('card$index'),
+                                        controller: scrollController,
+                                        children: [
+                                          SizedBox(
+                                            width: 300,
+                                            height: 35,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: DefaultTheme.WHITE,
+                                                    image: DecorationImage(
+                                                      image: ImageUtils.instance
+                                                          .getImageNetWork(
+                                                        bankAccounts[index]
+                                                            .imgId,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
+                                                const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 10)),
+                                                Expanded(
+                                                  child: Text(
+                                                    '${bankAccounts[index].bankCode} - ${bankAccounts[index].bankAccount}\n${bankAccounts[index].bankName}',
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                      color: DefaultTheme.WHITE,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
+                                          ),
+                                          if (provider.index == index) ...[
                                             const Padding(
                                                 padding:
-                                                    EdgeInsets.only(left: 10)),
-                                            Expanded(
-                                              child: Text(
-                                                '${bankAccounts[index].bankCode} - ${bankAccounts[index].bankAccount}\n${bankAccounts[index].bankName}',
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  color: DefaultTheme.WHITE,
-                                                ),
+                                                    EdgeInsets.only(top: 30)),
+                                            SizedBox(
+                                              width: width,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          bankAccounts[index]
+                                                              .userBankName
+                                                              .toUpperCase(),
+                                                          style:
+                                                              const TextStyle(
+                                                            color: DefaultTheme
+                                                                .WHITE,
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          (bankAccounts[index]
+                                                                  .isAuthenticated)
+                                                              ? 'Trạng thái: Đã liên kết'
+                                                              : 'Trạng thái: Chưa liên kết',
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: DefaultTheme
+                                                                .WHITE,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
-                                        ),
+                                        ],
                                       ),
-                                      if (provider.index == index) ...[
-                                        const Padding(
-                                            padding: EdgeInsets.only(top: 30)),
-                                        SizedBox(
-                                          width: width,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      bankAccounts[index]
-                                                          .userBankName
-                                                          .toUpperCase(),
-                                                      style: const TextStyle(
-                                                        color:
-                                                            DefaultTheme.WHITE,
-                                                        fontSize: 15,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      (bankAccounts[index]
-                                                              .isAuthenticated)
-                                                          ? 'Trạng thái: Đã liên kết'
-                                                          : 'Trạng thái: Chưa liên kết',
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                        color:
-                                                            DefaultTheme.WHITE,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          );
                   },
                 )),
               ],
