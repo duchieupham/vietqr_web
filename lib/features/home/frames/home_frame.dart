@@ -95,9 +95,8 @@ class HomeFrame extends StatelessWidget {
                             width: width,
                             height: height,
                             color: DefaultTheme.BLACK.withOpacity(0.9),
-                            child: ListView(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              shrinkWrap: true,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 // SizedBox(
                                 //   width: 500,
@@ -110,12 +109,11 @@ class HomeFrame extends StatelessWidget {
                                 //     ),
                                 //   ),
                                 // ),
-                                UnconstrainedBox(
-                                  child: Image.asset(
-                                    guideAssets[provider.index],
-                                    width: 630,
-                                  ),
+                                Image.asset(
+                                  guideAssets[provider.index],
+                                  width: 630,
                                 ),
+
                                 SizedBox(
                                   width: width,
                                   child: Row(
