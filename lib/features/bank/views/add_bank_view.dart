@@ -442,7 +442,7 @@ class _AddBankView extends State<AddBankView> {
                           width: width,
                           isObscureText: false,
                           maxLines: 1,
-                          hintText: 'CMT/CCCD \u002A',
+                          hintText: 'CCCD/Mã số thuế \u002A',
                           controller: nationalController,
                           inputType: TextInputType.number,
                           keyboardAction: TextInputAction.next,
@@ -457,7 +457,7 @@ class _AddBankView extends State<AddBankView> {
                       Visibility(
                         visible: provider.nationalErr,
                         child: const Text(
-                          'CCCD/CMT không hợp lệ',
+                          'CCCD/Mã số thuế không hợp lệ',
                           style: TextStyle(
                             fontSize: 12,
                             color: DefaultTheme.RED_TEXT,
@@ -521,8 +521,7 @@ class _AddBankView extends State<AddBankView> {
                                           bankAccountController.text)),
                                 );
                                 provider.updateNameErr(
-                                  !StringUtils.instance
-                                      .isValidFullName(nameController.text),
+                                  nameController.text.isEmpty,
                                 );
                                 if (provider.isValidUnauthenticateForm()) {
                                   String bankTypeId =
@@ -561,8 +560,7 @@ class _AddBankView extends State<AddBankView> {
                                           bankAccountController.text)),
                                 );
                                 provider.updateNameErr(
-                                  !StringUtils.instance
-                                      .isValidFullName(nameController.text),
+                                  nameController.text.isEmpty,
                                 );
                                 provider.updateNationalErr(
                                     !(nationalController.text.length >= 9 &&
