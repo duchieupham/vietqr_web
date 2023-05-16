@@ -136,6 +136,7 @@ flutter:
       - assets/images/ic-guide3.png
       - assets/images/ic-guide4.png
       - assets/images/ic-guide5.png
+      - assets/images/ads-1.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -257,44 +257,17 @@ class _AddBankView extends State<AddBankView> {
             widget1: ListView(
               shrinkWrap: true,
               children: [
-                Consumer<BankTypeProvider>(
-                  builder: (context, provider, child) {
-                    return InkWell(
-                      onTap: () {
-                        DialogWidget.instance.openPopup(
-                          child: const SelectBankTypeWidget(),
-                          width: 500,
-                          height: 500,
-                        );
-                      },
-                      child: (provider.bankType.id.isEmpty)
-                          ? BoxLayout(
-                              width: width,
-                              height: 50,
-                              borderRadius: 5,
-                              child: Row(
-                                children: const [
-                                  Text(
-                                    'Chọn ngân hàng thụ hưởng',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.arrow_drop_down_circle_outlined,
-                                    size: 12,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : _buildSelectedBankType(
-                              context,
-                              width,
-                              provider.bankType,
-                            ),
-                    );
-                  },
+                //image
+                Container(
+                  width: 300,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    image: DecorationImage(
+                      image: Image.asset('assets/images/ads-1.jpg').image,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
                 const Padding(padding: EdgeInsets.only(top: 30)),
                 const Text(
@@ -322,7 +295,7 @@ class _AddBankView extends State<AddBankView> {
                 ),
                 const Padding(padding: EdgeInsets.only(top: 5)),
                 const Text(
-                  '-   Khi thực hiện liên kết, CMT/CCCD và Số điện thoại xác thực là bắt buộc.',
+                  '-   Khi thực hiện liên kết, CCCD/Mã số thuế và Số điện thoại xác thực là bắt buộc.',
                   style: TextStyle(
                     fontSize: 13,
                     color: DefaultTheme.GREY_TEXT,
@@ -335,6 +308,46 @@ class _AddBankView extends State<AddBankView> {
                 return ListView(
                   shrinkWrap: true,
                   children: [
+                    Consumer<BankTypeProvider>(
+                      builder: (context, provider, child) {
+                        return InkWell(
+                          onTap: () {
+                            DialogWidget.instance.openPopup(
+                              child: const SelectBankTypeWidget(),
+                              width: 500,
+                              height: 500,
+                            );
+                          },
+                          child: (provider.bankType.id.isEmpty)
+                              ? BoxLayout(
+                                  width: width,
+                                  height: 50,
+                                  borderRadius: 5,
+                                  child: Row(
+                                    children: const [
+                                      Text(
+                                        'Chọn ngân hàng thụ hưởng',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Icon(
+                                        Icons.arrow_drop_down_circle_outlined,
+                                        size: 12,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : _buildSelectedBankType(
+                                  context,
+                                  width,
+                                  provider.bankType,
+                                ),
+                        );
+                      },
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 30)),
                     const Text(
                       'Thông tin tài khoản',
                       style: TextStyle(
