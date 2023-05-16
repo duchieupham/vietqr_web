@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
@@ -101,12 +102,20 @@ class _Login extends State<Login> {
           title: 'Đăng nhập không thành công',
           msg: 'Vui lòng nhập số điện thoại để đăng nhập.');
     } else {
+      String phoneNo = '';
+      String email = '';
+      if (StringUtils.instance.isNumeric(phoneNoController.text.trim())) {
+        phoneNo = phoneNoController.text.trim();
+      } else {
+        email = phoneNoController.text.trim();
+      }
       DialogWidget.instance.openPINDialog(
           title: 'Nhập Mật khẩu',
           onDone: (pin) {
             Navigator.of(context).pop();
             AccountLoginDTO dto = AccountLoginDTO(
-              phoneNo: phoneNoController.text,
+              phoneNo: phoneNo,
+              email: email,
               password: EncryptUtils.instance.encrypted(
                 phoneNoController.text,
                 pin,
@@ -141,9 +150,9 @@ class _Login extends State<Login> {
             width: width,
             isObscureText: false,
             autoFocus: true,
-            hintText: 'Số điện thoại',
+            hintText: 'Email hoặc Số điện thoại',
             controller: phoneNoController,
-            inputType: TextInputType.number,
+            inputType: TextInputType.text,
             keyboardAction: TextInputAction.next,
             onChange: (vavlue) {},
           ),

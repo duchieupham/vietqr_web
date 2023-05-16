@@ -278,6 +278,7 @@ class RegisterView extends StatelessWidget {
                     .isValidValidation()) {
                   AccountLoginDTO dto = AccountLoginDTO(
                     phoneNo: _phoneNoController.text,
+                    email: '',
                     password: EncryptUtils.instance.encrypted(
                       _phoneNoController.text,
                       _passwordController.text,
