@@ -750,12 +750,12 @@ class _HomeScreen extends State<HomeScreen> {
                         (int index) => DataRow(
                           cells: [
                             DataCell(
-                              Text(
+                              SelectableText(
                                 (index + 1).toString(),
                               ),
                             ),
                             DataCell(
-                              Text(
+                              SelectableText(
                                 '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -769,19 +769,19 @@ class _HomeScreen extends State<HomeScreen> {
                               ),
                             ),
                             DataCell(
-                              Text(
+                              SelectableText(
                                 TransactionUtils.instance.getStatusString(
                                     transactions[index].status),
                               ),
                             ),
                             DataCell(
-                              Text(
+                              SelectableText(
                                 TimeUtils.instance.formatDateFromInt(
                                     transactions[index].time, false),
                               ),
                             ),
                             DataCell(
-                              Text(
+                              SelectableText(
                                 transactions[index].content,
                               ),
                             ),
@@ -797,7 +797,7 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   Widget _buildLabel(String text) {
-    return Text(
+    return SelectableText(
       text,
       style: const TextStyle(
         fontWeight: FontWeight.bold,

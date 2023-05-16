@@ -225,48 +225,6 @@ class VietQRWidget extends StatelessWidget {
               ],
             ),
           );
-    // return Container(
-    //   width: width,
-    //   alignment: Alignment.center,
-    //   decoration: BoxDecoration(
-    //     color: Theme.of(context).cardColor,
-    //     borderRadius: BorderRadius.circular(5),
-    //   ),
-    //   child: (isCopy != null && isCopy!)
-    //       ? Stack(
-    //           fit: StackFit.expand,
-    //           children: [
-    //             _buildComponent(context),
-    //             Positioned(
-    //               right: 10,
-    //               top: 10,
-    //               child: InkWell(
-    //                 onTap: () async {
-    //                   await FlutterClipboard.copy(getTextSharing()).then(
-    //                     (value) => Fluttertoast.showToast(
-    //                       msg: 'Đã sao chép',
-    //                       toastLength: Toast.LENGTH_SHORT,
-    //                       gravity: ToastGravity.CENTER,
-    //                       timeInSecForIosWeb: 1,
-    //                       backgroundColor: Theme.of(context).primaryColor,
-    //                       textColor: Theme.of(context).hintColor,
-    //                       fontSize: 15,
-    //                       webBgColor: 'rgba(255, 255, 255)',
-    //                       webPosition: 'center',
-    //                     ),
-    //                   );
-    //                 },
-    //                 child: const Icon(
-    //                   Icons.copy_outlined,
-    //                   color: DefaultTheme.GREY_TOP_TAB_BAR,
-    //                   size: 20,
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         )
-    //       : _buildComponent(context),
-    // );
   }
 
   Widget _buildSection({
@@ -291,7 +249,7 @@ class VietQRWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Text(
+              child: SelectableText(
                 description,
                 style: TextStyle(
                   fontSize: 15,
