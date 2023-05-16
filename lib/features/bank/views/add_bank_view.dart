@@ -415,8 +415,7 @@ class _AddBankView extends State<AddBankView> {
                         keyboardAction: TextInputAction.next,
                         onChange: (vavlue) {
                           provider.updateNameErr(
-                            !StringUtils.instance
-                                .isValidFullName(nameController.text),
+                            nameController.text.isEmpty,
                           );
                         },
                       ),
