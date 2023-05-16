@@ -1,6 +1,7 @@
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
+import 'package:VietQR/models/bank_name_information_dto.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -152,3 +153,18 @@ class BankInsertFailedState extends BankState {
   @override
   List<Object?> get props => [message];
 }
+
+class BankSearchingNameState extends BankState {}
+
+class BankSearchNameSuccessState extends BankState {
+  final BankNameInformationDTO dto;
+
+  const BankSearchNameSuccessState({
+    required this.dto,
+  });
+
+  @override
+  List<Object?> get props => [dto];
+}
+
+class BankSearchNameFailedState extends BankState {}

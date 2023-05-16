@@ -9,6 +9,8 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
+import 'package:VietQR/models/bank_name_information_dto.dart';
+import 'package:VietQR/models/bank_name_search_dto.dart';
 import 'package:VietQR/models/confirm_otp_bank_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 
@@ -187,6 +189,29 @@ class BankRepository {
     } catch (e) {
       LOG.error(e.toString());
       result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+    }
+    return result;
+  }
+
+  Future<BankNameInformationDTO> searchBankName(BankNameSearchDTO dto) async {
+    BankNameInformationDTO result = const BankNameInformationDTO(
+      accountName: '',
+      customerName: '',
+      customerShortName: '',
+    );
+    try {
+      final String url =
+          '${EnvConfig.getUrl()}bank/api/account/info/${dto.bankCode}/${dto.accountNumber}/${dto.accountType}/${dto.transferType}';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        result = BankNameInformationDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error(e.toString());
     }
     return result;
   }

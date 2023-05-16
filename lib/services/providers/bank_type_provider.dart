@@ -8,6 +8,7 @@ class BankTypeProvider with ChangeNotifier {
     bankName: '',
     imageId: '',
     status: 0,
+    caiValue: '',
   );
 
   bool _isNameErr = false;
@@ -72,6 +73,7 @@ class BankTypeProvider with ChangeNotifier {
       bankName: '',
       imageId: '',
       status: 0,
+      caiValue: '',
     );
     _isNameErr = false;
     _isBankAccountErr = false;

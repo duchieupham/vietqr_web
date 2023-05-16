@@ -3,6 +3,7 @@ class BankTypeDTO {
   final String bankCode;
   final String bankName;
   final String imageId;
+  final String caiValue;
   final int status;
 
   const BankTypeDTO({
@@ -10,6 +11,7 @@ class BankTypeDTO {
     required this.bankCode,
     required this.bankName,
     required this.imageId,
+    required this.caiValue,
     required this.status,
   });
 
@@ -19,6 +21,7 @@ class BankTypeDTO {
       bankCode: json['bankCode'] ?? '',
       bankName: json['bankName'] ?? '',
       imageId: json['imageId'] ?? '',
+      caiValue: json['caiValue'] ?? '',
       status: json['status'] ?? 0,
     );
   }
@@ -29,6 +32,7 @@ class BankTypeDTO {
     data['bankCode'] = bankCode;
     data['bankName'] = bankName;
     data['imageId'] = imageId;
+    data['caiValue'] = caiValue;
     data['status'] = status;
     return data;
   }

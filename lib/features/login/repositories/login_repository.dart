@@ -18,8 +18,6 @@ class LoginRepository {
 
   Future<bool> login(AccountLoginDTO dto) async {
     bool result = false;
-    print('email: ${dto.email}');
-    print('phoneNo: ${dto.phoneNo}');
     try {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       String url = '${EnvConfig.getBaseUrl()}accounts';

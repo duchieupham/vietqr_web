@@ -21,6 +21,7 @@ class TextFieldWidget extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final TextAlign? textAlign;
+  final Function(PointerDownEvent)? onTapOutside;
 
   const TextFieldWidget({
     Key? key,
@@ -42,6 +43,7 @@ class TextFieldWidget extends StatelessWidget {
     this.onSubmitted,
     this.maxLength,
     this.textAlign,
+    this.onTapOutside,
   }) : super(key: key);
 
   @override
@@ -70,6 +72,7 @@ class TextFieldWidget extends StatelessWidget {
                     textAlign:
                         (textAlign != null) ? textAlign! : TextAlign.left,
                     onEditingComplete: onEdittingComplete,
+                    onTapOutside: onTapOutside,
                     onSubmitted: onSubmitted,
                     maxLength: maxLength,
                     autofocus: (autoFocus != null) ? autoFocus! : false,
@@ -114,6 +117,7 @@ class TextFieldWidget extends StatelessWidget {
               textInputAction: keyboardAction,
               autofocus: false,
               focusNode: focusNode,
+              onTapOutside: onTapOutside,
               decoration: InputDecoration(
                 hintText: hintText,
                 counterText: '',

@@ -1,6 +1,7 @@
 import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
+import 'package:VietQR/models/bank_name_search_dto.dart';
 import 'package:VietQR/models/confirm_otp_bank_dto.dart';
 import 'package:equatable/equatable.dart';
 
@@ -75,6 +76,15 @@ class BankEventConfirmOTP extends BankEvent {
   final ConfirmOTPBankDTO dto;
 
   const BankEventConfirmOTP({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}
+
+class BankEventSearchName extends BankEvent {
+  final BankNameSearchDTO dto;
+
+  const BankEventSearchName({required this.dto});
 
   @override
   List<Object?> get props => [dto];

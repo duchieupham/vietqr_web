@@ -11,6 +11,7 @@ import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/main.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_name_information_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,7 @@ class BankBloc extends Bloc<BankEvent, BankState> {
     on<BankEventRequestOTP>(_requestOTP);
     on<BankEventConfirmOTP>(_confirmOTP);
     on<BankEventInsert>(_insertBank);
+    on<BankEventSearchName>(_searchBankName);
   }
 }
 
@@ -214,5 +216,23 @@ void _checkExistedBank(BankEvent event, Emitter emit) async {
   } catch (e) {
     LOG.error(e.toString());
     emit(BankCheckFailedState());
+  }
+}
+
+void _searchBankName(BankEvent event, Emitter emit) async {
+  try {
+    if (event is BankEventSearchName) {
+      emit(BankSearchingNameState());
+      BankNameInformationDTO dto =
+          await _bankRepository.searchBankName(event.dto);
+      if (dto.accountName.trim().isNotEmpty) {
+        emit(BankSearchNameSuccessState(dto: dto));
+      } else {
+        emit(BankSearchNameFailedState());
+      }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    emit(BankSearchNameFailedState());
   }
 }
