@@ -288,8 +288,33 @@ class CreateQR extends StatelessWidget {
                         maxLength: 50,
                         controller: contentController,
                         inputType: TextInputType.number,
-                        keyboardAction: TextInputAction.next,
+                        keyboardAction: TextInputAction.done,
                         onChange: (vavlue) {},
+                        onSubmitted: (value) {
+                          if (amountController.text.isNotEmpty &&
+                              StringUtils.instance
+                                  .isNumeric(amountController.text)) {
+                            QRCreateDTO qrCreateDTO = QRCreateDTO(
+                              bankId: bankDetailDTO.id,
+                              amount: amountController.text,
+                              content: StringUtils.instance
+                                  .removeDiacritic(contentController.text),
+                              branchId:
+                                  (bankDetailDTO.businessDetails.isNotEmpty)
+                                      ? bankDetailDTO.businessDetails.first
+                                          .branchDetails.first.branchId
+                                      : '',
+                              businessId:
+                                  (bankDetailDTO.businessDetails.isNotEmpty)
+                                      ? bankDetailDTO
+                                          .businessDetails.first.businessId
+                                      : '',
+                              userId:
+                                  UserInformationHelper.instance.getUserId(),
+                            );
+                            _qrBloc.add(QREventGenerate(dto: qrCreateDTO));
+                          }
+                        },
                       ),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 30)),
@@ -483,6 +508,7 @@ class CreateQR extends StatelessWidget {
           );
           // return onTap!(text);
         },
+        focusNode: null,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(

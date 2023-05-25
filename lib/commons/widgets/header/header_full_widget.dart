@@ -141,23 +141,6 @@ class HeaderFullWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // const Padding(padding: EdgeInsets.only(right: 10)),
-            // Tooltip(
-            //   message: 'Tạo doanh nghiệp',
-            //   child: BoxLayout(
-            //     width: 35,
-            //     height: 35,
-            //     borderRadius: 35,
-            //     alignment: Alignment.center,
-            //     padding: const EdgeInsets.all(0),
-            //     bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-            //     child: Icon(
-            //       Icons.business_rounded,
-            //       size: 20,
-            //       color: Theme.of(context).hintColor,
-            //     ),
-            //   ),
-            // ),
             const Padding(padding: EdgeInsets.only(right: 30)),
           ],
           Tooltip(
@@ -191,24 +174,6 @@ class HeaderFullWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // const Positioned(
-                    //   bottom: 0,
-                    //   right: 0,
-                    //   child: BoxLayout(
-                    //     width: 20,
-                    //     height: 20,
-                    //     padding: EdgeInsets.all(0),
-                    //     alignment: Alignment.center,
-                    //     bgColor: DefaultTheme.RED_CALENDAR,
-                    //     child: Text(
-                    //       '100',
-                    //       style: TextStyle(
-                    //         fontSize: 8,
-                    //         color: DefaultTheme.WHITE,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -218,16 +183,6 @@ class HeaderFullWidget extends StatelessWidget {
           //shortcut
           _buildAvatar(context, imgId, 35),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 15,
-        fontWeight: FontWeight.w500,
       ),
     );
   }

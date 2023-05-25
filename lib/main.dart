@@ -17,6 +17,7 @@ import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
+import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
@@ -225,6 +226,9 @@ class _VietQRApp extends State<VietQRApp> {
           ),
           BlocProvider<LogoutBloc>(
             create: (BuildContext context) => LogoutBloc(),
+          ),
+          BlocProvider<TokenBloc>(
+            create: (BuildContext context) => TokenBloc(),
           ),
         ],
         child: MultiProvider(
