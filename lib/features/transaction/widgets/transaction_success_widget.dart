@@ -1,20 +1,20 @@
-import 'dart:convert';
-import 'dart:typed_data';
+// import 'dart:convert';
+// import 'dart:typed_data';
 
 import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
-import 'package:VietQR/commons/utils/log.dart';
+// import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rive/rive.dart' as rive;
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 
 class TransactionSuccessWidget extends StatefulWidget {
   final NotificationTransactionSuccessDTO dto;
@@ -30,7 +30,7 @@ class TransactionSuccessWidget extends StatefulWidget {
 
 class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
   //animation
-  final AudioPlayer audioPlayer = AudioPlayer();
+  // final AudioPlayer audioPlayer = AudioPlayer();
   late final rive.StateMachineController _riveController;
   late rive.SMITrigger _action;
   bool _isRiveInit = false;
@@ -39,16 +39,16 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
   void initState() {
     super.initState();
     // print('---audiolink: ${widget.dto.audioLink}');
-    if (widget.dto.audioLink.isNotEmpty) {
-      Future.delayed(const Duration(milliseconds: 0), () async {
-        await playMusicFromUrl(widget.dto.audioLink);
-        // await playMusicFromUrl(
-        //     'https://cdn.jsdelivr.net/gh/duchieupham/vietqr_sound@main/prefix_transaction.mp3');
-        // await Future.delayed(const Duration(milliseconds: 2000), () async {
+    // if (widget.dto.audioLink.isNotEmpty) {
+    //   Future.delayed(const Duration(milliseconds: 0), () async {
+    //     await playMusicFromUrl(widget.dto.audioLink);
+    //     // await playMusicFromUrl(
+    //     //     'https://cdn.jsdelivr.net/gh/duchieupham/vietqr_sound@main/prefix_transaction.mp3');
+    //     // await Future.delayed(const Duration(milliseconds: 2000), () async {
 
-        // });
-      });
-    }
+    //     // });
+    //   });
+    // }
   }
 
   @override
@@ -59,13 +59,13 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
     super.dispose();
   }
 
-  Future<void> playMusicFromUrl(String url) async {
-    try {
-      await audioPlayer.play(UrlSource(url));
-    } catch (e) {
-      LOG.error('playMusicFromUrl: ${e.toString()}');
-    }
-  }
+  // Future<void> playMusicFromUrl(String url) async {
+  //   try {
+  //     await audioPlayer.play(UrlSource(url));
+  //   } catch (e) {
+  //     LOG.error('playMusicFromUrl: ${e.toString()}');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
