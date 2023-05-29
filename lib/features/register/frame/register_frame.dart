@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:flutter/material.dart';
 
@@ -30,17 +31,16 @@ class RegisterFrame extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: SingleChildScrollView(
-        child: (PlatformUtils.instance.resizeWhen(width, 750))
-            ? BoxLayout(
-                width: 400,
-                height: 450,
-                borderRadius: 5,
-                enableShadow: true,
-                child: webChildren,
-              )
-            : const SizedBox(),
-      ),
+      child: (PlatformUtils.instance.resizeWhen(width, 600))
+          ? SingleChildScrollView(
+              child: BoxLayout(
+              width: 400,
+              height: 450,
+              borderRadius: 5,
+              enableShadow: true,
+              child: webChildren,
+            ))
+          : const WebMobileBlankWidget(),
     );
   }
 }
