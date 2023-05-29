@@ -223,12 +223,12 @@ class RegisterView extends StatelessWidget {
               ),
             ),
           ),
-          // (PlatformUtils.instance.resizeWhen(width, 600))
-          //     ? Padding(
-          //         padding: const EdgeInsets.only(bottom: 20, top: 10),
-          //         child: _buildButtonSubmit(context, width),
-          //       )
-          //     : const SizedBox(),
+          (PlatformUtils.instance.resizeWhen(width, 600))
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 20, top: 10),
+                  child: _buildButtonSubmit(context, width),
+                )
+              : const SizedBox(),
         ],
       ),
     );
