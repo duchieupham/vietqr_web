@@ -93,13 +93,17 @@ class _HomeScreen extends State<HomeScreen> {
                 DialogWidget.instance.openWidgetDialog(
                   child: TransactionSuccessWidget(
                     onTapClose: () {
-                      _transactionBloc.add(TransactionEventGetList(
+                      _transactionBloc.add(
+                        TransactionEventGetList(
                           dto: TransactionInputDTO(
-                              bankId: Provider.of<MenuCardProvider>(context,
-                                      listen: false)
-                                  .bankDetailDTO
-                                  .id,
-                              offset: currentPage)));
+                            bankId: Provider.of<MenuCardProvider>(context,
+                                    listen: false)
+                                .bankDetailDTO
+                                .id,
+                            offset: currentPage,
+                          ),
+                        ),
+                      );
                     },
                     dto: NotificationTransactionSuccessDTO.fromJson(data),
                   ),
