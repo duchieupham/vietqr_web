@@ -54,7 +54,7 @@ class _HomeScreen extends State<HomeScreen> {
   late BankBloc _bankBloc;
   late TransactionBloc _transactionBloc;
   late TokenBloc _tokenBloc;
-
+  int currentPage = 0;
   List<BankAccountDTO> bankAccounts = [];
   List<Color> cardColors = [];
 
@@ -99,7 +99,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       listen: false)
                                   .bankDetailDTO
                                   .id,
-                              offset: 0)));
+                              offset: currentPage)));
                     },
                     dto: NotificationTransactionSuccessDTO.fromJson(data),
                   ),
@@ -194,6 +194,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       child: InkWell(
                                         onTap: () {
                                           int prevPage = 0 * 20;
+                                          currentPage = prevPage;
                                           String bankId =
                                               Provider.of<MenuCardProvider>(
                                                       context,
@@ -237,6 +238,7 @@ class _HomeScreen extends State<HomeScreen> {
                                         onTap: () {
                                           int prevPage =
                                               (provider.page ~/ 20 - 1) * 20;
+                                          currentPage = prevPage;
                                           String bankId =
                                               Provider.of<MenuCardProvider>(
                                                       context,
@@ -279,6 +281,7 @@ class _HomeScreen extends State<HomeScreen> {
                                         onTap: () {
                                           int nextPage =
                                               (provider.page ~/ 20 + 1) * 20;
+                                          currentPage = nextPage;
                                           String bankId =
                                               Provider.of<MenuCardProvider>(
                                                       context,
