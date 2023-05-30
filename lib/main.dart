@@ -160,7 +160,7 @@ class _VietQRApp extends State<VietQRApp> {
   void initState() {
     super.initState();
     String userId = UserInformationHelper.instance.getUserId();
-    listenWebSocket(userId);
+    // listenWebSocket(userId);
   }
 
   void listenWebSocket(String userId) {

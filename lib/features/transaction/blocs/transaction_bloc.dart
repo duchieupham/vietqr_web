@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionBloc() : super(TransactionInitialState()) {
     on<TransactionEventGetList>(_getTransactions);
-    on<TransactionEventFetch>(_fetchTransactions);
+    // on<TransactionEventFetch>(_fetchTransactions);
   }
 }
 
