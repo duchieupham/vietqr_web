@@ -31,6 +31,7 @@ import 'package:VietQR/services/providers/theme_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
@@ -159,43 +160,8 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
-    String userId = UserInformationHelper.instance.getUserId();
-    // listenWebSocket(userId);
-  }
-
-  void listenWebSocket(String userId) {
-    if (userId.isNotEmpty) {
-      bool isListenWebSocket = WebSocketHelper.instance.isListenWs();
-      if (!isListenWebSocket) {
-        try {
-          WebSocketHelper.instance.setListenWs(true);
-          final wsUrl =
-              Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
-          channel = WebSocketChannel.connect(wsUrl);
-          // print('---channel.closeCode: ${channel.closeCode}');
-          if (channel.closeCode == null) {
-            channel.stream.listen((event) {
-              var data = jsonDecode(event);
-              LOG.info(data.toString());
-              if (data['notificationType'] != null &&
-                  data['notificationType'] ==
-                      Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-                DialogWidget.instance.openWidgetDialog(
-                  child: TransactionSuccessWidget(
-                    dto: NotificationTransactionSuccessDTO.fromJson(data),
-                  ),
-                );
-              }
-            });
-          } else {
-            WebSocketHelper.instance.setListenWs(false);
-          }
-        } catch (e) {
-          print('WS: $e');
-          LOG.error('WS: $e');
-        }
-      }
-    }
+    WebSocketHelper.instance.listenTransactionSocket();
+    Session.load;
   }
 
   @override

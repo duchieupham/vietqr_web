@@ -3,6 +3,8 @@ import 'package:VietQR/features/login/repositories/login_repository.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../services/shared_references/web_socket_helper.dart';
+
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitialState()) {
     on<LoginEventByPhone>(_login);
@@ -23,6 +25,7 @@ void _login(LoginEvent event, Emitter emit) async {
       bool check = await loginRepository.login(event.dto);
       if (check) {
         emit(LoginSuccessfulState());
+        WebSocketHelper.instance.listenTransactionSocket();
       } else {
         emit(LoginFailedState());
       }
