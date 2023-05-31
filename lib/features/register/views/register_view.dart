@@ -235,11 +235,12 @@ class RegisterView extends StatelessWidget {
 
   Widget _buildButtonSubmit(BuildContext context, double width) {
     return SizedBox(
-      width: 400,
+      width: width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ButtonWidget(
-            width: 400 / 2 - 25,
+            width: width / 2 - 35,
             height: 40,
             text: 'Trang chủ',
             borderRadius: 5,
@@ -249,9 +250,8 @@ class RegisterView extends StatelessWidget {
               backToPreviousPage(context);
             },
           ),
-          const Padding(padding: EdgeInsets.only(left: 10)),
           ButtonWidget(
-              width: 400 / 2 - 25,
+              width: width / 2 - 35,
               height: 40,
               text: 'Đăng ký',
               borderRadius: 5,

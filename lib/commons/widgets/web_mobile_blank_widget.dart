@@ -12,7 +12,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WebMobileBlankWidget extends StatelessWidget {
-  late final LogoutBloc logoutBloc;
+  late LogoutBloc logoutBloc;
 
   WebMobileBlankWidget({super.key});
 
@@ -80,7 +80,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 30)),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
                     const Text(
                       'Quét mã QR để tải ứng dụng VietQR',
                       style: TextStyle(
@@ -88,7 +88,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                         // fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 30)),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
                     BoxLayout(
                       width: width * 0.45,
                       height: width * 0.45,
@@ -115,7 +115,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                         // fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 30)),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
                     SizedBox(
                       width: width,
                       child: Row(
@@ -146,12 +146,19 @@ class WebMobileBlankWidget extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const Padding(padding: EdgeInsets.only(top: 20)),
+                    const Text(
+                      'VietQR chỉ hỗ trợ trình duyệt web cho PC.',
+                      style: TextStyle(
+                        color: DefaultTheme.GREY_TEXT,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
+          const Padding(padding: EdgeInsets.only(top: 5)),
           Container(
             width: width,
             height: 100,
@@ -222,8 +229,24 @@ class WebMobileBlankWidget extends StatelessWidget {
                             child: const Text(
                               '19006234',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  // fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ),
+                          const Text(' - '),
+                          InkWell(
+                            onTap: () async {
+                              final Uri launchUri = Uri(
+                                scheme: 'tel',
+                                path: '0936382222',
+                              );
+                              await launchUrl(launchUri);
+                            },
+                            child: const Text(
+                              '0936382222',
+                              style: TextStyle(
+                                  // fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                         ],
