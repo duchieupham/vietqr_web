@@ -213,7 +213,19 @@ class _Login extends State<Login> {
           function: () {
             context.go('/register');
           },
-        )
+        ),
+        // const Padding(padding: EdgeInsets.only(top: 20)),
+        // ButtonWidget(
+        //   width: width,
+        //   height: 40,
+        //   text: 'Tạo mã QR ngay',
+        //   borderRadius: 5,
+        //   textColor: DefaultTheme.WHITE,
+        //   bgColor: DefaultTheme.BLUE_TEXT,
+        //   function: () {
+        //     context.go('/register');
+        //   },
+        // )
       ],
     );
   }

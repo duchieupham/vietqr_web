@@ -239,51 +239,56 @@ class RegisterView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ButtonWidget(
-            width: width / 2 - 35,
-            height: 40,
-            text: 'Trang chủ',
-            borderRadius: 5,
-            textColor: DefaultTheme.GREEN,
-            bgColor: Theme.of(context).canvasColor,
-            function: () {
-              backToPreviousPage(context);
-            },
-          ),
-          ButtonWidget(
-              width: width / 2 - 35,
+          Expanded(
+            child: ButtonWidget(
               height: 40,
-              text: 'Đăng ký',
+              text: 'Trang chủ',
               borderRadius: 5,
-              textColor: DefaultTheme.WHITE,
-              bgColor: DefaultTheme.GREEN,
+              textColor: DefaultTheme.GREEN,
+              bgColor: Theme.of(context).canvasColor,
               function: () {
-                Provider.of<RegisterProvider>(context, listen: false)
-                    .updateErrs(
-                  phoneErr:
-                      !StringUtils.instance.isNumeric(_phoneNoController.text),
-                  passErr: (!StringUtils.instance
-                          .isNumeric(_passwordController.text) ||
-                      (_passwordController.text.length != 6)),
-                  confirmPassErr: !StringUtils.instance.isValidConfirmText(
-                      _passwordController.text, _confirmPassController.text),
-                );
-                if (Provider.of<RegisterProvider>(context, listen: false)
-                    .isValidValidation()) {
-                  AccountLoginDTO dto = AccountLoginDTO(
-                    phoneNo: _phoneNoController.text,
-                    email: '',
-                    password: EncryptUtils.instance.encrypted(
-                      _phoneNoController.text,
-                      _passwordController.text,
-                    ),
-                    device: '',
-                    fcmToken: '',
-                    platform: '',
+                backToPreviousPage(context);
+              },
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: ButtonWidget(
+                height: 40,
+                text: 'Đăng ký',
+                borderRadius: 5,
+                textColor: DefaultTheme.WHITE,
+                bgColor: DefaultTheme.GREEN,
+                function: () {
+                  Provider.of<RegisterProvider>(context, listen: false)
+                      .updateErrs(
+                    phoneErr: !StringUtils.instance
+                        .isNumeric(_phoneNoController.text),
+                    passErr: (!StringUtils.instance
+                            .isNumeric(_passwordController.text) ||
+                        (_passwordController.text.length != 6)),
+                    confirmPassErr: !StringUtils.instance.isValidConfirmText(
+                        _passwordController.text, _confirmPassController.text),
                   );
-                  _registerBloc.add(RegisterEventSubmit(dto: dto));
-                }
-              }),
+                  if (Provider.of<RegisterProvider>(context, listen: false)
+                      .isValidValidation()) {
+                    AccountLoginDTO dto = AccountLoginDTO(
+                      phoneNo: _phoneNoController.text,
+                      email: '',
+                      password: EncryptUtils.instance.encrypted(
+                        _phoneNoController.text,
+                        _passwordController.text,
+                      ),
+                      device: '',
+                      fcmToken: '',
+                      platform: '',
+                    );
+                    _registerBloc.add(RegisterEventSubmit(dto: dto));
+                  }
+                }),
+          ),
         ],
       ),
     );
