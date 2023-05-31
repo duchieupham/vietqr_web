@@ -1,9 +1,9 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
-// import 'package:VietQR/services/providers/clock_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -93,6 +93,24 @@ class HeaderFullWidget extends StatelessWidget {
           // _buildTitle('Trang chủ'),
           //time
           const Spacer(),
+          InkWell(
+            onTap: () {
+              DialogWidget.instance.openPopup(
+                child: const DialogOpenBankAccount(),
+                width: 500,
+                height: 650,
+              );
+            },
+            child: const Text(
+              'Mở tài khoản MB Bank',
+              style: TextStyle(
+                color: DefaultTheme.MB_BLUE,
+                decoration: TextDecoration.underline,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          const Padding(padding: EdgeInsets.only(right: 20)),
           if (isSubHeader == null || !isSubHeader!) ...[
             Tooltip(
               message: 'Sao chép mã QR',
