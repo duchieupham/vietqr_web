@@ -45,7 +45,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                         children: [
                           Image.asset(
                             'assets/images/logo-vietqr-vn.png',
-                            width: 200,
+                            width: 150,
                           ),
                           const Spacer(),
                           BlocListener<LogoutBloc, LogoutState>(
@@ -90,14 +90,15 @@ class WebMobileBlankWidget extends StatelessWidget {
                     ),
                     const Padding(padding: EdgeInsets.only(top: 30)),
                     BoxLayout(
-                      width: width * 0.5,
-                      height: width * 0.5,
+                      width: width * 0.45,
+                      height: width * 0.45,
                       padding: const EdgeInsets.all(0),
+                      bgColor: DefaultTheme.WHITE,
                       enableShadow: true,
                       child: UnconstrainedBox(
                         child: QrImage(
                           data: 'https://onelink.to/q7zwpe',
-                          size: width * 0.45,
+                          size: width * 0.4,
                           embeddedImage: const AssetImage(
                               'assets/images/ic-viet-qr-small.png'),
                           embeddedImageStyle: QrEmbeddedImageStyle(
@@ -121,6 +122,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildButton(
+                            width: width,
                             text: 'App Store',
                             assetImage: 'assets/images/logo-app-store.png',
                             onTap: () {
@@ -133,6 +135,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                           ),
                           const Padding(padding: EdgeInsets.only(left: 10)),
                           _buildButton(
+                            width: width,
                             text: 'Google Play',
                             assetImage: 'assets/images/logo-google-play.png',
                             onTap: () async {
@@ -219,7 +222,6 @@ class WebMobileBlankWidget extends StatelessWidget {
                             child: const Text(
                               '19006234',
                               style: TextStyle(
-                                color: DefaultTheme.GREY_TEXT,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -242,6 +244,7 @@ class WebMobileBlankWidget extends StatelessWidget {
   }
 
   Widget _buildButton({
+    required double width,
     required String text,
     required String assetImage,
     required VoidCallback onTap,
@@ -249,7 +252,7 @@ class WebMobileBlankWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: BoxLayout(
-        width: 180,
+        width: width * 0.4,
         height: 45,
         padding: const EdgeInsets.all(0),
         bgColor: DefaultTheme.BLACK,
