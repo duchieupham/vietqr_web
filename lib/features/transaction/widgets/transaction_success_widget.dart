@@ -18,12 +18,10 @@ import 'package:rive/rive.dart' as rive;
 
 class TransactionSuccessWidget extends StatefulWidget {
   final NotificationTransactionSuccessDTO dto;
-  final VoidCallback? onTapClose;
 
   const TransactionSuccessWidget({
     super.key,
     required this.dto,
-    this.onTapClose,
   });
 
   @override
@@ -68,11 +66,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
   //     LOG.error('playMusicFromUrl: ${e.toString()}');
   //   }
   // }
-  void onClosePopup() {
-    if (widget.onTapClose != null) {
-      widget.onTapClose!();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +173,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                         Navigator.pop(context);
                         context.go('/');
                       }
-                      onClosePopup();
                     },
                     bgColor: Theme.of(context).canvasColor,
                     textColor: DefaultTheme.GREEN,
@@ -192,7 +184,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     icon: Icons.add_rounded,
                     title: 'Giao dịch mới',
                     function: () {
-                      onClosePopup();
                       Navigator.pop(context);
                     },
                     bgColor: DefaultTheme.GREEN,
@@ -227,7 +218,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     alignment: Alignment.topRight,
                     child: InkWell(
                       onTap: () {
-                        onClosePopup();
                         if (widget.dto.transType == 'C') {
                           _doEndAnimation();
                           Future.delayed(const Duration(milliseconds: 500), () {

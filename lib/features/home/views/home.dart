@@ -33,6 +33,7 @@ import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:clipboard/clipboard.dart';
@@ -42,6 +43,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+import '../../../commons/enums/event_type.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -66,55 +69,36 @@ class _HomeScreen extends State<HomeScreen> {
   void initState() {
     super.initState();
     String userId = UserInformationHelper.instance.getUserId();
-    listenWebSocket(userId);
+
     _tokenBloc = BlocProvider.of(context);
     _bankBloc = BlocProvider.of(context);
     _tokenBloc.add(const TokenEventCheckValid());
     _transactionBloc = BlocProvider.of(context);
     _bankBloc.add(BankEventGetList(userId: userId));
+    Session.instance.registerEventListener(EventTypes.refreshListTransaction,
+        () {
+      _transactionBloc.add(TransactionEventGetList(
+          dto: TransactionInputDTO(
+              bankId: Provider.of<MenuCardProvider>(context, listen: false)
+                  .bankDetailDTO
+                  .id,
+              offset: currentPage)));
+    });
   }
 
-  void listenWebSocket(String userId) {
-    if (userId.isNotEmpty) {
-      bool isListenWebSocket = WebSocketHelper.instance.isListenWs();
-      if (!isListenWebSocket) {
-        try {
-          WebSocketHelper.instance.setListenWs(true);
-          final wsUrl =
-              Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
-          channel = WebSocketChannel.connect(wsUrl);
-          // print('---channel.closeCode: ${channel.closeCode}');
-          if (channel.closeCode == null) {
-            channel.stream.listen((event) {
-              var data = jsonDecode(event);
-              if (data['notificationType'] != null &&
-                  data['notificationType'] ==
-                      Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-                DialogWidget.instance.openWidgetDialog(
-                  child: TransactionSuccessWidget(
-                    onTapClose: () {
-                      _transactionBloc.add(TransactionEventGetList(
-                          dto: TransactionInputDTO(
-                              bankId: Provider.of<MenuCardProvider>(context,
-                                      listen: false)
-                                  .bankDetailDTO
-                                  .id,
-                              offset: currentPage)));
-                    },
-                    dto: NotificationTransactionSuccessDTO.fromJson(data),
-                  ),
-                );
-              }
-            });
-          } else {
-            WebSocketHelper.instance.setListenWs(false);
-          }
-        } catch (e) {
-          print('WS: $e');
-          LOG.error('WS: $e');
-        }
-      }
-    }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Session.instance.registerEventListener(EventTypes.refreshListTransaction,
+        () {
+      _transactionBloc.add(TransactionEventGetList(
+          dto: TransactionInputDTO(
+              bankId: Provider.of<MenuCardProvider>(context, listen: false)
+                  .bankDetailDTO
+                  .id,
+              offset: currentPage)));
+    });
   }
 
   @override
