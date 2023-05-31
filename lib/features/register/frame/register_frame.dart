@@ -34,13 +34,20 @@ class RegisterFrame extends StatelessWidget {
       child: (PlatformUtils.instance.resizeWhen(width, 600))
           ? SingleChildScrollView(
               child: BoxLayout(
+                width: 400,
+                height: 450,
+                borderRadius: 5,
+                enableShadow: true,
+                child: webChildren,
+              ),
+            )
+          : BoxLayout(
               width: 400,
               height: 450,
               borderRadius: 5,
               enableShadow: true,
               child: webChildren,
-            ))
-          : const WebMobileBlankWidget(),
+            ),
     );
   }
 }

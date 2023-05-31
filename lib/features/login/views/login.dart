@@ -177,25 +177,6 @@ class _Login extends State<Login> {
             openPinDialog(context);
           },
         ),
-        (!isResized && PlatformUtils.instance.isWeb())
-            ? const Padding(
-                padding: EdgeInsets.only(top: 10),
-              )
-            : const SizedBox(),
-        (!isResized && PlatformUtils.instance.isWeb())
-            ? ButtonWidget(
-                width: width,
-                height: 40,
-                text: 'Đăng nhập bằng QR Code',
-                borderRadius: 5,
-                textColor: Theme.of(context).hintColor,
-                bgColor: Theme.of(context).canvasColor,
-                function: () {
-                  DialogWidget.instance
-                      .openContentDialog(null, _buildWidget2(context: context));
-                },
-              )
-            : const SizedBox(),
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
           width: width,

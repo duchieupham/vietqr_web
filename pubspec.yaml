@@ -141,6 +141,10 @@ flutter:
       - assets/images/ads-1.jpg
       - assets/images/ic-disconnect.png
       - assets/images/ic-maintain.png
+      - assets/images/logo-google-play.png
+      - assets/images/logo-app-store.png
+      - assets/images/logo-vietqr-vn.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
