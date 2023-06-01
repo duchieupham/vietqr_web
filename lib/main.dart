@@ -1,0 +1,241 @@
+import 'dart:convert';
+
+import 'package:VietQR/commons/constants/configurations/stringify.dart';
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/constants/env/url_strategy.dart';
+import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
+import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
+import 'package:VietQR/features/bank/views/add_bank_view.dart';
+import 'package:VietQR/features/home/views/home.dart';
+import 'package:VietQR/features/login/blocs/login_bloc.dart';
+import 'package:VietQR/features/login/views/login.dart';
+import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
+import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
+import 'package:VietQR/features/qr/views/create_qr.dart';
+import 'package:VietQR/features/register/blocs/register_bloc.dart';
+import 'package:VietQR/features/register/views/register_view.dart';
+import 'package:VietQR/features/token/blocs/token_bloc.dart';
+import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
+import 'package:VietQR/models/notification_transaction_success_dto.dart';
+import 'package:VietQR/services/providers/bank_type_provider.dart';
+import 'package:VietQR/services/providers/create_qr_provider.dart';
+import 'package:VietQR/services/providers/guide_provider.dart';
+import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/services/providers/pin_provider.dart';
+import 'package:VietQR/services/providers/register_provider.dart';
+import 'package:VietQR/services/providers/theme_provider.dart';
+import 'package:VietQR/services/providers/transaction_list_provider.dart';
+import 'package:VietQR/services/shared_references/account_helper.dart';
+import 'package:VietQR/services/shared_references/guide_helper.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/theme_helper.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:VietQR/services/shared_references/web_socket_helper.dart';
+import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+//Share Preferences
+late SharedPreferences sharedPrefs;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
+  sharedPrefs = await SharedPreferences.getInstance();
+  await _initialServiceHelper();
+  await Firebase.initializeApp(
+    options: EnvConfig.getFirebaseConfig(),
+  );
+  LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
+  runApp(const VietQRApp());
+}
+
+Future<void> _initialServiceHelper() async {
+  await WebSocketHelper.instance.initialWebSocket();
+  if (!sharedPrefs.containsKey('THEME_SYSTEM') ||
+      sharedPrefs.getString('THEME_SYSTEM') == null) {
+    await ThemeHelper.instance.initialTheme();
+  }
+  if (!sharedPrefs.containsKey('USER_ID') ||
+      sharedPrefs.getString('USER_ID') == null) {
+    await UserInformationHelper.instance.initialUserInformationHelper();
+  }
+  if (!sharedPrefs.containsKey('TOKEN') ||
+      sharedPrefs.getString('TOKEN') == null) {
+    await AccountHelper.instance.initialAccountHelper();
+  }
+  if (!sharedPrefs.containsKey('GUIDE_DISABLE') ||
+      sharedPrefs.getBool('GUIDE_DISABLE') == null) {
+    await GuideHelper.instance.initialGuide();
+  }
+}
+
+class NavigationService {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+}
+
+// final isLoggedIn = UserInformationHelper.instance.getUserId().trim().isNotEmpty;
+// final String authenticatedRedirect = (isLoggedIn) ? '/home' : '/login';
+
+final GoRouter _router = GoRouter(
+  navigatorKey: NavigationService.navigatorKey,
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      redirect: (context, state) {
+        return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+            ? '/home'
+            : '/login';
+      },
+    ),
+    GoRoute(
+      path: '/login',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/home'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) => const Login(),
+    ),
+    GoRoute(
+      path: '/register',
+      redirect: (context, state) => '/register',
+      builder: (BuildContext context, GoRouterState state) =>
+          const RegisterView(),
+    ),
+    GoRoute(
+      path: '/home',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/home'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/qr/create/:id',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/qr/create/${state.params['id'] ?? ''}'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) => CreateQR(
+        bankId: state.params['id'] ?? '',
+      ),
+    ),
+    GoRoute(
+      path: '/bank/create/:id',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isEmpty)
+              ? '/login'
+              : (UserInformationHelper.instance.getUserId().trim() ==
+                      state.params['id'])
+                  ? '/bank/create/${state.params['id'] ?? ''}'
+                  : '/home',
+      builder: (BuildContext context, GoRouterState state) => AddBankView(
+        userId: state.params['id'] ?? '',
+      ),
+    ),
+  ],
+);
+
+class VietQRApp extends StatefulWidget {
+  const VietQRApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _VietQRApp();
+}
+
+class _VietQRApp extends State<VietQRApp> {
+  late WebSocketChannel channel;
+
+  @override
+  void initState() {
+    super.initState();
+    WebSocketHelper.instance.listenTransactionSocket();
+    Session.load;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<LoginBloc>(
+            create: (BuildContext context) => LoginBloc(),
+          ),
+          BlocProvider<BankBloc>(
+            create: (BuildContext context) => BankBloc(),
+          ),
+          BlocProvider<TransactionBloc>(
+            create: (BuildContext context) => TransactionBloc(),
+          ),
+          BlocProvider<QRBloc>(
+            create: (BuildContext context) => QRBloc(),
+          ),
+          BlocProvider<RegisterBloc>(
+            create: (BuildContext context) => RegisterBloc(),
+          ),
+          BlocProvider<BankTypeBloc>(
+            create: (BuildContext context) => BankTypeBloc(),
+          ),
+          BlocProvider<LogoutBloc>(
+            create: (BuildContext context) => LogoutBloc(),
+          ),
+          BlocProvider<TokenBloc>(
+            create: (BuildContext context) => TokenBloc(),
+          ),
+        ],
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => ThemeProvider()),
+            ChangeNotifierProvider(create: (context) => PinProvider()),
+            ChangeNotifierProvider(create: (context) => MenuCardProvider()),
+            ChangeNotifierProvider(create: (context) => CreateQRProvider()),
+            ChangeNotifierProvider(create: (context) => RegisterProvider()),
+            ChangeNotifierProvider(create: (context) => BankTypeProvider()),
+            ChangeNotifierProvider(create: (context) => GuideProvider()),
+            ChangeNotifierProvider(
+                create: (context) => TransactionListProvider()),
+          ],
+          child: Consumer<ThemeProvider>(
+            builder: (context, themeSelect, child) {
+              return MaterialApp.router(
+                routerConfig: _router,
+                debugShowCheckedModeBanner: false,
+                themeMode:
+                    (themeSelect.themeSystem == DefaultTheme.THEME_SYSTEM)
+                        ? ThemeMode.system
+                        : (themeSelect.themeSystem == DefaultTheme.THEME_LIGHT)
+                            ? ThemeMode.light
+                            : ThemeMode.dark,
+                darkTheme: DefaultThemeData(context: context).darkTheme,
+                theme: DefaultThemeData(context: context).lightTheme,
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  //  Locale('en'), // English
+                  Locale('vi'), // Vietnamese
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
