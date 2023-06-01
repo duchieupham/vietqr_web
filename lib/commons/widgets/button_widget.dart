@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
-  final double width;
+  final double? width;
   //height default 50
   final String text;
   final Color textColor;
@@ -12,7 +12,7 @@ class ButtonWidget extends StatelessWidget {
 
   const ButtonWidget({
     Key? key,
-    required this.width,
+    this.width,
     required this.text,
     required this.textColor,
     required this.bgColor,

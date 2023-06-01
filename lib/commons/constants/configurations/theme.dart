@@ -54,6 +54,8 @@ class DefaultTheme {
   static const Color BANK_CARD_COLOR_1 = Color(0xFFD4D3D1);
   static const Color BANK_CARD_COLOR_2 = Color(0xFFE4E3DF);
   static const Color BANK_CARD_COLOR_3 = Color(0xFFA1A09C);
+  static const Color MB_BLUE = Color(0xFF141CD6);
+  static const Color MB_RED = Color(0xFFF4272A);
 
   //THEME NAME
   static const String THEME_LIGHT = 'LIGHT';
