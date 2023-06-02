@@ -11,6 +11,7 @@ import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
+import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
@@ -195,6 +196,9 @@ class _VietQRApp extends State<VietQRApp> {
           ),
           BlocProvider<TokenBloc>(
             create: (BuildContext context) => TokenBloc(),
+          ),
+          BlocProvider<QRCodeUnUTBloc>(
+            create: (BuildContext context) => QRCodeUnUTBloc(),
           ),
         ],
         child: MultiProvider(

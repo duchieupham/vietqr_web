@@ -15,6 +15,13 @@ class BankTypeEventGetList extends BankTypeEvent {
   List<Object?> get props => [];
 }
 
+class BankTypeEventGetListUnauthenticated extends BankTypeEvent {
+  const BankTypeEventGetListUnauthenticated();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class BankTypeEventSearch extends BankTypeEvent {
   final String textSearch;
   final List<BankTypeDTO> list;

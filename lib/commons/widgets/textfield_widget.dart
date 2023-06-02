@@ -3,7 +3,7 @@ import 'package:VietQR/commons/enums/textfield_type.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
-  final double width;
+  final double? width;
   final String hintText;
   final TextEditingController controller;
   final ValueChanged<Object>? onChange;
@@ -25,7 +25,7 @@ class TextFieldWidget extends StatelessWidget {
 
   const TextFieldWidget({
     Key? key,
-    required this.width,
+    this.width,
     required this.hintText,
     required this.controller,
     required this.keyboardAction,
