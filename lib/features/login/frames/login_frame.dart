@@ -29,27 +29,39 @@ class LoginFrame extends StatelessWidget {
         ),
       ),
       child: SingleChildScrollView(
-        child: (PlatformUtils.instance.resizeWhen(width, 750))
-            ? BoxLayout(
-                width: 700,
-                height: 400,
-                borderRadius: 5,
-                enableShadow: true,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
+        child: (PlatformUtils.instance.resizeWhen(width, 850))
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BoxLayout(
                         width: 400,
+                        height: 770,
+                        borderRadius: 20,
+                        enableShadow: true,
                         child: widget1,
                       ),
-                    ),
-                    widget2,
-                  ],
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      Expanded(
+                        child: BoxLayout(
+                          height: 770,
+                          borderRadius: 20,
+                          enableShadow: true,
+                          padding: EdgeInsets.zero,
+                          child: widget2,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             : BoxLayout(
                 width: width * 0.8,
-                height: 400,
+                height: 430,
                 borderRadius: 5,
                 enableShadow: true,
                 child: widget1,

@@ -21,14 +21,18 @@ class SelectBankTypeWidget extends StatelessWidget {
   static final List<BankTypeDTO> bankTypesResult = [];
   static final List<BankTypeDTO> bankTypes = [];
   static late BankTypeBloc bankTypeBloc;
-
-  const SelectBankTypeWidget({super.key});
+  final bool authenticated;
+  const SelectBankTypeWidget({super.key, this.authenticated = true});
 
   void initialServices(BuildContext context) {
     bankTypesResult.clear();
     bankTypes.clear();
     bankTypeBloc = BlocProvider.of(context);
-    bankTypeBloc.add(const BankTypeEventGetList());
+    if (authenticated) {
+      bankTypeBloc.add(const BankTypeEventGetList());
+    } else {
+      bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
+    }
   }
 
   @override

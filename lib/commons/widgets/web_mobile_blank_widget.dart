@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/widgets/bottom_web.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
@@ -159,107 +160,8 @@ class WebMobileBlankWidget extends StatelessWidget {
             ),
           ),
           const Padding(padding: EdgeInsets.only(top: 5)),
-          Container(
-            width: width,
-            height: 100,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            color: Theme.of(context).cardColor,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Thông tin liên hệ',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 10)),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            width: 80,
-                            child: Text(
-                              'Email: ',
-                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              final Uri launchUri = Uri(
-                                scheme: 'mailto',
-                                path: 'sales@vietqr.vn',
-                              );
-                              await launchUrl(launchUri);
-                            },
-                            child: const Text(
-                              'sales@vietqr.vn',
-                              style: TextStyle(
-                                color: DefaultTheme.BLUE_TEXT,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(padding: EdgeInsets.only(top: 5)),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            width: 80,
-                            child: Text(
-                              'Hotline: ',
-                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              final Uri launchUri = Uri(
-                                scheme: 'tel',
-                                path: '19006234',
-                              );
-                              await launchUrl(launchUri);
-                            },
-                            child: const Text(
-                              '19006234',
-                              style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                          const Text(' - '),
-                          InkWell(
-                            onTap: () async {
-                              final Uri launchUri = Uri(
-                                scheme: 'tel',
-                                path: '0936382222',
-                              );
-                              await launchUrl(launchUri);
-                            },
-                            child: const Text(
-                              '0936382222',
-                              style: TextStyle(
-                                  // fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Image.asset(
-                  'assets/images/logo-vietqr-vn.png',
-                  width: 100,
-                ),
-              ],
-            ),
+          BottomWeb(
+            bgColor: Theme.of(context).cardColor,
           ),
         ],
       ),

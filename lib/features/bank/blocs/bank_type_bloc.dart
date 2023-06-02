@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class BankTypeBloc extends Bloc<BankTypeEvent, BankTypeState> {
   BankTypeBloc() : super(BankTypeInitialState()) {
     on<BankTypeEventGetList>(_getBankTypes);
+    on<BankTypeEventGetListUnauthenticated>(_getBankTypes);
     on<BankTypeEventSearch>(_searchBankTypes);
   }
 }
@@ -19,6 +20,12 @@ void _getBankTypes(BankTypeEvent event, Emitter emit) async {
     if (event is BankTypeEventGetList) {
       emit(BankTypeLoadingState());
       List<BankTypeDTO> list = await bankTypeRepository.getBankTypes();
+      emit(BankTypeGetListSuccessfulState(list: list));
+    }
+    if (event is BankTypeEventGetListUnauthenticated) {
+      emit(BankTypeLoadingState());
+      List<BankTypeDTO> list =
+          await bankTypeRepository.getBankTypesUnauthenticated();
       emit(BankTypeGetListSuccessfulState(list: list));
     }
   } catch (e) {
