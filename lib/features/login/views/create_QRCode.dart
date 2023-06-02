@@ -182,7 +182,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
               ButtonWidget(
                 width: (provider.bankType.status == 0) ? 380 : 380 / 2 - 10,
                 height: 40,
-                text: 'Thêm',
+                text: 'Tạo mã VietQR',
                 borderRadius: 5,
                 textColor: DefaultTheme.WHITE,
                 bgColor: DefaultTheme.GREEN,
@@ -387,12 +387,17 @@ class _CreateQRCodeState extends State<CreateQRCode> {
       alignment: Alignment.topCenter,
       child: Padding(
         padding: const EdgeInsets.only(top: 50),
-        child: QrImage(
-          data: 'http://localhost:55687/login',
-          size: 260,
-          foregroundColor: Colors.black38,
-          embeddedImageStyle: QrEmbeddedImageStyle(
-            size: const Size(30, 30),
+        child: Opacity(
+          opacity: 0.5,
+          child: QrImage(
+            data: 'https://vietqr.vn',
+            size: 260,
+            foregroundColor: DefaultTheme.BLACK,
+            embeddedImage:
+                const AssetImage('assets/images/ic-viet-qr-small.png'),
+            embeddedImageStyle: QrEmbeddedImageStyle(
+              size: const Size(30, 30),
+            ),
           ),
         ),
       ),
