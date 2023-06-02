@@ -7,7 +7,6 @@ import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:http/http.dart' as http;
 
 class BaseAPIClient {
-  static final String _token = AccountHelper.instance.getToken();
   static const Duration _timeout =
       Duration(seconds: Numeral.DEFAULT_TIMEOUT_API);
 
@@ -106,6 +105,7 @@ class BaseAPIClient {
   }) async {
     final Uri uri = Uri.parse(url);
     final request = http.MultipartRequest('POST', uri);
+    final String _token = AccountHelper.instance.getToken();
     request.headers['Authorization'] = 'Bearer $_token';
     if (fields.isNotEmpty) {
       for (String key in fields.keys) {
@@ -129,6 +129,7 @@ class BaseAPIClient {
       String? clientMessageId}) {
     Map<String, String>? result = {};
     type ??= AuthenticationType.NONE;
+    final String _token = AccountHelper.instance.getToken();
     switch (type) {
       case AuthenticationType.SYSTEM:
         result['Authorization'] = 'Bearer $_token';
