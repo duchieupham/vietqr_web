@@ -216,6 +216,8 @@ class _VietQRApp extends State<VietQRApp> {
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {
               return MaterialApp.router(
+                onGenerateTitle: (context) =>
+                    'VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam',
                 routerConfig: _router,
                 debugShowCheckedModeBanner: false,
                 themeMode:
