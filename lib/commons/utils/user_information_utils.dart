@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/log.dart';
 import 'package:flutter/material.dart';
+import 'dart:html';
 
 class UserInformationUtils {
   const UserInformationUtils._privateConsrtructor();
@@ -46,6 +50,20 @@ class UserInformationUtils {
       result = 3;
     } else {
       result = 3;
+    }
+    return result;
+  }
+
+  //get user device IP address
+  Future<String> getIPAddress() async {
+    String result = '';
+    try {
+      final response =
+          await HttpRequest.request('https://api.ipify.org?format=json');
+      final data = json.decode(response.responseText ?? '');
+      result = data['ip'] ?? '';
+    } catch (e) {
+      LOG.error(e.toString());
     }
     return result;
   }

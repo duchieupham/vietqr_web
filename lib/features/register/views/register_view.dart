@@ -2,6 +2,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/commons/utils/user_information_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
@@ -261,7 +262,9 @@ class RegisterView extends StatelessWidget {
                 borderRadius: 5,
                 textColor: DefaultTheme.WHITE,
                 bgColor: DefaultTheme.GREEN,
-                function: () {
+                function: () async {
+                  String userIP =
+                      await UserInformationUtils.instance.getIPAddress();
                   Provider.of<RegisterProvider>(context, listen: false)
                       .updateErrs(
                     phoneErr: !StringUtils.instance
@@ -281,9 +284,9 @@ class RegisterView extends StatelessWidget {
                         _phoneNoController.text,
                         _passwordController.text,
                       ),
-                      device: '',
+                      device: userIP,
                       fcmToken: '',
-                      platform: '',
+                      platform: 'WEB',
                     );
                     _registerBloc.add(RegisterEventSubmit(dto: dto));
                   }
