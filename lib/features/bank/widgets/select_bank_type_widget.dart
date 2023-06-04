@@ -219,7 +219,9 @@ class SelectBankTypeWidget extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(left: 10)),
             Expanded(
               child: Text(
-                '${dto.bankCode} - ${dto.bankName}',
+                (dto.bankShortName.trim().isEmpty)
+                    ? '${dto.bankCode} - ${dto.bankName}'
+                    : '${dto.bankShortName} - ${dto.bankName}',
                 style: const TextStyle(
                   fontSize: 12,
                 ),

@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/features/bank/events/bank_type_event.dart';
 import 'package:VietQR/features/bank/repositories/bank_type_repository.dart';
 import 'package:VietQR/features/bank/states/bank_type_state.dart';
@@ -40,14 +41,19 @@ void _searchBankTypes(BankTypeEvent event, Emitter emit) {
       // emit(BankTypeLoadingState());
       List<BankTypeDTO> result = [];
       if (event.textSearch.trim().isNotEmpty) {
+        String textSearchRemoveDiacritic = StringUtils.instance
+            .removeDiacritic(event.textSearch.trim().toUpperCase());
         result.addAll(event.list
             .where((dto) =>
-                dto.bankCode
-                    .toUpperCase()
-                    .contains(event.textSearch.toUpperCase()) ||
-                dto.bankName
-                    .toUpperCase()
-                    .contains(event.textSearch.toUpperCase()))
+                StringUtils.instance
+                    .removeDiacritic(dto.bankCode.toUpperCase())
+                    .contains(textSearchRemoveDiacritic) ||
+                StringUtils.instance
+                    .removeDiacritic(dto.bankName.toUpperCase())
+                    .contains(textSearchRemoveDiacritic) ||
+                StringUtils.instance
+                    .removeDiacritic(dto.bankShortName.toUpperCase())
+                    .contains(textSearchRemoveDiacritic))
             .toList());
       } else {
         result = event.list;

@@ -54,22 +54,27 @@ class _CreateQRCodeState extends State<CreateQRCode> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return LayoutBuilder(
       builder: (context, constraints) {
         return Column(
           children: [
             if (PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800))
               Expanded(
+                child: SizedBox(
+                  width: width,
                   child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 100, 30, 30),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _buildFormInput()),
-                    Expanded(child: _buildQRCode())
-                  ],
+                    padding: const EdgeInsets.fromLTRB(30, 100, 30, 30),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: _buildFormInput()),
+                        Expanded(child: _buildQRCode())
+                      ],
+                    ),
+                  ),
                 ),
-              ))
+              )
             else ...[
               Padding(
                 padding: const EdgeInsets.only(top: 30),
@@ -109,7 +114,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
               ),
               const Padding(padding: EdgeInsets.only(top: 30)),
               _buildListBank(),
-              const Padding(padding: EdgeInsets.only(top: 25)),
+              const Padding(padding: EdgeInsets.only(top: 15)),
               BorderLayout(
                 height: 50,
                 isError: provider.bankAccountErr,
@@ -159,7 +164,31 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   hintText: 'Chủ tài khoản \u002A',
                   controller: nameController,
                   inputType: TextInputType.number,
-                  keyboardAction: TextInputAction.next,
+                  keyboardAction: TextInputAction.done,
+                  onSubmitted: (value) {
+                    if (provider.bankType.bankCode.isNotEmpty) {
+                      provider.updateBankAccountErr(
+                        (bankAccountController.text.isEmpty ||
+                            !StringUtils.instance
+                                .isNumeric(bankAccountController.text)),
+                      );
+                      provider.updateNameErr(
+                        nameController.text.isEmpty,
+                      );
+                      if (provider.isValidUnauthenticateForm()) {
+                        Map<String, dynamic> data = {};
+                        data['bankAccount'] = bankAccountController.text;
+                        data['userBankName'] = nameController.text;
+                        data['bankCode'] = provider.bankType.bankCode;
+                        qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
+                      }
+                    } else {
+                      DialogWidget.instance.openMsgDialog(
+                        title: 'Không thể tạo',
+                        msg: 'Vui lòng chọn ngân hàng thụ hưởng',
+                      );
+                    }
+                  },
                   onChange: (vavlue) {
                     provider.updateNameErr(
                       nameController.text.isEmpty,
@@ -233,7 +262,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
           },
           child: (provider.bankType.bankCode.isEmpty)
               ? BoxLayout(
-                  bgColor: DefaultTheme.GREY_BG,
+                  bgColor: Theme.of(context).canvasColor,
                   height: 50,
                   borderRadius: 5,
                   child: Row(
@@ -262,82 +291,38 @@ class _CreateQRCodeState extends State<CreateQRCode> {
   }
 
   Widget _buildSelectedBankType(BuildContext context, BankTypeDTO dto) {
-    return SizedBox(
-      height: 120,
-      child: Stack(
+    final double width = MediaQuery.of(context).size.width;
+    return Container(
+      width: width,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: DefaultTheme.GREY_TOP_TAB_BAR, width: 0.5),
+      ),
+      child: Row(
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 20),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            width: 80,
+            height: 50,
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Padding(padding: EdgeInsets.only(top: 10)),
-                Text(
-                  dto.bankCode,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(top: 2)),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                  child: Text(
-                    dto.bankName,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ],
+              image: DecorationImage(
+                image: ImageUtils.instance.getImageNetWork(dto.imageId),
+              ),
             ),
           ),
-          Positioned(
-            top: 0,
-            left: 0,
-            child: _buildLogo(context, 70, dto.imageId, BoxFit.contain),
+          const Padding(padding: EdgeInsets.only(left: 10)),
+          Expanded(
+            child: Text(
+              '${dto.bankCode} - ${dto.bankName}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const Icon(
+            Icons.arrow_drop_down_circle_outlined,
+            size: 12,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildLogo(
-      BuildContext context, double size, String imageId, BoxFit fit) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size),
-        color: Theme.of(context).scaffoldBackgroundColor,
-      ),
-      child: UnconstrainedBox(
-        child: Container(
-          width: size - 10,
-          height: size - 10,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(size - 10),
-            color: DefaultTheme.WHITE,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 2,
-                offset: const Offset(1, 2),
-              ),
-            ],
-            image: DecorationImage(
-                fit: fit, image: ImageUtils.instance.getImageNetWork(imageId)),
-          ),
-        ),
       ),
     );
   }
@@ -366,9 +351,17 @@ class _CreateQRCodeState extends State<CreateQRCode> {
         }
         return (qrGeneratedDTO.qrCode.isEmpty)
             ? _buildQRCodeBlank()
-            : Padding(
-                padding: const EdgeInsets.only(top: 26),
-                child: UnconstrainedBox(
+            : UnconstrainedBox(
+                child: Container(
+                  margin:
+                      (horizontalInfo) ? const EdgeInsets.only(top: 30) : null,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: DefaultTheme.GREY_TOP_TAB_BAR,
+                      width: 0.5,
+                    ),
+                  ),
                   child: VietQRWidget(
                     width: width,
                     horizontalInfoWidth: horizontalInfoWidth,
@@ -387,16 +380,23 @@ class _CreateQRCodeState extends State<CreateQRCode> {
       alignment: Alignment.topCenter,
       child: Padding(
         padding: const EdgeInsets.only(top: 50),
-        child: Opacity(
-          opacity: 0.5,
-          child: QrImage(
-            data: 'https://vietqr.vn',
-            size: 260,
-            foregroundColor: DefaultTheme.BLACK,
-            embeddedImage:
-                const AssetImage('assets/images/ic-viet-qr-small.png'),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: const Size(30, 30),
+        child: BoxLayout(
+          width: 300,
+          height: 300,
+          bgColor: DefaultTheme.WHITE,
+          enableShadow: true,
+          padding: const EdgeInsets.all(20),
+          child: Opacity(
+            opacity: 0.5,
+            child: QrImage(
+              data: 'https://vietqr.vn',
+              size: 250,
+              foregroundColor: DefaultTheme.BLACK,
+              embeddedImage:
+                  const AssetImage('assets/images/ic-viet-qr-small.png'),
+              embeddedImageStyle: QrEmbeddedImageStyle(
+                size: const Size(30, 30),
+              ),
             ),
           ),
         ),

@@ -85,9 +85,8 @@ class VietQRWidget extends StatelessWidget {
 
   Widget _buildHorizontalInfo() {
     return SizedBox(
-      width: horizontalInfoWidth,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
+      width: horizontalInfoWidth - 40,
+      child: SizedBox(
         child: Row(
           children: [
             _buildQR(),
@@ -185,6 +184,8 @@ class VietQRWidget extends StatelessWidget {
         Expanded(
           child: Text(
             qrGeneratedDTO.bankName,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,

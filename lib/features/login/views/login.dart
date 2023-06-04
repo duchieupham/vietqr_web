@@ -156,10 +156,13 @@ class _Login extends State<Login> {
             width: width,
             isObscureText: false,
             autoFocus: true,
-            hintText: 'Email hoặc Số điện thoại',
+            hintText: 'Số điện thoại',
             controller: phoneNoController,
             inputType: TextInputType.text,
-            keyboardAction: TextInputAction.next,
+            keyboardAction: TextInputAction.done,
+            onSubmitted: (value) {
+              openPinDialog(context);
+            },
             onChange: (vavlue) {},
           ),
         ),
@@ -170,13 +173,13 @@ class _Login extends State<Login> {
             child: InkWell(
               onTap: () {
                 DialogWidget.instance.openMsgDialog(
-                  title: 'Đang cập nhật',
-                  msg: 'Chúng tôi đang cập nhật ứng dụng VietQR trên iOS',
+                  title: 'Tính năng bảo trì',
+                  msg:
+                      'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
                 );
               },
               child: const Text(
                 'Quên mật khẩu?',
-                style: TextStyle(color: DefaultTheme.GREY_HIGHLIGHT),
               ),
             ),
           ),
@@ -244,8 +247,9 @@ class _Login extends State<Login> {
                   borderRadius: BorderRadius.circular(5)),
               onPressed: () {
                 DialogWidget.instance.openMsgDialog(
-                  title: 'Đang cập nhật',
-                  msg: 'Chúng tôi đang cập nhật ứng dụng VietQR trên iOS',
+                  title: 'Tính năng bảo trì',
+                  msg:
+                      'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
                 );
               },
             ),
@@ -263,8 +267,11 @@ class _Login extends State<Login> {
             context.go('/register');
           },
         ),
-        const Padding(padding: EdgeInsets.only(top: 10)),
-        if (PlatformUtils.instance.resizeWhen(width, 850)) _buildQrLogin()
+
+        if (PlatformUtils.instance.resizeWhen(width, 850)) ...[
+          const Padding(padding: EdgeInsets.only(top: 10)),
+          _buildQrLogin(),
+        ],
       ],
     );
   }
