@@ -263,8 +263,6 @@ class RegisterView extends StatelessWidget {
                 textColor: DefaultTheme.WHITE,
                 bgColor: DefaultTheme.GREEN,
                 function: () async {
-                  String userIP =
-                      await UserInformationUtils.instance.getIPAddress();
                   Provider.of<RegisterProvider>(context, listen: false)
                       .updateErrs(
                     phoneErr: !StringUtils.instance
@@ -277,6 +275,8 @@ class RegisterView extends StatelessWidget {
                   );
                   if (Provider.of<RegisterProvider>(context, listen: false)
                       .isValidValidation()) {
+                    String userIP =
+                        await UserInformationUtils.instance.getIPAddress();
                     AccountLoginDTO dto = AccountLoginDTO(
                       phoneNo: _phoneNoController.text,
                       email: '',
