@@ -49,6 +49,7 @@ class WebSocketHelper {
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
                 Session.instance.sendEvent(EventTypes.refreshListTransaction);
+                Session.instance.sendEvent(EventTypes.updateCountNotification);
                 DialogWidget.instance.openWidgetDialog(
                   child: TransactionSuccessWidget(
                     dto: NotificationTransactionSuccessDTO.fromJson(data),

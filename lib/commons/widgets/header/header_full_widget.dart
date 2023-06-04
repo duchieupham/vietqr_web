@@ -1,16 +1,23 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
+import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
+import 'package:VietQR/features/notification/events/notification_event.dart';
+import 'package:VietQR/features/notification/states/notification_state.dart';
+import 'package:VietQR/features/notification/views/notification_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class HeaderFullWidget extends StatelessWidget {
+class HeaderFullWidget extends StatefulWidget {
   final bool? isSubHeader;
   //providers
   // ClockProvider clockProvider = ClockProvider('');
@@ -20,23 +27,40 @@ class HeaderFullWidget extends StatelessWidget {
     this.isSubHeader,
   });
 
-  // void _initialServices(BuildContext context) {
-  //   clockProvider.getRealTime();
-  // }
+  @override
+  State<HeaderFullWidget> createState() => _HeaderFullWidgetState();
+}
+
+class _HeaderFullWidgetState extends State<HeaderFullWidget> {
+  late NotificationBloc _notificationBloc;
+  int _notificationCount = 0;
+  @override
+  void initState() {
+    super.initState();
+    _notificationBloc = BlocProvider.of(context);
+    String userId = UserInformationHelper.instance.getUserId();
+    _notificationBloc.add(NotificationGetCounterEvent(userId: userId));
+    Session.instance.registerEventListener(EventTypes.updateCountNotification,
+        () {
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        _notificationBloc.add(NotificationGetCounterEvent(userId: userId));
+      });
+    });
+    // listenNewNotification(userId);
+  }
 
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final String imgId =
         UserInformationHelper.instance.getAccountInformation().imgId;
-    // _initialServices(context);
     return Container(
       width: width,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       height: 60,
       child: Row(
         children: [
-          (isSubHeader != null && isSubHeader!)
+          (widget.isSubHeader != null && widget.isSubHeader!)
               ? const SizedBox()
               : Tooltip(
                   message: 'Menu',
@@ -71,22 +95,14 @@ class HeaderFullWidget extends StatelessWidget {
             message: 'Trang chủ',
             child: InkWell(
               onTap: () {
-                if (isSubHeader != null && isSubHeader!) {
+                if (widget.isSubHeader != null && widget.isSubHeader!) {
                   context.go('/');
                 }
               },
-              child: BoxLayout(
-                width: 100,
-                height: 35,
-                padding: const EdgeInsets.all(5),
-                bgColor: DefaultTheme.TRANSPARENT,
-                borderRadius: 10,
-                child: Image.asset(
-                  'assets/images/ic-viet-qr.png',
-                  width: 80,
-                  height: 35,
-                  fit: BoxFit.contain,
-                ),
+              child: Image.asset(
+                'assets/images/logo-vietqr-vn.png',
+                height: 50,
+                fit: BoxFit.fitHeight,
               ),
             ),
           ),
@@ -111,7 +127,7 @@ class HeaderFullWidget extends StatelessWidget {
             ),
           ),
           const Padding(padding: EdgeInsets.only(right: 20)),
-          if (isSubHeader == null || !isSubHeader!) ...[
+          if (widget.isSubHeader == null || !widget.isSubHeader!) ...[
             Tooltip(
               message: 'Sao chép mã QR',
               child: InkWell(
@@ -165,10 +181,18 @@ class HeaderFullWidget extends StatelessWidget {
             message: 'Thông báo',
             child: InkWell(
               onTap: () {
-                DialogWidget.instance.openMsgDialog(
-                  title: 'Tính năng đang bảo trì',
-                  msg: 'Vui lòng thử lại sau',
-                );
+                DialogWidget.instance.openNotificationDialog(
+                    child: NotificationView(
+                      notificationBloc: _notificationBloc,
+                    ),
+                    height: 800,
+                    onTapBarrier: () {
+                      _notificationBloc.add(
+                        NotificationUpdateStatusEvent(
+                          userId: UserInformationHelper.instance.getUserId(),
+                        ),
+                      );
+                    });
               },
               child: SizedBox(
                 width: 40,
@@ -192,6 +216,47 @@ class HeaderFullWidget extends StatelessWidget {
                         ),
                       ),
                     ),
+                    BlocConsumer<NotificationBloc, NotificationState>(
+                      listener: (context, state) {
+                        //
+                      },
+                      builder: (context, state) {
+                        if (state is NotificationCountSuccessState) {
+                          _notificationCount = state.count;
+                        }
+                        if (state is NotificationUpdateStatusSuccessState) {
+                          _notificationCount = 0;
+                        }
+                        if (_notificationCount != 0) {
+                          return Positioned(
+                            top: 5,
+                            right: 0,
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: DefaultTheme.RED_CALENDAR,
+                              ),
+                              child: Text(
+                                _notificationCount.toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize:
+                                      (_notificationCount.toString().length >=
+                                              3)
+                                          ? 8
+                                          : 10,
+                                  color: DefaultTheme.WHITE,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    )
                   ],
                 ),
               ),
