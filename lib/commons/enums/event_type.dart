@@ -1,4 +1,7 @@
-enum EventTypes { refreshListTransaction }
+enum EventTypes {
+  refreshListTransaction,
+  updateCountNotification,
+}
 
 class EventType {
   final dynamic data;

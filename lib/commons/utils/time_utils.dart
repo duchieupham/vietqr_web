@@ -276,4 +276,27 @@ class TimeUtils {
     }
     return result;
   }
+
+  String formatTimeNotification(int timeInMillis) {
+    final now = DateTime.now();
+    final time = DateTime.fromMillisecondsSinceEpoch(timeInMillis * 1000);
+
+    final difference = now.difference(time);
+
+    if (difference.inSeconds < 60) {
+      return 'vài giây trước';
+    } else if (difference.inMinutes < 60) {
+      final minutes = difference.inMinutes;
+      return '$minutes phút trước';
+    } else if (difference.inHours < 24) {
+      final hours = difference.inHours;
+      return '$hours giờ trước';
+    } else if (difference.inDays <= 7) {
+      return '${difference.inDays} ngày trước';
+    } else {
+      final formatter = DateFormat('HH:mm dd/MM/yyyy');
+      final formattedTime = formatter.format(time);
+      return formattedTime;
+    }
+  }
 }
