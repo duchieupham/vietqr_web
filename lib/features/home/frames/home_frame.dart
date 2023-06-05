@@ -89,7 +89,7 @@ class HomeFrame extends StatelessWidget {
                 ),
                 Consumer<GuideProvider>(
                   builder: (context, provider, child) {
-                    return (provider.guideDisabled)
+                    return (!provider.guideDisabled)
                         ? const SizedBox()
                         : Container(
                             width: width,
@@ -97,6 +97,7 @@ class HomeFrame extends StatelessWidget {
                             color: DefaultTheme.BLACK.withOpacity(0.9),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 // SizedBox(
                                 //   width: 500,
@@ -111,9 +112,9 @@ class HomeFrame extends StatelessWidget {
                                 // ),
                                 Image.asset(
                                   guideAssets[provider.index],
-                                  width: 630,
+                                  width: 540,
                                 ),
-
+                                _buildCheckBoxUpdateGuide(provider),
                                 SizedBox(
                                   width: width,
                                   child: Row(
@@ -129,8 +130,7 @@ class HomeFrame extends StatelessWidget {
                                             // icon: Icons.close_rounded,
                                             text: 'Bỏ qua hướng dẫn',
                                             function: () {
-                                              provider
-                                                  .updateGuideDisabled(true);
+                                              provider.updateGuideDisabled();
                                               provider.updateIndex(0);
                                             },
                                             bgColor: Theme.of(context)
@@ -160,8 +160,7 @@ class HomeFrame extends StatelessWidget {
                                             function: () {
                                               if (provider.index ==
                                                   guideAssets.length - 1) {
-                                                provider
-                                                    .updateGuideDisabled(true);
+                                                provider.updateGuideDisabled();
                                                 provider.updateIndex(0);
                                               } else {
                                                 provider.updateIndex(
@@ -188,6 +187,34 @@ class HomeFrame extends StatelessWidget {
               ],
             )
           : WebMobileBlankWidget(),
+    );
+  }
+
+  Widget _buildCheckBoxUpdateGuide(GuideProvider provider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: SizedBox(
+        width: 540,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Checkbox(
+              checkColor: DefaultTheme.WHITE, // color of tick Mark
+              activeColor: DefaultTheme.GREY_LIGHT,
+              value: provider.guideWeb,
+              side: const BorderSide(color: DefaultTheme.GREY_LIGHT, width: 2),
+
+              onChanged: (bool? value) {
+                provider.changeGuideWeb(value!);
+              },
+            ),
+            const Text(
+              'Không hiển thị hướng dẫn cho lần đăng nhập tiếp theo',
+              style: TextStyle(color: DefaultTheme.WHITE),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

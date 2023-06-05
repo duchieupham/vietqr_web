@@ -162,8 +162,10 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
+
     WebSocketHelper.instance.listenTransactionSocket();
     Session.load;
+    Session.instance.getGuideWeb();
   }
 
   @override

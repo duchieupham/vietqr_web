@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
+import 'package:VietQR/services/shared_references/guide_helper.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -75,5 +78,16 @@ class Session {
   Future sendEvent(EventTypes eventType, [dynamic data]) async {
     final EventType et = EventType(eventType, data);
     _eventStream.add(et);
+  }
+
+  final UserSettingRepository _userSettingRepository =
+      const UserSettingRepository();
+
+  Future getGuideWeb() async {
+    String userId = UserInformationHelper.instance.getUserId();
+    if (userId.isNotEmpty) {
+      bool value = await _userSettingRepository.getGuideWeb(userId);
+      await GuideHelper.instance.updateGuideDisable(value);
+    }
   }
 }
