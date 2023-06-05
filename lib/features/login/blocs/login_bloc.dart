@@ -1,6 +1,8 @@
+import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
 import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/repositories/login_repository.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../services/shared_references/web_socket_helper.dart';
@@ -17,12 +19,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 }
 
 const LoginRepository loginRepository = LoginRepository();
-
+const UserSettingRepository userSettingRepository = UserSettingRepository();
 void _login(LoginEvent event, Emitter emit) async {
   try {
     if (event is LoginEventByPhone) {
       emit(LoginLoadingState());
       bool check = await loginRepository.login(event.dto);
+      // await userSettingRepository.getGuideWeb(userId)
       if (check) {
         emit(LoginSuccessfulState());
         WebSocketHelper.instance.listenTransactionSocket();

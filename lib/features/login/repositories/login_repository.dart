@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/models/account_information_dto.dart';
 import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -71,6 +72,7 @@ class LoginRepository {
             .setUserId(accountInformationDTO.userId);
         await UserInformationHelper.instance
             .setAccountInformation(accountInformationDTO);
+        await Session.instance.getGuideWeb();
         result = true;
       }
     } catch (e) {
