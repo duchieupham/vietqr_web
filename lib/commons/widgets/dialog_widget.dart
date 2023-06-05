@@ -196,7 +196,7 @@ class DialogWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                        padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
                         child: Text(
                           'Thông báo',
                           style: TextStyle(
