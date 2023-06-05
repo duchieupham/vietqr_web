@@ -593,6 +593,12 @@ class _HomeScreen extends State<HomeScreen> {
           _resetBank();
           if (bankAccounts.isEmpty) {
             bankAccounts.addAll(state.list);
+            bankAccounts.sort((a, b) {
+              if (b.isAuthenticated) {
+                return 1;
+              }
+              return -1;
+            });
             cardColors.addAll(state.colors);
             if (state.list.isNotEmpty) {
               TransactionInputDTO transactionInputDTO = TransactionInputDTO(
@@ -782,6 +788,23 @@ class _HomeScreen extends State<HomeScreen> {
                                                 ),
                                               ),
                                             ),
+                                            if (bankAccounts[index]
+                                                .isAuthenticated)
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(25)),
+                                                  color: DefaultTheme.GREEN,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.check,
+                                                  color: DefaultTheme.WHITE,
+                                                  size: 11,
+                                                ),
+                                              )
                                           ],
                                         ),
                                       ),
