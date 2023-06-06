@@ -1,4 +1,5 @@
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction_receive_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class TransactionState extends Equatable {
@@ -37,3 +38,18 @@ class TransactionFetchSuccessState extends TransactionState {
 }
 
 class TransactionFetchFailedState extends TransactionState {}
+
+class TransactionDetailLoadingState extends TransactionState {}
+
+class TransactionDetailSuccessState extends TransactionState {
+  final TransactionReceiveDTO dto;
+
+  const TransactionDetailSuccessState({
+    required this.dto,
+  });
+
+  @override
+  List<Object?> get props => [dto];
+}
+
+class TransactionDetailFailedState extends TransactionState {}

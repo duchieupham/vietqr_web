@@ -25,6 +25,7 @@ import 'package:VietQR/features/token/widgets/maintain_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
+import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
@@ -385,26 +386,35 @@ class _HomeScreen extends State<HomeScreen> {
                       rows: List<DataRow>.generate(
                         transactions.length,
                         (int index) => DataRow(
+                          onSelectChanged: (select) {
+                            if (select!) {
+                              DialogWidget.instance.openPopup(
+                                child: TransactionDetailView(
+                                  transactionId:
+                                      transactions[index].transactionId,
+                                ),
+                                width: 500,
+                                height: 500,
+                              );
+                            }
+                          },
                           cells: [
                             DataCell(
                               SelectableText(
                                 (index + 1).toString(),
                               ),
                             ),
-                            DataCell(
-                              SelectableText(
-                                '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      TransactionUtils.instance.getColorStatus(
-                                    transactions[index].status,
-                                    transactions[index].type,
-                                    transactions[index].transType,
-                                  ),
+                            DataCell(SelectableText(
+                              '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: TransactionUtils.instance.getColorStatus(
+                                  transactions[index].status,
+                                  transactions[index].type,
+                                  transactions[index].transType,
                                 ),
                               ),
-                            ),
+                            )),
                             DataCell(
                               SelectableText(
                                 TransactionUtils.instance.getStatusString(

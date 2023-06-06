@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
+import 'package:VietQR/models/transaction_receive_dto.dart';
 
 class TransactionRepository {
   const TransactionRepository();
@@ -27,6 +28,41 @@ class TransactionRepository {
             .map<RelatedTransactionReceiveDTO>(
                 (json) => RelatedTransactionReceiveDTO.fromJson(json))
             .toList();
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<TransactionReceiveDTO> getTransactionDetail(String id) async {
+    TransactionReceiveDTO result = const TransactionReceiveDTO(
+      time: 0,
+      status: 0,
+      id: '',
+      type: 0,
+      content: '',
+      bankAccount: '',
+      bankAccountName: '',
+      bankId: '',
+      bankCode: '',
+      bankName: '',
+      imgId: '',
+      amount: 0,
+      transType: '',
+      traceId: '',
+      refId: '',
+      referenceNumber: '',
+    );
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}transaction/$id';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        result = TransactionReceiveDTO.fromJson(data);
       }
     } catch (e) {
       LOG.error(e.toString());
