@@ -99,6 +99,16 @@ class _HomeScreen extends State<HomeScreen> {
     });
   }
 
+  void selectRow(String id) {
+    DialogWidget.instance.openPopup(
+      child: TransactionDetailView(
+        transactionId: id,
+      ),
+      width: 500,
+      height: 500,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -405,55 +415,27 @@ class _HomeScreen extends State<HomeScreen> {
                                     ),
                                   ),
                                 ), onTap: () {
-                              DialogWidget.instance.openPopup(
-                                child: TransactionDetailView(
-                                  transactionId:
-                                      transactions[index].transactionId,
-                                ),
-                                width: 500,
-                                height: 500,
-                              );
+                              selectRow(transactions[index].transactionId);
                             }),
                             DataCell(
                                 SelectableText(
                                   TransactionUtils.instance.getStatusString(
                                       transactions[index].status),
                                 ), onTap: () {
-                              DialogWidget.instance.openPopup(
-                                child: TransactionDetailView(
-                                  transactionId:
-                                      transactions[index].transactionId,
-                                ),
-                                width: 500,
-                                height: 500,
-                              );
+                              selectRow(transactions[index].transactionId);
                             }),
                             DataCell(
                                 SelectableText(
                                   TimeUtils.instance.formatDateFromInt(
                                       transactions[index].time, false),
                                 ), onTap: () {
-                              DialogWidget.instance.openPopup(
-                                child: TransactionDetailView(
-                                  transactionId:
-                                      transactions[index].transactionId,
-                                ),
-                                width: 500,
-                                height: 500,
-                              );
+                              selectRow(transactions[index].transactionId);
                             }),
                             DataCell(
                                 SelectableText(
                                   transactions[index].content,
                                 ), onTap: () {
-                              DialogWidget.instance.openPopup(
-                                child: TransactionDetailView(
-                                  transactionId:
-                                      transactions[index].transactionId,
-                                ),
-                                width: 500,
-                                height: 500,
-                              );
+                              selectRow(transactions[index].transactionId);
                             }),
                           ],
                         ),
