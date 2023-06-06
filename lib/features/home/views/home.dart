@@ -386,8 +386,25 @@ class _HomeScreen extends State<HomeScreen> {
                       rows: List<DataRow>.generate(
                         transactions.length,
                         (int index) => DataRow(
-                          onSelectChanged: (select) {
-                            if (select!) {
+                          cells: [
+                            DataCell(
+                              SelectableText(
+                                (index + 1).toString(),
+                              ),
+                            ),
+                            DataCell(
+                                SelectableText(
+                                  '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: TransactionUtils.instance
+                                        .getColorStatus(
+                                      transactions[index].status,
+                                      transactions[index].type,
+                                      transactions[index].transType,
+                                    ),
+                                  ),
+                                ), onTap: () {
                               DialogWidget.instance.openPopup(
                                 child: TransactionDetailView(
                                   transactionId:
@@ -396,42 +413,48 @@ class _HomeScreen extends State<HomeScreen> {
                                 width: 500,
                                 height: 500,
                               );
-                            }
-                          },
-                          cells: [
+                            }),
                             DataCell(
-                              SelectableText(
-                                (index + 1).toString(),
-                              ),
-                            ),
-                            DataCell(SelectableText(
-                              '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: TransactionUtils.instance.getColorStatus(
-                                  transactions[index].status,
-                                  transactions[index].type,
-                                  transactions[index].transType,
+                                SelectableText(
+                                  TransactionUtils.instance.getStatusString(
+                                      transactions[index].status),
+                                ), onTap: () {
+                              DialogWidget.instance.openPopup(
+                                child: TransactionDetailView(
+                                  transactionId:
+                                      transactions[index].transactionId,
                                 ),
-                              ),
-                            )),
+                                width: 500,
+                                height: 500,
+                              );
+                            }),
                             DataCell(
-                              SelectableText(
-                                TransactionUtils.instance.getStatusString(
-                                    transactions[index].status),
-                              ),
-                            ),
+                                SelectableText(
+                                  TimeUtils.instance.formatDateFromInt(
+                                      transactions[index].time, false),
+                                ), onTap: () {
+                              DialogWidget.instance.openPopup(
+                                child: TransactionDetailView(
+                                  transactionId:
+                                      transactions[index].transactionId,
+                                ),
+                                width: 500,
+                                height: 500,
+                              );
+                            }),
                             DataCell(
-                              SelectableText(
-                                TimeUtils.instance.formatDateFromInt(
-                                    transactions[index].time, false),
-                              ),
-                            ),
-                            DataCell(
-                              SelectableText(
-                                transactions[index].content,
-                              ),
-                            ),
+                                SelectableText(
+                                  transactions[index].content,
+                                ), onTap: () {
+                              DialogWidget.instance.openPopup(
+                                child: TransactionDetailView(
+                                  transactionId:
+                                      transactions[index].transactionId,
+                                ),
+                                width: 500,
+                                height: 500,
+                              );
+                            }),
                           ],
                         ),
                       ),
