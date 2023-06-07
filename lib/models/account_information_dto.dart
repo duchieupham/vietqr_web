@@ -8,6 +8,7 @@ class AccountInformationDTO {
   final String address;
   final String email;
   final String imgId;
+  final String phoneNo;
 
   const AccountInformationDTO({
     required this.userId,
@@ -19,6 +20,7 @@ class AccountInformationDTO {
     required this.address,
     required this.email,
     required this.imgId,
+    required this.phoneNo,
   });
 
   factory AccountInformationDTO.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class AccountInformationDTO {
       address: json['address'] ?? '',
       email: json['email'] ?? '',
       imgId: json['imgId'] ?? '',
+      phoneNo: json['phoneNo'] ?? '',
     );
   }
 
@@ -46,6 +49,7 @@ class AccountInformationDTO {
     data['address'] = address;
     data['email'] = email;
     data['imgId'] = imgId;
+    data['phoneNo'] = phoneNo;
     return data;
   }
 
@@ -60,6 +64,7 @@ class AccountInformationDTO {
     data['"address"'] = (address == '') ? '""' : '"$address"';
     data['"email"'] = (email == '') ? '""' : '"$email"';
     data['"imgId"'] = (imgId == '') ? '""' : '"$imgId"';
+    data['"phoneNo"'] = (phoneNo == '') ? '""' : '"$phoneNo"';
     return data;
   }
 }

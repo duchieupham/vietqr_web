@@ -2,7 +2,6 @@ import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
 import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/repositories/login_repository.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
-import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../services/shared_references/web_socket_helper.dart';
@@ -10,6 +9,7 @@ import '../../../services/shared_references/web_socket_helper.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitialState()) {
     on<LoginEventByPhone>(_login);
+    on<LoginEventByCardNumber>(_loginByCardNumber);
     // on<LoginEventGetUserInformation>(_getUserInformation);
     // on<LoginEventListen>(_listenCodeLogin);
     // on<LoginEventReceived>(_receivedCodeLogin);
@@ -20,11 +20,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
 const LoginRepository loginRepository = LoginRepository();
 const UserSettingRepository userSettingRepository = UserSettingRepository();
+
 void _login(LoginEvent event, Emitter emit) async {
   try {
     if (event is LoginEventByPhone) {
       emit(LoginLoadingState());
       bool check = await loginRepository.login(event.dto);
+      // await userSettingRepository.getGuideWeb(userId)
+      if (check) {
+        emit(LoginSuccessfulState());
+        WebSocketHelper.instance.listenTransactionSocket();
+      } else {
+        emit(LoginFailedState());
+      }
+    }
+  } catch (e) {
+    print('Error at login - LoginBloc: $e');
+    emit(LoginFailedState());
+  }
+}
+
+void _loginByCardNumber(LoginEvent event, Emitter emit) async {
+  try {
+    if (event is LoginEventByCardNumber) {
+      emit(LoginLoadingState());
+      bool check = await loginRepository.loginByCardNumber(event.dto);
       // await userSettingRepository.getGuideWeb(userId)
       if (check) {
         emit(LoginSuccessfulState());

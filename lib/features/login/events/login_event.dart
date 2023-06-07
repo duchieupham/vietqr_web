@@ -1,5 +1,6 @@
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/models/account_login_dto.dart';
+import 'package:VietQR/models/account_login_method_dto.dart';
 import 'package:VietQR/models/code_login_dto.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,6 +14,15 @@ class LoginEvent extends Equatable {
 class LoginEventByPhone extends LoginEvent {
   final AccountLoginDTO dto;
   const LoginEventByPhone({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}
+
+class LoginEventByCardNumber extends LoginEvent {
+  final AccountLoginMethodDTO dto;
+
+  const LoginEventByCardNumber({required this.dto});
 
   @override
   List<Object?> get props => [dto];

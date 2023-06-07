@@ -105,6 +105,30 @@ class PopupMenuWebWidget {
           ),
         ),
         PopupMenuItem<int>(
+          value: 2,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.wifi_tethering_sharp,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Cài đặt VietQR ID',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
             value: 3,
             height: 40,
             child: BlocListener<LogoutBloc, LogoutState>(

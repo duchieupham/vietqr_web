@@ -24,6 +24,7 @@ import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
+import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/guide_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
@@ -216,6 +217,8 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => RegisterProvider()),
             ChangeNotifierProvider(create: (context) => BankTypeProvider()),
             ChangeNotifierProvider(create: (context) => GuideProvider()),
+            ChangeNotifierProvider(
+                create: (context) => CardNumberSettingProvider()),
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
           ],

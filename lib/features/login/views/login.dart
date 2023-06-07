@@ -11,9 +11,11 @@ import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/frames/login_frame.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
 import 'package:VietQR/features/login/views/create_QRCode.dart';
+import 'package:VietQR/features/login/widgets/login_by_card_widget.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
+import 'package:VietQR/models/account_login_method_dto.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -147,7 +149,7 @@ class _Login extends State<Login> {
           fit: BoxFit.fitWidth,
         ),
         const SizedBox(
-          height: 30,
+          height: 20,
         ),
         BorderLayout(
           width: width,
@@ -210,7 +212,7 @@ class _Login extends State<Login> {
             ),
           ],
         ),
-        const Padding(padding: EdgeInsets.only(top: 20)),
+        const Padding(padding: EdgeInsets.only(top: 15)),
         SizedBox(
           width: width,
           child: Row(
@@ -236,26 +238,61 @@ class _Login extends State<Login> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 15),
           child: SizedBox(
             width: width,
             height: 40,
-            child: SignInButton(
-              Buttons.Google,
-              text: "Đăng nhập với Google",
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              onPressed: () {
-                DialogWidget.instance.openMsgDialog(
-                  title: 'Tính năng bảo trì',
-                  msg:
-                      'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
-                );
-              },
+            child: Row(
+              children: [
+                Expanded(
+                  child: _buildButtonSignIn(
+                    assetImage: 'assets/images/logo-google.png',
+                    text: 'Đăng nhập với Google',
+                    function: () {
+                      DialogWidget.instance.openMsgDialog(
+                        title: 'Tính năng bảo trì',
+                        msg:
+                            'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
+                      );
+                    },
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(left: 10)),
+                Expanded(
+                  child: _buildButtonSignIn(
+                    assetImage: 'assets/images/ic-card.png',
+                    text: 'VietQR ID',
+                    bgColor: DefaultTheme.PURPLE_NEON,
+                    textColor: DefaultTheme.WHITE,
+                    function: () async {
+                      await DialogWidget.instance
+                          .openPopup(
+                        child: LoginByCardWidget(),
+                        width: 500,
+                        height: 500,
+                      )
+                          .then((value) {
+                        if (value != null) {
+                          AccountLoginMethodDTO accountLoginMethodDTO =
+                              AccountLoginMethodDTO(
+                            method: 'CARD',
+                            cardNumber: value,
+                            userId: '',
+                            platform: '',
+                            device: '',
+                            fcmToken: '',
+                          );
+                          _loginBloc.add(LoginEventByCardNumber(
+                              dto: accountLoginMethodDTO));
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-
         ButtonWidget(
           width: width,
           height: 40,
@@ -273,6 +310,46 @@ class _Login extends State<Login> {
           _buildQrLogin(),
         ],
       ],
+    );
+  }
+
+  Widget _buildButtonSignIn({
+    required String assetImage,
+    required String text,
+    required VoidCallback function,
+    Color? bgColor,
+    Color? textColor,
+  }) {
+    return InkWell(
+      onTap: function,
+      child: BoxLayout(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        enableShadow: true,
+        borderRadius: 5,
+        bgColor: bgColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              assetImage,
+              width: 30,
+              height: 30,
+            ),
+            const Padding(padding: EdgeInsets.only(left: 5)),
+            Expanded(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: textColor,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

@@ -23,7 +23,6 @@ class AccountLoginDTO {
     data['fcmToken'] = fcmToken;
     data['device'] = device;
     data['platform'] = platform;
-    print(data);
     return data;
   }
 }

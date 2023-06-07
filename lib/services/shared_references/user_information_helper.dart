@@ -21,6 +21,7 @@ class UserInformationHelper {
       address: '',
       email: '',
       imgId: '',
+      phoneNo: '',
     );
     await sharedPrefs.setString('USER_ID', '');
     await sharedPrefs.setString('PHONE_NO', '');
