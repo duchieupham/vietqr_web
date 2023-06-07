@@ -101,10 +101,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/ecom',
       redirect: (context, state) {
-        return (UserInformationHelper.instance
-                .getUserECOMId()
-                .trim()
-                .isNotEmpty)
+        return (Session.instance.userECOMId.trim().isNotEmpty)
             ? '/ecom/home'
             : '/ecom/login';
       },
@@ -116,7 +113,10 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/ecom/home',
-      redirect: (context, state) => '/ecom/home',
+      redirect: (context, state) =>
+          (Session.instance.userECOMId.trim().isNotEmpty)
+              ? '/ecom/home'
+              : '/ecom/login',
       builder: (BuildContext context, GoRouterState state) =>
           const ECOMHomeScreen(),
     ),
@@ -128,13 +128,11 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/ecom/bank/create/:id',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserECOMId().trim().isEmpty)
-              ? '/ecom/login'
-              : (UserInformationHelper.instance.getUserECOMId().trim() ==
-                      state.params['id'])
-                  ? '/ecom/bank/create/${state.params['id'] ?? ''}'
-                  : '/ecom/home',
+      redirect: (context, state) => (Session.instance.userECOMId.trim().isEmpty)
+          ? '/ecom/login'
+          : (Session.instance.userECOMId.trim() == state.params['id'])
+              ? '/ecom/bank/create/${state.params['id'] ?? ''}'
+              : '/ecom/home',
       builder: (BuildContext context, GoRouterState state) => ECOMAddBankView(
         userId: state.params['id'] ?? '',
       ),

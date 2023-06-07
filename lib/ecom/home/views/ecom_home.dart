@@ -32,6 +32,7 @@ import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
+import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:clipboard/clipboard.dart';
@@ -61,7 +62,7 @@ class _HomeScreen extends State<ECOMHomeScreen> {
   late WebSocketChannel channel;
 
   List<RelatedTransactionReceiveDTO> transactions = [];
-  String userId = UserInformationHelper.instance.getUserECOMId();
+  String userId = Session.instance.userECOMId;
   @override
   void initState() {
     super.initState();
@@ -84,9 +85,43 @@ class _HomeScreen extends State<ECOMHomeScreen> {
             width: width * 0.9,
             child: Column(
               children: [
-                const SelectableText('value token'),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                ),
+                SelectableText(Session.instance.userECOMToken),
                 const SizedBox(
-                  height: 50,
+                  height: 70,
+                ),
+                Tooltip(
+                  message: 'Sao chép mã QR',
+                  child: ButtonIconWidget(
+                    width: width * 0.6,
+                    height: 45,
+                    icon: Icons.copy_rounded,
+                    title: 'Coppy token',
+                    function: () async {
+                      await FlutterClipboard.copy(
+                              Session.instance.userECOMToken)
+                          .then(
+                        (value) => Fluttertoast.showToast(
+                          msg: 'Đã sao chép',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: DefaultTheme.WHITE,
+                          textColor: DefaultTheme.BLACK,
+                          fontSize: 15,
+                          webBgColor: 'rgba(255, 255, 255)',
+                          webPosition: 'center',
+                        ),
+                      );
+                    },
+                    bgColor: Theme.of(context).cardColor,
+                    textColor: Theme.of(context).hintColor,
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 Tooltip(
                   message: 'Thêm tài khoản ngân hàng',

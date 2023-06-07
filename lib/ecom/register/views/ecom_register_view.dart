@@ -13,6 +13,7 @@ import 'package:VietQR/ecom/register/states/ecom_register_state.dart';
 import 'package:VietQR/features/register/frame/register_frame.dart';
 import 'package:VietQR/features/register/states/register_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,8 +69,7 @@ class ECOMRegisterView extends StatelessWidget {
                 if (state is ECOMRegisterSuccessState) {
                   //pop loading dialog
                   Navigator.of(context).pop();
-                  String userId =
-                      UserInformationHelper.instance.getUserECOMId();
+                  String userId = Session.instance.userECOMId;
                   context.push('/ecom/bank/create/$userId');
                 }
               }),
