@@ -1,11 +1,16 @@
-import 'dart:convert';
-
-import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
 import 'package:VietQR/commons/utils/log.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/ecom/bank/blocs/ecom_bank_bloc.dart';
+import 'package:VietQR/ecom/bank/blocs/ecom_bank_type_bloc.dart';
+import 'package:VietQR/ecom/bank/views/ecom_add_bank_view.dart';
+import 'package:VietQR/ecom/home/views/ecom_home.dart';
+import 'package:VietQR/ecom/login/blocs/ecom_login_bloc.dart';
+import 'package:VietQR/ecom/login/views/ecom_login.dart';
+import 'package:VietQR/ecom/register/blocs/ecom_register_bloc.dart';
+import 'package:VietQR/ecom/register/provider/ecom_register_provider.dart';
+import 'package:VietQR/ecom/register/views/ecom_register_view.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
@@ -21,8 +26,6 @@ import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
-import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
-import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
@@ -47,6 +50,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -93,6 +98,47 @@ class NavigationService {
 final GoRouter _router = GoRouter(
   navigatorKey: NavigationService.navigatorKey,
   routes: <RouteBase>[
+    GoRoute(
+      path: '/ecom',
+      redirect: (context, state) {
+        return (UserInformationHelper.instance
+                .getUserECOMId()
+                .trim()
+                .isNotEmpty)
+            ? '/ecom/home'
+            : '/ecom/login';
+      },
+    ),
+    GoRoute(
+      path: '/ecom/login',
+      redirect: (context, state) => '/ecom/login',
+      builder: (BuildContext context, GoRouterState state) => const ECOMLogin(),
+    ),
+    GoRoute(
+      path: '/ecom/home',
+      redirect: (context, state) => '/ecom/home',
+      builder: (BuildContext context, GoRouterState state) =>
+          const ECOMHomeScreen(),
+    ),
+    GoRoute(
+      path: '/ecom/register',
+      redirect: (context, state) => '/ecom/register',
+      builder: (BuildContext context, GoRouterState state) =>
+          ECOMRegisterView(),
+    ),
+    GoRoute(
+      path: '/ecom/bank/create/:id',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserECOMId().trim().isEmpty)
+              ? '/ecom/login'
+              : (UserInformationHelper.instance.getUserECOMId().trim() ==
+                      state.params['id'])
+                  ? '/ecom/bank/create/${state.params['id'] ?? ''}'
+                  : '/ecom/home',
+      builder: (BuildContext context, GoRouterState state) => ECOMAddBankView(
+        userId: state.params['id'] ?? '',
+      ),
+    ),
     GoRoute(
       path: '/',
       redirect: (context, state) {
@@ -207,6 +253,18 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<NotificationBloc>(
             create: (BuildContext context) => NotificationBloc(),
           ),
+          BlocProvider<ECOMLoginBloc>(
+            create: (BuildContext context) => ECOMLoginBloc(),
+          ),
+          BlocProvider<ECOMRegisterBloc>(
+            create: (BuildContext context) => ECOMRegisterBloc(),
+          ),
+          BlocProvider<ECOMBankBloc>(
+            create: (BuildContext context) => ECOMBankBloc(),
+          ),
+          BlocProvider<ECOMBankTypeBloc>(
+            create: (BuildContext context) => ECOMBankTypeBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
@@ -215,12 +273,14 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => MenuCardProvider()),
             ChangeNotifierProvider(create: (context) => CreateQRProvider()),
             ChangeNotifierProvider(create: (context) => RegisterProvider()),
+            ChangeNotifierProvider(create: (context) => ECOMRegisterProvider()),
             ChangeNotifierProvider(create: (context) => BankTypeProvider()),
             ChangeNotifierProvider(create: (context) => GuideProvider()),
             ChangeNotifierProvider(
                 create: (context) => CardNumberSettingProvider()),
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
+            ChangeNotifierProvider(create: (context) => ECOMBankTypeProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

@@ -608,12 +608,7 @@ class _HomeScreen extends State<HomeScreen> {
           _resetBank();
           if (bankAccounts.isEmpty) {
             bankAccounts.addAll(state.list);
-            bankAccounts.sort((a, b) {
-              if (b.isAuthenticated) {
-                return 1;
-              }
-              return -1;
-            });
+
             cardColors.addAll(state.colors);
             if (state.list.isNotEmpty) {
               TransactionInputDTO transactionInputDTO = TransactionInputDTO(

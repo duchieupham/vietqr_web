@@ -1,8 +1,10 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
@@ -20,8 +22,10 @@ import 'package:VietQR/models/qr_create_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class CreateQR extends StatelessWidget {
@@ -455,6 +459,97 @@ class CreateQR extends StatelessWidget {
                                     width: 400,
                                     qrGeneratedDTO: qrGeneratedDTO,
                                     content: '',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                UnconstrainedBox(
+                                  child: SizedBox(
+                                    width: 350,
+                                    child: Row(
+                                      children: [
+                                        Tooltip(
+                                          message: 'In',
+                                          child: ButtonIconWidget(
+                                            width: 350 / 3 - (20 / 3),
+                                            height: 40,
+                                            icon: Icons.print_rounded,
+                                            title: '',
+                                            function: () {
+                                              DialogWidget.instance
+                                                  .openMsgDialog(
+                                                title: 'Tính năng đang bảo trì',
+                                                msg: 'Vui lòng thử lại sau',
+                                              );
+                                            },
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            textColor:
+                                                Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Tooltip(
+                                          message: 'Lưu ảnh',
+                                          child: ButtonIconWidget(
+                                            width: 350 / 3 - (20 / 3),
+                                            height: 40,
+                                            icon: Icons.photo_rounded,
+                                            title: '',
+                                            function: () {
+                                              DialogWidget.instance
+                                                  .openMsgDialog(
+                                                title: 'Tính năng đang bảo trì',
+                                                msg: 'Vui lòng thử lại sau',
+                                              );
+                                            },
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            textColor:
+                                                Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Tooltip(
+                                          message: 'Sao chép mã QR',
+                                          child: ButtonIconWidget(
+                                            width: 350 / 3 - (20 / 3),
+                                            height: 40,
+                                            icon: Icons.copy_rounded,
+                                            title: '',
+                                            function: () async {
+                                              await FlutterClipboard.copy(
+                                                      ShareUtils
+                                                          .instance
+                                                          .getTextSharing(
+                                                              qrGeneratedDTO))
+                                                  .then(
+                                                (value) =>
+                                                    Fluttertoast.showToast(
+                                                  msg: 'Đã sao chép',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.CENTER,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor:
+                                                      DefaultTheme.WHITE,
+                                                  textColor: DefaultTheme.BLACK,
+                                                  fontSize: 15,
+                                                  webBgColor:
+                                                      'rgba(255, 255, 255)',
+                                                  webPosition: 'center',
+                                                ),
+                                              );
+                                            },
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            textColor:
+                                                Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
