@@ -59,13 +59,9 @@ class ECOMLoginRepository {
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         AccountInformationDTO accountInformationDTO =
             AccountInformationDTO.fromJson(decodedToken);
-        await AccountHelper.instance.setFcmToken('');
-        await AccountHelper.instance.setToken(token);
-        await UserInformationHelper.instance.setPhoneNo(dto.phoneNo);
-        await UserInformationHelper.instance
-            .setUserECOMId(accountInformationDTO.userId);
-        await UserInformationHelper.instance
-            .setAccountInformation(accountInformationDTO);
+        Session.instance.updateUserECOMToken(token);
+        Session.instance.updateUserECOMId(accountInformationDTO.userId);
+
         result = true;
       }
     } catch (e) {

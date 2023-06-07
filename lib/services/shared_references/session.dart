@@ -1,6 +1,7 @@
 import 'dart:async';
-
+import 'dart:html' as html;
 import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
+import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:async/async.dart';
@@ -89,5 +90,18 @@ class Session {
       bool value = await _userSettingRepository.getGuideWeb(userId);
       await GuideHelper.instance.updateGuideDisable(value);
     }
+  }
+
+  String _userECOMId = '';
+  String get userECOMId => _userECOMId;
+
+  String _userECOMToken = '';
+  String get userECOMToken => _userECOMToken;
+  void updateUserECOMId(String value) {
+    _userECOMId = value;
+  }
+
+  void updateUserECOMToken(String value) {
+    _userECOMToken = value;
   }
 }
