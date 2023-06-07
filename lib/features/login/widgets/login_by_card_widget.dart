@@ -39,7 +39,7 @@ class LoginByCardWidget extends StatelessWidget {
               const Padding(padding: EdgeInsets.only(left: 25)),
               const Spacer(),
               const Text(
-                'VietQR ID',
+                'VietQR ID Card',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

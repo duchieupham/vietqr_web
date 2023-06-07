@@ -24,6 +24,7 @@ import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
+import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
@@ -262,6 +263,9 @@ class _VietQRApp extends State<VietQRApp> {
           ),
           BlocProvider<ECOMBankTypeBloc>(
             create: (BuildContext context) => ECOMBankTypeBloc(),
+          ),
+          BlocProvider<CardNumBloc>(
+            create: (BuildContext context) => CardNumBloc(),
           ),
         ],
         child: MultiProvider(

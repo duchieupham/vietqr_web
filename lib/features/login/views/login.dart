@@ -261,7 +261,7 @@ class _Login extends State<Login> {
                 Expanded(
                   child: _buildButtonSignIn(
                     assetImage: 'assets/images/ic-card.png',
-                    text: 'VietQR ID',
+                    text: 'VietQR ID Card',
                     bgColor: DefaultTheme.PURPLE_NEON,
                     textColor: DefaultTheme.WHITE,
                     function: () async {
