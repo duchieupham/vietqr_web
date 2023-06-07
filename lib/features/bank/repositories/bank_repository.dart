@@ -36,6 +36,12 @@ class BankRepository {
     } catch (e) {
       LOG.error(e.toString());
     }
+    result.sort((a, b) {
+      if (b.isAuthenticated) {
+        return 1;
+      }
+      return -1;
+    });
     return result;
   }
 
