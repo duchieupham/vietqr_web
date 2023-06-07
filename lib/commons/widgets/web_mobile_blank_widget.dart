@@ -13,9 +13,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WebMobileBlankWidget extends StatelessWidget {
-  late LogoutBloc logoutBloc;
+  static late LogoutBloc logoutBloc;
 
-  WebMobileBlankWidget({super.key});
+  const WebMobileBlankWidget({super.key});
 
   void initialServices(BuildContext context) {
     logoutBloc = BlocProvider.of(context);
