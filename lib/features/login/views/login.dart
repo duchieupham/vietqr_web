@@ -10,9 +10,11 @@ import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/frames/login_frame.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
+import 'package:VietQR/features/login/views/create_QRCode.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -90,7 +92,7 @@ class _Login extends State<Login> {
             width: width,
             isResized: PlatformUtils.instance.resizeWhen(width, 750),
           ),
-          widget2: _buildWidget2(context: context),
+          widget2: const CreateQRCode(),
         ),
       ),
     );
@@ -133,15 +135,19 @@ class _Login extends State<Login> {
 
   Widget _buildWidget1({required bool isResized, required double width}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: Image.asset(
-            'assets/images/ic-viet-qr.png',
-            width: 100,
-            height: 100,
-          ),
+        const SizedBox(
+          height: 10,
+        ),
+        Image.asset(
+          'assets/images/logo-vietqr-vn.png',
+          width: 200,
+          fit: BoxFit.fitWidth,
+        ),
+        const SizedBox(
+          height: 30,
         ),
         BorderLayout(
           width: width,
@@ -150,11 +156,32 @@ class _Login extends State<Login> {
             width: width,
             isObscureText: false,
             autoFocus: true,
-            hintText: 'Email hoặc Số điện thoại',
+            hintText: 'Số điện thoại',
             controller: phoneNoController,
             inputType: TextInputType.text,
-            keyboardAction: TextInputAction.next,
+            keyboardAction: TextInputAction.done,
+            onSubmitted: (value) {
+              openPinDialog(context);
+            },
             onChange: (vavlue) {},
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: InkWell(
+              onTap: () {
+                DialogWidget.instance.openMsgDialog(
+                  title: 'Tính năng bảo trì',
+                  msg:
+                      'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
+                );
+              },
+              child: const Text(
+                'Quên mật khẩu?',
+              ),
+            ),
           ),
         ),
         // const Padding(padding: EdgeInsets.only(top: 15)),
@@ -165,17 +192,23 @@ class _Login extends State<Login> {
         //     fontSize: 15,
         //   ),
         // ),
-        const Padding(padding: EdgeInsets.only(top: 30)),
-        ButtonWidget(
-          width: width,
-          height: 40,
-          text: 'Đăng nhập',
-          borderRadius: 5,
-          textColor: DefaultTheme.WHITE,
-          bgColor: DefaultTheme.GREEN,
-          function: () {
-            openPinDialog(context);
-          },
+        const Padding(padding: EdgeInsets.only(top: 10)),
+        Row(
+          children: [
+            Expanded(
+              child: ButtonWidget(
+                width: width,
+                height: 40,
+                text: 'Đăng nhập',
+                borderRadius: 5,
+                textColor: DefaultTheme.WHITE,
+                bgColor: DefaultTheme.GREEN,
+                function: () {
+                  openPinDialog(context);
+                },
+              ),
+            ),
+          ],
         ),
         const Padding(padding: EdgeInsets.only(top: 20)),
         SizedBox(
@@ -202,7 +235,27 @@ class _Login extends State<Login> {
             ],
           ),
         ),
-        const Padding(padding: EdgeInsets.only(top: 20)),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: SizedBox(
+            width: width,
+            height: 40,
+            child: SignInButton(
+              Buttons.Google,
+              text: "Đăng nhập với Google",
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              onPressed: () {
+                DialogWidget.instance.openMsgDialog(
+                  title: 'Tính năng bảo trì',
+                  msg:
+                      'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
+                );
+              },
+            ),
+          ),
+        ),
+
         ButtonWidget(
           width: width,
           height: 40,
@@ -214,62 +267,58 @@ class _Login extends State<Login> {
             context.go('/register');
           },
         ),
-        // const Padding(padding: EdgeInsets.only(top: 20)),
-        // ButtonWidget(
-        //   width: width,
-        //   height: 40,
-        //   text: 'Tạo mã QR ngay',
-        //   borderRadius: 5,
-        //   textColor: DefaultTheme.WHITE,
-        //   bgColor: DefaultTheme.BLUE_TEXT,
-        //   function: () {
-        //     context.go('/register');
-        //   },
-        // )
+
+        if (PlatformUtils.instance.resizeWhen(width, 850)) ...[
+          const Padding(padding: EdgeInsets.only(top: 10)),
+          _buildQrLogin(),
+        ],
       ],
     );
   }
 
-  Widget _buildWidget2({required BuildContext context}) {
-    return SizedBox(
-      width: 300,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          BoxLayout(
-            width: 200,
-            height: 200,
-            borderRadius: 5,
-            enableShadow: true,
-            alignment: Alignment.center,
-            bgColor: DefaultTheme.WHITE,
-            padding: const EdgeInsets.all(0),
-            child: QrImage(
-              data: code,
-              size: 200,
-              embeddedImage:
-                  const AssetImage('assets/images/ic-viet-qr-login.png'),
-              embeddedImageStyle: QrEmbeddedImageStyle(
-                size: const Size(30, 30),
+  Widget _buildQrLogin() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: SizedBox(
+        width: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            BoxLayout(
+              width: 190,
+              height: 190,
+              borderRadius: 5,
+              enableShadow: true,
+              alignment: Alignment.center,
+              bgColor: DefaultTheme.WHITE,
+              padding: const EdgeInsets.all(0),
+              child: QrImage(
+                data: code,
+                size: 200,
+                embeddedImage:
+                    const AssetImage('assets/images/ic-viet-qr-login.png'),
+                embeddedImageStyle: QrEmbeddedImageStyle(
+                  size: const Size(30, 30),
+                ),
               ),
             ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 30)),
-          const Text(
-            'Đăng nhập bằng QR Code',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          const SizedBox(
-            width: 250,
-            child: Text(
-              'Sử dụng ứng dụng VietQR trên điện thoại để quét mã đăng nhập.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15),
+            const Padding(padding: EdgeInsets.only(top: 30)),
+            const Text(
+              'Đăng nhập bằng QR Code',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ),
-        ],
+            const Padding(padding: EdgeInsets.only(top: 10)),
+            const SizedBox(
+              width: 250,
+              child: Text(
+                'Sử dụng ứng dụng VietQR trên điện thoại để quét mã đăng nhập.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

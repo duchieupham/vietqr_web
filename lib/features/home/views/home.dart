@@ -25,6 +25,7 @@ import 'package:VietQR/features/token/widgets/maintain_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
+import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
@@ -96,6 +97,16 @@ class _HomeScreen extends State<HomeScreen> {
                   .id,
               offset: currentPage)));
     });
+  }
+
+  void selectRow(String id) {
+    DialogWidget.instance.openPopup(
+      child: TransactionDetailView(
+        transactionId: id,
+      ),
+      width: 500,
+      height: 500,
+    );
   }
 
   @override
@@ -392,36 +403,40 @@ class _HomeScreen extends State<HomeScreen> {
                               ),
                             ),
                             DataCell(
-                              SelectableText(
-                                '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      TransactionUtils.instance.getColorStatus(
-                                    transactions[index].status,
-                                    transactions[index].type,
-                                    transactions[index].transType,
+                                SelectableText(
+                                  '${TransactionUtils.instance.getTransType(transactions[index].transType)} ${CurrencyUtils.instance.getCurrencyFormatted(transactions[index].amount)}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: TransactionUtils.instance
+                                        .getColorStatus(
+                                      transactions[index].status,
+                                      transactions[index].type,
+                                      transactions[index].transType,
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
+                                ), onTap: () {
+                              selectRow(transactions[index].transactionId);
+                            }),
                             DataCell(
-                              SelectableText(
-                                TransactionUtils.instance.getStatusString(
-                                    transactions[index].status),
-                              ),
-                            ),
+                                SelectableText(
+                                  TransactionUtils.instance.getStatusString(
+                                      transactions[index].status),
+                                ), onTap: () {
+                              selectRow(transactions[index].transactionId);
+                            }),
                             DataCell(
-                              SelectableText(
-                                TimeUtils.instance.formatDateFromInt(
-                                    transactions[index].time, false),
-                              ),
-                            ),
+                                SelectableText(
+                                  TimeUtils.instance.formatDateFromInt(
+                                      transactions[index].time, false),
+                                ), onTap: () {
+                              selectRow(transactions[index].transactionId);
+                            }),
                             DataCell(
-                              SelectableText(
-                                transactions[index].content,
-                              ),
-                            ),
+                                SelectableText(
+                                  transactions[index].content,
+                                ), onTap: () {
+                              selectRow(transactions[index].transactionId);
+                            }),
                           ],
                         ),
                       ),
@@ -593,6 +608,12 @@ class _HomeScreen extends State<HomeScreen> {
           _resetBank();
           if (bankAccounts.isEmpty) {
             bankAccounts.addAll(state.list);
+            bankAccounts.sort((a, b) {
+              if (b.isAuthenticated) {
+                return 1;
+              }
+              return -1;
+            });
             cardColors.addAll(state.colors);
             if (state.list.isNotEmpty) {
               TransactionInputDTO transactionInputDTO = TransactionInputDTO(
@@ -782,6 +803,23 @@ class _HomeScreen extends State<HomeScreen> {
                                                 ),
                                               ),
                                             ),
+                                            if (bankAccounts[index]
+                                                .isAuthenticated)
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                decoration: const BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(25)),
+                                                  color: DefaultTheme.GREEN,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.check,
+                                                  color: DefaultTheme.WHITE,
+                                                  size: 11,
+                                                ),
+                                              )
                                           ],
                                         ),
                                       ),

@@ -6,6 +6,7 @@ class BankTypeProvider with ChangeNotifier {
     id: '',
     bankCode: '',
     bankName: '',
+    bankShortName: '',
     imageId: '',
     status: 0,
     caiValue: '',
@@ -30,7 +31,7 @@ class BankTypeProvider with ChangeNotifier {
   }
 
   bool isValidUnauthenticateForm() {
-    return (_bankType.id.isNotEmpty && !_isNameErr && !_isBankAccountErr);
+    return (_bankType.bankCode.isNotEmpty && !_isNameErr && !_isBankAccountErr);
   }
 
   bool isValidAuthenticateForm() {
@@ -71,6 +72,7 @@ class BankTypeProvider with ChangeNotifier {
       id: '',
       bankCode: '',
       bankName: '',
+      bankShortName: '',
       imageId: '',
       status: 0,
       caiValue: '',

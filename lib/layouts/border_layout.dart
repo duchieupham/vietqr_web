@@ -2,7 +2,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
 
 class BorderLayout extends StatelessWidget {
-  final double width;
+  final double? width;
   final bool isError;
   final Widget child;
   final EdgeInsets? padding;
@@ -10,7 +10,7 @@ class BorderLayout extends StatelessWidget {
 
   const BorderLayout({
     super.key,
-    required this.width,
+    this.width,
     required this.isError,
     required this.child,
     this.padding,

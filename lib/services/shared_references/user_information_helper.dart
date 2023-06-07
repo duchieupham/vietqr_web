@@ -58,4 +58,12 @@ class UserInformationHelper {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();
   }
+
+  Future<void> setUserECOMId(String userId) async {
+    await sharedPrefs.setString('USER_ECOM_ID', userId);
+  }
+
+  String getUserECOMId() {
+    return sharedPrefs.getString('USER_ECOM_ID') ?? '';
+  }
 }

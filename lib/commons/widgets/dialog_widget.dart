@@ -165,39 +165,47 @@ class DialogWidget {
   openNotificationDialog({
     required Widget child,
     required double height,
+    required Function onTapBarrier,
     double? marginRight,
   }) {
     return showDialog(
         context: NavigationService.navigatorKey.currentContext!,
         barrierColor: DefaultTheme.TRANSPARENT,
-        barrierDismissible: true,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return Align(
-            alignment: Alignment.topRight,
-            child: UnconstrainedBox(
-              child: BoxLayout(
-                width: 300,
-                height: height * 0.7,
-                borderRadius: 5,
-                enableShadow: true,
-                margin: EdgeInsets.only(
-                  right: (marginRight != null) ? marginRight : 120,
-                  top: 60,
-                ),
-                padding: const EdgeInsets.all(0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                      child: Text(
-                        'Thông báo',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+          return GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+              onTapBarrier();
+            },
+            child: Material(
+              color: DefaultTheme.TRANSPARENT,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: BoxLayout(
+                  width: 400,
+                  height: height * 0.7,
+                  borderRadius: 5,
+                  enableShadow: true,
+                  margin: EdgeInsets.only(
+                    right: (marginRight != null) ? marginRight : 80,
+                    top: 60,
+                  ),
+                  padding: const EdgeInsets.all(0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                        child: Text(
+                          'Thông báo',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    Expanded(child: child),
-                  ],
+                      Expanded(child: child),
+                    ],
+                  ),
                 ),
               ),
             ),

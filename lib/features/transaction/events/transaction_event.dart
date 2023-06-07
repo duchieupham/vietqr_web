@@ -29,3 +29,12 @@ class TransactionEventFetch extends TransactionEvent {
   @override
   List<Object?> get props => [dto];
 }
+
+class TransactionEventGetDetail extends TransactionEvent {
+  final String id;
+
+  const TransactionEventGetDetail({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}

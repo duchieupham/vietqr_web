@@ -30,4 +30,26 @@ class BankTypeRepository {
     }
     return result;
   }
+
+  Future<List<BankTypeDTO>> getBankTypesUnauthenticated() async {
+    List<BankTypeDTO> result = [];
+    try {
+      String url = '${EnvConfig.getBaseUrl()}bank-type/unauthenticated';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          result = data
+              .map<BankTypeDTO>((json) => BankTypeDTO.fromJson(json))
+              .toList();
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
 }
