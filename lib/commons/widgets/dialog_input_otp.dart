@@ -54,7 +54,7 @@ class DialogInputOTP extends StatelessWidget {
             width: 300,
             height: 30,
             child: Text(
-              'Nhập mã sác nhận đã được ửi tới bạn qua SMS',
+              'Nhập mã sác nhận đã được gửi tới bạn qua SMS',
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
