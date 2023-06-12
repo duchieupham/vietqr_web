@@ -1,6 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
-import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/user_information_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -61,9 +60,6 @@ class RegisterView extends StatelessWidget {
           Expanded(
             child: BlocListener<RegisterBloc, RegisterState>(
               listener: ((context, state) {
-                if (state is RegisterLoadingState) {
-                  DialogWidget.instance.openLoadingDialog();
-                }
                 if (state is RegisterFailedState) {
                   //pop loading dialog
                   Navigator.pop(context);
@@ -273,27 +269,46 @@ class RegisterView extends StatelessWidget {
                     confirmPassErr: !StringUtils.instance.isValidConfirmText(
                         _passwordController.text, _confirmPassController.text),
                   );
+
                   if (Provider.of<RegisterProvider>(context, listen: false)
                       .isValidValidation()) {
-                    String userIP =
-                        await UserInformationUtils.instance.getIPAddress();
-                    AccountLoginDTO dto = AccountLoginDTO(
-                      phoneNo: _phoneNoController.text,
-                      email: '',
-                      password: EncryptUtils.instance.encrypted(
-                        _phoneNoController.text,
-                        _passwordController.text,
-                      ),
-                      device: userIP,
-                      fcmToken: '',
-                      platform: 'WEB',
-                    );
-                    _registerBloc.add(RegisterEventSubmit(dto: dto));
+                    Provider.of<RegisterProvider>(context, listen: false)
+                        .sendOtp(_phoneNoController.text);
+                    openPinDialog(context);
                   }
                 }),
           ),
         ],
       ),
     );
+  }
+
+  void openPinDialog(BuildContext context) {
+    if (_phoneNoController.text.isEmpty) {
+      DialogWidget.instance.openMsgDialog(
+          title: 'Đăng kí không thành công',
+          msg: 'Vui lòng nhập số điện thoại để đăng kí.');
+    } else {
+      DialogWidget.instance.openOTPDialog(onDone: () async {
+        Navigator.of(context).pop();
+        DialogWidget.instance.openLoadingDialog();
+        String userIP = await UserInformationUtils.instance.getIPAddress();
+        AccountLoginDTO dto = AccountLoginDTO(
+          phoneNo: _phoneNoController.text,
+          email: '',
+          password: EncryptUtils.instance.encrypted(
+            _phoneNoController.text,
+            _passwordController.text,
+          ),
+          device: userIP,
+          fcmToken: '',
+          platform: 'WEB',
+        );
+        _registerBloc.add(RegisterEventSubmit(dto: dto));
+      }, reSendOtp: () {
+        Provider.of<RegisterProvider>(context, listen: false)
+            .sendOtp(_phoneNoController.text);
+      });
+    }
   }
 }
