@@ -5,10 +5,8 @@ import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/ecom/login/model/account_login_dto.dart';
 import 'package:VietQR/models/account_information_dto.dart';
-import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
-import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -59,6 +57,7 @@ class ECOMLoginRepository {
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         AccountInformationDTO accountInformationDTO =
             AccountInformationDTO.fromJson(decodedToken);
+        await AccountHelper.instance.setToken(token);
         Session.instance.updateUserECOMToken(token);
         Session.instance.updateUserECOMId(accountInformationDTO.userId);
 
