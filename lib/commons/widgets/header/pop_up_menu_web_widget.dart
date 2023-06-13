@@ -77,6 +77,31 @@ class PopupMenuWebWidget {
           child: SizedBox(),
         ),
         PopupMenuItem<int>(
+          value: 1,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              context.go('/user_information');
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.account_circle_outlined,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Thông tin cá nhân',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
           value: 2,
           height: 40,
           child: InkWell(

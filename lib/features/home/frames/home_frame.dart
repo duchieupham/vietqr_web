@@ -186,7 +186,7 @@ class HomeFrame extends StatelessWidget {
                 ),
               ],
             )
-          : WebMobileBlankWidget(),
+          : const WebMobileBlankWidget(),
     );
   }
 
