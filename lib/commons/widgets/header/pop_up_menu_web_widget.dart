@@ -6,6 +6,7 @@ import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/card_number_setting_widget.dart';
 import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,7 +145,12 @@ class PopupMenuWebWidget {
                 }
                 if (state is LogoutSuccessfulState) {
                   Navigator.pop(context);
-                  context.push('/login');
+                  if (Session.instance.userECOMId.trim().isNotEmpty) {
+                    Session.instance.updateUserECOMId('');
+                    context.push('/ecom');
+                  } else {
+                    context.push('/login');
+                  }
                 }
                 if (state is LogoutFailedState) {
                   Navigator.pop(context);
