@@ -234,6 +234,15 @@ class UserInformationView extends StatelessWidget {
           DialogWidget.instance.openMsgSuccessDialog(
               title: 'Thành công', msg: 'Bạn đã thay đổi mật khẩu thành công');
         }
+        if (state is UserDeActiveFailedState) {
+          //pop loading dialog
+          Navigator.pop(context);
+          //
+          DialogWidget.instance.openMsgDialog(
+            title: 'Không thể xoá tài khoản',
+            msg: state.message,
+          );
+        }
       }),
       child: Consumer<UserInformationProvider>(
           builder: (context, provider, child) {
