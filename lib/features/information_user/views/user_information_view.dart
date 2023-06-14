@@ -243,6 +243,15 @@ class UserInformationView extends StatelessWidget {
             msg: state.message,
           );
         }
+        if (state is InformationUserAvatarFailedState) {
+          //pop loading dialog
+          Navigator.pop(context);
+          //
+          DialogWidget.instance.openMsgDialog(
+            title: 'Không thể cập nhật ảnh đại diện',
+            msg: state.message,
+          );
+        }
       }),
       child: Consumer<UserInformationProvider>(
           builder: (context, provider, child) {
