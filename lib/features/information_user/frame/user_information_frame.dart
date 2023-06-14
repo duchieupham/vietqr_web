@@ -20,7 +20,7 @@ class UserInformationFrame extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: (PlatformUtils.instance.resizeWhen(width, 750))
+      child: (PlatformUtils.instance.resizeWhen(width, 1100))
           ? Column(
               children: [
                 const HeaderWidget(
@@ -28,6 +28,7 @@ class UserInformationFrame extends StatelessWidget {
                 ),
                 Row(
                   children: [
+                    const Spacer(),
                     SizedBox(
                       width: 380,
                       height: height - 60,
@@ -37,15 +38,17 @@ class UserInformationFrame extends StatelessWidget {
                         children: widget1,
                       ),
                     ),
-                    Expanded(
-                      child: SizedBox(
-                        height: height - 60,
-                        child: ListView(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          shrinkWrap: true,
-                          children: widget2,
-                        ),
+                    SizedBox(
+                      width: 700,
+                      height: height - 60,
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        shrinkWrap: true,
+                        children: widget2,
                       ),
+                    ),
+                    const Spacer(
+                      flex: 2,
                     ),
                   ],
                 )

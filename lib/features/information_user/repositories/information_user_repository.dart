@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/commons/utils/base_api.dart';
@@ -78,7 +77,7 @@ class InformationUserRepository {
   }
 
   Future<ResponseMessageDTO> updateAvatar(
-      String imgId, String userId, File? file) async {
+      String imgId, String userId, List<int>? imageData) async {
     ResponseMessageDTO result =
         const ResponseMessageDTO(status: '', message: '');
     try {
@@ -88,8 +87,9 @@ class InformationUserRepository {
       };
       final String url = '${EnvConfig.getBaseUrl()}user/image';
       final List<http.MultipartFile> files = [];
-      if (file != null) {
-        final imageFile = await http.MultipartFile.fromPath('image', file.path);
+      if (imageData!.isNotEmpty) {
+        final imageFile = http.MultipartFile.fromBytes('image', imageData);
+
         files.add(imageFile);
         final response = await BaseAPIClient.postMultipartAPI(
           url: url,

@@ -14,6 +14,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DialogWidget {
   //
@@ -418,64 +419,49 @@ class DialogWidget {
         });
   }
 
-  Future openDateTimePickerDialog(
-      String title, Function(DateTime) onChanged) async {
-    double width = MediaQuery.of(NavigationService.navigatorKey.currentContext!)
-        .size
-        .width;
-    return await showModalBottomSheet(
-        isScrollControlled: true,
-        context: NavigationService.navigatorKey.currentContext!,
-        backgroundColor: DefaultTheme.TRANSPARENT,
-        builder: (context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: ClipRRect(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
-                child: Container(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 10,
+  Future openDateTimePickerDialog(BuildContext context,
+      Function(DateTime) onChanged, DateTime initDate) async {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return Material(
+            color: DefaultTheme.TRANSPARENT,
+            child: Center(
+              child: Container(
+                width: 400,
+                height: 450,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Stack(
+                  children: [
+                    SfDateRangePicker(
+                      maxDate: DateTime.now(),
+                      initialDisplayDate: initDate,
+                      onSelectionChanged: (date) {
+                        Navigator.pop(context);
+                        onChanged(date.value.first);
+                      },
+                      selectionMode: DateRangePickerSelectionMode.multiple,
                     ),
-                    width: MediaQuery.of(context).size.width - 10,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Theme.of(context).cardColor,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(padding: EdgeInsets.only(top: 30)),
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.close_rounded,
+                          size: 15,
                         ),
-                        Expanded(
-                          child: CupertinoDatePicker(
-                            initialDateTime: DateTime.now(),
-                            maximumDate: DateTime.now(),
-                            mode: CupertinoDatePickerMode.dateAndTime,
-                            onDateTimeChanged: onChanged,
-                          ),
-                        ),
-                        ButtonWidget(
-                          width: width,
-                          text: 'OK',
-                          textColor: DefaultTheme.WHITE,
-                          bgColor: DefaultTheme.GREEN,
-                          function: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        const Padding(padding: EdgeInsets.only(bottom: 20)),
-                      ],
-                    )),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -652,6 +638,77 @@ class DialogWidget {
                 //     ),
                 //   ),
                 ),
+          );
+        });
+  }
+
+  openMsgSuccessDialog(
+      {required String title,
+      String? msg,
+      VoidCallback? function,
+      BuildContext? context}) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context ?? NavigationService.navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return Material(
+            color: DefaultTheme.TRANSPARENT,
+            child: Center(
+                child: Container(
+              width: 300,
+              height: 200,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (msg != null) ...[
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    SizedBox(
+                      width: 250,
+                      height: 60,
+                      child: Text(
+                        msg,
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                  const Spacer(),
+                  ButtonWidget(
+                    width: 250,
+                    height: 35,
+                    text: 'Đóng',
+                    textColor: DefaultTheme.WHITE,
+                    bgColor: DefaultTheme.GREEN,
+                    borderRadius: 5,
+                    function: (function != null)
+                        ? function
+                        : () {
+                            Navigator.pop(context);
+                          },
+                  ),
+                  // const Padding(padding: EdgeInsets.only(top: 10)),
+                ],
+              ),
+            )),
           );
         });
   }

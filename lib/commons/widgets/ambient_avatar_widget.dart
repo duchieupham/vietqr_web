@@ -1,11 +1,11 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
 class AmbientAvatarWidget extends StatelessWidget {
   final String imgId;
-  final File? imageFile;
+  final Uint8List? imageFile;
   final double size;
   static const double blurRadius = 25.0;
   static const double blurSigma = 20.0;
@@ -31,7 +31,7 @@ class AmbientAvatarWidget extends StatelessWidget {
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: (imageFile != null)
-                    ? Image.file(imageFile!).image
+                    ? Image.memory(imageFile!).image
                     : ImageUtils.instance.getImageNetworkCache(imgId),
               ),
             ),

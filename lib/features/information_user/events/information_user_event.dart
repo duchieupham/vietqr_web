@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:VietQR/models/account_information_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -38,16 +38,16 @@ class InformationUserEditPassEvent extends InformationUserEvent {
 class UserEditAvatarEvent extends InformationUserEvent {
   final String userId;
   final String imgId;
-  final File? image;
+  final List<int>? imageByte;
 
   const UserEditAvatarEvent({
     required this.userId,
     required this.imgId,
-    required this.image,
+    required this.imageByte,
   });
 
   @override
-  List<Object?> get props => [userId, imgId, image];
+  List<Object?> get props => [userId, imgId, imageByte];
 }
 
 class UserDeActiveEvent extends InformationUserEvent {

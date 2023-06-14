@@ -72,7 +72,7 @@ class InformationUserBloc
         final ResponseMessageDTO result = await userEditRepository.updateAvatar(
           event.imgId,
           event.userId,
-          event.image,
+          event.imageByte,
         );
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           emit(InformationUserAvatarSuccessState());
