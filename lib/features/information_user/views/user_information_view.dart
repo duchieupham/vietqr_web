@@ -128,19 +128,23 @@ class UserInformationView extends StatelessWidget {
           textColor: DefaultTheme.GREEN,
           bgColor: Theme.of(context).cardColor,
           function: () async {
-            Provider.of<AddBusinessProvider>(context, listen: false)
-                .openImagePicker(upload: (byteData) async {
-              await Future.delayed(const Duration(milliseconds: 200), () {
-                String userId = UserInformationHelper.instance.getUserId();
-                String imgId = UserInformationHelper.instance
-                    .getAccountInformation()
-                    .imgId;
-                _userInformationBloc.add(
-                  UserEditAvatarEvent(
-                      userId: userId, imgId: imgId, imageByte: byteData),
-                );
-              });
-            });
+            DialogWidget.instance.openMsgDialog(
+              title: 'Tính năng đang bảo trì',
+              msg: 'Vui lòng thử lại sau',
+            );
+            // Provider.of<AddBusinessProvider>(context, listen: false)
+            //     .openImagePicker(upload: (byteData) async {
+            //   await Future.delayed(const Duration(milliseconds: 200), () {
+            //     String userId = UserInformationHelper.instance.getUserId();
+            //     String imgId = UserInformationHelper.instance
+            //         .getAccountInformation()
+            //         .imgId;
+            //     _userInformationBloc.add(
+            //       UserEditAvatarEvent(
+            //           userId: userId, imgId: imgId, imageByte: byteData),
+            //     );
+            //   });
+            // });
           },
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
