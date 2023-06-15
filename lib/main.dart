@@ -15,6 +15,8 @@ import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/home/views/home.dart';
+import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
+import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
@@ -27,6 +29,7 @@ import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/services/providers/add_business_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
@@ -36,6 +39,7 @@ import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/providers/register_provider.dart';
 import 'package:VietQR/services/providers/theme_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
+import 'package:VietQR/services/providers/user_information_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -192,6 +196,15 @@ final GoRouter _router = GoRouter(
         userId: state.params['id'] ?? '',
       ),
     ),
+    GoRoute(
+      path: '/user_information',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/user_information'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          UserInformationView(),
+    ),
   ],
 );
 
@@ -267,6 +280,12 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<CardNumBloc>(
             create: (BuildContext context) => CardNumBloc(),
           ),
+          BlocProvider<LoginBloc>(
+            create: (BuildContext context) => LoginBloc(),
+          ),
+          BlocProvider<InformationUserBloc>(
+            create: (BuildContext context) => InformationUserBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
@@ -283,6 +302,9 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(
                 create: (context) => TransactionListProvider()),
             ChangeNotifierProvider(create: (context) => ECOMBankTypeProvider()),
+            ChangeNotifierProvider(
+                create: (context) => UserInformationProvider()),
+            ChangeNotifierProvider(create: (context) => AddBusinessProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

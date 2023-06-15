@@ -59,4 +59,22 @@ class UserInformationHelper {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();
   }
+
+  Future<void> setImageId(String imgId) async {
+    AccountInformationDTO dto = AccountInformationDTO.fromJson(
+        json.decode(sharedPrefs.getString('ACCOUNT_INFORMATION')!));
+    AccountInformationDTO newDto = AccountInformationDTO(
+        address: dto.address,
+        birthDate: dto.birthDate,
+        email: dto.email,
+        firstName: dto.firstName,
+        gender: dto.gender,
+        imgId: imgId,
+        lastName: dto.lastName,
+        middleName: dto.middleName,
+        userId: dto.userId,
+        phoneNo: dto.phoneNo);
+    await sharedPrefs.setString(
+        'ACCOUNT_INFORMATION', newDto.toDataString().toString());
+  }
 }

@@ -11,6 +11,9 @@ class TimeUtils {
   DateTime getDateFromString(String time) {
     List<String> times = time.split('/');
     DateTime result = DateTime.now();
+    if (time == '22/11/1970') {
+      return result;
+    }
     if (times.length == 3) {
       result = DateTime(
         int.parse(times[2]),
