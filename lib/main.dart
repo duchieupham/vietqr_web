@@ -14,6 +14,12 @@ import 'package:VietQR/ecom/register/views/ecom_register_view.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
+import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
+import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
+import 'package:VietQR/features/business/blocs/business_member_bloc.dart';
+import 'package:VietQR/features/business/views/business_information_view.dart';
+import 'package:VietQR/features/business/views/business_manager_view.dart';
+import 'package:VietQR/features/business/views/business_transaction_view.dart';
 import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
@@ -37,6 +43,7 @@ import 'package:VietQR/services/providers/guide_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/providers/register_provider.dart';
+import 'package:VietQR/services/providers/search_clear_provider.dart';
 import 'package:VietQR/services/providers/theme_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/providers/user_information_provider.dart';
@@ -57,6 +64,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
+import 'services/providers/business_inforamtion_provider.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -205,6 +213,15 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           UserInformationView(),
     ),
+    GoRoute(
+      path: '/business_manager',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/business_manager'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const BusinessManagerView(),
+    ),
   ],
 );
 
@@ -286,6 +303,15 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<InformationUserBloc>(
             create: (BuildContext context) => InformationUserBloc(),
           ),
+          BlocProvider<BranchBloc>(
+            create: (BuildContext context) => BranchBloc(id: ''),
+          ),
+          BlocProvider<BusinessInformationBloc>(
+            create: (BuildContext context) => BusinessInformationBloc(),
+          ),
+          BlocProvider<BusinessMemberBloc>(
+            create: (BuildContext context) => BusinessMemberBloc(),
+          ),
         ],
         child: MultiProvider(
           providers: [
@@ -305,6 +331,9 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(
                 create: (context) => UserInformationProvider()),
             ChangeNotifierProvider(create: (context) => AddBusinessProvider()),
+            ChangeNotifierProvider(
+                create: (context) => BusinessInformationProvider()),
+            ChangeNotifierProvider(create: (context) => SearchProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

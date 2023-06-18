@@ -1,3 +1,4 @@
+import 'package:VietQR/models/business_detail_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_receive_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -53,3 +54,25 @@ class TransactionDetailSuccessState extends TransactionState {
 }
 
 class TransactionDetailFailedState extends TransactionState {}
+
+class TransactionGetListBranchSuccessState extends TransactionState {
+  final List<BusinessTransactionDTO> list;
+
+  const TransactionGetListBranchSuccessState({
+    required this.list,
+  });
+
+  @override
+  List<Object?> get props => [list];
+}
+
+class TransactionFetchBranchSuccessState extends TransactionState {
+  final List<BusinessTransactionDTO> list;
+
+  const TransactionFetchBranchSuccessState({
+    required this.list,
+  });
+
+  @override
+  List<Object?> get props => [list];
+}

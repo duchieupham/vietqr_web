@@ -103,6 +103,31 @@ class PopupMenuWebWidget {
           ),
         ),
         PopupMenuItem<int>(
+          value: 1,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              context.go('/business_manager');
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.business_rounded,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Quản lý doanh nghiệp',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
           value: 2,
           height: 40,
           child: InkWell(

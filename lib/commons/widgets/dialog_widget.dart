@@ -882,4 +882,44 @@ class DialogWidget {
       },
     );
   }
+
+  Future showModelBottomSheet(
+      {BuildContext? context,
+      required Widget widget,
+      required double height}) async {
+    context ??= NavigationService.navigatorKey.currentContext!;
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: false,
+      useRootNavigator: true,
+      context: context,
+      backgroundColor: DefaultTheme.TRANSPARENT,
+      builder: (context) {
+        final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: ClipRRect(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 10,
+                  bottom: keyboardHeight,
+                ),
+                width: MediaQuery.of(context).size.width - 10,
+                height: height + keyboardHeight,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Theme.of(context).cardColor,
+                ),
+                child: widget,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

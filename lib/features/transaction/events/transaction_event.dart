@@ -1,3 +1,4 @@
+import 'package:VietQR/models/transaction_branch_input_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:equatable/equatable.dart';
 
@@ -37,4 +38,15 @@ class TransactionEventGetDetail extends TransactionEvent {
 
   @override
   List<Object?> get props => [id];
+}
+
+class TransactionEventGetListBranch extends TransactionEvent {
+  final TransactionBranchInputDTO dto;
+
+  const TransactionEventGetListBranch({
+    required this.dto,
+  });
+
+  @override
+  List<Object?> get props => [dto];
 }
