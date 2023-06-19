@@ -714,10 +714,14 @@ class DialogWidget {
   }
 
   openPopup(
-      {required Widget child, required double width, required double height}) {
+      {required Widget child,
+      required double width,
+      required double height,
+      Color barrierColor = Colors.black54}) {
     final BuildContext context = NavigationService.navigatorKey.currentContext!;
     return showDialog(
       barrierDismissible: false,
+      barrierColor: barrierColor,
       context: context,
       builder: (BuildContext context) {
         return Material(

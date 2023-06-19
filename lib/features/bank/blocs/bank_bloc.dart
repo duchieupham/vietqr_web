@@ -166,7 +166,7 @@ void _getDetail(BankEvent event, Emitter emit) async {
 void _insertBankUnauthenticated(BankEvent event, Emitter emit) async {
   try {
     if (event is BankEventInsertUnauthenticated) {
-      emit(BankLoadingInsertState());
+      emit(BankLoadingState());
       final ResponseMessageDTO result =
           await _bankRepository.insertBankUnauthenticated(event.dto);
       if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
@@ -201,7 +201,7 @@ void _insertBankUnauthenticated(BankEvent event, Emitter emit) async {
 void _checkExistedBank(BankEvent event, Emitter emit) async {
   try {
     if (event is BankCheckExistedEvent) {
-      emit(BankLoadingInsertState());
+      emit(BankLoadingState());
       final ResponseMessageDTO result = await _bankRepository.checkExistedBank(
           event.bankAccount, event.bankTypeId);
       if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
@@ -228,11 +228,11 @@ void _searchBankName(BankEvent event, Emitter emit) async {
       if (dto.accountName.trim().isNotEmpty) {
         emit(BankSearchNameSuccessState(dto: dto));
       } else {
-        emit(BankSearchNameFailedState());
+        emit(const BankSearchNameFailedState(msg: 'Không tìm thấy tên chủ TK'));
       }
     }
   } catch (e) {
     LOG.error(e.toString());
-    emit(BankSearchNameFailedState());
+    emit(const BankSearchNameFailedState(msg: 'Không tìm thấy tên chủ TK'));
   }
 }

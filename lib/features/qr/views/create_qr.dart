@@ -54,7 +54,7 @@ class CreateQR extends StatelessWidget {
     phoneAuthenticated: '',
     businessDetails: [],
     transactions: [],
-    authenticated: false,
+    authenticated: false, caiValue: '',
   );
 
   QRGeneratedDTO qrGeneratedDTO = const QRGeneratedDTO(

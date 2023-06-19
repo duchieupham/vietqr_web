@@ -17,6 +17,7 @@ class TextFieldWidget extends StatelessWidget {
   final String? title;
   final double? titleWidth;
   final bool? autoFocus;
+  final bool? enable;
   final FocusNode? focusNode;
   final int? maxLines;
   final int? maxLength;
@@ -42,6 +43,7 @@ class TextFieldWidget extends StatelessWidget {
     this.onEdittingComplete,
     this.onSubmitted,
     this.maxLength,
+    this.enable,
     this.textAlign,
     this.onTapOutside,
   }) : super(key: key);
@@ -77,6 +79,7 @@ class TextFieldWidget extends StatelessWidget {
                     maxLength: maxLength,
                     autofocus: (autoFocus != null) ? autoFocus! : false,
                     focusNode: focusNode,
+                    enabled: enable,
                     keyboardType: inputType,
                     maxLines: (maxLines == null) ? 1 : maxLines,
                     textInputAction: keyboardAction,
@@ -115,6 +118,7 @@ class TextFieldWidget extends StatelessWidget {
               maxLines: 1,
               maxLength: maxLength,
               textInputAction: keyboardAction,
+              enabled: enable,
               autofocus: false,
               focusNode: focusNode,
               onTapOutside: onTapOutside,

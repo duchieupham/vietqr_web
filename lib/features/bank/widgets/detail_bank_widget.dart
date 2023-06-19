@@ -1,12 +1,17 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
+import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
+import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
+import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
+import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BankDetailWidget extends StatelessWidget {
   final AccountBankDetailDTO accountBankDetailDTO;
@@ -21,6 +26,7 @@ class BankDetailWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -124,41 +130,6 @@ class BankDetailWidget extends StatelessWidget {
                       ),
                       const Padding(padding: EdgeInsets.only(top: 10)),
                       DividerWidget(width: width),
-                      ButtonIconWidget(
-                        width: width,
-                        height: 40,
-                        icon: Icons.link_rounded,
-                        title: 'Liên kết ngay',
-                        function: () {
-                          // BankTypeDTO bankTypeDTO = BankTypeDTO(
-                          //   id: qrGeneratedDTO.bankTypeId,
-                          //   bankCode: qrGeneratedDTO.bankCode,
-                          //   bankName: qrGeneratedDTO.bankName,
-                          //   imageId: qrGeneratedDTO.imgId,
-                          //   status: qrGeneratedDTO.bankTypeStatus,
-                          // );
-                          // Provider.of<AddBankProvider>(context, listen: false)
-                          //     .updateBankId(qrGeneratedDTO.id);
-                          // Provider.of<AddBankProvider>(context, listen: false)
-                          //     .updateSelect(2);
-                          // Provider.of<AddBankProvider>(context, listen: false)
-                          //     .updateRegisterAuthentication(true);
-                          // Provider.of<AddBankProvider>(context, listen: false)
-                          //     .updateSelectBankType(bankTypeDTO);
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   Routes.ADD_BANK_CARD,
-                          //   arguments: {
-                          //     'pageIndex': 3,
-                          //     'bankAccount': qrGeneratedDTO.bankAccount,
-                          //     'name': qrGeneratedDTO.userBankName,
-                          //   },
-                          // ).then((value) => bankCardBloc
-                          //     .add(BankCardGetDetailEvent(bankId: bankId)));
-                        },
-                        bgColor: DefaultTheme.TRANSPARENT,
-                        textColor: DefaultTheme.GREEN,
-                      ),
                     ],
                     if (accountBankDetailDTO.nationalId.isNotEmpty) ...[
                       Padding(
@@ -223,6 +194,55 @@ class BankDetailWidget extends StatelessWidget {
                                     msg: 'Vui lòng thử lại sau',
                                   );
                                 },
+                              ),
+                            ),
+                          ],
+                          if (!accountBankDetailDTO.authenticated) ...[
+                            const Padding(padding: EdgeInsets.only(left: 10)),
+                            Tooltip(
+                              message: 'Liên kết ngay',
+                              child: ButtonWidget(
+                                width: 150,
+                                height: 40,
+                                textColor: DefaultTheme.WHITE,
+                                bgColor: DefaultTheme.GREEN,
+                                borderRadius: 5,
+                                function: () {
+                                  BankTypeDTO bankTypeDTO = BankTypeDTO(
+                                      id: accountBankDetailDTO.bankTypeId,
+                                      bankCode: accountBankDetailDTO.bankCode,
+                                      bankName: accountBankDetailDTO.bankName,
+                                      imageId: accountBankDetailDTO.imgId,
+                                      status:
+                                          accountBankDetailDTO.bankTypeStatus,
+                                      caiValue: accountBankDetailDTO.caiValue,
+                                      bankShortName:
+                                          accountBankDetailDTO.bankName);
+                                  Provider.of<AddBankProvider>(context,
+                                          listen: false)
+                                      .updateBankId(accountBankDetailDTO.id);
+                                  Provider.of<AddBankProvider>(context,
+                                          listen: false)
+                                      .updateSelect(2);
+                                  Provider.of<AddBankProvider>(context,
+                                          listen: false)
+                                      .updateRegisterAuthentication(true);
+                                  Provider.of<AddBankProvider>(context,
+                                          listen: false)
+                                      .updateSelectBankType(bankTypeDTO);
+                                  DialogWidget.instance.openPopup(
+                                    barrierColor: Colors.transparent,
+                                    child: AddBankCardView(
+                                      bankAccount:
+                                          accountBankDetailDTO.bankAccount,
+                                      userBankName:
+                                          accountBankDetailDTO.userBankName,
+                                    ),
+                                    height: height * 0.7,
+                                    width: 760,
+                                  );
+                                },
+                                text: 'Liên kết ngay',
                               ),
                             ),
                           ],

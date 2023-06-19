@@ -167,4 +167,21 @@ class BankSearchNameSuccessState extends BankState {
   List<Object?> get props => [dto];
 }
 
-class BankSearchNameFailedState extends BankState {}
+class BankSearchNameFailedState extends BankState {
+  final String msg;
+  const BankSearchNameFailedState({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+}
+
+class BankUpdateAuthenticateSuccessState extends BankState {}
+
+class BankUpdateAuthenticateFailedState extends BankState {
+  final String msg;
+
+  const BankUpdateAuthenticateFailedState({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+}

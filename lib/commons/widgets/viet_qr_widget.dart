@@ -29,7 +29,7 @@ class VietQRWidget extends StatelessWidget {
       this.qrSize,
       this.showQROnly = false,
       this.horizontalInfo = false,
-      this.horizontalInfoWidth = 500});
+      this.horizontalInfoWidth = 500, });
 
   @override
   Widget build(BuildContext context) {
@@ -48,35 +48,6 @@ class VietQRWidget extends StatelessWidget {
                 const Padding(padding: EdgeInsets.only(bottom: 10)),
                 DividerWidget(width: width),
                 _buildQR(),
-                // DividerWidget(width: width),
-                // const Padding(padding: EdgeInsets.only(bottom: 10)),
-                // _buildSection(
-                //     title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
-                // const Padding(padding: EdgeInsets.only(bottom: 5)),
-                // _buildSection(
-                //     title: 'Chủ thẻ: ',
-                //     description: qrGeneratedDTO.userBankName.toUpperCase()),
-                // const Padding(padding: EdgeInsets.only(bottom: 10)),
-                // if (qrGeneratedDTO.amount.isNotEmpty &&
-                //     qrGeneratedDTO.amount != '0') ...[
-                //   DividerWidget(width: width),
-                //   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                //   _buildSection(
-                //     title: 'Số tiền: ',
-                //     description:
-                //         '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-                //     descColor: DefaultTheme.GREEN,
-                //   ),
-                // ],
-                // if (qrGeneratedDTO.content.isNotEmpty) ...[
-                //   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                //   _buildSection(
-                //     title: 'Nội dung: ',
-                //     description: qrGeneratedDTO.content,
-                //     isUnbold: true,
-                //   ),
-                //   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                // ],
                 _buildInfoCard()
               ],
             ),

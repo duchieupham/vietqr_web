@@ -35,7 +35,9 @@ import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/add_business_provider.dart';
+import 'package:VietQR/services/providers/bank_card_position_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
@@ -334,6 +336,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(
                 create: (context) => BusinessInformationProvider()),
             ChangeNotifierProvider(create: (context) => SearchProvider()),
+            ChangeNotifierProvider(create: (context) => AddBankProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

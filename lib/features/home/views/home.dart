@@ -585,7 +585,7 @@ class _HomeScreen extends State<HomeScreen> {
                               accountBankDetailDTO: provider.bankDetailDTO,
                               qrGeneratedDTO: provider.qrGeneratedDTO,
                             ),
-                            width: 750,
+                            width: 760,
                             height: 450,
                           );
                         },

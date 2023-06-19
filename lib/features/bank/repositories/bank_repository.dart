@@ -63,6 +63,7 @@ class BankRepository {
       businessDetails: [],
       transactions: [],
       authenticated: false,
+      caiValue: '',
     );
     try {
       final String url =
