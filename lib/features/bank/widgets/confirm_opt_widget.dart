@@ -13,15 +13,18 @@ import 'package:flutter/material.dart';
 class ConfirmOTPWidget extends StatefulWidget {
   final String requestId;
   final String phone;
+  final String bankAccount;
   final BankBloc bankBloc;
-  final BankCardRequestOTP dto;
-
+  final BankCardRequestOTP? dto;
+  final bool isUnlink;
   const ConfirmOTPWidget({
     super.key,
     required this.requestId,
     required this.phone,
     required this.bankBloc,
-    required this.dto,
+    this.dto,
+    this.bankAccount = '',
+    this.isUnlink = false,
   });
 
   @override
@@ -174,7 +177,7 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
                             ..onTap = () {
                               countdownProvider = CountdownProvider(120);
                               widget.bankBloc.add(
-                                BankEventRequestOTP(dto: widget.dto),
+                                BankEventRequestOTP(dto: widget.dto!),
                               );
                               Navigator.pop(context);
                             },
@@ -197,11 +200,18 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
               if (otpController.text.isNotEmpty) {
                 Navigator.pop(context);
                 ConfirmOTPBankDTO confirmDTO = ConfirmOTPBankDTO(
+                  bankAccount: widget.bankAccount,
                   requestId: widget.requestId,
                   otpValue: otpController.text,
                   applicationType: 'WEB_APP',
                 );
-                widget.bankBloc.add(BankEventConfirmOTP(dto: confirmDTO));
+                if (widget.isUnlink) {
+                  widget.bankBloc
+                      .add(BankEventConfirmUnlinkOTP(dto: confirmDTO));
+                } else {
+                  widget.bankBloc.add(BankEventConfirmOTP(dto: confirmDTO));
+                }
+                otpController.clear();
               }
             },
           ),

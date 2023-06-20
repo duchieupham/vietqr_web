@@ -1,6 +1,7 @@
 enum EventTypes {
   refreshListTransaction,
   updateCountNotification,
+  refreshListAccountBank,
 }
 
 class EventType {

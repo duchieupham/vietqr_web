@@ -73,6 +73,10 @@ class _HomeScreen extends State<HomeScreen> {
     _tokenBloc.add(const TokenEventCheckValid());
     _transactionBloc = BlocProvider.of(context);
     _bankBloc.add(BankEventGetList(userId: userId));
+    Session.instance.registerEventListener(EventTypes.refreshListAccountBank,
+        () {
+      _bankBloc.add(BankEventGetList(userId: userId));
+    });
     Session.instance.registerEventListener(EventTypes.refreshListTransaction,
         () {
       _transactionBloc.add(TransactionEventGetList(
@@ -584,6 +588,7 @@ class _HomeScreen extends State<HomeScreen> {
                             child: BankDetailWidget(
                               accountBankDetailDTO: provider.bankDetailDTO,
                               qrGeneratedDTO: provider.qrGeneratedDTO,
+                              bankBloc: _bankBloc,
                             ),
                             width: 760,
                             height: 450,
@@ -604,6 +609,22 @@ class _HomeScreen extends State<HomeScreen> {
     final double width = MediaQuery.of(context).size.width;
     return BlocConsumer<BankBloc, BankState>(
       listener: (context, state) {
+        if (state is BankRemoveLoadingState) {
+          Navigator.pop(context);
+          DialogWidget.instance.openLoadingDialog();
+        }
+        if (state is BankRemoveSuccessState) {
+          String userId = UserInformationHelper.instance.getUserId();
+          Navigator.pop(context);
+          _bankBloc.add(BankEventGetList(userId: userId));
+        }
+        if (state is BankRemoveFailedState) {
+          Navigator.pop(context);
+          DialogWidget.instance.openMsgDialog(
+            title: 'Không thể xoá tài khoản',
+            msg: state.message,
+          );
+        }
         if (state is BankGetListSuccessState) {
           _resetBank();
           if (bankAccounts.isEmpty) {

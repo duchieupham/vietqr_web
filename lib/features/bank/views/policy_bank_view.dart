@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -10,6 +11,7 @@ import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/register_authentication_dto.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +112,21 @@ class PolicyBankView extends StatelessWidget {
               context
                   .read<BankBloc>()
                   .add(BankEventRegisterAuthentication(dto: dto));
+              Session.instance.sendEvent(EventTypes.refreshListAccountBank);
             }
+          }
+          if (state is BankUpdateAuthenticateSuccessState) {
+            phoneAuthenController.clear();
+            nameController.clear();
+            nationalController.clear();
+            bankAccountController.clear();
+            Navigator.pop(context);
+          }
+          if (state is BankUpdateAuthenticateFailedState) {
+            DialogWidget.instance.openMsgDialog(
+              title: 'Không thể liên kết',
+              msg: state.msg,
+            );
           }
           if (state is BankConfirmOTPFailedState) {
             Navigator.pop(context);

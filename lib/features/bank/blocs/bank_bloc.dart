@@ -27,6 +27,10 @@ class BankBloc extends Bloc<BankEvent, BankState> {
     on<BankEventConfirmOTP>(_confirmOTP);
     on<BankEventInsert>(_insertBank);
     on<BankEventSearchName>(_searchBankName);
+    on<BankEventRegisterAuthentication>(_registerAuthentication);
+    on<BankEventRemove>(_removeBankAccount);
+    on<BankEventUnlink>(_unlinkAccountBank);
+    on<BankEventConfirmUnlinkOTP>(_confirmUnlinkOTP);
   }
 }
 
@@ -97,6 +101,36 @@ void _confirmOTP(BankEvent event, Emitter emit) async {
       emit(BankConfirmOTPLoadingState());
       final ResponseMessageDTO responseMessageDTO =
           await _bankRepository.confirmOTP(event.dto);
+      if (responseMessageDTO.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+        emit(BankConfirmOTPSuccessState());
+      } else {
+        emit(
+          BankConfirmOTPFailedState(
+            message:
+                ErrorUtils.instance.getErrorMessage(responseMessageDTO.message),
+          ),
+        );
+      }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    ResponseMessageDTO responseMessageDTO =
+        const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+    emit(
+      BankConfirmOTPFailedState(
+        message:
+            ErrorUtils.instance.getErrorMessage(responseMessageDTO.message),
+      ),
+    );
+  }
+}
+
+void _confirmUnlinkOTP(BankEvent event, Emitter emit) async {
+  try {
+    if (event is BankEventConfirmUnlinkOTP) {
+      emit(BankConfirmOTPLoadingState());
+      final ResponseMessageDTO responseMessageDTO =
+          await _bankRepository.confirmUnlinkOTP(event.dto);
       if (responseMessageDTO.status == Stringify.RESPONSE_STATUS_SUCCESS) {
         emit(BankConfirmOTPSuccessState());
       } else {
@@ -234,5 +268,66 @@ void _searchBankName(BankEvent event, Emitter emit) async {
   } catch (e) {
     LOG.error(e.toString());
     emit(const BankSearchNameFailedState(msg: 'Không tìm thấy tên chủ TK'));
+  }
+}
+
+void _registerAuthentication(BankEvent event, Emitter emit) async {
+  try {
+    if (event is BankEventRegisterAuthentication) {
+      emit(BankLoadingState());
+      final ResponseMessageDTO result =
+          await _bankRepository.updateRegisterAuthenticationBank(event.dto);
+      if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+        emit(BankUpdateAuthenticateSuccessState());
+      } else {
+        emit(BankUpdateAuthenticateFailedState(
+            msg: ErrorUtils.instance.getErrorMessage(result.message)));
+      }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+  }
+}
+
+void _removeBankAccount(BankEvent event, Emitter emit) async {
+  try {
+    if (event is BankEventRemove) {
+      emit(BankRemoveLoadingState());
+      final ResponseMessageDTO responseMessageDTO =
+          await _bankRepository.removeBankAccount(event.dto);
+      if (responseMessageDTO.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+        emit(BankRemoveSuccessState());
+      } else if (responseMessageDTO.status == Stringify.RESPONSE_STATUS_CHECK) {
+        String message =
+            CheckUtils.instance.getCheckMessage(responseMessageDTO.message);
+        emit(BankRemoveFailedState(message: message));
+      } else {
+        String message =
+            ErrorUtils.instance.getErrorMessage(responseMessageDTO.message);
+        emit(BankRemoveFailedState(message: message));
+      }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    emit(const BankRemoveFailedState(
+        message: 'Không thể huỷ liên kết. Vui lòng kiểm tra lại kết nối'));
+  }
+}
+
+void _unlinkAccountBank(BankEvent event, Emitter emit) async {
+  try {
+    if (event is BankEventUnlink) {
+      emit(BankUnlinkLoadingState());
+      final ResponseMessageDTO result =
+          await _bankRepository.unLinkBank(event.dto);
+      if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+        emit(BankUnlinkSuccessState(requestId: result.message));
+      } else {
+        emit(BankUnlinkFailedState(
+            msg: ErrorUtils.instance.getErrorMessage(result.message)));
+      }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
   }
 }
