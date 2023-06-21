@@ -30,6 +30,7 @@ import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
+import 'package:VietQR/features/qr/views/qr_generate.dart';
 import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
@@ -223,6 +224,15 @@ final GoRouter _router = GoRouter(
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
           const BusinessManagerView(),
+    ),
+    GoRoute(
+      path: '/qr_generate',
+      redirect: (context, state) {
+        print('-------------------------------${state.params}');
+        return '/qr_generate';
+      },
+      builder: (BuildContext context, GoRouterState state) =>
+          const QrGenerate(),
     ),
   ],
 );

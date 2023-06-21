@@ -12,24 +12,27 @@ class VietQRWidget extends StatelessWidget {
   final double? height;
   final QRGeneratedDTO qrGeneratedDTO;
   final String content;
+  final String amount;
   final bool? isStatistic;
   final bool? isCopy;
   final double? qrSize;
   final bool showQROnly;
   final bool horizontalInfo;
 
-  const VietQRWidget(
-      {super.key,
-      required this.width,
-      required this.qrGeneratedDTO,
-      required this.content,
-      this.height,
-      this.isStatistic,
-      this.isCopy,
-      this.qrSize,
-      this.showQROnly = false,
-      this.horizontalInfo = false,
-      this.horizontalInfoWidth = 500, });
+  const VietQRWidget({
+    super.key,
+    required this.width,
+    required this.qrGeneratedDTO,
+    required this.content,
+    this.height,
+    this.isStatistic,
+    this.isCopy,
+    this.qrSize,
+    this.showQROnly = false,
+    this.horizontalInfo = false,
+    this.amount = '',
+    this.horizontalInfoWidth = 500,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +90,8 @@ class VietQRWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (qrGeneratedDTO.amount.isNotEmpty &&
-            qrGeneratedDTO.amount != '0') ...[
+        if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0' ||
+            amount.isNotEmpty) ...[
           const Padding(padding: EdgeInsets.only(bottom: 10)),
           const Text(
             'Quét mã QR để thanh toán',
@@ -99,7 +102,9 @@ class VietQRWidget extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.only(bottom: 5)),
           Text(
-            '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+            amount.isNotEmpty
+                ? '${CurrencyUtils.instance.getCurrencyFormatted(amount)} VND'
+                : '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
             style: const TextStyle(
               color: DefaultTheme.ORANGE,
               fontSize: 20,
@@ -119,12 +124,12 @@ class VietQRWidget extends StatelessWidget {
           isUnbold: true,
         ),
         const Padding(padding: EdgeInsets.only(bottom: 10)),
-        if (qrGeneratedDTO.content.isNotEmpty) ...[
+        if (qrGeneratedDTO.content.isNotEmpty || content.isNotEmpty) ...[
           DividerWidget(width: width),
           const Padding(padding: EdgeInsets.only(bottom: 10)),
           _buildSection(
             title: 'Nội dung: ',
-            description: qrGeneratedDTO.content,
+            description: content.isNotEmpty ? content : qrGeneratedDTO.content,
             isUnbold: true,
           ),
           const Padding(padding: EdgeInsets.only(bottom: 10)),
