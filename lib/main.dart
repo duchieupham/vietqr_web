@@ -228,8 +228,9 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/qr_generate',
       redirect: (context, state) {
-        print('-------------------------------${state.params}');
-        return '/qr_generate';
+        Map<String, String> params = state.queryParams;
+
+        return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}';
       },
       builder: (BuildContext context, GoRouterState state) =>
           const QrGenerate(),
