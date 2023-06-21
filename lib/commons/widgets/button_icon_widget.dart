@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ButtonIconWidget extends StatelessWidget {
-  final double width;
+  final double? width;
   final IconData icon;
   final String title;
   final VoidCallback function;
@@ -16,7 +16,7 @@ class ButtonIconWidget extends StatelessWidget {
 
   const ButtonIconWidget({
     super.key,
-    required this.width,
+    this.width,
     required this.icon,
     required this.title,
     required this.function,

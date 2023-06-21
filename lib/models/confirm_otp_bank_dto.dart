@@ -6,11 +6,13 @@
 // }
 
 class ConfirmOTPBankDTO {
+  final String bankAccount;
   final String requestId;
   final String otpValue;
   final String applicationType;
 
   const ConfirmOTPBankDTO({
+    required this.bankAccount,
     required this.requestId,
     required this.otpValue,
     required this.applicationType,
@@ -18,6 +20,7 @@ class ConfirmOTPBankDTO {
 
   factory ConfirmOTPBankDTO.fromJson(Map<String, dynamic> json) {
     return ConfirmOTPBankDTO(
+      bankAccount: json['bankAccount'] ?? '',
       requestId: json['requestId'] ?? '',
       otpValue: json['otpValue'] ?? '',
       applicationType: json['applicationType'] ?? '',
@@ -29,6 +32,7 @@ class ConfirmOTPBankDTO {
     data['requestId'] = requestId;
     data['otpValue'] = otpValue;
     data['applicationType'] = applicationType;
+    data['bankAccount'] = bankAccount;
     return data;
   }
 }

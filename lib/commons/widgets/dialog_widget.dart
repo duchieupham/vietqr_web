@@ -714,10 +714,14 @@ class DialogWidget {
   }
 
   openPopup(
-      {required Widget child, required double width, required double height}) {
+      {required Widget child,
+      required double width,
+      required double height,
+      Color barrierColor = Colors.black54}) {
     final BuildContext context = NavigationService.navigatorKey.currentContext!;
     return showDialog(
       barrierDismissible: false,
+      barrierColor: barrierColor,
       context: context,
       builder: (BuildContext context) {
         return Material(
@@ -881,5 +885,146 @@ class DialogWidget {
         );
       },
     );
+  }
+
+  Future showModelBottomSheet(
+      {BuildContext? context,
+      required Widget widget,
+      required double height}) async {
+    context ??= NavigationService.navigatorKey.currentContext!;
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      enableDrag: false,
+      useRootNavigator: true,
+      context: context,
+      backgroundColor: DefaultTheme.TRANSPARENT,
+      builder: (context) {
+        final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          child: ClipRRect(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 10,
+                  bottom: keyboardHeight,
+                ),
+                width: MediaQuery.of(context).size.width - 10,
+                height: height + keyboardHeight,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: Theme.of(context).cardColor,
+                ),
+                child: widget,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  openMsgDialogQuestion(
+      {required String title,
+      required String msg,
+      VoidCallback? onConfirm,
+      VoidCallback? onCancel,
+      BuildContext? context}) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context ?? NavigationService.navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return Material(
+            color: DefaultTheme.TRANSPARENT,
+            child: Center(
+                child: Container(
+              width: 300,
+              height: 300,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/ic-warning.png',
+                    width: 80,
+                    height: 80,
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  SizedBox(
+                    width: 250,
+                    height: 60,
+                    child: Text(
+                      msg,
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 30)),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ButtonWidget(
+                          width: 250,
+                          height: 40,
+                          text: 'Đóng',
+                          textColor: DefaultTheme.GREEN,
+                          bgColor: DefaultTheme.WHITE,
+                          borderRadius: 5,
+                          function: (onCancel != null)
+                              ? onCancel
+                              : () {
+                                  Navigator.pop(context);
+                                },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        child: ButtonWidget(
+                          width: 250,
+                          height: 40,
+                          text: 'Xác nhận',
+                          textColor: DefaultTheme.WHITE,
+                          bgColor: DefaultTheme.GREEN,
+                          borderRadius: 5,
+                          function: (onConfirm != null)
+                              ? onConfirm
+                              : () {
+                                  Navigator.pop(context);
+                                },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // const Padding(padding: EdgeInsets.only(top: 10)),
+                ],
+              ),
+            )),
+          );
+        });
   }
 }

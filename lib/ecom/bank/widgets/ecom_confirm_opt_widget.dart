@@ -199,6 +199,7 @@ class _ConfirmOTPWidget extends State<ECOMConfirmOTPWidget> {
               if (otpController.text.isNotEmpty) {
                 Navigator.pop(context);
                 ConfirmOTPBankDTO confirmDTO = ConfirmOTPBankDTO(
+                  bankAccount: '',
                   requestId: widget.requestId,
                   otpValue: otpController.text,
                   applicationType: 'WEB_APP',

@@ -15,24 +15,27 @@ class AccountBankDetailDTO {
   final List<BusinessDetails> businessDetails;
   final List<Transactions> transactions;
   final bool authenticated;
+  final String caiValue;
 
-  const AccountBankDetailDTO(
-      {required this.id,
-      required this.bankAccount,
-      required this.userBankName,
-      required this.bankCode,
-      required this.bankName,
-      required this.imgId,
-      required this.type,
-      required this.userId,
-      required this.bankTypeId,
-      required this.bankTypeStatus,
-      required this.nationalId,
-      required this.qrCode,
-      required this.phoneAuthenticated,
-      required this.businessDetails,
-      required this.transactions,
-      required this.authenticated});
+  const AccountBankDetailDTO({
+    required this.id,
+    required this.bankAccount,
+    required this.userBankName,
+    required this.bankCode,
+    required this.bankName,
+    required this.imgId,
+    required this.type,
+    required this.userId,
+    required this.bankTypeId,
+    required this.bankTypeStatus,
+    required this.nationalId,
+    required this.qrCode,
+    required this.phoneAuthenticated,
+    required this.businessDetails,
+    required this.transactions,
+    required this.authenticated,
+    required this.caiValue,
+  });
 
   factory AccountBankDetailDTO.fromJson(Map<String, dynamic> json) {
     final List<BusinessDetails> businessDetails = [];
@@ -58,6 +61,7 @@ class AccountBankDetailDTO {
       userId: json['userId'] ?? '',
       bankTypeId: json['bankTypeId'] ?? '',
       bankTypeStatus: json['bankTypeStatus'] ?? 0,
+      caiValue: json['caiValue'] ?? '',
       nationalId: json['nationalId'] ?? '',
       qrCode: json['qrCode'] ?? '',
       phoneAuthenticated: json['phoneAuthenticated'] ?? '',

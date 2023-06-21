@@ -167,4 +167,56 @@ class BankSearchNameSuccessState extends BankState {
   List<Object?> get props => [dto];
 }
 
-class BankSearchNameFailedState extends BankState {}
+class BankSearchNameFailedState extends BankState {
+  final String msg;
+  const BankSearchNameFailedState({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+}
+
+class BankUpdateAuthenticateSuccessState extends BankState {}
+
+class BankUpdateAuthenticateFailedState extends BankState {
+  final String msg;
+
+  const BankUpdateAuthenticateFailedState({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+}
+
+class BankRemoveLoadingState extends BankState {}
+
+class BankRemoveSuccessState extends BankState {}
+
+class BankRemoveFailedState extends BankState {
+  final String message;
+
+  const BankRemoveFailedState({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class BankUnlinkLoadingState extends BankState {}
+
+class BankUnlinkSuccessState extends BankState {
+  final String requestId;
+
+  const BankUnlinkSuccessState({
+    required this.requestId,
+  });
+
+  @override
+  List<Object?> get props => [requestId];
+}
+
+class BankUnlinkFailedState extends BankState {
+  final String msg;
+
+  const BankUnlinkFailedState({required this.msg});
+
+  @override
+  List<Object?> get props => [msg];
+}

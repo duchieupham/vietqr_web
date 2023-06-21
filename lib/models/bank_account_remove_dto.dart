@@ -24,3 +24,20 @@ class BankAccountRemoveDTO {
     return data;
   }
 }
+
+class BankAccountUnlinkDTO {
+  final String accountNumber;
+  final String applicationType;
+
+  const BankAccountUnlinkDTO({
+    required this.accountNumber,
+    required this.applicationType,
+  });
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = {};
+    data['accountNumber'] = accountNumber;
+    data['applicationType'] = applicationType;
+    return data;
+  }
+}
