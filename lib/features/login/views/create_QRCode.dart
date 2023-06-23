@@ -73,7 +73,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                 child: SizedBox(
                   width: width,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 100, 30, 30),
+                    padding: const EdgeInsets.fromLTRB(10, 80, 10, 30),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -339,7 +339,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
   Widget _buildQRCode(
       {bool horizontalInfo = false,
       double horizontalInfoWidth = 400,
-      double width = 400}) {
+      double width = 430}) {
     return BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
       listener: (context, state) {
         if (state is CreateSuccessfulState) {
@@ -363,24 +363,26 @@ class _CreateQRCodeState extends State<CreateQRCode> {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Padding(
+                    padding: horizontalInfo
+                        ? const EdgeInsets.only(top: 30)
+                        : EdgeInsets.zero,
+                    child: const Text(
+                      'Mã QR của bạn',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   UnconstrainedBox(
-                    child: Container(
-                      margin: (horizontalInfo)
-                          ? const EdgeInsets.only(top: 30)
-                          : null,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: DefaultTheme.GREY_TOP_TAB_BAR,
-                          width: 0.5,
-                        ),
-                      ),
-                      child: VietQRWidget(
-                        width: width,
-                        horizontalInfoWidth: horizontalInfoWidth,
-                        horizontalInfo: horizontalInfo,
-                        qrGeneratedDTO: qrGeneratedDTO,
-                      ),
+                    child: VietQRWidget(
+                      width: width,
+                      horizontalInfoWidth: horizontalInfoWidth,
+                      horizontalInfo: horizontalInfo,
+                      qrGeneratedDTO: qrGeneratedDTO,
+                      hasBgNapas: true,
                     ),
                   ),
                   const SizedBox(

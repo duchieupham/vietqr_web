@@ -29,6 +29,7 @@ class _QrGenerateState extends State<QrGenerate> {
   late QRCodeUnUTBloc qrCodeUnUTBloc;
   final GlobalKey globalKey = GlobalKey();
   final WaterMarkProvider _waterMarkProvider = WaterMarkProvider(false);
+  bool showBgNapas = false;
   @override
   void initState() {
     getData();
@@ -56,6 +57,9 @@ class _QrGenerateState extends State<QrGenerate> {
         Uri.base.queryParameters['content'].toString().replaceAll('_', ' ') ??
             '';
     data['action'] = Uri.base.queryParameters['action'] ?? '';
+    if (data['amount'] == '' && data['content'] == '') {
+      showBgNapas = true;
+    }
     qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
   }
 
@@ -67,7 +71,7 @@ class _QrGenerateState extends State<QrGenerate> {
           .updateAction(true);
     });
     _waterMarkProvider.updateWaterMark(true);
-    await Future.delayed(const Duration(milliseconds: 300), () async {
+    await Future.delayed(const Duration(milliseconds: 1000), () async {
       _waterMarkProvider.updateWaterMark(false);
       await ShareUtils.instance
           .saveImageToGallery(globalKey, nameFile)
@@ -126,19 +130,25 @@ class _QrGenerateState extends State<QrGenerate> {
                     height: double.infinity,
                     color: Theme.of(context).cardColor,
                     padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: RepaintBoundaryWidget(
-                        globalKey: globalKey,
-                        builder: (key) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              VietQRWidget(
-                                width: 500,
-                                qrGeneratedDTO: qrGeneratedDTO,
-                              ),
-                            ],
-                          );
-                        }),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RepaintBoundaryWidget(
+                            globalKey: globalKey,
+                            builder: (key) {
+                              return showBgNapas
+                                  ? VietQRWidget(
+                                      width: 416,
+                                      qrGeneratedDTO: qrGeneratedDTO,
+                                      hasBgNapas: showBgNapas,
+                                    )
+                                  : VietQRWidget(
+                                      width: 500,
+                                      qrGeneratedDTO: qrGeneratedDTO,
+                                    );
+                            }),
+                      ],
+                    ),
                   );
           },
         ),
