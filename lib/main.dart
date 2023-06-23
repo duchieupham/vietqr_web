@@ -31,7 +31,6 @@ import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/qr/views/qr_generate.dart';
-import 'package:VietQR/features/qr/views/qr_share_view.dart';
 import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
