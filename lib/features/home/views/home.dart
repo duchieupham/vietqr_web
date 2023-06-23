@@ -1,16 +1,13 @@
-import 'dart:convert';
-
-import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/commons/utils/log.dart';
+
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
-
+import 'dart:js' as js;
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
@@ -30,6 +27,7 @@ import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
+import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -475,7 +473,6 @@ class _HomeScreen extends State<HomeScreen> {
                     child: VietQRWidget(
                       width: 400,
                       qrGeneratedDTO: provider.qrGeneratedDTO,
-                      content: '',
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 30)),
@@ -511,10 +508,16 @@ class _HomeScreen extends State<HomeScreen> {
                               icon: Icons.photo_rounded,
                               title: '',
                               function: () {
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Tính năng đang bảo trì',
-                                  msg: 'Vui lòng thử lại sau',
-                                );
+                                Provider.of<ActionShareProvider>(context,
+                                        listen: false)
+                                    .updateAction(false);
+                                String paramData = Session.instance
+                                    .formatDataParamUrl(provider.qrGeneratedDTO,
+                                        action: 'SAVE');
+                                js.context.callMethod('open', [
+                                  Uri.base.toString().replaceFirst(
+                                      '/login', '/qr_generate$paramData')
+                                ]);
                               },
                               bgColor:
                                   Theme.of(context).cardColor.withOpacity(0.3),

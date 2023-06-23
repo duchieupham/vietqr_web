@@ -237,7 +237,6 @@ class BankDetailWidget extends StatelessWidget {
               VietQRWidget(
                 width: 350,
                 qrGeneratedDTO: qrGeneratedDTO,
-                content: '',
                 showQROnly: true,
               ),
               const Padding(padding: EdgeInsets.only(right: 20)),

@@ -6,8 +6,10 @@ import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../commons/enums/event_type.dart';
+import '../../models/qr_generated_dto.dart';
 
 class Session {
   static final Session _singleton = Session._privateConstructor();
@@ -19,6 +21,7 @@ class Session {
     return _singleton;
   }
 
+  late SharedPreferences sharedPrefs;
   static Session get instance => _singleton;
   final StreamController<EventType> _eventStream =
       StreamController<EventType>();
@@ -103,5 +106,15 @@ class Session {
 
   void updateUserECOMToken(String value) {
     _userECOMToken = value;
+  }
+
+  String formatDataParamUrl(QRGeneratedDTO qrGeneratedDTO,
+      {String action = ''}) {
+    String bankCode = qrGeneratedDTO.bankCode;
+    String account = qrGeneratedDTO.bankAccount;
+    String name = qrGeneratedDTO.userBankName.replaceAll(' ', '_');
+    String amount = qrGeneratedDTO.amount;
+    String content = qrGeneratedDTO.content.replaceAll(' ', '_');
+    return '?bankCode=$bankCode&account=$account&name=$name&amount=$amount&content=$content&action=$action';
   }
 }

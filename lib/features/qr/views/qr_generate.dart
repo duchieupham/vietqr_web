@@ -1,12 +1,18 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
+import 'package:VietQR/services/providers/action_share_provider.dart';
+import 'package:VietQR/services/providers/water_mark_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../commons/widgets/repaint_boundary_widget.dart';
 import '../../login/events/qrcode_un_authen_event.dart';
 import '../../login/states/qrcode_un_authen_state.dart';
 
@@ -21,6 +27,8 @@ class _QrGenerateState extends State<QrGenerate> {
   Map<String, dynamic> data = {};
   late QRGeneratedDTO qrGeneratedDTO;
   late QRCodeUnUTBloc qrCodeUnUTBloc;
+  final GlobalKey globalKey = GlobalKey();
+  final WaterMarkProvider _waterMarkProvider = WaterMarkProvider(false);
   @override
   void initState() {
     getData();
@@ -40,11 +48,45 @@ class _QrGenerateState extends State<QrGenerate> {
     );
     qrCodeUnUTBloc = BlocProvider.of(context);
     data['bankAccount'] = Uri.base.queryParameters['account'] ?? '';
-    data['userBankName'] = Uri.base.queryParameters['name'] ?? '';
+    data['userBankName'] =
+        Uri.base.queryParameters['name'].toString().replaceAll('_', ' ') ?? '';
     data['bankCode'] = Uri.base.queryParameters['bankCode'] ?? '';
     data['amount'] = Uri.base.queryParameters['amount'] ?? '';
-    data['content'] = Uri.base.queryParameters['content'] ?? '';
+    data['content'] =
+        Uri.base.queryParameters['content'].toString().replaceAll('_', ' ') ??
+            '';
+    data['action'] = Uri.base.queryParameters['action'] ?? '';
     qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
+  }
+
+  saveImage() async {
+    String nameFile =
+        'VietQR_${data['bankCode']}_${data['userBankName'].replaceAll(' ', '_')}';
+    await Future.delayed(const Duration(milliseconds: 0), () {
+      Provider.of<ActionShareProvider>(context, listen: false)
+          .updateAction(true);
+    });
+    _waterMarkProvider.updateWaterMark(true);
+    await Future.delayed(const Duration(milliseconds: 300), () async {
+      _waterMarkProvider.updateWaterMark(false);
+      await ShareUtils.instance
+          .saveImageToGallery(globalKey, nameFile)
+          .then((value) {
+        Fluttertoast.showToast(
+          msg: 'Đã lưu ảnh',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Theme.of(context).cardColor,
+          textColor: Theme.of(context).hintColor,
+          fontSize: 15,
+          webBgColor: 'rgba(255, 255, 255)',
+          webPosition: 'center',
+        );
+
+        // Navigator.pop(context);
+      });
+    });
   }
 
   @override
@@ -55,6 +97,9 @@ class _QrGenerateState extends State<QrGenerate> {
           listener: (context, state) {
             if (state is CreateSuccessfulState) {
               qrGeneratedDTO = state.dto;
+              if (data['action'] == 'SAVE') {
+                saveImage();
+              }
             }
           },
           builder: (context, state) {
@@ -78,20 +123,22 @@ class _QrGenerateState extends State<QrGenerate> {
                 ? _buildQRCodeBlank(
                     'Không thể tạo mã VietQR \n mã ngân hàng không hợp lệ')
                 : Container(
-                    height: 667,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: DefaultTheme.GREY_TOP_TAB_BAR,
-                        width: 0.5,
-                      ),
-                    ),
-                    child: VietQRWidget(
-                      width: 500,
-                      qrGeneratedDTO: qrGeneratedDTO,
-                      amount: data['amount'],
-                      content: data['content'],
-                    ),
+                    height: double.infinity,
+                    color: Theme.of(context).cardColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: RepaintBoundaryWidget(
+                        globalKey: globalKey,
+                        builder: (key) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              VietQRWidget(
+                                width: 500,
+                                qrGeneratedDTO: qrGeneratedDTO,
+                              ),
+                            ],
+                          );
+                        }),
                   );
           },
         ),

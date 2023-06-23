@@ -54,7 +54,8 @@ class CreateQR extends StatelessWidget {
     phoneAuthenticated: '',
     businessDetails: [],
     transactions: [],
-    authenticated: false, caiValue: '',
+    authenticated: false,
+    caiValue: '',
   );
 
   QRGeneratedDTO qrGeneratedDTO = const QRGeneratedDTO(
@@ -458,7 +459,6 @@ class CreateQR extends StatelessWidget {
                                   child: VietQRWidget(
                                     width: 400,
                                     qrGeneratedDTO: qrGeneratedDTO,
-                                    content: '',
                                   ),
                                 ),
                                 const SizedBox(

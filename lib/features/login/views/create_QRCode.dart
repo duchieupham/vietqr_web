@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'dart:js' as js;
+import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
@@ -13,9 +18,13 @@ import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
+import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -351,25 +360,120 @@ class _CreateQRCodeState extends State<CreateQRCode> {
         }
         return (qrGeneratedDTO.qrCode.isEmpty)
             ? _buildQRCodeBlank()
-            : UnconstrainedBox(
-                child: Container(
-                  margin:
-                      (horizontalInfo) ? const EdgeInsets.only(top: 30) : null,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: DefaultTheme.GREY_TOP_TAB_BAR,
-                      width: 0.5,
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  UnconstrainedBox(
+                    child: Container(
+                      margin: (horizontalInfo)
+                          ? const EdgeInsets.only(top: 30)
+                          : null,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: DefaultTheme.GREY_TOP_TAB_BAR,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: VietQRWidget(
+                        width: width,
+                        horizontalInfoWidth: horizontalInfoWidth,
+                        horizontalInfo: horizontalInfo,
+                        qrGeneratedDTO: qrGeneratedDTO,
+                      ),
                     ),
                   ),
-                  child: VietQRWidget(
-                    width: width,
-                    horizontalInfoWidth: horizontalInfoWidth,
-                    horizontalInfo: horizontalInfo,
-                    qrGeneratedDTO: qrGeneratedDTO,
-                    content: '',
+                  const SizedBox(
+                    height: 12,
                   ),
-                ),
+                  SizedBox(
+                    width: horizontalInfo ? 300 : width - 40,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Tooltip(
+                            message: 'In',
+                            child: ButtonIconWidget(
+                              height: 40,
+                              icon: Icons.print_rounded,
+                              title: 'In',
+                              function: () {
+                                DialogWidget.instance.openMsgDialog(
+                                  title: 'Tính năng đang bảo trì',
+                                  msg: 'Vui lòng thử lại sau',
+                                );
+                              },
+                              bgColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              textColor: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Expanded(
+                          child: Tooltip(
+                            message: 'Lưu ảnh',
+                            child: ButtonIconWidget(
+                              height: 40,
+                              icon: Icons.photo_rounded,
+                              title: 'Lưu ảnh',
+                              function: () {
+                                Provider.of<ActionShareProvider>(context,
+                                        listen: false)
+                                    .updateAction(false);
+                                String paramData = Session.instance
+                                    .formatDataParamUrl(qrGeneratedDTO,
+                                        action: 'SAVE');
+                                js.context.callMethod('open', [
+                                  Uri.base.toString().replaceFirst(
+                                      '/login', '/qr_generate$paramData')
+                                ]);
+                              },
+                              bgColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              textColor: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Expanded(
+                          child: Tooltip(
+                            message: 'Sao chép mã QR',
+                            child: ButtonIconWidget(
+                              height: 40,
+                              icon: Icons.copy_rounded,
+                              title: '',
+                              function: () async {
+                                await FlutterClipboard.copy(ShareUtils.instance
+                                        .getTextSharing(qrGeneratedDTO))
+                                    .then(
+                                  (value) => Fluttertoast.showToast(
+                                    msg: 'Đã sao chép',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: DefaultTheme.WHITE,
+                                    textColor: DefaultTheme.BLACK,
+                                    fontSize: 15,
+                                    webBgColor: 'rgba(255, 255, 255)',
+                                    webPosition: 'center',
+                                  ),
+                                );
+                              },
+                              bgColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                              textColor: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               );
       },
     );
