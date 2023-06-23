@@ -31,11 +31,13 @@ import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/qr/views/qr_generate.dart';
+import 'package:VietQR/features/qr/views/qr_share_view.dart';
 import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/add_business_provider.dart';
 import 'package:VietQR/services/providers/bank_card_position_provider.dart';
@@ -71,7 +73,6 @@ import 'services/providers/business_inforamtion_provider.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
@@ -230,7 +231,7 @@ final GoRouter _router = GoRouter(
       redirect: (context, state) {
         Map<String, String> params = state.queryParams;
 
-        return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}';
+        return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&action=${params['action']}';
       },
       builder: (BuildContext context, GoRouterState state) =>
           const QrGenerate(),
@@ -348,6 +349,7 @@ class _VietQRApp extends State<VietQRApp> {
                 create: (context) => BusinessInformationProvider()),
             ChangeNotifierProvider(create: (context) => SearchProvider()),
             ChangeNotifierProvider(create: (context) => AddBankProvider()),
+            ChangeNotifierProvider(create: (context) => ActionShareProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

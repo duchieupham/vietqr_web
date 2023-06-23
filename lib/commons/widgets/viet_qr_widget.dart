@@ -11,8 +11,6 @@ class VietQRWidget extends StatelessWidget {
   final double width, horizontalInfoWidth;
   final double? height;
   final QRGeneratedDTO qrGeneratedDTO;
-  final String content;
-  final String amount;
   final bool? isStatistic;
   final bool? isCopy;
   final double? qrSize;
@@ -23,14 +21,12 @@ class VietQRWidget extends StatelessWidget {
     super.key,
     required this.width,
     required this.qrGeneratedDTO,
-    required this.content,
     this.height,
     this.isStatistic,
     this.isCopy,
     this.qrSize,
     this.showQROnly = false,
     this.horizontalInfo = false,
-    this.amount = '',
     this.horizontalInfoWidth = 500,
   });
 
@@ -90,8 +86,8 @@ class VietQRWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0' ||
-            amount.isNotEmpty) ...[
+        if (qrGeneratedDTO.amount.isNotEmpty &&
+            qrGeneratedDTO.amount != '0') ...[
           const Padding(padding: EdgeInsets.only(bottom: 10)),
           const Text(
             'Quét mã QR để thanh toán',
@@ -102,9 +98,7 @@ class VietQRWidget extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.only(bottom: 5)),
           Text(
-            amount.isNotEmpty
-                ? '${CurrencyUtils.instance.getCurrencyFormatted(amount)} VND'
-                : '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+            '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
             style: const TextStyle(
               color: DefaultTheme.ORANGE,
               fontSize: 20,
@@ -124,12 +118,12 @@ class VietQRWidget extends StatelessWidget {
           isUnbold: true,
         ),
         const Padding(padding: EdgeInsets.only(bottom: 10)),
-        if (qrGeneratedDTO.content.isNotEmpty || content.isNotEmpty) ...[
+        if (qrGeneratedDTO.content.isNotEmpty) ...[
           DividerWidget(width: width),
           const Padding(padding: EdgeInsets.only(bottom: 10)),
           _buildSection(
             title: 'Nội dung: ',
-            description: content.isNotEmpty ? content : qrGeneratedDTO.content,
+            description: qrGeneratedDTO.content,
             isUnbold: true,
           ),
           const Padding(padding: EdgeInsets.only(bottom: 10)),

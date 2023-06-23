@@ -119,7 +119,6 @@ class _BankCardGeneratedView extends State<BankCardGeneratedView> {
                   child: VietQRWidget(
                     width: width,
                     qrGeneratedDTO: qrGeneratedDTO,
-                    content: '',
                   ),
                   //  BankCardWidget(dto: dto, width: width * 0.9),
                 );

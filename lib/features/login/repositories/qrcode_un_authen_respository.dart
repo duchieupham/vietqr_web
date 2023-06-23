@@ -35,4 +35,32 @@ class QRCodeUnUTRepository {
     }
     return result;
   }
+
+  Future<QRGeneratedDTO> generateQRStaging(Map<String, dynamic> data) async {
+    QRGeneratedDTO result = const QRGeneratedDTO(
+      bankCode: '',
+      bankName: '',
+      bankAccount: '',
+      userBankName: '',
+      amount: '',
+      content: '',
+      qrCode: '',
+      imgId: '',
+    );
+    try {
+      const String url =
+          'http://112.78.1.220:8084/vqr/api/qr/generate/unauthenticated';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        body: data,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        result = QRGeneratedDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
 }
