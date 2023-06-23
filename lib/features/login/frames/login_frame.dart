@@ -38,7 +38,7 @@ class LoginFrame extends StatelessWidget {
                     children: [
                       BoxLayout(
                         width: 400,
-                        height: 800,
+                        height: 850,
                         borderRadius: 20,
                         bgColor: Theme.of(context).canvasColor,
                         enableShadow: true,
@@ -50,7 +50,7 @@ class LoginFrame extends StatelessWidget {
                       Expanded(
                         child: BoxLayout(
                           width: width - 90,
-                          height: 800,
+                          height: 850,
                           borderRadius: 20,
                           enableShadow: true,
                           padding: EdgeInsets.zero,
