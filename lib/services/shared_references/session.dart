@@ -109,12 +109,12 @@ class Session {
   }
 
   String formatDataParamUrl(QRGeneratedDTO qrGeneratedDTO,
-      {String action = ''}) {
+      {String action = '', int showBankAccount = 1}) {
     String bankCode = qrGeneratedDTO.bankCode;
     String account = qrGeneratedDTO.bankAccount;
     String name = qrGeneratedDTO.userBankName.replaceAll(' ', '_');
     String amount = qrGeneratedDTO.amount;
     String content = qrGeneratedDTO.content.replaceAll(' ', '_');
-    return '?bankCode=$bankCode&account=$account&name=$name&amount=$amount&content=$content&action=$action';
+    return '?bankCode=$bankCode&account=$account&name=$name&amount=$amount&content=$content&action=$action&showBankAccount=$showBankAccount';
   }
 }

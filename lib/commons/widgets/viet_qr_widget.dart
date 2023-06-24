@@ -17,7 +17,7 @@ class VietQRWidget extends StatelessWidget {
   final bool showQROnly;
   final bool horizontalInfo;
   final bool hasBgNapas;
-
+  final bool showBankAccount;
   const VietQRWidget(
       {super.key,
       required this.width,
@@ -29,7 +29,8 @@ class VietQRWidget extends StatelessWidget {
       this.showQROnly = false,
       this.horizontalInfo = false,
       this.horizontalInfoWidth = 500,
-      this.hasBgNapas = false});
+      this.hasBgNapas = false,
+      this.showBankAccount = true});
 
   @override
   Widget build(BuildContext context) {
@@ -112,10 +113,12 @@ class VietQRWidget extends StatelessWidget {
         ],
         const Padding(padding: EdgeInsets.only(bottom: 10)),
         DividerWidget(width: width),
-        const Padding(padding: EdgeInsets.only(bottom: 10)),
-        _buildSection(
-            title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
-        const Padding(padding: EdgeInsets.only(bottom: 5)),
+        if (showBankAccount) ...[
+          const Padding(padding: EdgeInsets.only(bottom: 10)),
+          _buildSection(
+              title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
+        ],
+        Padding(padding: EdgeInsets.only(bottom: showBankAccount ? 5 : 20)),
         _buildSection(
           title: 'Chủ thẻ: ',
           description: qrGeneratedDTO.userBankName.toUpperCase(),
@@ -319,15 +322,21 @@ class VietQRWidget extends StatelessWidget {
             ),
           ),
           DividerWidget(width: width),
-          const Padding(padding: EdgeInsets.only(bottom: 10)),
-          _buildSection(
-              title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
-          const Padding(padding: EdgeInsets.only(bottom: 5)),
+          if (showBankAccount) ...[
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+            _buildSection(
+                title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
+          ],
+          Padding(padding: EdgeInsets.only(bottom: showBankAccount ? 5 : 20)),
           _buildSection(
             title: 'Chủ thẻ: ',
             description: qrGeneratedDTO.userBankName.toUpperCase(),
             isUnbold: true,
           ),
+          if (!showBankAccount)
+            const SizedBox(
+              height: 10,
+            ),
         ],
       ),
     );

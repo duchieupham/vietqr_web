@@ -57,6 +57,8 @@ class _QrGenerateState extends State<QrGenerate> {
         Uri.base.queryParameters['content'].toString().replaceAll('_', ' ') ??
             '';
     data['action'] = Uri.base.queryParameters['action'] ?? '';
+    data['showBankAccount'] =
+        Uri.base.queryParameters['showBankAccount'] ?? '1';
     if (data['amount'] == '' && data['content'] == '') {
       showBgNapas = true;
     }
@@ -141,6 +143,8 @@ class _QrGenerateState extends State<QrGenerate> {
                                       width: 416,
                                       qrGeneratedDTO: qrGeneratedDTO,
                                       hasBgNapas: showBgNapas,
+                                      showBankAccount:
+                                          data['showBankAccount'] == '1',
                                     )
                                   : VietQRWidget(
                                       width: 500,

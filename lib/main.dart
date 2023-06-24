@@ -230,7 +230,7 @@ final GoRouter _router = GoRouter(
       redirect: (context, state) {
         Map<String, String> params = state.queryParams;
 
-        return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&action=${params['action']}';
+        return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&action=${params['action']}&showBankAccount=${params['showBankAccount']}';
       },
       builder: (BuildContext context, GoRouterState state) =>
           const QrGenerate(),
