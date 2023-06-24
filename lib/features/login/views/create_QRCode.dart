@@ -142,7 +142,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                       _focusNode.unfocus();
                     }
                   },
-                  onChange: (vavlue) {
+                  onChange: (value) {
                     provider.updateBankAccountErr(
                       (bankAccountController.text.isEmpty ||
                           !StringUtils.instance
@@ -215,6 +215,23 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                     color: DefaultTheme.RED_TEXT,
                   ),
                 ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 5)),
+              Row(
+                children: [
+                  Switch(
+                    value: !provider.showBankAccount,
+                    activeColor: DefaultTheme.GREEN,
+                    onChanged: (bool value) {
+                      provider.updateShowBankAccount(!value);
+                    },
+                  ),
+                  const Expanded(
+                      child: Text(
+                    'Không hiển thị mã tài khoản của tôi tại mã VietQR',
+                    style: TextStyle(fontSize: 12),
+                  ))
+                ],
               ),
               const Padding(padding: EdgeInsets.only(top: 50)),
               ButtonWidget(
@@ -383,6 +400,9 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                       horizontalInfo: horizontalInfo,
                       qrGeneratedDTO: qrGeneratedDTO,
                       hasBgNapas: true,
+                      showBankAccount:
+                          Provider.of<BankTypeProvider>(context, listen: false)
+                              .showBankAccount,
                     ),
                   ),
                   const SizedBox(
@@ -427,7 +447,14 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                                     .updateAction(false);
                                 String paramData = Session.instance
                                     .formatDataParamUrl(qrGeneratedDTO,
-                                        action: 'SAVE');
+                                        action: 'SAVE',
+                                        showBankAccount:
+                                            Provider.of<BankTypeProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .showBankAccount
+                                                ? 1
+                                                : 0);
                                 js.context.callMethod('open', [
                                   Uri.base.toString().replaceFirst(
                                       '/login', '/qr_generate$paramData')

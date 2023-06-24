@@ -17,6 +17,7 @@ class BankTypeProvider with ChangeNotifier {
   bool _isNationalErr = false;
   bool _isPhoneErr = false;
   bool _isAgreeWithPolicy = false;
+  bool _isShowBankAccount = true;
 
   BankTypeDTO get bankType => _bankType;
   bool get nameErr => _isNameErr;
@@ -24,6 +25,12 @@ class BankTypeProvider with ChangeNotifier {
   bool get nationalErr => _isNationalErr;
   bool get phoneErr => _isPhoneErr;
   bool get agreeWithPolicy => _isAgreeWithPolicy;
+  bool get showBankAccount => _isShowBankAccount;
+
+  void updateShowBankAccount(bool value) {
+    _isShowBankAccount = value;
+    notifyListeners();
+  }
 
   void updateAgreePolicy(bool value) {
     _isAgreeWithPolicy = value;
