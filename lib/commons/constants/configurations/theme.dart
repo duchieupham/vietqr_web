@@ -77,6 +77,7 @@ class DefaultThemeData {
 
   ThemeData get darkTheme {
     return ThemeData(
+      fontFamily: 'SF-Pro',
       brightness: Brightness.dark,
       scaffoldBackgroundColor: DefaultTheme.BLACK,
       colorScheme: const ColorScheme.dark(primary: DefaultTheme.GREEN),
@@ -106,6 +107,7 @@ class DefaultThemeData {
 
   ThemeData get lightTheme {
     return ThemeData(
+      fontFamily: 'SF-Pro',
       brightness: Brightness.light,
       scaffoldBackgroundColor: DefaultTheme.GREY_BG,
       colorScheme: const ColorScheme.light(primary: DefaultTheme.GREEN),
