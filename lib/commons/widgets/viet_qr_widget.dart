@@ -260,6 +260,7 @@ class VietQRWidget extends StatelessWidget {
     return BoxLayout(
       width: width - 40,
       bgImage: 'assets/images/bg_napas_qr.png',
+      bgColor: Colors.transparent,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 23),
       borderRadius: 22,
       child: Column(
