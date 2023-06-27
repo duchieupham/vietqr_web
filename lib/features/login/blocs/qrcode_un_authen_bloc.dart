@@ -17,8 +17,7 @@ void _createQR(QRCodeUnUTEvent event, Emitter emit) async {
   try {
     if (event is QRCodeUnUTCreateQR) {
       emit(CreateQRLoadingState());
-      final QRGeneratedDTO result =
-          await _repository.generateQRStaging(event.data);
+      final QRGeneratedDTO result = await _repository.generateQR(event.data);
       emit(CreateSuccessfulState(dto: result));
     }
   } catch (e) {
