@@ -29,7 +29,7 @@ class _QrGenerateState extends State<QrGenerate> {
   late QRCodeUnUTBloc qrCodeUnUTBloc;
   final GlobalKey globalKey = GlobalKey();
   final WaterMarkProvider _waterMarkProvider = WaterMarkProvider(false);
-  bool showBgNapas = false;
+  bool showBgNapas = true;
   @override
   void initState() {
     getData();
@@ -59,9 +59,6 @@ class _QrGenerateState extends State<QrGenerate> {
     data['action'] = Uri.base.queryParameters['action'] ?? '';
     data['showBankAccount'] =
         Uri.base.queryParameters['showBankAccount'] ?? '1';
-    if (data['amount'] == '' && data['content'] == '') {
-      showBgNapas = true;
-    }
     qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
   }
 

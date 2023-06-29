@@ -28,6 +28,7 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
+import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -472,6 +473,7 @@ class _HomeScreen extends State<HomeScreen> {
                   UnconstrainedBox(
                     child: VietQRWidget(
                       width: 400,
+                      height: 600,
                       qrGeneratedDTO: provider.qrGeneratedDTO,
                     ),
                   ),
@@ -516,7 +518,7 @@ class _HomeScreen extends State<HomeScreen> {
                                         action: 'SAVE');
                                 js.context.callMethod('open', [
                                   Uri.base.toString().replaceFirst(
-                                      '/login', '/qr_generate$paramData')
+                                      '/home', '/qr_generate$paramData')
                                 ]);
                               },
                               bgColor:

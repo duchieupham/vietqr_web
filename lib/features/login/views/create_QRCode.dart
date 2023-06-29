@@ -380,30 +380,15 @@ class _CreateQRCodeState extends State<CreateQRCode> {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: horizontalInfo
-                        ? const EdgeInsets.only(top: 30)
-                        : EdgeInsets.zero,
-                    child: const Text(
-                      'Mã QR của bạn',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  UnconstrainedBox(
-                    child: VietQRWidget(
-                      width: width,
-                      horizontalInfoWidth: horizontalInfoWidth,
-                      horizontalInfo: horizontalInfo,
-                      qrGeneratedDTO: qrGeneratedDTO,
-                      hasBgNapas: true,
-                      showBankAccount:
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .showBankAccount,
-                    ),
+                  VietQRWidget(
+                    width: width,
+                    horizontalInfoWidth: horizontalInfoWidth,
+                    horizontalInfo: horizontalInfo,
+                    qrGeneratedDTO: qrGeneratedDTO,
+                    hasBgNapas: true,
+                    showBankAccount:
+                        Provider.of<BankTypeProvider>(context, listen: false)
+                            .showBankAccount,
                   ),
                   const SizedBox(
                     height: 12,
