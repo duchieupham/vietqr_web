@@ -9,6 +9,7 @@ import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
+import 'dart:js' as js;
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
@@ -20,7 +21,9 @@ import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/qr_create_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
+import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
@@ -458,6 +461,7 @@ class CreateQR extends StatelessWidget {
                                 UnconstrainedBox(
                                   child: VietQRWidget(
                                     width: 400,
+                                    hasBgNapas: true,
                                     qrGeneratedDTO: qrGeneratedDTO,
                                   ),
                                 ),
@@ -498,11 +502,30 @@ class CreateQR extends StatelessWidget {
                                             icon: Icons.photo_rounded,
                                             title: '',
                                             function: () {
-                                              DialogWidget.instance
-                                                  .openMsgDialog(
-                                                title: 'Tính năng đang bảo trì',
-                                                msg: 'Vui lòng thử lại sau',
-                                              );
+                                              String userId =
+                                                  UserInformationHelper.instance
+                                                      .getUserId();
+                                              Provider.of<ActionShareProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .updateAction(false);
+                                              String paramData = Session
+                                                  .instance
+                                                  .formatDataParamUrl(
+                                                      qrGeneratedDTO,
+                                                      action: 'SAVE');
+
+                                              int start = Uri.base
+                                                  .toString()
+                                                  .indexOf('/qr');
+                                              int end =
+                                                  Uri.base.toString().length;
+                                              js.context.callMethod('open', [
+                                                Uri.base.toString().replaceRange(
+                                                    start,
+                                                    end,
+                                                    '/qr_generate$paramData')
+                                              ]);
                                             },
                                             bgColor:
                                                 Theme.of(context).cardColor,
