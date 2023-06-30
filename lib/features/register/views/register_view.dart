@@ -73,7 +73,13 @@ class RegisterView extends StatelessWidget {
                   //pop loading dialog
                   Navigator.of(context).pop();
                   //pop to login page
-                  backToPreviousPage(context);
+
+                  DialogWidget.instance.openMsgSuccessDialog(
+                      title: 'Thông báo',
+                      msg: 'Đăng ký thành công',
+                      function: () {
+                        backToPreviousPage(context);
+                      });
                 }
               }),
               child: Consumer<RegisterProvider>(
@@ -272,9 +278,24 @@ class RegisterView extends StatelessWidget {
 
                   if (Provider.of<RegisterProvider>(context, listen: false)
                       .isValidValidation()) {
-                    Provider.of<RegisterProvider>(context, listen: false)
-                        .sendOtp(_phoneNoController.text);
-                    openPinDialog(context);
+                    // Provider.of<RegisterProvider>(context, listen: false)
+                    //     .sendOtp(_phoneNoController.text);
+                    // openPinDialog(context);
+                    DialogWidget.instance.openLoadingDialog();
+                    String userIP =
+                        await UserInformationUtils.instance.getIPAddress();
+                    AccountLoginDTO dto = AccountLoginDTO(
+                      phoneNo: _phoneNoController.text,
+                      email: '',
+                      password: EncryptUtils.instance.encrypted(
+                        _phoneNoController.text,
+                        _passwordController.text,
+                      ),
+                      device: userIP,
+                      fcmToken: '',
+                      platform: 'WEB',
+                    );
+                    _registerBloc.add(RegisterEventSubmit(dto: dto));
                   }
                 }),
           ),
