@@ -35,6 +35,7 @@ import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
+import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
@@ -234,6 +235,12 @@ final GoRouter _router = GoRouter(
       },
       builder: (BuildContext context, GoRouterState state) =>
           const QrGenerate(),
+    ),
+    GoRoute(
+      path: '/naptk',
+      redirect: (context, state) => '/naptk',
+      builder: (BuildContext context, GoRouterState state) =>
+          const TopUpAccount(),
     ),
   ],
 );
