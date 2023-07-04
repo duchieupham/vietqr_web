@@ -136,11 +136,9 @@ class BottomWeb extends StatelessWidget {
                 width: 300,
                 text: 'App Store',
                 assetImage: 'assets/images/logo-app-store.png',
-                onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Đang cập nhật',
-                    msg: 'Chúng tôi đang cập nhật ứng dụng VietQR trên iOS',
-                  );
+                onTap: () async {
+                  await launchUrl(Uri.parse(
+                      'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
                 },
               ),
               const Padding(padding: EdgeInsets.only(left: 10)),
