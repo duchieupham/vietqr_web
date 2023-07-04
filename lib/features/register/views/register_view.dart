@@ -26,13 +26,16 @@ class RegisterView extends StatelessWidget {
 
   static final TextEditingController _confirmPassController =
       TextEditingController();
+  static final TextEditingController _shareCodeController =
+      TextEditingController();
 
   static late RegisterBloc _registerBloc;
 
   // static bool _isChangePhone = false;
   static bool _isChangePass = false;
+  String shareCode = '';
 
-  const RegisterView({super.key});
+  RegisterView({super.key});
 
   void initialServices(BuildContext context) {
     _registerBloc = BlocProvider.of(context);
@@ -40,6 +43,11 @@ class RegisterView extends StatelessWidget {
       _passwordController.clear();
       _confirmPassController.clear();
     }
+    shareCode = Uri.base.queryParameters['share_code'] ?? '';
+    if (shareCode.isNotEmpty) {
+      _shareCodeController.text = shareCode;
+    }
+
     // if (!_isChangePhone) {
     //   if (StringUtils.instance.isNumeric(phoneNo)) {
     //     _phoneNoController.value =
@@ -214,6 +222,26 @@ class RegisterView extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const Padding(padding: EdgeInsets.only(top: 15)),
+                        shareCode.isNotEmpty
+                            ? _buildFiledShareCode(width)
+                            : BorderLayout(
+                                width: width,
+                                height: 50,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                isError: false,
+                                child: TextFieldWidget(
+                                  width: width,
+                                  maxLines: 1,
+                                  hintText: 'Mã giới thiệu',
+                                  controller: _shareCodeController,
+                                  inputType: TextInputType.text,
+                                  keyboardAction: TextInputAction.next,
+                                  onChange: (vavlue) {},
+                                  isObscureText: false,
+                                ),
+                              ),
                         const Spacer(),
                         _buildButtonSubmit(context, width),
                         const Padding(padding: EdgeInsets.only(bottom: 20)),
@@ -234,6 +262,24 @@ class RegisterView extends StatelessWidget {
     _isChangePass = false;
     Provider.of<RegisterProvider>(context, listen: false).reset();
     context.go('/login');
+  }
+
+  Widget _buildFiledShareCode(double width) {
+    return Container(
+      width: width,
+      height: 50,
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+      decoration: BoxDecoration(
+        color: DefaultTheme.GREY_BUTTON,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Text(
+        shareCode,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 16),
+      ),
+    );
   }
 
   Widget _buildButtonSubmit(BuildContext context, double width) {
@@ -294,6 +340,7 @@ class RegisterView extends StatelessWidget {
                       device: userIP,
                       fcmToken: '',
                       platform: 'WEB',
+                      sharingCode: _shareCodeController.text,
                     );
                     _registerBloc.add(RegisterEventSubmit(dto: dto));
                   }

@@ -172,9 +172,11 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/register',
-      redirect: (context, state) => '/register',
-      builder: (BuildContext context, GoRouterState state) =>
-          const RegisterView(),
+      redirect: (context, state) {
+        Map<String, String> params = state.queryParams;
+        return '/register?share_code=${params['share_code']}';
+      },
+      builder: (BuildContext context, GoRouterState state) => RegisterView(),
     ),
     GoRoute(
       path: '/home',

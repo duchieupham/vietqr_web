@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
@@ -180,6 +181,34 @@ class PopupMenuWebWidget {
                   style: TextStyle(
                     fontSize: 13,
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
+          value: 2,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              DialogWidget.instance.openPopup(
+                width: 500,
+                height: 300,
+                child: const PopupShareCode(),
+              );
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/images/ic-share-code.png',
+                  fit: BoxFit.fitHeight,
+                  height: 28,
+                ),
+                const Padding(padding: EdgeInsets.only(left: 10)),
+                const Text(
+                  'Mã giới thiệu',
+                  style: TextStyle(fontSize: 13, color: DefaultTheme.BLUE_TEXT),
                 ),
               ],
             ),
