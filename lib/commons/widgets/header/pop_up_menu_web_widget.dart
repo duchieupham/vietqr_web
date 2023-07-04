@@ -290,9 +290,9 @@ class PopupMenuWebWidget {
   Widget _buildPoint() {
     return Row(
       children: [
-        const Text(
-          '0',
-          style: TextStyle(fontSize: 12),
+        Text(
+          Session.instance.wallet.point ?? '',
+          style: const TextStyle(fontSize: 12),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 2),

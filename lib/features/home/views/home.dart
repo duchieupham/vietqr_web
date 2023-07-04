@@ -83,6 +83,7 @@ class _HomeScreen extends State<HomeScreen> {
                   .id,
               offset: currentPage)));
     });
+    Session.instance.fetchWallet();
   }
 
   @override
