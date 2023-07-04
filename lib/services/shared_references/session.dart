@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:html' as html;
 import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
+import 'package:VietQR/features/information_user/repositories/wallet_repository.dart';
+import 'package:VietQR/models/wallet_dto.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -116,5 +118,15 @@ class Session {
     String amount = qrGeneratedDTO.amount;
     String content = qrGeneratedDTO.content.replaceAll(' ', '_');
     return '?bankCode=$bankCode&account=$account&name=$name&amount=$amount&content=$content&action=$action&showBankAccount=$showBankAccount';
+  }
+
+  // Wallet
+  final WalletRepository walletRepository = const WalletRepository();
+  WalletDTO _wallet = WalletDTO();
+  WalletDTO get wallet => _wallet;
+  Future fetchWallet() async {
+    String userId = UserInformationHelper.instance.getUserId();
+    final WalletDTO dto = await walletRepository.getInfoWallet(userId);
+    _wallet = dto;
   }
 }

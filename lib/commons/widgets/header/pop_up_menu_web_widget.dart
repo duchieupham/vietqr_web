@@ -56,16 +56,22 @@ class PopupMenuWebWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 5)),
-                    InkWell(
-                      onTap: () {},
-                      child: const Text(
-                        'Chi tiết',
-                        style: TextStyle(
-                          fontSize: 13,
-                          decoration: TextDecoration.underline,
-                          color: DefaultTheme.GREEN,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {},
+                          child: const Text(
+                            'Chi tiết',
+                            style: TextStyle(
+                              fontSize: 13,
+                              decoration: TextDecoration.underline,
+                              color: DefaultTheme.GREEN,
+                            ),
+                          ),
                         ),
-                      ),
+                        _buildPoint()
+                      ],
                     ),
                   ],
                 ),
@@ -279,5 +285,23 @@ class PopupMenuWebWidget {
       offset & overlay.size,
     );
     return position;
+  }
+
+  Widget _buildPoint() {
+    return Row(
+      children: [
+        Text(
+          Session.instance.wallet.point ?? '',
+          style: const TextStyle(fontSize: 12),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Image.asset(
+            'assets/images/ic-point.png',
+            width: 20,
+          ),
+        )
+      ],
+    );
   }
 }

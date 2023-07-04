@@ -6,11 +6,11 @@ class WalletDTO {
   final bool enableService;
 
   const WalletDTO({
-    required this.amount,
-    required this.enableService,
-    required this.point,
-    required this.sharingCode,
-    required this.walletId,
+    this.amount = '',
+    this.enableService = false,
+    this.point = '',
+    this.sharingCode = '',
+    this.walletId = '',
   });
 
   factory WalletDTO.fromJson(Map<String, dynamic> json) {

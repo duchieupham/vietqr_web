@@ -28,7 +28,6 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
-import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -66,7 +65,6 @@ class _HomeScreen extends State<HomeScreen> {
   void initState() {
     super.initState();
     String userId = UserInformationHelper.instance.getUserId();
-
     _tokenBloc = BlocProvider.of(context);
     _bankBloc = BlocProvider.of(context);
     _tokenBloc.add(const TokenEventCheckValid());
@@ -85,6 +83,7 @@ class _HomeScreen extends State<HomeScreen> {
                   .id,
               offset: currentPage)));
     });
+    Session.instance.fetchWallet();
   }
 
   @override
