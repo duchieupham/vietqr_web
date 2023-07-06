@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -405,10 +406,20 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                               icon: Icons.print_rounded,
                               title: 'In',
                               function: () {
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Tính năng đang bảo trì',
-                                  msg: 'Vui lòng thử lại sau',
-                                );
+                                String paramData = Session.instance
+                                    .formatDataParamUrl(qrGeneratedDTO,
+                                        action: 'PRINT',
+                                        showBankAccount:
+                                            Provider.of<BankTypeProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .showBankAccount
+                                                ? 1
+                                                : 0);
+                                js.context.callMethod('open', [
+                                  Uri.base.toString().replaceFirst(
+                                      '/login', '/qr_generate$paramData')
+                                ]);
                               },
                               bgColor:
                                   Theme.of(context).scaffoldBackgroundColor,

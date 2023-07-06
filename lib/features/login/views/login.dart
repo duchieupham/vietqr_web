@@ -35,7 +35,7 @@ class _Login extends State<Login> {
   static final TextEditingController phoneNoController =
       TextEditingController();
 
-  static late LoginBloc _loginBloc;
+  final LoginBloc _loginBloc = LoginBloc();
   static String code = '';
   static const Uuid uuid = Uuid();
 
@@ -43,7 +43,6 @@ class _Login extends State<Login> {
   void initState() {
     super.initState();
     code = uuid.v1();
-    _loginBloc = BlocProvider.of(context);
     // _loginBloc.add(LoginEventInsertCode(code: code, loginBloc: _loginBloc));
   }
 
@@ -59,42 +58,45 @@ class _Login extends State<Login> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: BlocListener<LoginBloc, LoginState>(
-        listener: ((context, state) {
-          if (state is LoginLoadingState) {
-            DialogWidget.instance.openLoadingDialog();
-          }
-          if (state is LoginSuccessfulState) {
-            // _loginBloc.add(LoginEventGetUserInformation(userId: state.userId));
-            //pop loading dialog
-            Navigator.of(context).pop();
-            //   //navigate to home screen
-            //   Navigator.of(context).popUntil((route) => route.isFirst);
-            //   Navigator.of(context).pushReplacementNamed(Routes.HOME,
-            //       arguments: {'isFromLogin': true});
-            context.push('/home');
-          }
-          if (state is LoginFailedState) {
-            FocusManager.instance.primaryFocus?.unfocus();
-            //pop loading dialog
-            Navigator.of(context).pop();
+      body: BlocProvider<LoginBloc>(
+        create: (BuildContext context) => _loginBloc,
+        child: BlocListener<LoginBloc, LoginState>(
+          listener: ((context, state) {
+            if (state is LoginLoadingState) {
+              DialogWidget.instance.openLoadingDialog();
+            }
+            if (state is LoginSuccessfulState) {
+              // _loginBloc.add(LoginEventGetUserInformation(userId: state.userId));
+              //pop loading dialog
+              Navigator.of(context).pop();
+              //   //navigate to home screen
+              //   Navigator.of(context).popUntil((route) => route.isFirst);
+              //   Navigator.of(context).pushReplacementNamed(Routes.HOME,
+              //       arguments: {'isFromLogin': true});
+              context.push('/home');
+            }
+            if (state is LoginFailedState) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              //pop loading dialog
+              Navigator.of(context).pop();
 
-            //show msg dialog
-            DialogWidget.instance.openMsgDialog(
-              title: 'Đăng nhập không thành công',
-              msg:
-                  'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.',
-            );
-          }
-        }),
-        child: LoginFrame(
-          width: width,
-          height: height,
-          widget1: _buildWidget1(
+              //show msg dialog
+              DialogWidget.instance.openMsgDialog(
+                title: 'Đăng nhập không thành công',
+                msg:
+                    'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.',
+              );
+            }
+          }),
+          child: LoginFrame(
             width: width,
-            isResized: PlatformUtils.instance.resizeWhen(width, 750),
+            height: height,
+            widget1: _buildWidget1(
+              width: width,
+              isResized: PlatformUtils.instance.resizeWhen(width, 750),
+            ),
+            widget2: const CreateQRCode(),
           ),
-          widget2: const CreateQRCode(),
         ),
       ),
     );

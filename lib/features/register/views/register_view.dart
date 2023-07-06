@@ -29,7 +29,7 @@ class RegisterView extends StatelessWidget {
   static final TextEditingController _shareCodeController =
       TextEditingController();
 
-  static late RegisterBloc _registerBloc;
+  final RegisterBloc _registerBloc = RegisterBloc();
 
   // static bool _isChangePhone = false;
   static bool _isChangePass = false;
@@ -38,7 +38,6 @@ class RegisterView extends StatelessWidget {
   RegisterView({super.key});
 
   void initialServices(BuildContext context) {
-    _registerBloc = BlocProvider.of(context);
     if (!_isChangePass) {
       _passwordController.clear();
       _confirmPassController.clear();
@@ -66,189 +65,193 @@ class RegisterView extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: BlocListener<RegisterBloc, RegisterState>(
-              listener: ((context, state) {
-                if (state is RegisterFailedState) {
-                  //pop loading dialog
-                  Navigator.pop(context);
-                  //
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Không thể đăng ký',
-                    msg: state.msg,
-                  );
-                }
-                if (state is RegisterSuccessState) {
-                  //pop loading dialog
-                  Navigator.of(context).pop();
-                  //pop to login page
+            child: BlocProvider<RegisterBloc>(
+              create: (BuildContext context) => RegisterBloc(),
+              child: BlocListener<RegisterBloc, RegisterState>(
+                bloc: _registerBloc,
+                listener: ((context, state) {
+                  if (state is RegisterFailedState) {
+                    //pop loading dialog
+                    Navigator.pop(context);
+                    //
+                    DialogWidget.instance.openMsgDialog(
+                      title: 'Không thể đăng ký',
+                      msg: state.msg,
+                    );
+                  }
+                  if (state is RegisterSuccessState) {
+                    //pop loading dialog
+                    Navigator.of(context).pop();
+                    //pop to login page
 
-                  DialogWidget.instance.openMsgSuccessDialog(
-                      title: 'Thông báo',
-                      msg: 'Đăng ký thành công',
-                      function: () {
-                        backToPreviousPage(context);
-                      });
-                }
-              }),
-              child: Consumer<RegisterProvider>(
-                builder: (context, value, child) {
-                  return RegisterFrame(
-                    width: width,
-                    height: height,
-                    mobileChildren: const SizedBox(),
-                    webChildren: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: width,
-                          child: Row(
-                            children: [
-                              const Text(
-                                'Đăng ký tài khoản',
+                    DialogWidget.instance.openMsgSuccessDialog(
+                        title: 'Thông báo',
+                        msg: 'Đăng ký thành công',
+                        function: () {
+                          backToPreviousPage(context);
+                        });
+                  }
+                }),
+                child: Consumer<RegisterProvider>(
+                  builder: (context, value, child) {
+                    return RegisterFrame(
+                      width: width,
+                      height: height,
+                      mobileChildren: const SizedBox(),
+                      webChildren: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: width,
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'Đăng ký tài khoản',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Image.asset(
+                                  'assets/images/ic-viet-qr.png',
+                                  width: 100,
+                                  height: 50,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          BorderLayout(
+                            width: width,
+                            height: 50,
+                            isError: value.phoneErr,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: TextFieldWidget(
+                              width: width,
+                              isObscureText: false,
+                              maxLines: 1,
+                              // textfieldType: TextfieldType.LABEL,
+                              // title: 'Số điện thoại',
+                              // titleWidth: 100,
+                              hintText: 'Số điện thoại',
+                              controller: _phoneNoController,
+                              inputType: TextInputType.number,
+                              keyboardAction: TextInputAction.next,
+                              onChange: (vavlue) {
+                                // _isChangePhone = true;
+                              },
+                            ),
+                          ),
+                          Visibility(
+                            visible: value.phoneErr,
+                            child: const Padding(
+                              padding:
+                                  EdgeInsets.only(left: 10, top: 5, right: 30),
+                              child: Text(
+                                'Số điện thoại không đúng định dạng.',
                                 style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    color: DefaultTheme.RED_TEXT, fontSize: 13),
                               ),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/images/ic-viet-qr.png',
-                                width: 100,
-                                height: 50,
+                            ),
+                          ),
+                          const Padding(padding: EdgeInsets.only(top: 15)),
+                          BorderLayout(
+                            width: width,
+                            height: 50,
+                            isError: value.passwordErr,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: TextFieldWidget(
+                              width: width,
+                              isObscureText: true,
+                              maxLines: 1,
+                              // textfieldType: TextfieldType.LABEL,
+                              // title: 'Mật khẩu',
+                              // titleWidth: 100,
+                              hintText: 'Mật khẩu (6 số)',
+                              controller: _passwordController,
+                              inputType: TextInputType.number,
+                              keyboardAction: TextInputAction.next,
+                              onChange: (vavlue) {
+                                _isChangePass = true;
+                              },
+                            ),
+                          ),
+                          Visibility(
+                            visible: value.passwordErr,
+                            child: const Padding(
+                              padding:
+                                  EdgeInsets.only(left: 10, top: 5, right: 30),
+                              child: Text(
+                                'Mật khẩu bao gồm 6 số.',
+                                style: TextStyle(
+                                    color: DefaultTheme.RED_TEXT, fontSize: 13),
                               ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        BorderLayout(
-                          width: width,
-                          height: 50,
-                          isError: value.phoneErr,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: TextFieldWidget(
-                            width: width,
-                            isObscureText: false,
-                            maxLines: 1,
-                            // textfieldType: TextfieldType.LABEL,
-                            // title: 'Số điện thoại',
-                            // titleWidth: 100,
-                            hintText: 'Số điện thoại',
-                            controller: _phoneNoController,
-                            inputType: TextInputType.number,
-                            keyboardAction: TextInputAction.next,
-                            onChange: (vavlue) {
-                              // _isChangePhone = true;
-                            },
-                          ),
-                        ),
-                        Visibility(
-                          visible: value.phoneErr,
-                          child: const Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, top: 5, right: 30),
-                            child: Text(
-                              'Số điện thoại không đúng định dạng.',
-                              style: TextStyle(
-                                  color: DefaultTheme.RED_TEXT, fontSize: 13),
                             ),
                           ),
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 15)),
-                        BorderLayout(
-                          width: width,
-                          height: 50,
-                          isError: value.passwordErr,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: TextFieldWidget(
+                          const Padding(padding: EdgeInsets.only(top: 15)),
+                          BorderLayout(
                             width: width,
-                            isObscureText: true,
-                            maxLines: 1,
-                            // textfieldType: TextfieldType.LABEL,
-                            // title: 'Mật khẩu',
-                            // titleWidth: 100,
-                            hintText: 'Mật khẩu (6 số)',
-                            controller: _passwordController,
-                            inputType: TextInputType.number,
-                            keyboardAction: TextInputAction.next,
-                            onChange: (vavlue) {
-                              _isChangePass = true;
-                            },
-                          ),
-                        ),
-                        Visibility(
-                          visible: value.passwordErr,
-                          child: const Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, top: 5, right: 30),
-                            child: Text(
-                              'Mật khẩu bao gồm 6 số.',
-                              style: TextStyle(
-                                  color: DefaultTheme.RED_TEXT, fontSize: 13),
+                            height: 50,
+                            isError: value.confirmPassErr,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: TextFieldWidget(
+                              width: width,
+                              isObscureText: true,
+                              maxLines: 1,
+                              // textfieldType: TextfieldType.LABEL,
+                              // title: 'Xác nhận lại',
+                              // titleWidth: 100,
+                              hintText: 'Xác nhận lại Mật khẩu',
+                              controller: _confirmPassController,
+                              inputType: TextInputType.number,
+                              keyboardAction: TextInputAction.next,
+                              onChange: (vavlue) {
+                                _isChangePass = true;
+                              },
                             ),
                           ),
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 15)),
-                        BorderLayout(
-                          width: width,
-                          height: 50,
-                          isError: value.confirmPassErr,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: TextFieldWidget(
-                            width: width,
-                            isObscureText: true,
-                            maxLines: 1,
-                            // textfieldType: TextfieldType.LABEL,
-                            // title: 'Xác nhận lại',
-                            // titleWidth: 100,
-                            hintText: 'Xác nhận lại Mật khẩu',
-                            controller: _confirmPassController,
-                            inputType: TextInputType.number,
-                            keyboardAction: TextInputAction.next,
-                            onChange: (vavlue) {
-                              _isChangePass = true;
-                            },
-                          ),
-                        ),
-                        Visibility(
-                          visible: value.confirmPassErr,
-                          child: const Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, top: 5, right: 30),
-                            child: Text(
-                              'Xác nhận Mật khẩu không trùng khớp.',
-                              style: TextStyle(
-                                  color: DefaultTheme.RED_TEXT, fontSize: 13),
+                          Visibility(
+                            visible: value.confirmPassErr,
+                            child: const Padding(
+                              padding:
+                                  EdgeInsets.only(left: 10, top: 5, right: 30),
+                              child: Text(
+                                'Xác nhận Mật khẩu không trùng khớp.',
+                                style: TextStyle(
+                                    color: DefaultTheme.RED_TEXT, fontSize: 13),
+                              ),
                             ),
                           ),
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 15)),
-                        shareCode.isNotEmpty
-                            ? _buildFiledShareCode(width)
-                            : BorderLayout(
-                                width: width,
-                                height: 50,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                isError: false,
-                                child: TextFieldWidget(
+                          const Padding(padding: EdgeInsets.only(top: 15)),
+                          shareCode.isNotEmpty
+                              ? _buildFiledShareCode(width)
+                              : BorderLayout(
                                   width: width,
-                                  maxLines: 1,
-                                  hintText: 'Mã giới thiệu',
-                                  controller: _shareCodeController,
-                                  inputType: TextInputType.text,
-                                  keyboardAction: TextInputAction.next,
-                                  onChange: (vavlue) {},
-                                  isObscureText: false,
+                                  height: 50,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  isError: false,
+                                  child: TextFieldWidget(
+                                    width: width,
+                                    maxLines: 1,
+                                    hintText: 'Mã giới thiệu',
+                                    controller: _shareCodeController,
+                                    inputType: TextInputType.text,
+                                    keyboardAction: TextInputAction.next,
+                                    onChange: (vavlue) {},
+                                    isObscureText: false,
+                                  ),
                                 ),
-                              ),
-                        const Spacer(),
-                        _buildButtonSubmit(context, width),
-                        const Padding(padding: EdgeInsets.only(bottom: 20)),
-                      ],
-                    ),
-                  );
-                },
+                          const Spacer(),
+                          _buildButtonSubmit(context, width),
+                          const Padding(padding: EdgeInsets.only(bottom: 20)),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

@@ -17,24 +17,17 @@ import 'package:provider/provider.dart';
 class AddBusinessMemberWidget extends StatelessWidget {
   final TextEditingController memberController;
 
-  static late BusinessMemberBloc businessMemberBloc;
-
   static final SearchClearProvider searchClearProvider =
       SearchClearProvider(false);
 
-  const AddBusinessMemberWidget({
+  AddBusinessMemberWidget({
     super.key,
     required this.memberController,
   });
-
-  void initialServices(BuildContext context) {
-    businessMemberBloc = BlocProvider.of(context);
-  }
-
+  final BusinessMemberBloc businessMemberBloc = BusinessMemberBloc();
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    initialServices(context);
     return SizedBox(
       width: width,
       child: Column(
@@ -82,58 +75,62 @@ class AddBusinessMemberWidget extends StatelessWidget {
           ),
           DividerWidget(width: width),
           const Padding(padding: EdgeInsets.only(top: 30)),
-          BlocBuilder<BusinessMemberBloc, BusinessMemberState>(
-            builder: (context, state) {
-              if (state is BusinessMemberSearchState) {
-                return Column(
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Kết quả tìm kiếm',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
+          BlocProvider<BusinessMemberBloc>(
+            create: (BuildContext context) => businessMemberBloc,
+            child: BlocBuilder<BusinessMemberBloc, BusinessMemberState>(
+              bloc: businessMemberBloc,
+              builder: (context, state) {
+                if (state is BusinessMemberSearchState) {
+                  return Column(
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Kết quả tìm kiếm',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                    _buildSearchItem(
-                      context: context,
-                      dto: state.dto,
-                    ),
-                  ],
-                );
-              }
-              if (state is BusinessMemberSearchNotFoundState) {
-                return Column(
-                  children: [
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Kết quả tìm kiếm',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
+                      _buildSearchItem(
+                        context: context,
+                        dto: state.dto,
+                      ),
+                    ],
+                  );
+                }
+                if (state is BusinessMemberSearchNotFoundState) {
+                  return Column(
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Kết quả tìm kiếm',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                    BoxLayout(
-                      width: width,
-                      borderRadius: 5,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.center,
-                      bgColor: Theme.of(context).canvasColor,
-                      child: Text(
-                        state.message,
+                      BoxLayout(
+                        width: width,
+                        borderRadius: 5,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.center,
+                        bgColor: Theme.of(context).canvasColor,
+                        child: Text(
+                          state.message,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }
-              if (state is BusinessMemberInitialState) {
+                    ],
+                  );
+                }
+                if (state is BusinessMemberInitialState) {
+                  return const SizedBox();
+                }
                 return const SizedBox();
-              }
-              return const SizedBox();
-            },
+              },
+            ),
           ),
           const Spacer(),
           BorderLayout(
