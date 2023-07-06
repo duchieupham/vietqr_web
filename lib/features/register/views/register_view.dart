@@ -115,7 +115,7 @@ class RegisterView extends StatelessWidget {
                                 ),
                                 const Spacer(),
                                 Image.asset(
-                                  'assets/images/ic-viet-qr.png',
+                                  'assets/images/logo-vietqr-vn.png',
                                   width: 100,
                                   height: 50,
                                 ),

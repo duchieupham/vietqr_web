@@ -56,23 +56,7 @@ class PopupMenuWebWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 5)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          child: const Text(
-                            'Chi tiết',
-                            style: TextStyle(
-                              fontSize: 13,
-                              decoration: TextDecoration.underline,
-                              color: DefaultTheme.GREEN,
-                            ),
-                          ),
-                        ),
-                        _buildPoint()
-                      ],
-                    ),
+                    _buildPoint()
                   ],
                 ),
               ),
@@ -210,11 +194,12 @@ class PopupMenuWebWidget {
                   'assets/images/ic-share-code.png',
                   fit: BoxFit.fitHeight,
                   height: 28,
+                  color: Theme.of(context).hintColor,
                 ),
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 const Text(
-                  'Mã giới thiệu',
-                  style: TextStyle(fontSize: 13, color: DefaultTheme.BLUE_TEXT),
+                  'Giới thiệu VietQR VN',
+                  style: TextStyle(fontSize: 13),
                 ),
               ],
             ),

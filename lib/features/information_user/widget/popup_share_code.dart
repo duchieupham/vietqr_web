@@ -17,7 +17,7 @@ class PopupShareCode extends StatelessWidget {
       children: [
         const Padding(padding: EdgeInsets.only(top: 20)),
         _buildTitle(context),
-        const Padding(padding: EdgeInsets.only(bottom: 65)),
+        const Padding(padding: EdgeInsets.only(bottom: 30)),
         _buildFormCode(context),
         const Padding(padding: EdgeInsets.only(bottom: 30)),
       ],
@@ -88,7 +88,7 @@ class PopupShareCode extends StatelessWidget {
           const Padding(padding: EdgeInsets.only(left: 25)),
           const Spacer(),
           const Text(
-            'Mã giới thiệu',
+            'Giới thiệu VietQR VN',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

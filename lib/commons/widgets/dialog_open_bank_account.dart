@@ -92,7 +92,7 @@ class DialogOpenBankAccount extends StatelessWidget {
           width: 10,
         ),
         Image.asset(
-          'assets/images/ic-viet-qr.png',
+          'assets/images/logo-vietqr-vn.png',
           width: 110,
           fit: BoxFit.contain,
         )
