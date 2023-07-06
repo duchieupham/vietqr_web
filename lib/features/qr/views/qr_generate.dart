@@ -1,5 +1,8 @@
+import 'dart:html';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/layouts/box_layout.dart';
@@ -86,7 +89,6 @@ class _QrGenerateState extends State<QrGenerate> {
           webBgColor: 'rgba(255, 255, 255)',
           webPosition: 'center',
         );
-
         // Navigator.pop(context);
       });
     });
@@ -94,14 +96,20 @@ class _QrGenerateState extends State<QrGenerate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return SizedBox(
+      width: 500,
+      child: Material(
         child: BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
           listener: (context, state) {
             if (state is CreateSuccessfulState) {
               qrGeneratedDTO = state.dto;
               if (data['action'] == 'SAVE') {
                 saveImage();
+              }
+              if (data['action'] == 'PRINT') {
+                Future.delayed(const Duration(seconds: 1), () {
+                  window.print();
+                });
               }
             }
           },

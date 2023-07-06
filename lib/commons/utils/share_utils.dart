@@ -50,4 +50,24 @@ class ShareUtils {
       LOG.error(e.toString());
     }
   }
+
+  Future<void> getImageFromWidget(GlobalKey globalKey, String nameFile) async {
+    try {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage();
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      List<int> dataImage = pngBytes;
+
+      js.context.callMethod("saveAs", [
+        html.Blob([dataImage]),
+        '$nameFile.png'
+      ]);
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+  }
 }

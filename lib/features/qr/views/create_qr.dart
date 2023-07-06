@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
@@ -481,11 +483,22 @@ class CreateQR extends StatelessWidget {
                                             icon: Icons.print_rounded,
                                             title: '',
                                             function: () {
-                                              DialogWidget.instance
-                                                  .openMsgDialog(
-                                                title: 'Tính năng đang bảo trì',
-                                                msg: 'Vui lòng thử lại sau',
-                                              );
+                                              String paramData = Session
+                                                  .instance
+                                                  .formatDataParamUrl(
+                                                      qrGeneratedDTO,
+                                                      action: 'PRINT');
+                                              int start = Uri.base
+                                                  .toString()
+                                                  .indexOf('/qr');
+                                              int end =
+                                                  Uri.base.toString().length;
+                                              js.context.callMethod('open', [
+                                                Uri.base.toString().replaceRange(
+                                                    start,
+                                                    end,
+                                                    '/qr_generate$paramData')
+                                              ]);
                                             },
                                             bgColor:
                                                 Theme.of(context).cardColor,
@@ -502,9 +515,6 @@ class CreateQR extends StatelessWidget {
                                             icon: Icons.photo_rounded,
                                             title: '',
                                             function: () {
-                                              String userId =
-                                                  UserInformationHelper.instance
-                                                      .getUserId();
                                               Provider.of<ActionShareProvider>(
                                                       context,
                                                       listen: false)

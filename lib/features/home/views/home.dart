@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -490,10 +492,13 @@ class _HomeScreen extends State<HomeScreen> {
                               icon: Icons.print_rounded,
                               title: '',
                               function: () {
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Tính năng đang bảo trì',
-                                  msg: 'Vui lòng thử lại sau',
-                                );
+                                String paramData = Session.instance
+                                    .formatDataParamUrl(provider.qrGeneratedDTO,
+                                        action: 'PRINT');
+                                js.context.callMethod('open', [
+                                  Uri.base.toString().replaceFirst(
+                                      '/home', '/qr_generate$paramData')
+                                ]);
                               },
                               bgColor:
                                   Theme.of(context).cardColor.withOpacity(0.3),
@@ -828,11 +833,17 @@ class _HomeScreen extends State<HomeScreen> {
                                               Container(
                                                 padding:
                                                     const EdgeInsets.all(4),
-                                                decoration: const BoxDecoration(
+                                                decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.all(
+                                                      const BorderRadius.all(
                                                           Radius.circular(25)),
-                                                  color: DefaultTheme.GREEN,
+                                                  color: bankAccounts[index]
+                                                              .userId ==
+                                                          UserInformationHelper
+                                                              .instance
+                                                              .getUserId()
+                                                      ? DefaultTheme.GREEN
+                                                      : DefaultTheme.ORANGE,
                                                 ),
                                                 child: const Icon(
                                                   Icons.check,

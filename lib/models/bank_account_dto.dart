@@ -11,6 +11,7 @@ class BankAccountDTO {
   final String branchName;
   final String businessName;
   final bool isAuthenticated;
+  final String userId;
   // final String branchCode;
   // final String businessCode;
 
@@ -27,6 +28,7 @@ class BankAccountDTO {
     required this.branchName,
     required this.businessName,
     required this.isAuthenticated,
+    this.userId = '',
     // required this.branchCode,
     // required this.businessCode,
   });
@@ -45,6 +47,7 @@ class BankAccountDTO {
       branchName: json['branchName'] ?? '',
       businessName: json['businessName'] ?? '',
       isAuthenticated: json['authenticated'] ?? false,
+      userId: json['userId'] ?? '',
       // branchCode: json['branchCode'],
       // businessCode: json['businessCode'],
     );

@@ -19,19 +19,15 @@ class ECOMSelectBankTypeWidget extends StatelessWidget {
   final SearchClearProvider _searchClearProvider = SearchClearProvider(false);
   final List<BankTypeDTO> bankTypesResult = [];
   final List<BankTypeDTO> bankTypes = [];
-  static late ECOMBankTypeBloc bankTypeBloc;
+
   final bool authenticated;
   ECOMSelectBankTypeWidget({super.key, this.authenticated = true});
-
+  static late ECOMBankTypeBloc bankTypeBloc;
   void initialServices(BuildContext context) {
+    bankTypeBloc = BlocProvider.of(context);
     bankTypesResult.clear();
     bankTypes.clear();
-    bankTypeBloc = BlocProvider.of(context);
-    if (authenticated) {
-      bankTypeBloc.add(const ECOMBankTypeEventGetList());
-    } else {
-      bankTypeBloc.add(const ECOMBankTypeEventGetListUnauthenticated());
-    }
+    bankTypeBloc.add(const ECOMBankTypeEventGetList());
   }
 
   @override

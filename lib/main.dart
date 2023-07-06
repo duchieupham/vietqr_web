@@ -67,7 +67,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 
@@ -274,9 +273,6 @@ class _VietQRApp extends State<VietQRApp> {
       },
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<LoginBloc>(
-            create: (BuildContext context) => LoginBloc(),
-          ),
           BlocProvider<BankBloc>(
             create: (BuildContext context) => BankBloc(),
           ),
@@ -285,9 +281,6 @@ class _VietQRApp extends State<VietQRApp> {
           ),
           BlocProvider<QRBloc>(
             create: (BuildContext context) => QRBloc(),
-          ),
-          BlocProvider<RegisterBloc>(
-            create: (BuildContext context) => RegisterBloc(),
           ),
           BlocProvider<BankTypeBloc>(
             create: (BuildContext context) => BankTypeBloc(),
@@ -304,23 +297,8 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<NotificationBloc>(
             create: (BuildContext context) => NotificationBloc(),
           ),
-          BlocProvider<ECOMLoginBloc>(
-            create: (BuildContext context) => ECOMLoginBloc(),
-          ),
-          BlocProvider<ECOMRegisterBloc>(
-            create: (BuildContext context) => ECOMRegisterBloc(),
-          ),
-          BlocProvider<ECOMBankBloc>(
-            create: (BuildContext context) => ECOMBankBloc(),
-          ),
-          BlocProvider<ECOMBankTypeBloc>(
-            create: (BuildContext context) => ECOMBankTypeBloc(),
-          ),
           BlocProvider<CardNumBloc>(
             create: (BuildContext context) => CardNumBloc(),
-          ),
-          BlocProvider<LoginBloc>(
-            create: (BuildContext context) => LoginBloc(),
           ),
           BlocProvider<InformationUserBloc>(
             create: (BuildContext context) => InformationUserBloc(),
@@ -330,9 +308,6 @@ class _VietQRApp extends State<VietQRApp> {
           ),
           BlocProvider<BusinessInformationBloc>(
             create: (BuildContext context) => BusinessInformationBloc(),
-          ),
-          BlocProvider<BusinessMemberBloc>(
-            create: (BuildContext context) => BusinessMemberBloc(),
           ),
         ],
         child: MultiProvider(
