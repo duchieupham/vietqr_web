@@ -449,6 +449,29 @@ class _AddBankView extends State<AddBankView> {
                       BorderLayout(
                         width: width,
                         height: 50,
+                        isError: provider.phoneErr,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFieldWidget(
+                          width: width,
+                          isObscureText: false,
+                          maxLines: 1,
+                          hintText: 'Số điện thoại xác thực \u002A',
+                          controller: phoneController,
+                          inputType: TextInputType.number,
+                          keyboardAction: TextInputAction.next,
+                          onChange: (vavlue) {
+                            provider.updatePhoneErr(
+                              !(phoneController.text.isNotEmpty &&
+                                  StringUtils.instance
+                                      .isNumeric(phoneController.text)),
+                            );
+                          },
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 20)),
+                      BorderLayout(
+                        width: width,
+                        height: 50,
                         isError: provider.nationalErr,
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: TextFieldWidget(
@@ -477,29 +500,6 @@ class _AddBankView extends State<AddBankView> {
                           ),
                         ),
                       ),
-                      const Padding(padding: EdgeInsets.only(top: 20)),
-                      BorderLayout(
-                        width: width,
-                        height: 50,
-                        isError: provider.phoneErr,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextFieldWidget(
-                          width: width,
-                          isObscureText: false,
-                          maxLines: 1,
-                          hintText: 'Số điện thoại xác thực \u002A',
-                          controller: phoneController,
-                          inputType: TextInputType.number,
-                          keyboardAction: TextInputAction.next,
-                          onChange: (vavlue) {
-                            provider.updatePhoneErr(
-                              !(phoneController.text.isNotEmpty &&
-                                  StringUtils.instance
-                                      .isNumeric(phoneController.text)),
-                            );
-                          },
-                        ),
-                      ),
                       const Padding(padding: EdgeInsets.only(top: 5)),
                       Visibility(
                         visible: provider.phoneErr,
@@ -522,10 +522,10 @@ class _AddBankView extends State<AddBankView> {
                                 ? 380
                                 : 380 / 2 - 10,
                             height: 40,
-                            text: 'Thêm',
+                            text: 'Lưu tài khoản',
                             borderRadius: 5,
-                            textColor: DefaultTheme.WHITE,
-                            bgColor: DefaultTheme.GREEN,
+                            textColor: DefaultTheme.GREEN,
+                            bgColor: Theme.of(context).cardColor,
                             function: () {
                               if (provider.bankType.id.isNotEmpty) {
                                 provider.updateBankAccountErr(
@@ -565,7 +565,7 @@ class _AddBankView extends State<AddBankView> {
                               text: 'Liên kết',
                               borderRadius: 5,
                               textColor: DefaultTheme.WHITE,
-                              bgColor: DefaultTheme.PURPLE_NEON,
+                              bgColor: DefaultTheme.GREEN,
                               function: () async {
                                 provider.updateBankAccountErr(
                                   (bankAccountController.text.isEmpty ||

@@ -38,6 +38,7 @@ class BusinessInformationFrame extends StatelessWidget {
                       ),
                     ),
                     Expanded(
+                      flex: 3,
                       child: SizedBox(
                         height: height - 60,
                         child: ListView(
@@ -47,6 +48,7 @@ class BusinessInformationFrame extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Expanded(child: SizedBox.shrink())
                   ],
                 )
               ],

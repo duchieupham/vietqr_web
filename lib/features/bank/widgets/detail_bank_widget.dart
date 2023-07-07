@@ -17,6 +17,7 @@ import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -206,133 +207,140 @@ class BankDetailWidget extends StatelessWidget {
                         ),
                       ],
                       const Spacer(),
-                      SizedBox(
-                        width: width,
-                        child: Row(
-                          children: [
-                            Tooltip(
-                              message: 'Xoá tài khoản',
-                              child: ButtonIconWidget(
-                                width: 150,
-                                height: 40,
-                                textColor: DefaultTheme.RED_TEXT,
-                                icon: Icons.delete_rounded,
-                                title: 'Xoá tài khoản',
-                                bgColor: Theme.of(context).canvasColor,
-                                function: () {
-                                  if (accountBankDetailDTO.authenticated) {
-                                    DialogWidget.instance.openMsgDialog(
-                                      title: 'Bạn đang xoá tài khoản',
-                                      msg:
-                                          'Vui lòng Huỷ liên kết TK ngân hàng trước khi xoá',
-                                    );
-                                  } else {
-                                    BankAccountRemoveDTO bankAccountRemoveDTO =
-                                        BankAccountRemoveDTO(
-                                      bankId: accountBankDetailDTO.id,
-                                      type: accountBankDetailDTO.type,
-                                      isAuthenticated:
-                                          accountBankDetailDTO.authenticated,
-                                    );
-                                    DialogWidget.instance.openMsgDialogQuestion(
-                                        title: 'Bạn đang xoá tài khoản',
-                                        msg:
-                                            'Bạn có chắc chắn muốn xoá tài khoản này?',
-                                        onConfirm: () {
-                                          Navigator.pop(context);
-                                          bankBloc.add(BankEventRemove(
-                                              dto: bankAccountRemoveDTO));
-                                        });
-                                  }
-                                },
-                              ),
-                            ),
-                            if (accountBankDetailDTO.authenticated) ...[
-                              const Padding(padding: EdgeInsets.only(left: 10)),
+                      if (accountBankDetailDTO.userId ==
+                          UserInformationHelper.instance.getUserId())
+                        SizedBox(
+                          width: width,
+                          child: Row(
+                            children: [
                               Tooltip(
-                                message: 'Huỷ liên kết',
+                                message: 'Xoá tài khoản',
                                 child: ButtonIconWidget(
                                   width: 150,
                                   height: 40,
                                   textColor: DefaultTheme.RED_TEXT,
-                                  icon: Icons.remove_circle_rounded,
-                                  title: 'Huỷ liên kết',
+                                  icon: Icons.delete_rounded,
+                                  title: 'Xoá tài khoản',
                                   bgColor: Theme.of(context).canvasColor,
                                   function: () {
-                                    DialogWidget.instance.openMsgDialogQuestion(
-                                        title: 'Huỷ liên kết',
+                                    if (accountBankDetailDTO.authenticated) {
+                                      DialogWidget.instance.openMsgDialog(
+                                        title: 'Bạn đang xoá tài khoản',
                                         msg:
-                                            'Bạn có chắc chắn muốn huỷ liên kết?',
-                                        onConfirm: () {
-                                          BankAccountUnlinkDTO
-                                              bankAccountUnlinkDTO;
-                                          bankAccountUnlinkDTO =
-                                              BankAccountUnlinkDTO(
-                                                  accountNumber:
-                                                      accountBankDetailDTO
-                                                          .bankAccount,
-                                                  applicationType: 'WEB_APP');
+                                            'Vui lòng Huỷ liên kết TK ngân hàng trước khi xoá',
+                                      );
+                                    } else {
+                                      BankAccountRemoveDTO
+                                          bankAccountRemoveDTO =
+                                          BankAccountRemoveDTO(
+                                        bankId: accountBankDetailDTO.id,
+                                        type: accountBankDetailDTO.type,
+                                        isAuthenticated:
+                                            accountBankDetailDTO.authenticated,
+                                      );
+                                      DialogWidget.instance.openMsgDialogQuestion(
+                                          title: 'Bạn đang xoá tài khoản',
+                                          msg: 'Bạn có chắc chắn muốn xoá tài khoản này?',
+                                          onConfirm: () {
+                                            Navigator.pop(context);
+                                            bankBloc.add(BankEventRemove(
+                                                dto: bankAccountRemoveDTO));
+                                          });
+                                    }
+                                  },
+                                ),
+                              ),
+                              if (accountBankDetailDTO.authenticated) ...[
+                                const Padding(
+                                    padding: EdgeInsets.only(left: 10)),
+                                Tooltip(
+                                  message: 'Huỷ liên kết',
+                                  child: ButtonIconWidget(
+                                    width: 150,
+                                    height: 40,
+                                    textColor: DefaultTheme.RED_TEXT,
+                                    icon: Icons.remove_circle_rounded,
+                                    title: 'Huỷ liên kết',
+                                    bgColor: Theme.of(context).canvasColor,
+                                    function: () {
+                                      DialogWidget.instance.openMsgDialogQuestion(
+                                          title: 'Huỷ liên kết',
+                                          msg: 'Bạn có chắc chắn muốn huỷ liên kết?',
+                                          onConfirm: () {
+                                            BankAccountUnlinkDTO
+                                                bankAccountUnlinkDTO;
+                                            bankAccountUnlinkDTO =
+                                                BankAccountUnlinkDTO(
+                                                    accountNumber:
+                                                        accountBankDetailDTO
+                                                            .bankAccount,
+                                                    applicationType: 'WEB_APP');
 
-                                          bankBloc.add(BankEventUnlink(
-                                              dto: bankAccountUnlinkDTO));
-                                          Navigator.pop(context);
-                                        });
-                                  },
+                                            bankBloc.add(BankEventUnlink(
+                                                dto: bankAccountUnlinkDTO));
+                                            Navigator.pop(context);
+                                          });
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
-                            if (!accountBankDetailDTO.authenticated) ...[
-                              const Padding(padding: EdgeInsets.only(left: 10)),
-                              Tooltip(
-                                message: 'Liên kết ngay',
-                                child: ButtonWidget(
-                                  width: 150,
-                                  height: 40,
-                                  textColor: DefaultTheme.WHITE,
-                                  bgColor: DefaultTheme.GREEN,
-                                  borderRadius: 5,
-                                  function: () {
-                                    BankTypeDTO bankTypeDTO = BankTypeDTO(
-                                        id: accountBankDetailDTO.bankTypeId,
-                                        bankCode: accountBankDetailDTO.bankCode,
-                                        bankName: accountBankDetailDTO.bankName,
-                                        imageId: accountBankDetailDTO.imgId,
-                                        status:
-                                            accountBankDetailDTO.bankTypeStatus,
-                                        caiValue: accountBankDetailDTO.caiValue,
-                                        bankShortName:
-                                            accountBankDetailDTO.bankName);
-                                    Provider.of<AddBankProvider>(context,
-                                            listen: false)
-                                        .updateBankId(accountBankDetailDTO.id);
-                                    Provider.of<AddBankProvider>(context,
-                                            listen: false)
-                                        .updateSelect(2);
-                                    Provider.of<AddBankProvider>(context,
-                                            listen: false)
-                                        .updateRegisterAuthentication(true);
-                                    Provider.of<AddBankProvider>(context,
-                                            listen: false)
-                                        .updateSelectBankType(bankTypeDTO);
-                                    DialogWidget.instance.openPopup(
-                                      barrierColor: Colors.transparent,
-                                      child: AddBankCardView(
-                                        bankAccount:
-                                            accountBankDetailDTO.bankAccount,
-                                        userBankName:
-                                            accountBankDetailDTO.userBankName,
-                                      ),
-                                      height: height * 0.7,
-                                      width: 760,
-                                    );
-                                  },
-                                  text: 'Liên kết ngay',
+                              ],
+                              if (!accountBankDetailDTO.authenticated) ...[
+                                const Padding(
+                                    padding: EdgeInsets.only(left: 10)),
+                                Tooltip(
+                                  message: 'Liên kết ngay',
+                                  child: ButtonWidget(
+                                    width: 150,
+                                    height: 40,
+                                    textColor: DefaultTheme.WHITE,
+                                    bgColor: DefaultTheme.GREEN,
+                                    borderRadius: 5,
+                                    function: () {
+                                      BankTypeDTO bankTypeDTO = BankTypeDTO(
+                                          id: accountBankDetailDTO.bankTypeId,
+                                          bankCode:
+                                              accountBankDetailDTO.bankCode,
+                                          bankName:
+                                              accountBankDetailDTO.bankName,
+                                          imageId: accountBankDetailDTO.imgId,
+                                          status: accountBankDetailDTO
+                                              .bankTypeStatus,
+                                          caiValue:
+                                              accountBankDetailDTO.caiValue,
+                                          bankShortName:
+                                              accountBankDetailDTO.bankName);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateBankId(
+                                              accountBankDetailDTO.id);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateSelect(2);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateRegisterAuthentication(true);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateSelectBankType(bankTypeDTO);
+                                      DialogWidget.instance.openPopup(
+                                        barrierColor: Colors.transparent,
+                                        child: AddBankCardView(
+                                          bankAccount:
+                                              accountBankDetailDTO.bankAccount,
+                                          userBankName:
+                                              accountBankDetailDTO.userBankName,
+                                        ),
+                                        height: height * 0.7,
+                                        width: 760,
+                                      );
+                                    },
+                                    text: 'Liên kết ngay',
+                                  ),
                                 ),
-                              ),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
-                      ),
                       const Padding(padding: EdgeInsets.only(bottom: 20)),
                     ],
                   ),

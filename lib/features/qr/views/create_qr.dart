@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
@@ -12,6 +10,7 @@ import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'dart:js' as js;
+import 'dart:html' as html;
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
@@ -493,12 +492,12 @@ class CreateQR extends StatelessWidget {
                                                   .indexOf('/qr');
                                               int end =
                                                   Uri.base.toString().length;
-                                              js.context.callMethod('open', [
-                                                Uri.base.toString().replaceRange(
-                                                    start,
-                                                    end,
-                                                    '/qr_generate$paramData')
-                                              ]);
+                                              html.window.open(
+                                                  Uri.base.toString().replaceRange(
+                                                      start,
+                                                      end,
+                                                      '/qr_generate$paramData'),
+                                                  'new tab');
                                             },
                                             bgColor:
                                                 Theme.of(context).cardColor,
@@ -530,12 +529,12 @@ class CreateQR extends StatelessWidget {
                                                   .indexOf('/qr');
                                               int end =
                                                   Uri.base.toString().length;
-                                              js.context.callMethod('open', [
-                                                Uri.base.toString().replaceRange(
-                                                    start,
-                                                    end,
-                                                    '/qr_generate$paramData')
-                                              ]);
+                                              html.window.open(
+                                                  Uri.base.toString().replaceRange(
+                                                      start,
+                                                      end,
+                                                      '/qr_generate$paramData'),
+                                                  'new tab');
                                             },
                                             bgColor:
                                                 Theme.of(context).cardColor,

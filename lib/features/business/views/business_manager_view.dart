@@ -129,7 +129,7 @@ class _DashboardViewState extends State<BusinessManagerView> {
                             heroId: state.list[index].businessId,
                             dto: state.list[index],
                           ),
-                          width: width * 0.9,
+                          width: width * 0.7,
                           height: height * 0.9,
                         );
 
