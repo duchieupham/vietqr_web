@@ -130,38 +130,6 @@ class _AddBankCardViewState extends State<AddBankCardView> {
     );
   }
 
-  void _navigateBack(BuildContext context) {
-    int index = Provider.of<AddBankProvider>(context, listen: false).index;
-    if (index == 0) {
-      bankAccountController.clear();
-      nameController.clear();
-      nationalController.clear();
-      phoneAuthController.clear();
-      Provider.of<AddBankProvider>(context, listen: false).reset();
-      Navigator.of(context).pop();
-    } else {
-      if (index == 1) {
-        Provider.of<AddBankProvider>(context, listen: false).updateSelect(0);
-        Provider.of<AddBankProvider>(context, listen: false).reset();
-        Navigator.of(context).pop();
-      }
-      Provider.of<AddBankProvider>(context, listen: false).updateIndex(0);
-      _animatedToPage(index - 1);
-    }
-  }
-
-  void _hideKeyboardBack(BuildContext context) {
-    double bottom = WidgetsBinding.instance.window.viewInsets.bottom;
-    if (bottom > 0.0) {
-      FocusManager.instance.primaryFocus?.unfocus();
-      Future.delayed(const Duration(milliseconds: 200), () {
-        _navigateBack(context);
-      });
-    } else {
-      _navigateBack(context);
-    }
-  }
-
   //navigate to page
   void _animatedToPage(int index) {
     _pageController.animateToPage(

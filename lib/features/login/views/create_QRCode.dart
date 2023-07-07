@@ -1,6 +1,4 @@
-import 'dart:convert';
-import 'dart:html';
-
+import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
@@ -416,10 +414,10 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                                                     .showBankAccount
                                                 ? 1
                                                 : 0);
-                                js.context.callMethod('open', [
-                                  Uri.base.toString().replaceFirst(
-                                      '/login', '/qr_generate$paramData')
-                                ]);
+                                html.window.open(
+                                    Uri.base.toString().replaceFirst(
+                                        '/login', '/qr_generate$paramData'),
+                                    'new tab');
                               },
                               bgColor:
                                   Theme.of(context).scaffoldBackgroundColor,
@@ -451,10 +449,10 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                                                     .showBankAccount
                                                 ? 1
                                                 : 0);
-                                js.context.callMethod('open', [
-                                  Uri.base.toString().replaceFirst(
-                                      '/login', '/qr_generate$paramData')
-                                ]);
+                                html.window.open(
+                                    Uri.base.toString().replaceFirst(
+                                        '/login', '/qr_generate$paramData'),
+                                    'new tab');
                               },
                               bgColor:
                                   Theme.of(context).scaffoldBackgroundColor,

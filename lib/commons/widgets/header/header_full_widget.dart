@@ -161,7 +161,6 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                   context.go('/bank/create/$userId');
                 },
                 child: BoxLayout(
-                  width: 35,
                   height: 35,
                   borderRadius: 35,
                   alignment: Alignment.center,

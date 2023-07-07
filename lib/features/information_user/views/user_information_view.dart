@@ -125,7 +125,7 @@ class UserInformationView extends StatelessWidget {
           height: 40,
           borderRadius: 8,
           text: 'Cập nhật ảnh đại diện',
-          textColor: DefaultTheme.GREEN,
+          textColor: DefaultTheme.BLUE_TEXT,
           bgColor: Theme.of(context).cardColor,
           function: () async {
             DialogWidget.instance.openMsgDialog(
@@ -152,7 +152,7 @@ class UserInformationView extends StatelessWidget {
           text: 'Đổi mật khẩu',
           height: 40,
           borderRadius: 8,
-          textColor: DefaultTheme.GREEN,
+          textColor: DefaultTheme.BLUE_TEXT,
           bgColor: Theme.of(context).cardColor,
           function: () {
             DialogWidget.instance.openPopup(
@@ -264,10 +264,12 @@ class UserInformationView extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(top: 30)),
             BoxLayout(
               width: double.infinity,
+              borderRadius: 8,
               child: Column(
                 children: [
                   TextFieldWidget(
                     textfieldType: TextfieldType.LABEL,
+                    fontSize: 14,
                     isObscureText: false,
                     title: 'Họ',
                     hintText: 'Nhập họ',
@@ -284,6 +286,7 @@ class UserInformationView extends StatelessWidget {
                     textfieldType: TextfieldType.LABEL,
                     isObscureText: false,
                     title: 'Tên đệm',
+                    fontSize: 14,
                     hintText: 'Nhập tên đệm',
                     textAlign: TextAlign.right,
                     controller: _middleNameController,
@@ -297,6 +300,7 @@ class UserInformationView extends StatelessWidget {
                   TextFieldWidget(
                     textfieldType: TextfieldType.LABEL,
                     isObscureText: false,
+                    fontSize: 14,
                     textAlign: TextAlign.right,
                     title: 'Tên',
                     hintText: 'Nhập tên',
@@ -320,7 +324,7 @@ class UserInformationView extends StatelessWidget {
                     'Tên không được bỏ trống.',
                     style: TextStyle(
                       color: DefaultTheme.RED_TEXT,
-                      fontSize: 13,
+                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -328,6 +332,7 @@ class UserInformationView extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
+              borderRadius: 8,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -337,7 +342,7 @@ class UserInformationView extends StatelessWidget {
                     child: Text(
                       'Ngày sinh',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -353,27 +358,28 @@ class UserInformationView extends StatelessWidget {
                       },
                       child: Text(
                         getTextBirtDate(),
-                        style: const TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 14),
                       )),
                 ],
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
+              borderRadius: 8,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
                 children: [
                   const Text(
                     'Giới tính',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   const Spacer(),
                   const Text(
                     'Nam',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(left: 5)),
@@ -389,7 +395,7 @@ class UserInformationView extends StatelessWidget {
                   const Text(
                     'Nữ',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(left: 5)),
@@ -406,6 +412,7 @@ class UserInformationView extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
+              borderRadius: 8,
               // height: 55,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: TextFieldWidget(
@@ -414,6 +421,7 @@ class UserInformationView extends StatelessWidget {
                 title: 'Email',
                 hintText: 'user@gmail.com',
                 controller: _emailController,
+                fontSize: 14,
                 textAlign: TextAlign.right,
                 inputType: TextInputType.text,
                 keyboardAction: TextInputAction.next,
@@ -432,7 +440,7 @@ class UserInformationView extends StatelessWidget {
                     'Email không đúng định dạng',
                     style: TextStyle(
                       color: DefaultTheme.RED_TEXT,
-                      fontSize: 13,
+                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -440,6 +448,7 @@ class UserInformationView extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
+              borderRadius: 8,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -449,7 +458,7 @@ class UserInformationView extends StatelessWidget {
                     child: Text(
                       'Địa chỉ',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -466,7 +475,7 @@ class UserInformationView extends StatelessWidget {
                           decoration: const InputDecoration.collapsed(
                             hintText: 'Nhập địa chỉ thường trú',
                             hintStyle: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: DefaultTheme.GREY_TEXT,
                             ),
                           ),

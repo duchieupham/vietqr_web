@@ -44,8 +44,8 @@ class BusinessItem extends StatelessWidget {
                     height: 150,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
                       ),
                       color: DefaultTheme.GREY_TOP_TAB_BAR.withOpacity(0.3),
                       image: (dto.coverImgId.isNotEmpty)
@@ -83,6 +83,7 @@ class BusinessItem extends StatelessWidget {
                   child: InkWell(
                     onTap: businessInfo,
                     child: const BoxLayout(
+                      padding: EdgeInsets.symmetric(vertical: 8),
                       width: 85,
                       borderRadius: 40,
                       alignment: Alignment.center,
@@ -173,9 +174,12 @@ class BusinessItem extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text('Chưa có giao dịch nào'),
+              child: const Text(
+                'Chưa có giao dịch nào',
+                style: TextStyle(fontSize: 12),
+              ),
             ),
           ],
           if (dto.transactions.isNotEmpty) ...[
@@ -263,7 +267,10 @@ class BusinessItem extends StatelessWidget {
               color: color,
             ),
             const Padding(padding: EdgeInsets.only(left: 5)),
-            Text(text),
+            Text(
+              text,
+              style: const TextStyle(fontSize: 12),
+            ),
           ],
         ),
       ),

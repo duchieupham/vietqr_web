@@ -198,6 +198,7 @@ class VietQRWidget extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
             'assets/images/logo-vietqr-vn.png',
@@ -273,7 +274,7 @@ class VietQRWidget extends StatelessWidget {
       borderRadius: 22,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0')
             Align(
@@ -360,13 +361,13 @@ class VietQRWidget extends StatelessWidget {
   Widget _buildInfo() {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Padding(padding: EdgeInsets.only(bottom: 25)),
         SelectableText(
           qrGeneratedDTO.userBankName.toUpperCase(),
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -374,7 +375,7 @@ class VietQRWidget extends StatelessWidget {
         SelectableText(
           qrGeneratedDTO.bankAccount,
           style: const TextStyle(
-            fontSize: 15,
+            fontSize: 12,
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -384,7 +385,7 @@ class VietQRWidget extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            fontSize: 15,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -395,7 +396,7 @@ class VietQRWidget extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
         ],

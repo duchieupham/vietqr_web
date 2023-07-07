@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:VietQR/commons/constants/configurations/stringify.dart';
+import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/utils/check_utils.dart';
 import 'package:VietQR/commons/utils/error_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -13,6 +14,7 @@ import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/bank_name_information_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -53,6 +55,7 @@ void _insertBank(BankEvent event, Emitter emit) async {
         emit(
           BankInsertSuccessfulState(bankId: bankId, qr: qr),
         );
+        Session.instance.sendEvent(EventTypes.refreshListAccountBank);
       } else {
         String message =
             ErrorUtils.instance.getErrorMessage(responseMessageDTO.message);
@@ -279,6 +282,7 @@ void _registerAuthentication(BankEvent event, Emitter emit) async {
           await _bankRepository.updateRegisterAuthenticationBank(event.dto);
       if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
         emit(BankUpdateAuthenticateSuccessState());
+        Session.instance.sendEvent(EventTypes.refreshListAccountBank);
       } else {
         emit(BankUpdateAuthenticateFailedState(
             msg: ErrorUtils.instance.getErrorMessage(result.message)));

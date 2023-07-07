@@ -1,19 +1,19 @@
-import 'dart:html';
-
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-
+import 'dart:html' as html;
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
+import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'dart:js' as js;
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
+import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/features/bank/widgets/detail_bank_widget.dart';
 import 'package:VietQR/features/home/frames/home_frame.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
@@ -27,9 +27,11 @@ import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
+import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -475,6 +477,7 @@ class _HomeScreen extends State<HomeScreen> {
                     child: VietQRWidget(
                       width: 400,
                       height: 600,
+                      hasBgNapas: true,
                       qrGeneratedDTO: provider.qrGeneratedDTO,
                     ),
                   ),
@@ -495,10 +498,10 @@ class _HomeScreen extends State<HomeScreen> {
                                 String paramData = Session.instance
                                     .formatDataParamUrl(provider.qrGeneratedDTO,
                                         action: 'PRINT');
-                                js.context.callMethod('open', [
-                                  Uri.base.toString().replaceFirst(
-                                      '/home', '/qr_generate$paramData')
-                                ]);
+                                html.window.open(
+                                    Uri.base.toString().replaceFirst(
+                                        '/home', '/qr_generate$paramData'),
+                                    'new tab');
                               },
                               bgColor:
                                   Theme.of(context).cardColor.withOpacity(0.3),
@@ -520,10 +523,10 @@ class _HomeScreen extends State<HomeScreen> {
                                 String paramData = Session.instance
                                     .formatDataParamUrl(provider.qrGeneratedDTO,
                                         action: 'SAVE');
-                                js.context.callMethod('open', [
-                                  Uri.base.toString().replaceFirst(
-                                      '/home', '/qr_generate$paramData')
-                                ]);
+                                html.window.open(
+                                    Uri.base.toString().replaceFirst(
+                                        '/home', '/qr_generate$paramData'),
+                                    'new tab');
                               },
                               bgColor:
                                   Theme.of(context).cardColor.withOpacity(0.3),
@@ -579,32 +582,99 @@ class _HomeScreen extends State<HomeScreen> {
                           context.push('/qr/create/$id');
                         },
                         bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                        textColor: DefaultTheme.GREEN,
+                        textColor: DefaultTheme.BLUE_TEXT,
                       ),
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   UnconstrainedBox(
-                    child: Tooltip(
-                      message: 'Chi tiết TK ngân hàng',
-                      child: ButtonIconWidget(
-                        width: 350,
-                        height: 40,
-                        icon: Icons.info_outline_rounded,
-                        title: 'Chi tiết',
-                        function: () {
-                          DialogWidget.instance.openPopup(
-                            child: BankDetailWidget(
-                              accountBankDetailDTO: provider.bankDetailDTO,
-                              qrGeneratedDTO: provider.qrGeneratedDTO,
-                              bankBloc: _bankBloc,
+                    child: SizedBox(
+                      width: 350,
+                      child: Row(
+                        children: [
+                          if (!provider.bankDetailDTO.authenticated &&
+                              provider.bankDetailDTO.bankTypeStatus == 1) ...[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Tooltip(
+                                  message: 'Liên kết ngay',
+                                  child: ButtonWidget(
+                                    height: 40,
+                                    textColor: DefaultTheme.WHITE,
+                                    bgColor: DefaultTheme.GREEN,
+                                    borderRadius: 3,
+                                    function: () {
+                                      BankTypeDTO bankTypeDTO = BankTypeDTO(
+                                          id: provider.bankDetailDTO.bankTypeId,
+                                          bankCode:
+                                              provider.bankDetailDTO.bankCode,
+                                          bankName:
+                                              provider.bankDetailDTO.bankName,
+                                          imageId: provider.bankDetailDTO.imgId,
+                                          status: provider
+                                              .bankDetailDTO.bankTypeStatus,
+                                          caiValue:
+                                              provider.bankDetailDTO.caiValue,
+                                          bankShortName:
+                                              provider.bankDetailDTO.bankName);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateBankId(
+                                              provider.bankDetailDTO.id);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateSelect(2);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateRegisterAuthentication(true);
+                                      Provider.of<AddBankProvider>(context,
+                                              listen: false)
+                                          .updateSelectBankType(bankTypeDTO);
+                                      DialogWidget.instance.openPopup(
+                                        child: AddBankCardView(
+                                          bankAccount: provider
+                                              .bankDetailDTO.bankAccount,
+                                          userBankName: provider
+                                              .bankDetailDTO.userBankName,
+                                        ),
+                                        height: 600,
+                                        width: 760,
+                                      );
+                                    },
+                                    text: 'Liên kết ngay',
+                                  ),
+                                ),
+                              ),
                             ),
-                            width: 760,
-                            height: 450,
-                          );
-                        },
-                        bgColor: Theme.of(context).canvasColor.withOpacity(0.3),
-                        textColor: Theme.of(context).hintColor,
+                          ],
+                          Expanded(
+                            child: Tooltip(
+                              message: 'Chi tiết TK ngân hàng',
+                              child: ButtonIconWidget(
+                                height: 40,
+                                icon: Icons.info_outline_rounded,
+                                title: 'Chi tiết',
+                                function: () {
+                                  DialogWidget.instance.openPopup(
+                                    child: BankDetailWidget(
+                                      accountBankDetailDTO:
+                                          provider.bankDetailDTO,
+                                      qrGeneratedDTO: provider.qrGeneratedDTO,
+                                      bankBloc: _bankBloc,
+                                    ),
+                                    width: 760,
+                                    height: 450,
+                                  );
+                                },
+                                bgColor: Theme.of(context)
+                                    .canvasColor
+                                    .withOpacity(0.3),
+                                textColor: Theme.of(context).hintColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

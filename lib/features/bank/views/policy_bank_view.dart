@@ -77,7 +77,7 @@ class PolicyBankView extends StatelessWidget {
             DialogWidget.instance.openLoadingDialog();
           }
           if (state is BankConfirmOTPSuccessState) {
-            Navigator.pop(context);
+            // Navigator.pop(context);
             String bankId =
                 Provider.of<AddBankProvider>(context, listen: false).bankId;
             if (bankId.trim().isEmpty) {
@@ -112,8 +112,8 @@ class PolicyBankView extends StatelessWidget {
               context
                   .read<BankBloc>()
                   .add(BankEventRegisterAuthentication(dto: dto));
-              Session.instance.sendEvent(EventTypes.refreshListAccountBank);
             }
+            // Navigator.pop(context);
           }
           if (state is BankUpdateAuthenticateSuccessState) {
             phoneAuthenController.clear();
