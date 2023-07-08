@@ -13,6 +13,7 @@ import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/features/bank/widgets/confirm_opt_widget.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_remove_dto.dart';
+import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
@@ -55,6 +56,7 @@ class BankDetailWidget extends StatelessWidget {
               phone: accountBankDetailDTO.phoneAuthenticated,
               bankBloc: context.read<BankBloc>(),
               isUnlink: true,
+              unlinkDTO: state.dto,
             ));
       }
       if (state is BankUnlinkFailedState) {
@@ -271,10 +273,11 @@ class BankDetailWidget extends StatelessWidget {
                                                 bankAccountUnlinkDTO;
                                             bankAccountUnlinkDTO =
                                                 BankAccountUnlinkDTO(
-                                                    accountNumber:
-                                                        accountBankDetailDTO
-                                                            .bankAccount,
-                                                    applicationType: 'WEB_APP');
+                                              accountNumber:
+                                                  accountBankDetailDTO
+                                                      .bankAccount,
+                                              applicationType: 'WEB_APP',
+                                            );
 
                                             bankBloc.add(BankEventUnlink(
                                                 dto: bankAccountUnlinkDTO));

@@ -593,7 +593,10 @@ class _HomeScreen extends State<HomeScreen> {
                       child: Row(
                         children: [
                           if (!provider.bankDetailDTO.authenticated &&
-                              provider.bankDetailDTO.bankTypeStatus == 1) ...[
+                              provider.bankDetailDTO.bankTypeStatus == 1 &&
+                              provider.bankDetailDTO.userId ==
+                                  UserInformationHelper.instance
+                                      .getUserId()) ...[
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 12),

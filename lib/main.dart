@@ -173,7 +173,11 @@ final GoRouter _router = GoRouter(
       path: '/register',
       redirect: (context, state) {
         Map<String, String> params = state.queryParams;
-        return '/register?share_code=${params['share_code']}';
+        String shareCode = '';
+        if (params['share_code'] != null && params['share_code'] != 'null') {
+          shareCode = params['share_code'].toString();
+        }
+        return '/register?share_code=$shareCode';
       },
       builder: (BuildContext context, GoRouterState state) => RegisterView(),
     ),

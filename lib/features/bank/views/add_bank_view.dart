@@ -74,7 +74,6 @@ class _AddBankView extends State<AddBankView> {
           }
           if (state is BankCheckNotExistedState) {
             //pop loading
-            Navigator.pop(context);
             if (state.isAuthenticated) {
               //add event request OTP
               String formattedName = StringUtils.instance.removeDiacritic(
@@ -125,7 +124,6 @@ class _AddBankView extends State<AddBankView> {
           }
           if (state is BankInsertUnauthenticatedSuccessState) {
             //pop loading
-            Navigator.pop(context);
             phoneController.clear();
             nameController.clear();
             nationalController.clear();
