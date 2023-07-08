@@ -325,7 +325,7 @@ void _unlinkAccountBank(BankEvent event, Emitter emit) async {
       final ResponseMessageDTO result =
           await _bankRepository.unLinkBank(event.dto);
       if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
-        emit(BankUnlinkSuccessState(requestId: result.message));
+        emit(BankUnlinkSuccessState(requestId: result.message, dto: event.dto));
       } else {
         emit(BankUnlinkFailedState(
             msg: ErrorUtils.instance.getErrorMessage(result.message)));

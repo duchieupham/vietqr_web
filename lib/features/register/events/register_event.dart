@@ -16,3 +16,11 @@ class RegisterEventSubmit extends RegisterEvent {
   @override
   List<Object?> get props => [dto];
 }
+
+class LoginEventByPhone extends RegisterEvent {
+  final AccountLoginDTO dto;
+  const LoginEventByPhone({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}

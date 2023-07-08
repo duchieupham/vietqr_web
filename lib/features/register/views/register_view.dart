@@ -42,10 +42,12 @@ class RegisterView extends StatelessWidget {
       _passwordController.clear();
       _confirmPassController.clear();
     }
-    shareCode = Uri.base.queryParameters['share_code'] ?? '';
-    if (shareCode.isNotEmpty) {
-      _shareCodeController.text = shareCode;
+
+    if (Uri.base.queryParameters['share_code'].toString().toLowerCase() !=
+        'null') {
+      shareCode = Uri.base.queryParameters['share_code'] ?? '';
     }
+    _shareCodeController.text = shareCode;
 
     // if (!_isChangePhone) {
     //   if (StringUtils.instance.isNumeric(phoneNo)) {
@@ -88,8 +90,21 @@ class RegisterView extends StatelessWidget {
                         title: 'Thông báo',
                         msg: 'Đăng ký thành công',
                         function: () {
-                          backToPreviousPage(context);
+                          Navigator.of(context).pop();
+                          _registerBloc.add(LoginEventByPhone(dto: state.dto));
                         });
+                  }
+                  if (state is LoginSuccessState) {
+                    toHome(context);
+                  }
+                  if (state is LoginFailedState) {
+                    //pop loading dialog
+                    Navigator.pop(context);
+                    //
+                    DialogWidget.instance.openMsgDialog(
+                      title: 'Đã có lỗi xảy ra',
+                      msg: 'Bạn vui lòng login từ màn login',
+                    );
                   }
                 }),
                 child: Consumer<RegisterProvider>(
@@ -265,6 +280,13 @@ class RegisterView extends StatelessWidget {
     _isChangePass = false;
     Provider.of<RegisterProvider>(context, listen: false).reset();
     context.go('/login');
+  }
+
+  void toHome(BuildContext context) {
+    // _isChangePhone = false;
+    _isChangePass = false;
+    Provider.of<RegisterProvider>(context, listen: false).reset();
+    context.go('/home');
   }
 
   Widget _buildFiledShareCode(double width) {

@@ -4,6 +4,7 @@ import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/layouts/border_layout.dart';
+import 'package:VietQR/models/bank_account_remove_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/confirm_otp_bank_dto.dart';
 import 'package:VietQR/services/providers/countdown_provider.dart';
@@ -16,6 +17,7 @@ class ConfirmOTPWidget extends StatefulWidget {
   final String bankAccount;
   final BankBloc bankBloc;
   final BankCardRequestOTP? dto;
+  final BankAccountUnlinkDTO? unlinkDTO;
   final bool isUnlink;
   const ConfirmOTPWidget({
     super.key,
@@ -24,6 +26,7 @@ class ConfirmOTPWidget extends StatefulWidget {
     required this.bankBloc,
     this.dto,
     this.bankAccount = '',
+    this.unlinkDTO,
     this.isUnlink = false,
   });
 
@@ -39,7 +42,7 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
   @override
   void initState() {
     super.initState();
-    countdownProvider = CountdownProvider(120);
+    countdownProvider = CountdownProvider(10);
     countdownProvider.countDown();
   }
 
@@ -175,10 +178,18 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              countdownProvider = CountdownProvider(120);
-                              widget.bankBloc.add(
-                                BankEventRequestOTP(dto: widget.dto!),
-                              );
+                              countdownProvider = CountdownProvider(10);
+                              if (widget.dto != null) {
+                                widget.bankBloc.add(
+                                  BankEventRequestOTP(dto: widget.dto!),
+                                );
+                              }
+                              if (widget.unlinkDTO != null) {
+                                widget.bankBloc.add(
+                                  BankEventUnlink(dto: widget.unlinkDTO!),
+                                );
+                              }
+
                               Navigator.pop(context);
                             },
                         ),

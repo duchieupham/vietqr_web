@@ -1,5 +1,6 @@
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_account_remove_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_name_information_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -202,10 +203,12 @@ class BankRemoveFailedState extends BankState {
 class BankUnlinkLoadingState extends BankState {}
 
 class BankUnlinkSuccessState extends BankState {
+  final BankAccountUnlinkDTO dto;
   final String requestId;
 
   const BankUnlinkSuccessState({
     required this.requestId,
+    required this.dto,
   });
 
   @override

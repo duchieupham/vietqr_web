@@ -1,3 +1,4 @@
+import 'package:VietQR/models/account_login_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class RegisterState extends Equatable {
@@ -11,7 +12,13 @@ class RegisterInitialState extends RegisterState {}
 
 class RegisterLoadingState extends RegisterState {}
 
-class RegisterSuccessState extends RegisterState {}
+class RegisterSuccessState extends RegisterState {
+  final AccountLoginDTO dto;
+  const RegisterSuccessState({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}
 
 class RegisterFailedState extends RegisterState {
   final String msg;
@@ -21,3 +28,7 @@ class RegisterFailedState extends RegisterState {
   @override
   List<Object?> get props => [msg];
 }
+
+class LoginSuccessState extends RegisterState {}
+
+class LoginFailedState extends RegisterState {}
