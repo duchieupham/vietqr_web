@@ -22,7 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddBusinessView extends StatelessWidget {
@@ -34,7 +33,6 @@ class AddBusinessView extends StatelessWidget {
       TextEditingController();
   static final TextEditingController memberController = TextEditingController();
 
-  static final ImagePicker imagePicker = ImagePicker();
   static late BusinessInformationBloc businessInformationBloc;
 
   const AddBusinessView({super.key});
@@ -197,20 +195,20 @@ class AddBusinessView extends StatelessWidget {
                     textColor: DefaultTheme.GREEN,
                     bgColor: Theme.of(context).cardColor,
                     function: () async {
-                      await imagePicker
-                          .pickImage(source: ImageSource.gallery)
-                          .then(
-                        (pickedFile) {
-                          if (pickedFile != null) {
-                            File? file = File(pickedFile.path);
-                            File? compressedFile =
-                                FileUtils.instance.compressImage(file);
-                            // Provider.of<AddBusinessProvider>(context,
-                            //         listen: false)
-                            //     .setCover(compressedFile);
-                          }
-                        },
-                      );
+                      // await imagePicker
+                      //     .pickImage(source: ImageSource.gallery)
+                      //     .then(
+                      //   (pickedFile) {
+                      //     if (pickedFile != null) {
+                      //       File? file = File(pickedFile.path);
+                      //       File? compressedFile =
+                      //           FileUtils.instance.compressImage(file);
+                      //       // Provider.of<AddBusinessProvider>(context,
+                      //       //         listen: false)
+                      //       //     .setCover(compressedFile);
+                      //     }
+                      //   },
+                      // );
                     },
                   ),
                   const Padding(padding: EdgeInsets.only(top: 10)),
@@ -222,20 +220,20 @@ class AddBusinessView extends StatelessWidget {
                     textColor: DefaultTheme.GREEN,
                     bgColor: Theme.of(context).cardColor,
                     function: () async {
-                      await imagePicker
-                          .pickImage(source: ImageSource.gallery)
-                          .then(
-                        (pickedFile) {
-                          if (pickedFile != null) {
-                            File? file = File(pickedFile.path);
-                            File? compressedFile =
-                                FileUtils.instance.compressImage(file);
-                            // Provider.of<AddBusinessProvider>(context,
-                            //         listen: false)
-                            //     .setImage(compressedFile);
-                          }
-                        },
-                      );
+                      // await imagePicker
+                      //     .pickImage(source: ImageSource.gallery)
+                      //     .then(
+                      //   (pickedFile) {
+                      //     if (pickedFile != null) {
+                      //       File? file = File(pickedFile.path);
+                      //       File? compressedFile =
+                      //           FileUtils.instance.compressImage(file);
+                      // Provider.of<AddBusinessProvider>(context,
+                      //         listen: false)
+                      //     .setImage(compressedFile);
+                      //     }
+                      //   },
+                      // );
                     },
                   ),
                   const Padding(padding: EdgeInsets.only(top: 30)),

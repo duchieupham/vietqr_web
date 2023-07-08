@@ -16,7 +16,6 @@ import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/account_login_method_dto.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
