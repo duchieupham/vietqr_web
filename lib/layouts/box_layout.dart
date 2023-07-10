@@ -11,6 +11,7 @@ class BoxLayout extends StatelessWidget {
   final Alignment? alignment;
   final EdgeInsets? margin;
   final String? bgImage;
+  final BoxBorder? border;
 
   const BoxLayout({
     super.key,
@@ -24,6 +25,7 @@ class BoxLayout extends StatelessWidget {
     this.alignment,
     this.margin,
     this.bgImage,
+    this.border,
   });
 
   @override

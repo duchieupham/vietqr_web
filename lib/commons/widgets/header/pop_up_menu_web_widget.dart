@@ -99,60 +99,6 @@ class PopupMenuWebWidget {
           child: InkWell(
             onTap: () {
               Navigator.pop(context);
-              context.go('/business_manager');
-            },
-            child: Row(
-              children: const [
-                Icon(
-                  Icons.business_rounded,
-                  size: 15,
-                ),
-                Padding(padding: EdgeInsets.only(left: 10)),
-                Text(
-                  'Quản lý doanh nghiệp',
-                  style: TextStyle(
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        PopupMenuItem<int>(
-          value: 2,
-          height: 40,
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              DialogWidget.instance.openPopup(
-                width: 600,
-                height: 350,
-                child: const ThemeSettingWidget(),
-              );
-            },
-            child: Row(
-              children: const [
-                Icon(
-                  Icons.layers_outlined,
-                  size: 15,
-                ),
-                Padding(padding: EdgeInsets.only(left: 10)),
-                Text(
-                  'Giao diện',
-                  style: TextStyle(
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        PopupMenuItem<int>(
-          value: 2,
-          height: 40,
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
               DialogWidget.instance.openPopup(
                 width: 500,
                 height: 500,
@@ -177,36 +123,7 @@ class PopupMenuWebWidget {
           ),
         ),
         PopupMenuItem<int>(
-          value: 2,
-          height: 40,
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-              DialogWidget.instance.openPopup(
-                width: 500,
-                height: 300,
-                child: const PopupShareCode(),
-              );
-            },
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/ic-share-code.png',
-                  fit: BoxFit.fitHeight,
-                  height: 28,
-                  color: Theme.of(context).hintColor,
-                ),
-                const Padding(padding: EdgeInsets.only(left: 10)),
-                const Text(
-                  'Giới thiệu VietQR VN',
-                  style: TextStyle(fontSize: 13),
-                ),
-              ],
-            ),
-          ),
-        ),
-        PopupMenuItem<int>(
-            value: 3,
+            value: 2,
             height: 40,
             child: BlocListener<LogoutBloc, LogoutState>(
               listener: (context, state) {

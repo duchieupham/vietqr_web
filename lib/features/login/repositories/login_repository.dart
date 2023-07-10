@@ -68,6 +68,7 @@ class LoginRepository {
         await UserInformationHelper.instance
             .setAccountInformation(accountInformationDTO);
         await Session.instance.getGuideWeb();
+        Session.instance.fetchWallet();
         result = true;
       }
     } catch (e) {

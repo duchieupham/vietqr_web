@@ -101,6 +101,7 @@ flutter:
       - assets/rives/
       - assets/sounds/prefix_transaction.mp3
       - assets/images/
+      - assets/icons_menu/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

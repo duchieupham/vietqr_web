@@ -6,6 +6,7 @@ import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/providers/guide_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ class HomeFrame extends StatelessWidget {
   final Widget widget1;
   final Widget widget2;
   final Widget menu;
+  final Widget menuCard;
   static final List<String> guideAssets = [
     'assets/images/ic-guide1.png',
     'assets/images/ic-guide2.png',
@@ -26,6 +28,7 @@ class HomeFrame extends StatelessWidget {
     required this.widget1,
     required this.widget2,
     required this.menu,
+    required this.menuCard,
   });
 
   void _initialService(BuildContext context) {
@@ -70,20 +73,61 @@ class HomeFrame extends StatelessWidget {
                     ],
                   ),
                 ),
-                Consumer<MenuCardProvider>(
+                Consumer<MenuProvider>(
                   builder: (context, provider, child) {
-                    return AnimatedPositioned(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      left: (provider.showMenu) ? 10 : -350,
-                      bottom: 10,
-                      child: BoxLayout(
-                        width: 350,
-                        height: height - 80,
-                        borderRadius: 10,
-                        bgColor: Theme.of(context).cardColor,
-                        child: menu,
-                      ),
+                    return Stack(
+                      children: [
+                        Consumer<MenuCardProvider>(
+                          builder: (context, menuCardProvider, child) {
+                            double position = 0;
+                            if (provider.showMenu) {
+                              position = -350;
+                            } else {
+                              position = -700;
+                            }
+                            return AnimatedPositioned(
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeInOut,
+                              left: (menuCardProvider.showMenu) ? 0 : position,
+                              bottom: 0,
+                              child: SizedBox(
+                                width: 700,
+                                child: Row(
+                                  children: [
+                                    const Spacer(),
+                                    Container(
+                                      width: 350,
+                                      height: height - 70,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).cardColor,
+                                          border: const Border(
+                                              left: BorderSide(
+                                                  color: DefaultTheme
+                                                      .GREY_BUTTON))),
+                                      padding: EdgeInsets.zero,
+                                      child: menuCard,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        AnimatedPositioned(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          left: (provider.showMenu) ? 0 : -350,
+                          bottom: 0,
+                          child: BoxLayout(
+                            width: 350,
+                            height: height - 70,
+                            borderRadius: 0,
+                            padding: EdgeInsets.zero,
+                            bgColor: Theme.of(context).cardColor,
+                            child: menu,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
