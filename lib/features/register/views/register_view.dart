@@ -376,32 +376,32 @@ class RegisterView extends StatelessWidget {
     );
   }
 
-  void openPinDialog(BuildContext context) {
-    if (_phoneNoController.text.isEmpty) {
-      DialogWidget.instance.openMsgDialog(
-          title: 'Đăng kí không thành công',
-          msg: 'Vui lòng nhập số điện thoại để đăng kí.');
-    } else {
-      DialogWidget.instance.openOTPDialog(onDone: () async {
-        Navigator.of(context).pop();
-        DialogWidget.instance.openLoadingDialog();
-        String userIP = await UserInformationUtils.instance.getIPAddress();
-        AccountLoginDTO dto = AccountLoginDTO(
-          phoneNo: _phoneNoController.text,
-          email: '',
-          password: EncryptUtils.instance.encrypted(
-            _phoneNoController.text,
-            _passwordController.text,
-          ),
-          device: userIP,
-          fcmToken: '',
-          platform: 'WEB',
-        );
-        _registerBloc.add(RegisterEventSubmit(dto: dto));
-      }, reSendOtp: () {
-        Provider.of<RegisterProvider>(context, listen: false)
-            .sendOtp(_phoneNoController.text);
-      });
-    }
-  }
+  // void openPinDialog(BuildContext context) {
+  //   if (_phoneNoController.text.isEmpty) {
+  //     DialogWidget.instance.openMsgDialog(
+  //         title: 'Đăng kí không thành công',
+  //         msg: 'Vui lòng nhập số điện thoại để đăng kí.');
+  //   } else {
+  //     DialogWidget.instance.openOTPDialog(onDone: () async {
+  //       Navigator.of(context).pop();
+  //       DialogWidget.instance.openLoadingDialog();
+  //       String userIP = await UserInformationUtils.instance.getIPAddress();
+  //       AccountLoginDTO dto = AccountLoginDTO(
+  //         phoneNo: _phoneNoController.text,
+  //         email: '',
+  //         password: EncryptUtils.instance.encrypted(
+  //           _phoneNoController.text,
+  //           _passwordController.text,
+  //         ),
+  //         device: userIP,
+  //         fcmToken: '',
+  //         platform: 'WEB',
+  //       );
+  //       _registerBloc.add(RegisterEventSubmit(dto: dto));
+  //     }, reSendOtp: () {
+  //       Provider.of<RegisterProvider>(context, listen: false)
+  //           .sendOtp(_phoneNoController.text);
+  //     });
+  //   }
+  // }
 }

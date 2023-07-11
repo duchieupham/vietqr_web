@@ -59,7 +59,7 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,9 +78,9 @@ void main() async {
   usePathUrlStrategy();
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
-  await Firebase.initializeApp(
-    options: EnvConfig.getFirebaseConfig(),
-  );
+  // await Firebase.initializeApp(
+  //   options: EnvConfig.getFirebaseConfig(),
+  // );
   LOG.verbose('Config Environment: ${EnvConfig.getEnv()}');
   runApp(const VietQRApp());
 }

@@ -166,24 +166,24 @@ class DialogWidget {
     );
   }
 
-  openOTPDialog({required Function onDone, required Function reSendOtp}) {
-    // final FocusNode focusNode = FocusNode();
-    // focusNode.requestFocus();
-    return showDialog(
-      barrierDismissible: false,
-      context: NavigationService.navigatorKey.currentContext!,
-      builder: (BuildContext context) {
-        return Material(
-          color: DefaultTheme.TRANSPARENT,
-          child: Center(
-              child: DialogInputOTP(
-            onDone: onDone,
-            reSendOtp: reSendOtp,
-          )),
-        );
-      },
-    );
-  }
+  // openOTPDialog({required Function onDone, required Function reSendOtp}) {
+  //   // final FocusNode focusNode = FocusNode();
+  //   // focusNode.requestFocus();
+  //   return showDialog(
+  //     barrierDismissible: false,
+  //     context: NavigationService.navigatorKey.currentContext!,
+  //     builder: (BuildContext context) {
+  //       return Material(
+  //         color: DefaultTheme.TRANSPARENT,
+  //         child: Center(
+  //             child: DialogInputOTP(
+  //           onDone: onDone,
+  //           reSendOtp: reSendOtp,
+  //         )),
+  //       );
+  //     },
+  //   );
+  // }
 
   openNotificationDialog({
     required Widget child,
