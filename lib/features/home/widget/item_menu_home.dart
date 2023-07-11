@@ -143,7 +143,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   Widget _dropDownList() {
     return AnimatedContainer(
-      margin: const EdgeInsets.only(left: 70),
+      margin: const EdgeInsets.only(left: 40),
       height: getHeightDropDownList(),
       width: double.infinity,
       duration: const Duration(milliseconds: 500),
