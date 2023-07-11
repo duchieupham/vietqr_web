@@ -10,6 +10,7 @@ class ItemMenuHome extends StatefulWidget {
   final String? pathImage;
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
+  final double titleSize;
   const ItemMenuHome({
     Key? key,
     required this.title,
@@ -21,6 +22,7 @@ class ItemMenuHome extends StatefulWidget {
     this.enableDropDownList = false,
     this.listItemDrop = const [],
     this.isDropDownItem = false,
+    this.titleSize = 13,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class ItemMenuHome extends StatefulWidget {
 }
 
 class _ItemMenuHomeState extends State<ItemMenuHome> {
-  double heightItem = 55;
+  double heightItem = 40;
   bool openListDropDown = false;
   bool amIHovering = false;
 
@@ -89,16 +91,20 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               color: getBgItem(),
               child: Row(
                 children: [
-                  if (widget.pathImage != null && widget.pathImage != '')
+                  if (widget.pathImage != null && widget.pathImage != '') ...[
                     Image.asset(
                       widget.pathImage!,
-                      height: heightItem,
+                      height: 15,
                       fit: BoxFit.fitHeight,
                     ),
+                    const SizedBox(
+                      width: 8,
+                    )
+                  ],
                   if (widget.pathIcon.isNotEmpty) ...[
                     Image.asset(
                       widget.pathIcon,
-                      height: 37,
+                      height: 30,
                     ),
                     SizedBox(
                       width: widget.isDropDownItem ? 8 : 16,
@@ -107,13 +113,14 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                   if (widget.isLogout)
                     Text(
                       widget.title,
-                      style: const TextStyle(
-                          fontSize: 15, color: DefaultTheme.RED_TEXT),
+                      style: TextStyle(
+                          fontSize: widget.titleSize,
+                          color: DefaultTheme.RED_TEXT),
                     )
                   else
                     Text(
                       widget.title,
-                      style: const TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: widget.titleSize),
                     ),
                   const Spacer(),
                   if (widget.enableDropDownList)
@@ -143,7 +150,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   Widget _dropDownList() {
     return AnimatedContainer(
-      margin: const EdgeInsets.only(left: 70),
+      margin: const EdgeInsets.only(left: 40),
       height: getHeightDropDownList(),
       width: double.infinity,
       duration: const Duration(milliseconds: 500),

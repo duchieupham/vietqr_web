@@ -62,6 +62,61 @@ class HomeFrame extends StatelessWidget {
                       const HeaderWidget(),
                       Row(
                         children: [
+                          Consumer<MenuProvider>(
+                            builder: (context, provider, child) {
+                              return Consumer<MenuCardProvider>(
+                                builder: (context, menuCardProvider, child) {
+                                  double width = 0;
+                                  if (provider.showMenu) {
+                                    if (menuCardProvider.showMenu) {
+                                      width = 560;
+                                    } else {
+                                      width = 280;
+                                    }
+                                  } else {
+                                    width = 0;
+                                  }
+                                  return AnimatedContainer(
+                                    duration: const Duration(milliseconds: 400),
+                                    curve: Curves.easeInOut,
+                                    width: width,
+                                    child: SizedBox(
+                                      height: height - 70,
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        children: [
+                                          BoxLayout(
+                                            width: 280,
+                                            height: height - 70,
+                                            borderRadius: 0,
+                                            padding: EdgeInsets.zero,
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            child: menu,
+                                          ),
+                                          Container(
+                                            width: 280,
+                                            height: height - 70,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    Theme.of(context).cardColor,
+                                                border: const Border(
+                                                    left: BorderSide(
+                                                        color: DefaultTheme
+                                                            .GREY_BUTTON))),
+                                            padding: EdgeInsets.zero,
+                                            child: menuCard,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                           Expanded(child: widget1),
                           SizedBox(
                             width: 400,
@@ -72,64 +127,6 @@ class HomeFrame extends StatelessWidget {
                       )
                     ],
                   ),
-                ),
-                Consumer<MenuProvider>(
-                  builder: (context, provider, child) {
-                    return Stack(
-                      children: [
-                        Consumer<MenuCardProvider>(
-                          builder: (context, menuCardProvider, child) {
-                            double position = 0;
-                            if (provider.showMenu) {
-                              position = -350;
-                            } else {
-                              position = -700;
-                            }
-                            return AnimatedPositioned(
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeInOut,
-                              left: (menuCardProvider.showMenu) ? 0 : position,
-                              bottom: 0,
-                              child: SizedBox(
-                                width: 700,
-                                child: Row(
-                                  children: [
-                                    const Spacer(),
-                                    Container(
-                                      width: 350,
-                                      height: height - 70,
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context).cardColor,
-                                          border: const Border(
-                                              left: BorderSide(
-                                                  color: DefaultTheme
-                                                      .GREY_BUTTON))),
-                                      padding: EdgeInsets.zero,
-                                      child: menuCard,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        AnimatedPositioned(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                          left: (provider.showMenu) ? 0 : -350,
-                          bottom: 0,
-                          child: BoxLayout(
-                            width: 350,
-                            height: height - 70,
-                            borderRadius: 0,
-                            padding: EdgeInsets.zero,
-                            bgColor: Theme.of(context).cardColor,
-                            child: menu,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
                 ),
                 Consumer<GuideProvider>(
                   builder: (context, provider, child) {

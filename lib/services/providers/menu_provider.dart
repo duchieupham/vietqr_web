@@ -9,7 +9,7 @@ class MenuProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  MenuHomeType _menuHomeType = MenuHomeType.HOME;
+  MenuHomeType _menuHomeType = MenuHomeType.BANKLIST;
   MenuHomeType get menuHomeType => _menuHomeType;
   void selectMenu(MenuHomeType value) {
     _menuHomeType = value;

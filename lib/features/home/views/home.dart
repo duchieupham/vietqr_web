@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
@@ -263,9 +264,10 @@ class _HomeScreen extends State<HomeScreen> {
             children: [
               _buildTableRow(),
               const Padding(padding: EdgeInsets.only(bottom: 10)),
-              UnconstrainedBox(
+              Align(
+                alignment: Alignment.centerRight,
                 child: SizedBox(
-                    width: width - 80 - 400,
+                    width: 200,
                     height: 30,
                     child: Consumer<TransactionListProvider>(
                       builder: (context, provider, child) {
@@ -827,171 +829,138 @@ class _HomeScreen extends State<HomeScreen> {
         }
       },
       builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: WalletCard(),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Tài khoản ngân hàng',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Spacer(),
-                  if (bankAccounts.isNotEmpty)
-                    BoxLayout(
-                      width: 25,
-                      height: 25,
-                      borderRadius: 25,
-                      padding: const EdgeInsets.all(0),
-                      alignment: Alignment.center,
-                      bgColor: DefaultTheme.CARD_MY_QR.withOpacity(0.5),
-                      child: Text(
-                        bankAccounts.length.toString(),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: DefaultTheme.BLUE_TEXT,
-                        ),
+        return SizedBox(
+          width: 280,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: WalletCard(),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Tài khoản ngân hàng',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                ],
-              ),
-              const Padding(padding: EdgeInsets.only(top: 10)),
-              Expanded(child: Consumer<MenuCardProvider>(
-                builder: (context, provider, child) {
-                  return (bankAccounts.isEmpty &&
-                          (state is BankGetListSuccessState ||
-                              state is BankDetailSuccessState))
-                      ? SizedBox(
-                          width: width - 60,
-                          // borderRadius: 15,
-                          // alignment: Alignment.center,
-                          // bgColor: DefaultTheme.TRANSPARENT,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'assets/images/ic-card.png',
-                                width: width * 0.4,
-                                height: 150,
-                              ),
-                              const Text(
-                                'Chưa có tài khoản ngân hàng được thêm.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 13),
-                              ),
-                              const Padding(padding: EdgeInsets.only(top: 10)),
-                              UnconstrainedBox(
-                                child: Tooltip(
-                                  message: 'Thêm TK ngân hàng',
-                                  child: ButtonIconWidget(
-                                    width: 300,
-                                    height: 40,
-                                    icon: Icons.add_rounded,
-                                    title: 'Thêm TK ngân hàng',
-                                    function: () {
-                                      String userId = UserInformationHelper
-                                          .instance
-                                          .getUserId();
-                                      context.go('/bank/create/$userId');
-                                    },
-                                    bgColor: Theme.of(context)
-                                        .canvasColor
-                                        .withOpacity(0.3),
-                                    textColor: DefaultTheme.GREEN,
-                                  ),
-                                ),
-                              ),
-                              const Padding(padding: EdgeInsets.only(top: 10)),
-                            ],
+                    const Spacer(),
+                    if (bankAccounts.isNotEmpty)
+                      BoxLayout(
+                        width: 25,
+                        height: 25,
+                        borderRadius: 25,
+                        padding: const EdgeInsets.all(0),
+                        alignment: Alignment.center,
+                        bgColor: DefaultTheme.CARD_MY_QR.withOpacity(0.5),
+                        child: Text(
+                          bankAccounts.length.toString(),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: DefaultTheme.BLUE_TEXT,
                           ),
-                        )
-                      : (bankAccounts.isEmpty)
-                          ? const SizedBox()
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: bankAccounts.length,
-                              itemBuilder: (context, index) {
-                                ScrollController scrollController =
-                                    ScrollController();
-                                scrollController.addListener(() {
-                                  if (scrollController.hasClients) {
-                                    scrollController.jumpTo(0);
-                                  }
-                                });
-                                return InkWell(
-                                  onTap: () {
-                                    provider.updateIndex(index);
-                                    _bankBloc.add(BankEventGetDetail(
-                                        bankId: bankAccounts[index].id));
-                                    Provider.of<TransactionListProvider>(
-                                            context,
-                                            listen: false)
-                                        .reset();
-                                    TransactionInputDTO transactionInputDTO =
-                                        TransactionInputDTO(
-                                      bankId: bankAccounts[index].id,
-                                      offset: 0,
-                                    );
-                                    _transactionBloc.add(
-                                        TransactionEventGetList(
-                                            dto: transactionInputDTO));
-                                    provider.updateShowMenu(false);
-                                    // Provider.of<MenuProvider>(context,
-                                    //         listen: false)
-                                    //     .updateShowMenu(false);
-                                  },
-                                  child: AnimatedContainer(
-                                    width: 300,
-                                    duration: const Duration(milliseconds: 100),
-                                    curve: Curves.easeInOut,
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 15,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: (provider.index != index)
-                                          ? Border.all(
-                                              color: DefaultTheme.BLACK_LIGHT
-                                                  .withOpacity(0.2))
-                                          : null,
-                                      boxShadow: (provider.index == index)
-                                          ? [
-                                              BoxShadow(
-                                                color: DefaultTheme.GREY_TEXT
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 0.6,
-                                                blurRadius: 5,
-                                                offset: const Offset(0,
-                                                    0), // changes position of shadow
-                                              ),
-                                            ]
-                                          : null,
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: (provider.index == index)
-                                          ? cardColors[index]
-                                          : Theme.of(context).cardColor,
-                                    ),
-                                    child: SizedBox(
-                                      width: 300,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 40,
-                                            height: 40,
+                        ),
+                      ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.only(top: 10)),
+                Expanded(child: Consumer<MenuCardProvider>(
+                  builder: (context, provider, child) {
+                    return (bankAccounts.isEmpty &&
+                            (state is BankGetListSuccessState ||
+                                state is BankDetailSuccessState))
+                        ? SizedBox(
+                            width: width - 60,
+                            // borderRadius: 15,
+                            // alignment: Alignment.center,
+                            // bgColor: DefaultTheme.TRANSPARENT,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  'assets/images/ic-card.png',
+                                  width: width * 0.4,
+                                  height: 150,
+                                ),
+                                const Text(
+                                  'Chưa có tài khoản ngân hàng được thêm.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
+                                _buildButtonAddAccountBank(),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
+                              ],
+                            ),
+                          )
+                        : (bankAccounts.isEmpty)
+                            ? const SizedBox()
+                            : Column(
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: bankAccounts.length + 1,
+                                      itemBuilder: (context, index) {
+                                        ScrollController scrollController =
+                                            ScrollController();
+                                        scrollController.addListener(() {
+                                          if (scrollController.hasClients) {
+                                            scrollController.jumpTo(0);
+                                          }
+                                        });
+
+                                        if (index == bankAccounts.length) {
+                                          return const Text(
+                                            'Nhấp chọn tài khoản để hiển thị giao dịch',
+                                            style: TextStyle(fontSize: 10),
+                                          );
+                                        }
+                                        return InkWell(
+                                          onTap: () {
+                                            provider.updateShowMenu(false);
+                                            provider.updateIndex(index);
+                                            _bankBloc.add(BankEventGetDetail(
+                                                bankId:
+                                                    bankAccounts[index].id));
+                                            Provider.of<TransactionListProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .reset();
+                                            TransactionInputDTO
+                                                transactionInputDTO =
+                                                TransactionInputDTO(
+                                              bankId: bankAccounts[index].id,
+                                              offset: 0,
+                                            );
+                                            _transactionBloc.add(
+                                                TransactionEventGetList(
+                                                    dto: transactionInputDTO));
+
+                                            // Provider.of<MenuProvider>(context,
+                                            //         listen: false)
+                                            //     .updateShowMenu(false);
+                                          },
+                                          child: AnimatedContainer(
+                                            width: 300,
+                                            duration: const Duration(
+                                                milliseconds: 100),
+                                            curve: Curves.easeInOut,
+                                            margin: const EdgeInsets.only(
+                                                bottom: 10),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 15,
+                                            ),
                                             decoration: BoxDecoration(
                                               border: (provider.index != index)
                                                   ? Border.all(
@@ -999,118 +968,204 @@ class _HomeScreen extends State<HomeScreen> {
                                                           .BLACK_LIGHT
                                                           .withOpacity(0.2))
                                                   : null,
+                                              boxShadow: (provider.index ==
+                                                      index)
+                                                  ? [
+                                                      BoxShadow(
+                                                        color: DefaultTheme
+                                                            .GREY_TEXT
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 0.6,
+                                                        blurRadius: 5,
+                                                        offset: const Offset(0,
+                                                            0), // changes position of shadow
+                                                      ),
+                                                    ]
+                                                  : null,
                                               borderRadius:
-                                                  BorderRadius.circular(60),
-                                              color: DefaultTheme.WHITE,
-                                              image: DecorationImage(
-                                                image: ImageUtils.instance
-                                                    .getImageNetWork(
-                                                  bankAccounts[index].imgId,
-                                                ),
+                                                  BorderRadius.circular(8),
+                                              color: (provider.index == index)
+                                                  ? cardColors[index]
+                                                  : Theme.of(context).cardColor,
+                                            ),
+                                            child: SizedBox(
+                                              width: 300,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      border: (provider.index !=
+                                                              index)
+                                                          ? Border.all(
+                                                              color: DefaultTheme
+                                                                  .BLACK_LIGHT
+                                                                  .withOpacity(
+                                                                      0.2))
+                                                          : null,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              60),
+                                                      color: DefaultTheme.WHITE,
+                                                      image: DecorationImage(
+                                                        image: ImageUtils
+                                                            .instance
+                                                            .getImageNetWork(
+                                                          bankAccounts[index]
+                                                              .imgId,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 10)),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              '${bankAccounts[index].bankCode} - ${bankAccounts[index].bankAccount}',
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: (provider
+                                                                              .index ==
+                                                                          index)
+                                                                      ? DefaultTheme
+                                                                          .WHITE
+                                                                      : DefaultTheme
+                                                                          .BLACK,
+                                                                  fontSize: 13),
+                                                            ),
+                                                            _buildItemCheck(
+                                                                bankAccounts[
+                                                                    index],
+                                                                isChoose: provider
+                                                                        .index ==
+                                                                    index)
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 2,
+                                                        ),
+                                                        Text(
+                                                          bankAccounts[index]
+                                                              .userBankName
+                                                              .toUpperCase(),
+                                                          style: TextStyle(
+                                                            color: (provider.index ==
+                                                                    index)
+                                                                ? DefaultTheme
+                                                                    .WHITE
+                                                                : DefaultTheme
+                                                                    .BLACK,
+                                                            fontSize: 10,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  if (provider.index == index)
+                                                    const Text(
+                                                      'Đang chọn',
+                                                      style: TextStyle(
+                                                          fontSize: 9,
+                                                          color: DefaultTheme
+                                                              .WHITE),
+                                                    )
+                                                ],
                                               ),
                                             ),
                                           ),
-                                          const Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 10)),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      '${bankAccounts[index].bankCode} - ${bankAccounts[index].bankAccount}',
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .bold,
-                                                          color:
-                                                              (provider.index ==
-                                                                      index)
-                                                                  ? DefaultTheme
-                                                                      .WHITE
-                                                                  : DefaultTheme
-                                                                      .BLACK,
-                                                          fontSize: 13),
-                                                    ),
-                                                    if (bankAccounts[index]
-                                                        .isAuthenticated)
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(left: 4),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(2),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                      .all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          25)),
-                                                          color: bankAccounts[
-                                                                          index]
-                                                                      .userId ==
-                                                                  UserInformationHelper
-                                                                      .instance
-                                                                      .getUserId()
-                                                              ? DefaultTheme
-                                                                  .BLUE_CARD
-                                                              : DefaultTheme
-                                                                  .ORANGE,
-                                                        ),
-                                                        child: const Icon(
-                                                          Icons.check,
-                                                          color: DefaultTheme
-                                                              .WHITE,
-                                                          size: 7,
-                                                        ),
-                                                      )
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 2,
-                                                ),
-                                                Text(
-                                                  bankAccounts[index]
-                                                      .userBankName
-                                                      .toUpperCase(),
-                                                  style: TextStyle(
-                                                    color: (provider.index ==
-                                                            index)
-                                                        ? DefaultTheme.WHITE
-                                                        : DefaultTheme.BLACK,
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          if (provider.index == index)
-                                            const Text(
-                                              'Đang chọn',
-                                              style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: DefaultTheme.WHITE),
-                                            )
-                                        ],
-                                      ),
+                                        );
+                                      },
                                     ),
                                   ),
-                                );
-                              },
-                            );
-                },
-              )),
-            ],
+                                  _buildButtonAddAccountBank()
+                                ],
+                              );
+                  },
+                )),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildItemCheck(BankAccountDTO accountDTO, {bool isChoose = false}) {
+    if (accountDTO.isAuthenticated) {
+      return Container(
+        margin: const EdgeInsets.only(left: 4),
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
+          color: accountDTO.userId == UserInformationHelper.instance.getUserId()
+              ? DefaultTheme.BLUE_CARD
+              : DefaultTheme.ORANGE,
+        ),
+        child: const Icon(
+          Icons.check,
+          color: DefaultTheme.WHITE,
+          size: 7,
+        ),
+      );
+    } else if (accountDTO.bankCode == 'MB' &&
+        accountDTO.userId == UserInformationHelper.instance.getUserId() &&
+        !isChoose) {
+      return InkWell(
+        onTap: () {},
+        child: const Padding(
+          padding: EdgeInsets.only(left: 2, top: 2),
+          child: Text(
+            'Liên kết ngay',
+            style: TextStyle(
+              fontSize: 9,
+              color: DefaultTheme.BLUE_TEXT,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildButtonAddAccountBank() {
+    return UnconstrainedBox(
+      child: Tooltip(
+        message: 'Thêm TK ngân hàng',
+        child: ButtonIconWidget(
+          width: 245,
+          height: 40,
+          border: Border.all(color: DefaultTheme.BLUE_TEXT),
+          pathIcon: AppImages.icMenuBank,
+          title: 'Thêm/Liên kết TK ngân hàng',
+          function: () {
+            String userId = UserInformationHelper.instance.getUserId();
+            context.go('/bank/create/$userId');
+          },
+          bgColor: Theme.of(context).canvasColor.withOpacity(0.3),
+          textSize: 11,
+          pathIconSize: 28,
+          textColor: DefaultTheme.BLUE_TEXT,
+        ),
+      ),
     );
   }
 

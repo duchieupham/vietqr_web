@@ -3,7 +3,7 @@ import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:flutter/widgets.dart';
 
 class MenuCardProvider with ChangeNotifier {
-  bool _isShowMenu = false;
+  bool _isShowMenu = true;
   int _index = 0;
 
   AccountBankDetailDTO _bankDetailDTO = const AccountBankDetailDTO(
