@@ -64,7 +64,6 @@ class MenuLeft extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(top: 4)),
             Expanded(
                 child: _buildListItem(provider, () {
-              provider.updateShowMenu(!provider.showMenu);
               Provider.of<MenuCardProvider>(context, listen: false)
                   .updateShowMenu(false);
             })),
@@ -74,7 +73,7 @@ class MenuLeft extends StatelessWidget {
     });
   }
 
-  Widget _buildListItem(MenuProvider provider, Function closeMenu) {
+  Widget _buildListItem(MenuProvider provider, Function closeListCard) {
     return Column(
       children: [
         Expanded(
@@ -87,12 +86,14 @@ class MenuLeft extends StatelessWidget {
               onTap: () {
                 onTab(MenuHomeType.HOME);
                 provider.selectMenu(MenuHomeType.HOME);
-                closeMenu();
+                provider.updateShowMenu(!provider.showMenu);
+                closeListCard();
               },
             ),
             ItemMenuHome(
               title: 'Danh sách tài khoản',
               pathIcon: AppImages.icMenuBank,
+              enableMenuCard: true,
               isSelect: provider.menuHomeType == MenuHomeType.BANKLIST,
               onTap: () {
                 onTab(MenuHomeType.BANKLIST);
@@ -107,7 +108,7 @@ class MenuLeft extends StatelessWidget {
               onTap: () {
                 onTab(MenuHomeType.CONTACT);
                 provider.selectMenu(MenuHomeType.CONTACT);
-                closeMenu();
+                closeListCard();
               },
             ),
             ItemMenuHome(
@@ -127,8 +128,9 @@ class MenuLeft extends StatelessWidget {
                       MenuHomeType.ADD_LINK_BANK_ACCOUNT,
                   onTap: () {
                     onTab(MenuHomeType.ADD_LINK_BANK_ACCOUNT);
+                    provider.updateShowMenu(!provider.showMenu);
                     provider.selectMenu(MenuHomeType.ADD_LINK_BANK_ACCOUNT);
-                    closeMenu();
+                    closeListCard();
                   },
                 ),
                 ItemMenuHome(
@@ -139,8 +141,9 @@ class MenuLeft extends StatelessWidget {
                       provider.menuHomeType == MenuHomeType.ADD_LINK_BANK_MB,
                   onTap: () {
                     onTab(MenuHomeType.ADD_LINK_BANK_MB);
+                    provider.updateShowMenu(!provider.showMenu);
                     provider.selectMenu(MenuHomeType.ADD_LINK_BANK_MB);
-                    closeMenu();
+                    closeListCard();
                   },
                 ),
                 ItemMenuHome(
@@ -152,7 +155,7 @@ class MenuLeft extends StatelessWidget {
                   onTap: () {
                     onTab(MenuHomeType.OPEN_BANK_MB_ACCOUNT);
                     provider.selectMenu(MenuHomeType.OPEN_BANK_MB_ACCOUNT);
-                    closeMenu();
+                    closeListCard();
                   },
                 ),
               ],
@@ -174,7 +177,7 @@ class MenuLeft extends StatelessWidget {
                   onTap: () {
                     onTab(MenuHomeType.SCAN_CCCD);
                     provider.selectMenu(MenuHomeType.SCAN_CCCD);
-                    closeMenu();
+                    closeListCard();
                   },
                 ),
                 ItemMenuHome(
@@ -184,8 +187,9 @@ class MenuLeft extends StatelessWidget {
                   isSelect: provider.menuHomeType == MenuHomeType.SCAN_BANK,
                   onTap: () {
                     onTab(MenuHomeType.SCAN_BANK);
+
                     provider.selectMenu(MenuHomeType.SCAN_BANK);
-                    closeMenu();
+                    closeListCard();
                   },
                 ),
               ],
@@ -196,8 +200,9 @@ class MenuLeft extends StatelessWidget {
               isSelect: provider.menuHomeType == MenuHomeType.BUSINESS,
               onTap: () {
                 onTab(MenuHomeType.BUSINESS);
+                provider.updateShowMenu(!provider.showMenu);
                 provider.selectMenu(MenuHomeType.BUSINESS);
-                closeMenu();
+                closeListCard();
               },
             ),
             ItemMenuHome(
@@ -207,7 +212,7 @@ class MenuLeft extends StatelessWidget {
               onTap: () {
                 onTab(MenuHomeType.INTRO_VIET_QR);
                 provider.selectMenu(MenuHomeType.INTRO_VIET_QR);
-                closeMenu();
+                closeListCard();
               },
             ),
           ],
@@ -219,7 +224,7 @@ class MenuLeft extends StatelessWidget {
           onTap: () {
             onTab(MenuHomeType.SETTING);
             provider.selectMenu(MenuHomeType.OTHER);
-            closeMenu();
+            closeListCard();
           },
         ),
         ItemMenuHome(

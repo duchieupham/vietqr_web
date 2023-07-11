@@ -6,7 +6,7 @@ class ItemMenuHome extends StatefulWidget {
   final String pathIcon;
   final String title;
   final Function onTap;
-  final bool isSelect, isLogout, enableDropDownList;
+  final bool isSelect, isLogout, enableDropDownList, enableMenuCard;
   final String? pathImage;
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
@@ -23,6 +23,7 @@ class ItemMenuHome extends StatefulWidget {
     this.listItemDrop = const [],
     this.isDropDownItem = false,
     this.titleSize = 13,
+    this.enableMenuCard = false,
   }) : super(key: key);
 
   @override
@@ -33,7 +34,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
   double heightItem = 40;
   bool openListDropDown = false;
   bool amIHovering = false;
-
+  bool openMenuCard = true;
   Offset exitFrom = const Offset(0, 0);
 
   onOpenDropDownList() {
@@ -76,6 +77,11 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
       child: InkWell(
         onTap: () {
           widget.onTap();
+          if (widget.enableMenuCard) {
+            setState(() {
+              openMenuCard = !openMenuCard;
+            });
+          }
           if (widget.enableDropDownList) {
             onOpenDropDownList();
           }
@@ -123,7 +129,23 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                       style: TextStyle(fontSize: widget.titleSize),
                     ),
                   const Spacer(),
-                  if (widget.enableDropDownList)
+                  if (widget.enableMenuCard)
+                    Container(
+                      height: 20,
+                      width: 20,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: DefaultTheme.CARD_CODE_BG,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Transform.rotate(
+                        angle: !openMenuCard ? -math.pi / 2 : math.pi / 2,
+                        child: const Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 15,
+                        ),
+                      ),
+                    )
+                  else if (widget.enableDropDownList)
                     Container(
                       height: 20,
                       width: 20,

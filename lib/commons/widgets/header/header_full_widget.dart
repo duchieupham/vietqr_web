@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -101,6 +102,9 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               onTap: () {
                 if (widget.isSubHeader != null && widget.isSubHeader!) {
                   context.go('/');
+                } else {
+                  Provider.of<MenuProvider>(context, listen: false)
+                      .selectMenu(MenuHomeType.HOME);
                 }
               },
               child: Image.asset(

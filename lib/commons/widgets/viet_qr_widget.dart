@@ -277,19 +277,8 @@ class VietQRWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0')
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 30, bottom: 10),
-                child: Text(
-                  '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-                  style: const TextStyle(
-                    color: DefaultTheme.ORANGE_Dark,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            const SizedBox(
+              height: 50,
             )
           else
             const SizedBox(
@@ -364,6 +353,21 @@ class VietQRWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Padding(padding: EdgeInsets.only(bottom: 25)),
+        if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0')
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                style: const TextStyle(
+                  color: DefaultTheme.ORANGE_Dark,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
         SelectableText(
           qrGeneratedDTO.userBankName.toUpperCase(),
           style: const TextStyle(
