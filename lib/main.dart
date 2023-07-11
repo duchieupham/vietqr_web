@@ -46,6 +46,7 @@ import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/guide_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/providers/register_provider.dart';
 import 'package:VietQR/services/providers/search_clear_provider.dart';
@@ -318,6 +319,7 @@ class _VietQRApp extends State<VietQRApp> {
           providers: [
             ChangeNotifierProvider(create: (context) => ThemeProvider()),
             ChangeNotifierProvider(create: (context) => PinProvider()),
+            ChangeNotifierProvider(create: (context) => MenuProvider()),
             ChangeNotifierProvider(create: (context) => MenuCardProvider()),
             ChangeNotifierProvider(create: (context) => CreateQRProvider()),
             ChangeNotifierProvider(create: (context) => RegisterProvider()),

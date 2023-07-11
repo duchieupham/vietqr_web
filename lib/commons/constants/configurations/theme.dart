@@ -18,6 +18,7 @@ class DefaultTheme {
   static const Color GREY_HIGHLIGHT = Color(0xFF222222);
   static const Color RED_TEXT = Color(0xFFFF0A0A);
   static const Color BLUE_TEXT = Color(0xFF0A7AFF);
+  static const Color BLUE_CARD = Color(0xFF0A7AFF);
   static const Color RED_CALENDAR = Color(0xFFF5233C);
   static const Color TRANSPARENT = Color(0x00000000);
   static const Color GREY_TOP_TAB_BAR = Color(0xFFBEC1C9);
@@ -58,7 +59,8 @@ class DefaultTheme {
   static const Color MB_BLUE = Color(0xFF141CD6);
   static const Color MB_RED = Color(0xFFF4272A);
   static const Color CARD_CODE_BG = Color(0xFFf0f0f0);
-
+  static const Color ITEM_MENU_SELECTED = Color(0xFFb5d7ff);
+  static const Color CARD_MY_QR = Color(0xFF54a2ff);
   //THEME NAME
   static const String THEME_LIGHT = 'LIGHT';
   static const String THEME_DARK = 'DARK';

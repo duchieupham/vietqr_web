@@ -10,6 +10,7 @@ import 'package:VietQR/features/notification/states/notification_state.dart';
 import 'package:VietQR/features/notification/views/notification_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -64,11 +65,14 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               ? const SizedBox()
               : Tooltip(
                   message: 'Menu',
-                  child: Consumer<MenuCardProvider>(
+                  child: Consumer<MenuProvider>(
                     builder: (context, provider, child) {
                       return InkWell(
                         onTap: () {
+                          Session.instance.fetchWallet();
                           provider.updateShowMenu(!provider.showMenu);
+                          Provider.of<MenuCardProvider>(context, listen: false)
+                              .updateShowMenu(false);
                         },
                         child: BoxLayout(
                           width: 35,
@@ -109,74 +113,6 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           // _buildTitle('Trang chủ'),
           //time
           const Spacer(),
-          InkWell(
-            onTap: () {
-              DialogWidget.instance.openPopup(
-                child: const DialogOpenBankAccount(),
-                width: 500,
-                height: 650,
-              );
-            },
-            child: const Text(
-              'Mở tài khoản MB Bank',
-              style: TextStyle(
-                color: DefaultTheme.MB_BLUE,
-                decoration: TextDecoration.underline,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(right: 20)),
-          if (widget.isSubHeader == null || !widget.isSubHeader!) ...[
-            Tooltip(
-              message: 'Sao chép mã QR',
-              child: InkWell(
-                onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Tính năng đang bảo trì',
-                    msg: 'Vui lòng thử lại sau',
-                  );
-                },
-                child: BoxLayout(
-                  width: 35,
-                  height: 35,
-                  borderRadius: 35,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(0),
-                  bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                  child: Icon(
-                    Icons.qr_code_rounded,
-                    size: 20,
-                    color: Theme.of(context).hintColor,
-                  ),
-                ),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(right: 10)),
-            Tooltip(
-              message: 'Thêm TK ngân hàng',
-              child: InkWell(
-                onTap: () {
-                  String userId = UserInformationHelper.instance.getUserId();
-                  context.go('/bank/create/$userId');
-                },
-                child: BoxLayout(
-                  width: 35,
-                  height: 35,
-                  borderRadius: 35,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(0),
-                  bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                  child: Icon(
-                    Icons.credit_card_rounded,
-                    size: 20,
-                    color: Theme.of(context).hintColor,
-                  ),
-                ),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(right: 30)),
-          ],
           Tooltip(
             message: 'Thông báo',
             child: InkWell(
