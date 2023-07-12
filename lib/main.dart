@@ -21,6 +21,7 @@ import 'package:VietQR/features/business/views/business_information_view.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/business/views/business_transaction_view.dart';
 import 'package:VietQR/features/home/views/home.dart';
+import 'package:VietQR/features/home/views/overview_page.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
@@ -59,8 +60,6 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/theme_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -189,7 +188,7 @@ final GoRouter _router = GoRouter(
               ? '/home'
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
-          const HomeScreen(),
+          const OverViewPage(),
     ),
     GoRoute(
       path: '/qr/create/:id',
@@ -202,19 +201,6 @@ final GoRouter _router = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/bank/create/:id',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isEmpty)
-              ? '/login'
-              : (UserInformationHelper.instance.getUserId().trim() ==
-                      state.params['id'])
-                  ? '/bank/create/${state.params['id'] ?? ''}'
-                  : '/home',
-      builder: (BuildContext context, GoRouterState state) => AddBankView(
-        userId: state.params['id'] ?? '',
-      ),
-    ),
-    GoRoute(
       path: '/user_information',
       redirect: (context, state) =>
           (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
@@ -222,15 +208,6 @@ final GoRouter _router = GoRouter(
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
           UserInformationView(),
-    ),
-    GoRoute(
-      path: '/business_manager',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/business_manager'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) =>
-          const BusinessManagerView(),
     ),
     GoRoute(
       path: '/qr_generate',

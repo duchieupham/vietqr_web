@@ -6,10 +6,11 @@ class ItemMenuHome extends StatefulWidget {
   final String pathIcon;
   final String title;
   final Function onTap;
-  final bool isSelect, isLogout, enableDropDownList;
+  final bool isSelect, isLogout, enableDropDownList, enableMenuCard;
   final String? pathImage;
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
+  final double titleSize;
   const ItemMenuHome({
     Key? key,
     required this.title,
@@ -21,6 +22,8 @@ class ItemMenuHome extends StatefulWidget {
     this.enableDropDownList = false,
     this.listItemDrop = const [],
     this.isDropDownItem = false,
+    this.titleSize = 13,
+    this.enableMenuCard = false,
   }) : super(key: key);
 
   @override
@@ -28,10 +31,10 @@ class ItemMenuHome extends StatefulWidget {
 }
 
 class _ItemMenuHomeState extends State<ItemMenuHome> {
-  double heightItem = 55;
+  double heightItem = 40;
   bool openListDropDown = false;
   bool amIHovering = false;
-
+  bool openMenuCard = true;
   Offset exitFrom = const Offset(0, 0);
 
   onOpenDropDownList() {
@@ -74,6 +77,11 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
       child: InkWell(
         onTap: () {
           widget.onTap();
+          if (widget.enableMenuCard) {
+            setState(() {
+              openMenuCard = !openMenuCard;
+            });
+          }
           if (widget.enableDropDownList) {
             onOpenDropDownList();
           }
@@ -89,16 +97,20 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               color: getBgItem(),
               child: Row(
                 children: [
-                  if (widget.pathImage != null && widget.pathImage != '')
+                  if (widget.pathImage != null && widget.pathImage != '') ...[
                     Image.asset(
                       widget.pathImage!,
-                      height: heightItem,
+                      height: 15,
                       fit: BoxFit.fitHeight,
                     ),
+                    const SizedBox(
+                      width: 8,
+                    )
+                  ],
                   if (widget.pathIcon.isNotEmpty) ...[
                     Image.asset(
                       widget.pathIcon,
-                      height: 37,
+                      height: 30,
                     ),
                     SizedBox(
                       width: widget.isDropDownItem ? 8 : 16,
@@ -107,16 +119,33 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                   if (widget.isLogout)
                     Text(
                       widget.title,
-                      style: const TextStyle(
-                          fontSize: 15, color: DefaultTheme.RED_TEXT),
+                      style: TextStyle(
+                          fontSize: widget.titleSize,
+                          color: DefaultTheme.RED_TEXT),
                     )
                   else
                     Text(
                       widget.title,
-                      style: const TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: widget.titleSize),
                     ),
                   const Spacer(),
-                  if (widget.enableDropDownList)
+                  if (widget.enableMenuCard)
+                    Container(
+                      height: 20,
+                      width: 20,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: DefaultTheme.CARD_CODE_BG,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Transform.rotate(
+                        angle: !openMenuCard ? -math.pi / 2 : math.pi / 2,
+                        child: const Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 15,
+                        ),
+                      ),
+                    )
+                  else if (widget.enableDropDownList)
                     Container(
                       height: 20,
                       width: 20,

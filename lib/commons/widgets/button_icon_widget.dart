@@ -13,11 +13,14 @@ class ButtonIconWidget extends StatelessWidget {
   final double? borderRadius;
   final FocusNode? focusNode;
   final Alignment? alignment;
+  final BoxBorder? border;
+  final String pathIcon;
+  final double pathIconSize;
 
   const ButtonIconWidget({
     super.key,
     this.width,
-    required this.icon,
+    this.icon = Icons.add,
     required this.title,
     required this.function,
     required this.bgColor,
@@ -28,6 +31,9 @@ class ButtonIconWidget extends StatelessWidget {
     this.borderRadius,
     this.focusNode,
     this.alignment,
+    this.border,
+    this.pathIcon = '',
+    this.pathIconSize = 20,
   });
 
   @override
@@ -43,6 +49,7 @@ class ButtonIconWidget extends StatelessWidget {
         alignment: alignment,
         decoration: BoxDecoration(
           color: bgColor,
+          border: border,
           borderRadius:
               BorderRadius.circular((borderRadius != null) ? borderRadius! : 5),
         ),
@@ -51,11 +58,18 @@ class ButtonIconWidget extends StatelessWidget {
               ? MainAxisAlignment.start
               : MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: textColor,
-              size: (textSize != null) ? textSize : 15,
-            ),
+            if (pathIcon.isNotEmpty)
+              Image.asset(
+                pathIcon,
+                height: pathIconSize,
+                fit: BoxFit.fitHeight,
+              )
+            else
+              Icon(
+                icon,
+                color: textColor,
+                size: (textSize != null) ? textSize : 15,
+              ),
             if (title.isNotEmpty) ...[
               const Padding(padding: EdgeInsets.only(left: 5)),
               Text(
