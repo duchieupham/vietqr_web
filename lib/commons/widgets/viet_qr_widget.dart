@@ -371,17 +371,17 @@ class VietQRWidget extends StatelessWidget {
         SelectableText(
           qrGeneratedDTO.userBankName.toUpperCase(),
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: DefaultTheme.BLACK),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 5)),
         SelectableText(
           qrGeneratedDTO.bankAccount,
           style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w900,
-          ),
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
+              color: DefaultTheme.BLACK),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 5)),
         Text(
@@ -389,9 +389,9 @@ class VietQRWidget extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: DefaultTheme.BLACK),
         ),
         if (qrGeneratedDTO.content.isNotEmpty) ...[
           const Padding(padding: EdgeInsets.only(bottom: 10)),
@@ -399,9 +399,7 @@ class VietQRWidget extends StatelessWidget {
             qrGeneratedDTO.content,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 12,
-            ),
+            style: const TextStyle(fontSize: 12, color: DefaultTheme.BLACK),
           ),
         ],
       ],

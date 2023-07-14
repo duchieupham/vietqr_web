@@ -520,7 +520,7 @@ class _AddBankView extends State<AddBankView> {
                           height: 40,
                           text: 'Lưu tài khoản',
                           borderRadius: 5,
-                          textColor: DefaultTheme.GREEN,
+                          textColor: DefaultTheme.BLUE_TEXT,
                           bgColor: Theme.of(context).cardColor,
                           function: () {
                             if (provider.bankType.id.isNotEmpty) {

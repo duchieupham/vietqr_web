@@ -14,11 +14,10 @@ class MenuLeft extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<MenuProvider>(builder: (context, provider, child) {
-      return SizedBox(
-        width: 280,
-        child: Column(
-          children: [
-            const Padding(padding: EdgeInsets.only(top: 15)),
+      return Column(
+        children: [
+          const Padding(padding: EdgeInsets.only(top: 15)),
+          if (provider.showMenu)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
@@ -61,23 +60,36 @@ class MenuLeft extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(padding: EdgeInsets.only(top: 4)),
+          const Padding(padding: EdgeInsets.only(top: 4)),
+          if (provider.showMenu)
             Expanded(
                 child: _buildListItem(provider, () {
               Provider.of<MenuCardProvider>(context, listen: false)
                   .updateShowMenu(false);
-            })),
-          ],
-        ),
+            }))
+          else
+            Expanded(
+                child: InkWell(
+              onTap: () {
+                provider.updateShowMenu(!provider.showMenu);
+              },
+              child: _buildListICon(provider, () {
+                Provider.of<MenuCardProvider>(context, listen: false)
+                    .updateShowMenu(false);
+              }),
+            ))
+        ],
       );
     });
   }
 
   Widget _buildListItem(MenuProvider provider, Function closeListCard) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
             child: ListView(
+          padding: EdgeInsets.zero,
           children: [
             ItemMenuHome(
               title: 'Home',
@@ -107,7 +119,7 @@ class MenuLeft extends StatelessWidget {
               isSelect: provider.menuHomeType == MenuHomeType.CONTACT,
               onTap: () {
                 onTab(MenuHomeType.CONTACT);
-                provider.selectMenu(MenuHomeType.CONTACT);
+                // provider.selectMenu(MenuHomeType.CONTACT);
                 closeListCard();
               },
             ),
@@ -154,7 +166,7 @@ class MenuLeft extends StatelessWidget {
                       MenuHomeType.OPEN_BANK_MB_ACCOUNT,
                   onTap: () {
                     onTab(MenuHomeType.OPEN_BANK_MB_ACCOUNT);
-                    provider.selectMenu(MenuHomeType.OPEN_BANK_MB_ACCOUNT);
+                    // provider.selectMenu(MenuHomeType.OPEN_BANK_MB_ACCOUNT);
                     closeListCard();
                   },
                 ),
@@ -166,7 +178,7 @@ class MenuLeft extends StatelessWidget {
               enableDropDownList: true,
               isSelect: provider.menuHomeType == MenuHomeType.SCAN_QR,
               onTap: () {
-                provider.selectMenu(MenuHomeType.SCAN_QR);
+                // provider.selectMenu(MenuHomeType.SCAN_QR);
               },
               listItemDrop: [
                 ItemMenuHome(
@@ -176,7 +188,7 @@ class MenuLeft extends StatelessWidget {
                   isSelect: provider.menuHomeType == MenuHomeType.SCAN_CCCD,
                   onTap: () {
                     onTab(MenuHomeType.SCAN_CCCD);
-                    provider.selectMenu(MenuHomeType.SCAN_CCCD);
+                    // provider.selectMenu(MenuHomeType.SCAN_CCCD);
                     closeListCard();
                   },
                 ),
@@ -188,7 +200,7 @@ class MenuLeft extends StatelessWidget {
                   onTap: () {
                     onTab(MenuHomeType.SCAN_BANK);
 
-                    provider.selectMenu(MenuHomeType.SCAN_BANK);
+                    // provider.selectMenu(MenuHomeType.SCAN_BANK);
                     closeListCard();
                   },
                 ),
@@ -211,7 +223,7 @@ class MenuLeft extends StatelessWidget {
               isSelect: provider.menuHomeType == MenuHomeType.INTRO_VIET_QR,
               onTap: () {
                 onTab(MenuHomeType.INTRO_VIET_QR);
-                provider.selectMenu(MenuHomeType.INTRO_VIET_QR);
+                // provider.selectMenu(MenuHomeType.INTRO_VIET_QR);
                 closeListCard();
               },
             ),
@@ -230,6 +242,115 @@ class MenuLeft extends StatelessWidget {
         ItemMenuHome(
           title: 'Đăng xuất',
           isLogout: true,
+          isSelect: provider.menuHomeType == MenuHomeType.LOGOUT,
+          pathIcon: AppImages.icMenuLogout,
+          onTap: () {
+            onTab(MenuHomeType.LOGOUT);
+            provider.selectMenu(MenuHomeType.OTHER);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildListICon(MenuProvider provider, Function closeListCard) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ItemMenuHome(
+          title: 'Home',
+          pathIcon: AppImages.icMenuHome,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.HOME,
+          onTap: () {
+            onTab(MenuHomeType.HOME);
+            provider.selectMenu(MenuHomeType.HOME);
+            provider.updateShowMenu(!provider.showMenu);
+            closeListCard();
+          },
+        ),
+        ItemMenuHome(
+          title: 'Danh sách tài khoản',
+          pathIcon: AppImages.icMenuBank,
+          enableMenuCard: true,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.BANKLIST,
+          onTap: () {
+            onTab(MenuHomeType.BANKLIST);
+            provider.selectMenu(MenuHomeType.BANKLIST);
+            // closeMenu();
+          },
+        ),
+        ItemMenuHome(
+          title: 'Danh bạ',
+          pathIcon: AppImages.icMenuContact,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.CONTACT,
+          onTap: () {
+            onTab(MenuHomeType.CONTACT);
+            provider.selectMenu(MenuHomeType.CONTACT);
+            closeListCard();
+          },
+        ),
+        ItemMenuHome(
+          title: 'Liên kết',
+          pathIcon: AppImages.icMenuLinked,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.LINK ||
+              provider.menuHomeType == MenuHomeType.ADD_LINK_BANK_ACCOUNT ||
+              provider.menuHomeType == MenuHomeType.ADD_LINK_BANK_MB,
+          onTap: () {
+            provider.selectMenu(MenuHomeType.LINK);
+          },
+        ),
+        ItemMenuHome(
+          title: 'Quét QR',
+          pathIcon: AppImages.icMenuQR,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.SCAN_QR,
+          onTap: () {
+            provider.selectMenu(MenuHomeType.SCAN_QR);
+          },
+        ),
+        ItemMenuHome(
+          title: 'Doanh nghiệp',
+          pathIcon: AppImages.icMenuBusiness,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.BUSINESS,
+          onTap: () {
+            onTab(MenuHomeType.BUSINESS);
+            provider.updateShowMenu(!provider.showMenu);
+            provider.selectMenu(MenuHomeType.BUSINESS);
+            closeListCard();
+          },
+        ),
+        ItemMenuHome(
+          title: 'Giới thiệu VietQR VN',
+          pathImage: AppImages.icMenuIntroVietQrVN,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.INTRO_VIET_QR,
+          onTap: () {
+            onTab(MenuHomeType.INTRO_VIET_QR);
+            provider.selectMenu(MenuHomeType.INTRO_VIET_QR);
+            closeListCard();
+          },
+        ),
+        const Spacer(),
+        ItemMenuHome(
+          title: 'Cài đặt',
+          pathIcon: AppImages.icMenuSetting,
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.SETTING,
+          onTap: () {
+            onTab(MenuHomeType.SETTING);
+            provider.selectMenu(MenuHomeType.OTHER);
+            closeListCard();
+          },
+        ),
+        ItemMenuHome(
+          title: 'Đăng xuất',
+          isLogout: true,
+          isOnlyIcon: true,
           isSelect: provider.menuHomeType == MenuHomeType.LOGOUT,
           pathIcon: AppImages.icMenuLogout,
           onTap: () {

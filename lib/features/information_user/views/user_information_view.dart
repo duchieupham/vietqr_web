@@ -498,9 +498,11 @@ class UserInformationView extends StatelessWidget {
               child: Visibility(
                 visible: provider.availableUpdate,
                 child: ButtonWidget(
+                  height: 40,
+                  borderRadius: 8,
                   text: 'Cập nhật',
                   textColor: DefaultTheme.WHITE,
-                  bgColor: DefaultTheme.GREEN,
+                  bgColor: DefaultTheme.BLUE_CARD,
                   function: () {
                     FocusManager.instance.primaryFocus?.unfocus();
                     provider.updateErrors(_firstNameController.text.isEmpty);

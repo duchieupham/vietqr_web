@@ -12,86 +12,46 @@ class ThemeSettingWidget extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        const Padding(padding: EdgeInsets.only(top: 20)),
-        SizedBox(
-          width: width,
-          child: Row(
-            children: [
-              const Padding(padding: EdgeInsets.only(left: 20)),
-              const Text(
-                'Giao diện',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  width: 25,
-                  height: 25,
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(right: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Theme.of(context).canvasColor.withOpacity(0.3),
-                  ),
-                  child: const Icon(
-                    Icons.close_rounded,
-                    size: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Padding(padding: EdgeInsets.only(top: 30)),
+        const Spacer(),
         Consumer<ThemeProvider>(
           builder: (context, provider, child) {
-            return Column(
-              children: [
-                SizedBox(
-                  width: width,
-                  child: Row(
-                    children: [
-                      const Padding(padding: EdgeInsets.only(left: 20)),
-                      _buildItem(
-                        context: context,
-                        isSelected: provider.getThemeIndex() == 0,
-                        imageAsset: 'assets/images/ic-light-web.png',
-                        text: 'Sáng',
-                        width: 200 - 20,
-                        function: () => provider.updateThemeByIndex(0),
-                      ),
-                      const Padding(padding: EdgeInsets.only(left: 10)),
-                      _buildItem(
-                        context: context,
-                        isSelected: provider.getThemeIndex() == 1,
-                        imageAsset: 'assets/images/ic-dark-web.png',
-                        text: 'Tối',
-                        width: 200 - 20,
-                        function: () => provider.updateThemeByIndex(1),
-                      ),
-                      const Padding(padding: EdgeInsets.only(left: 10)),
-                      _buildItem(
-                        context: context,
-                        isSelected: provider.getThemeIndex() == 2,
-                        imageAsset: 'assets/images/ic-auto-theme-web.png',
-                        text: 'Hệ thống',
-                        width: 200 - 20,
-                        function: () => provider.updateThemeByIndex(2),
-                      ),
-                      const Padding(padding: EdgeInsets.only(right: 20)),
-                    ],
+            return SizedBox(
+              width: width,
+              child: Row(
+                children: [
+                  const Padding(padding: EdgeInsets.only(left: 20)),
+                  _buildItem(
+                    context: context,
+                    isSelected: provider.getThemeIndex() == 0,
+                    imageAsset: 'assets/images/ic-light-web.png',
+                    text: 'Sáng',
+                    width: 180,
+                    function: () => provider.updateThemeByIndex(0),
                   ),
-                )
-              ],
+                  const Padding(padding: EdgeInsets.only(left: 10)),
+                  _buildItem(
+                    context: context,
+                    isSelected: provider.getThemeIndex() == 1,
+                    imageAsset: 'assets/images/ic-dark-web.png',
+                    text: 'Tối',
+                    width: 180,
+                    function: () => provider.updateThemeByIndex(1),
+                  ),
+                  const Padding(padding: EdgeInsets.only(left: 10)),
+                  _buildItem(
+                    context: context,
+                    isSelected: provider.getThemeIndex() == 2,
+                    imageAsset: 'assets/images/ic-auto-theme-web.png',
+                    text: 'Hệ thống',
+                    width: 180,
+                    function: () => provider.updateThemeByIndex(2),
+                  ),
+                ],
+              ),
             );
           },
         ),
+        const Padding(padding: EdgeInsets.only(top: 40)),
         const Spacer(),
       ],
     );
