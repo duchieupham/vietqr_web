@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../commons/enums/event_type.dart';
+import '../../models/bank_account_dto.dart';
 import '../../models/qr_generated_dto.dart';
 
 class Session {
@@ -128,5 +129,17 @@ class Session {
     String userId = UserInformationHelper.instance.getUserId();
     final WalletDTO dto = await walletRepository.getInfoWallet(userId);
     _wallet = dto;
+  }
+
+  List<BankAccountDTO> _bankAccounts = [];
+  List<BankAccountDTO> get listBankAuth => _bankAccounts;
+
+  void updateBankAccountsAuth(List<BankAccountDTO> value) {
+    _bankAccounts = value
+        .where((bankAccount) => bankAccount.isAuthenticated
+            //     &&
+            // bankAccount.userId == UserInformationHelper.instance.getUserId()
+            )
+        .toList();
   }
 }

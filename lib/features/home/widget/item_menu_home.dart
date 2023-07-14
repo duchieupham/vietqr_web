@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/ecom/register/blocs/ecom_register_bloc.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -11,6 +12,7 @@ class ItemMenuHome extends StatefulWidget {
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
   final double titleSize;
+  final bool isOnlyIcon;
   const ItemMenuHome({
     Key? key,
     required this.title,
@@ -24,6 +26,7 @@ class ItemMenuHome extends StatefulWidget {
     this.isDropDownItem = false,
     this.titleSize = 13,
     this.enableMenuCard = false,
+    this.isOnlyIcon = false,
   }) : super(key: key);
 
   @override
@@ -67,11 +70,48 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isOnlyIcon) {
+      if (widget.pathImage != null && widget.pathImage != '') {
+        return Tooltip(
+          message: widget.title,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            color: widget.isSelect
+                ? DefaultTheme.ITEM_MENU_SELECTED
+                : Colors.transparent,
+            width: 40,
+            height: 40,
+            child: Image.asset(
+              widget.pathImage!,
+              height: 15,
+              width: 25,
+            ),
+          ),
+        );
+      }
+
+      if (widget.pathIcon.isNotEmpty) {
+        return Tooltip(
+          message: widget.title,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            color: widget.isSelect
+                ? DefaultTheme.ITEM_MENU_SELECTED
+                : Colors.transparent,
+            width: 40,
+            height: 40,
+            child: Image.asset(
+              widget.pathIcon,
+              height: 50,
+            ),
+          ),
+        );
+      }
+    }
     return MouseRegion(
       onEnter: (PointerEvent details) => setState(() => amIHovering = true),
       onExit: (PointerEvent details) => setState(() {
         amIHovering = false;
-
         exitFrom = details.localPosition;
       }),
       child: InkWell(
@@ -97,25 +137,6 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               color: getBgItem(),
               child: Row(
                 children: [
-                  if (widget.pathImage != null && widget.pathImage != '') ...[
-                    Image.asset(
-                      widget.pathImage!,
-                      height: 15,
-                      fit: BoxFit.fitHeight,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    )
-                  ],
-                  if (widget.pathIcon.isNotEmpty) ...[
-                    Image.asset(
-                      widget.pathIcon,
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: widget.isDropDownItem ? 8 : 16,
-                    )
-                  ],
                   if (widget.isLogout)
                     Text(
                       widget.title,
@@ -172,7 +193,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   Widget _dropDownList() {
     return AnimatedContainer(
-      margin: const EdgeInsets.only(left: 40),
+      margin: const EdgeInsets.only(left: 20),
       height: getHeightDropDownList(),
       width: double.infinity,
       duration: const Duration(milliseconds: 500),

@@ -66,12 +66,12 @@ class OverViewFrame extends StatelessWidget {
                                   double width = 0;
                                   if (provider.showMenu) {
                                     if (menuCardProvider.showMenu) {
-                                      width = 560;
+                                      width = 500;
                                     } else {
-                                      width = 280;
+                                      width = 220;
                                     }
                                   } else {
-                                    width = 0;
+                                    width = 60;
                                   }
                                   return AnimatedContainer(
                                     duration: const Duration(milliseconds: 400),
@@ -85,12 +85,19 @@ class OverViewFrame extends StatelessWidget {
                                             const NeverScrollableScrollPhysics(),
                                         children: [
                                           BoxLayout(
-                                            width: 280,
+                                            width: 220,
                                             height: height - 60,
                                             borderRadius: 0,
-                                            padding: EdgeInsets.zero,
-                                            bgColor:
-                                                Theme.of(context).cardColor,
+                                            padding: !provider.showMenu
+                                                ? const EdgeInsets.only(
+                                                    left: 10)
+                                                : EdgeInsets.zero,
+                                            alignment: Alignment.centerLeft,
+                                            bgColor: !provider.showMenu
+                                                ? Theme.of(context)
+                                                    .cardColor
+                                                    .withOpacity(0.3)
+                                                : Theme.of(context).cardColor,
                                             child: menu,
                                           ),
                                           Container(

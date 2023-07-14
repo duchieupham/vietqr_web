@@ -21,8 +21,11 @@ class TextFieldWidget extends StatelessWidget {
   final FocusNode? focusNode;
   final int? maxLines;
   final int? maxLength;
+  final bool readOnly;
   final TextAlign? textAlign;
   final Function(PointerDownEvent)? onTapOutside;
+  final EdgeInsets contentPadding;
+  final TextStyle? textStyle;
 
   const TextFieldWidget({
     Key? key,
@@ -46,6 +49,9 @@ class TextFieldWidget extends StatelessWidget {
     this.enable,
     this.textAlign,
     this.onTapOutside,
+    this.readOnly = false,
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -71,6 +77,7 @@ class TextFieldWidget extends StatelessWidget {
                     obscureText: isObscureText,
                     controller: controller,
                     onChanged: onChange,
+                    style: textStyle,
                     textAlign:
                         (textAlign != null) ? textAlign! : TextAlign.left,
                     onEditingComplete: onEdittingComplete,
@@ -80,6 +87,7 @@ class TextFieldWidget extends StatelessWidget {
                     autofocus: (autoFocus != null) ? autoFocus! : false,
                     focusNode: focusNode,
                     enabled: enable,
+                    readOnly: readOnly,
                     keyboardType: inputType,
                     maxLines: (maxLines == null) ? 1 : maxLines,
                     textInputAction: keyboardAction,
@@ -93,8 +101,7 @@ class TextFieldWidget extends StatelessWidget {
                             ? DefaultTheme.GREY_TEXT
                             : Theme.of(context).hintColor,
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 10),
+                      contentPadding: contentPadding,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       errorBorder: InputBorder.none,
@@ -113,12 +120,14 @@ class TextFieldWidget extends StatelessWidget {
               textAlign: (textAlign != null) ? textAlign! : TextAlign.left,
               onChanged: onChange,
               onSubmitted: onSubmitted,
+              style: textStyle,
               onEditingComplete: onEdittingComplete,
               keyboardType: inputType,
               maxLines: 1,
               maxLength: maxLength,
               textInputAction: keyboardAction,
               enabled: enable,
+              readOnly: readOnly,
               autofocus: false,
               focusNode: focusNode,
               onTapOutside: onTapOutside,
@@ -128,9 +137,9 @@ class TextFieldWidget extends StatelessWidget {
                 border: InputBorder.none,
                 hintStyle: TextStyle(
                   fontSize: (fontSize != null) ? fontSize : 16,
-                  color: Theme.of(context).hintColor,
+                  color: DefaultTheme.GREY_TEXT,
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                contentPadding: contentPadding,
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 errorBorder: InputBorder.none,

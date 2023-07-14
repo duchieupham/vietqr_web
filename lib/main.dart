@@ -2,29 +2,18 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
 import 'package:VietQR/commons/utils/log.dart';
-import 'package:VietQR/ecom/bank/blocs/ecom_bank_bloc.dart';
-import 'package:VietQR/ecom/bank/blocs/ecom_bank_type_bloc.dart';
 import 'package:VietQR/ecom/bank/views/ecom_add_bank_view.dart';
 import 'package:VietQR/ecom/home/views/ecom_home.dart';
-import 'package:VietQR/ecom/login/blocs/ecom_login_bloc.dart';
 import 'package:VietQR/ecom/login/views/ecom_login.dart';
-import 'package:VietQR/ecom/register/blocs/ecom_register_bloc.dart';
 import 'package:VietQR/ecom/register/provider/ecom_register_provider.dart';
 import 'package:VietQR/ecom/register/views/ecom_register_view.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
-import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
-import 'package:VietQR/features/business/blocs/business_member_bloc.dart';
-import 'package:VietQR/features/business/views/business_information_view.dart';
-import 'package:VietQR/features/business/views/business_manager_view.dart';
-import 'package:VietQR/features/business/views/business_transaction_view.dart';
-import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/home/views/overview_page.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
-import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
@@ -32,7 +21,6 @@ import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/qr/views/qr_generate.dart';
-import 'package:VietQR/features/register/blocs/register_bloc.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
@@ -41,7 +29,6 @@ import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/add_business_provider.dart';
-import 'package:VietQR/services/providers/bank_card_position_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/create_qr_provider.dart';
@@ -69,6 +56,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'services/providers/business_inforamtion_provider.dart';
+import 'services/providers/setting_provider.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -316,6 +304,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => SearchProvider()),
             ChangeNotifierProvider(create: (context) => AddBankProvider()),
             ChangeNotifierProvider(create: (context) => ActionShareProvider()),
+            ChangeNotifierProvider(create: (context) => SettingProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {

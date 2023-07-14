@@ -391,8 +391,9 @@ class BankDetailWidget extends StatelessWidget {
                   ? Icons.check_rounded
                   : Icons.pending_actions_rounded,
               size: 15,
-              color:
-                  (isAuthenticated) ? DefaultTheme.GREEN : DefaultTheme.ORANGE,
+              color: (isAuthenticated)
+                  ? DefaultTheme.BLUE_TEXT
+                  : DefaultTheme.ORANGE,
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
           ],
@@ -419,7 +420,7 @@ class BankDetailWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               color: (isAuthenticated != null && isAuthenticated)
-                  ? DefaultTheme.GREEN
+                  ? DefaultTheme.BLUE_TEXT
                   : (isAuthenticated != null && !isAuthenticated)
                       ? DefaultTheme.ORANGE
                       : Theme.of(context).hintColor,

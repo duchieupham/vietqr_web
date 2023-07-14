@@ -42,7 +42,7 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
   @override
   void initState() {
     super.initState();
-    countdownProvider = CountdownProvider(10);
+    countdownProvider = CountdownProvider(120);
     countdownProvider.countDown();
   }
 
@@ -178,7 +178,7 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              countdownProvider = CountdownProvider(10);
+                              countdownProvider = CountdownProvider(120);
                               if (widget.dto != null) {
                                 widget.bankBloc.add(
                                   BankEventRequestOTP(dto: widget.dto!),

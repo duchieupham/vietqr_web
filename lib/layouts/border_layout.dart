@@ -7,6 +7,7 @@ class BorderLayout extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
   final double? height;
+  final double borderWidth;
 
   const BorderLayout({
     super.key,
@@ -15,6 +16,7 @@ class BorderLayout extends StatelessWidget {
     required this.child,
     this.padding,
     this.height,
+    this.borderWidth = 0.5,
   });
 
   @override
@@ -28,7 +30,7 @@ class BorderLayout extends StatelessWidget {
             color: (isError)
                 ? DefaultTheme.RED_TEXT
                 : DefaultTheme.GREY_TOP_TAB_BAR,
-            width: 0.5),
+            width: borderWidth),
         borderRadius: BorderRadius.circular(5),
       ),
       child: child,

@@ -17,4 +17,9 @@ class AppImages {
 
   // Wallet
   static String icVietQrSmall = 'assets/images/ic-viet-qr-small.png';
+
+  // Setting
+  static String icHookBlue = 'assets/images/ic-hook-blue.png';
+  static String icKeyBlue = 'assets/images/ic-key-blue.png';
+  static String icThemeBlue = 'assets/images/ic-theme-blue.png';
 }

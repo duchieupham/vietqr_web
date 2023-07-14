@@ -58,7 +58,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
         UserInformationHelper.instance.getAccountInformation().imgId;
     return Container(
       width: width,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.only(left: 14, right: 20),
       height: 60,
       child: Row(
         children: [
