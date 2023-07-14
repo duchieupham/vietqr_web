@@ -161,7 +161,7 @@ class _Login extends State<Login> {
             autoFocus: true,
             hintText: 'Số điện thoại',
             controller: phoneNoController,
-            inputType: TextInputType.text,
+            inputType: TextInputType.number,
             keyboardAction: TextInputAction.done,
             onSubmitted: (value) {
               openPinDialog(context);
