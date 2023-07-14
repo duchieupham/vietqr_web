@@ -136,10 +136,9 @@ class Session {
 
   void updateBankAccountsAuth(List<BankAccountDTO> value) {
     _bankAccounts = value
-        .where((bankAccount) => bankAccount.isAuthenticated
-            //     &&
-            // bankAccount.userId == UserInformationHelper.instance.getUserId()
-            )
+        .where((bankAccount) =>
+            bankAccount.isAuthenticated &&
+            bankAccount.userId == UserInformationHelper.instance.getUserId())
         .toList();
   }
 }
