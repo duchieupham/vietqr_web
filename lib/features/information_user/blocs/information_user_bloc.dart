@@ -4,6 +4,7 @@ import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/features/information_user/events/information_user_event.dart';
 import 'package:VietQR/features/information_user/repositories/information_user_repository.dart';
 import 'package:VietQR/features/information_user/states/information_user_state.dart';
+import 'package:VietQR/models/account_information_dto.dart';
 import 'package:VietQR/models/password_update_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class InformationUserBloc
     on<InformationUserEditPassEvent>(_updatePassword);
     on<UserEditAvatarEvent>(_updateAvatar);
     on<UserDeActiveEvent>(_deActiveUser);
+    on<GetInformationUserEvent>(_getInformationUser);
+
   }
 
   final InformationUserRepository userEditRepository =
@@ -130,4 +133,23 @@ class InformationUserBloc
       LOG.error(e.toString());
     }
   }
+  void _getInformationUser(InformationUserEvent event, Emitter emit) async {
+    try {
+      if (event is GetInformationUserEvent) {
+        AccountInformationDTO accountInformationDTO =
+        await userEditRepository.getUserInformation(
+          event.userId,
+        );
+      }
+    } catch (e) {
+      ResponseMessageDTO responseMessageDTO = const ResponseMessageDTO(
+        status: 'FAILED',
+        message: 'E05',
+      );
+
+      LOG.error(e.toString());
+    }
+  }
+
 }
+

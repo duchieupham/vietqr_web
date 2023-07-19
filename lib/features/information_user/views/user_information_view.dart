@@ -31,10 +31,18 @@ class UserInformationView extends StatelessWidget {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nationalIdController =
+      TextEditingController(text: '');
+  final TextEditingController _oldNationalIdController =
+      TextEditingController(text: '');
+
   static String _birthDate = '';
+  static String _nationalDate = '';
   static late InformationUserBloc _userInformationBloc;
   initPage(BuildContext context) {
     _userInformationBloc = BlocProvider.of(context);
+    _userInformationBloc.add(GetInformationUserEvent(
+        userId: UserInformationHelper.instance.getUserId()));
     final AccountInformationDTO accountInformationDTO =
         UserInformationHelper.instance.getAccountInformation();
     if (accountInformationDTO.lastName.isNotEmpty &&
@@ -58,10 +66,26 @@ class UserInformationView extends StatelessWidget {
           _emailController.value.copyWith(text: accountInformationDTO.email);
     }
     _birthDate = accountInformationDTO.birthDate;
+    if (accountInformationDTO.nationalDate.isEmpty) {
+      _nationalDate = '22/11/1970';
+    } else {
+      _nationalDate = accountInformationDTO.nationalDate;
+    }
+
     if (accountInformationDTO.address.isNotEmpty &&
         _addressController.text.isEmpty) {
       _addressController.value = _addressController.value
           .copyWith(text: accountInformationDTO.address);
+    }
+    if (accountInformationDTO.nationalId.isNotEmpty &&
+        _nationalIdController.text.isEmpty) {
+      _nationalIdController.value = _nationalIdController.value
+          .copyWith(text: accountInformationDTO.nationalId);
+    }
+    if (accountInformationDTO.oldNationalId.isNotEmpty &&
+        _oldNationalIdController.text.isEmpty) {
+      _oldNationalIdController.value = _oldNationalIdController.value
+          .copyWith(text: accountInformationDTO.oldNationalId);
     }
   }
 
@@ -70,6 +94,14 @@ class UserInformationView extends StatelessWidget {
       return 'Chọn ngày sinh';
     } else {
       return _birthDate;
+    }
+  }
+
+  String getTextNationalDate() {
+    if (_nationalDate.isEmpty) {
+      return 'Chọn ngày cấp CCCD';
+    } else {
+      return _nationalDate;
     }
   }
 
@@ -265,6 +297,7 @@ class UserInformationView extends StatelessWidget {
             BoxLayout(
               width: double.infinity,
               borderRadius: 8,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   TextFieldWidget(
@@ -333,7 +366,7 @@ class UserInformationView extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
               borderRadius: 8,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -360,13 +393,16 @@ class UserInformationView extends StatelessWidget {
                         getTextBirtDate(),
                         style: const TextStyle(fontSize: 14),
                       )),
+                  const SizedBox(
+                    width: 12,
+                  )
                 ],
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
               borderRadius: 8,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
                 children: [
                   const Text(
@@ -407,43 +443,132 @@ class UserInformationView extends StatelessWidget {
                       provider.updateGender(1);
                     },
                   ),
+                  const SizedBox(
+                    width: 12,
+                  )
                 ],
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
             BoxLayout(
+              width: double.infinity,
               borderRadius: 8,
-              // height: 55,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              child: TextFieldWidget(
-                textfieldType: TextfieldType.LABEL,
-                isObscureText: false,
-                title: 'Email',
-                hintText: 'user@gmail.com',
-                controller: _emailController,
-                fontSize: 14,
-                textAlign: TextAlign.right,
-                inputType: TextInputType.text,
-                keyboardAction: TextInputAction.next,
-                onChange: (vavlue) {
-                  provider.setAvailableUpdate(true);
-                },
-              ),
-            ),
-            Visibility(
-              visible: provider.isValidEmailErr,
-              child: const Padding(
-                padding: EdgeInsets.only(top: 5, right: 5),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Email không đúng định dạng',
-                    style: TextStyle(
-                      color: DefaultTheme.RED_TEXT,
-                      fontSize: 12,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  BoxLayout(
+                    borderRadius: 8,
+                    // height: 55,
+                    padding: EdgeInsets.zero,
+                    child: TextFieldWidget(
+                      textfieldType: TextfieldType.LABEL,
+                      isObscureText: false,
+                      title: 'Email',
+                      hintText: 'user@gmail.com',
+                      controller: _emailController,
+                      fontSize: 14,
+                      textAlign: TextAlign.right,
+                      inputType: TextInputType.text,
+                      keyboardAction: TextInputAction.next,
+                      onChange: (vavlue) {
+                        provider.setAvailableUpdate(true);
+                      },
                     ),
                   ),
-                ),
+                  if (provider.isValidEmailErr)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 5, right: 5),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Email không đúng định dạng',
+                          style: TextStyle(
+                            color: DefaultTheme.RED_TEXT,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  const DividerWidget(width: double.infinity),
+                  BoxLayout(
+                    borderRadius: 8,
+                    // height: 55,
+                    padding: EdgeInsets.zero,
+                    child: TextFieldWidget(
+                      titleWidth: 150,
+                      textfieldType: TextfieldType.LABEL,
+                      isObscureText: false,
+                      title: 'Căn cước công dân',
+                      hintText: 'Nhập căn cước công dân',
+                      controller: _nationalIdController,
+                      fontSize: 14,
+                      textAlign: TextAlign.right,
+                      inputType: TextInputType.text,
+                      keyboardAction: TextInputAction.next,
+                      onChange: (vavlue) {
+                        provider.setAvailableUpdate(true);
+                      },
+                    ),
+                  ),
+                  const DividerWidget(width: double.infinity),
+                  BoxLayout(
+                    borderRadius: 8,
+                    // height: 55,
+                    padding: EdgeInsets.zero,
+                    child: TextFieldWidget(
+                      titleWidth: 160,
+                      textfieldType: TextfieldType.LABEL,
+                      isObscureText: false,
+                      title: 'Chứng minh nhân dân cũ',
+                      hintText: 'Nhập chứng minh nhân dân cũ',
+                      controller: _oldNationalIdController,
+                      fontSize: 14,
+                      textAlign: TextAlign.right,
+                      inputType: TextInputType.text,
+                      keyboardAction: TextInputAction.next,
+                      onChange: (vavlue) {
+                        provider.setAvailableUpdate(true);
+                      },
+                    ),
+                  ),
+                  const DividerWidget(width: double.infinity),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Ngày cấp Căn cước công dân',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        const Spacer(),
+                        InkWell(
+                            onTap: () {
+                              DialogWidget.instance
+                                  .openDateTimePickerDialog(context, (date) {
+                                provider.setAvailableUpdate(true);
+                                _nationalDate = TimeUtils.instance
+                                    .formatDate(date.toString());
+                              },
+                                      TimeUtils.instance
+                                          .getDateFromString(_nationalDate));
+                            },
+                            child: Text(
+                              getTextNationalDate(),
+                              style: const TextStyle(fontSize: 14),
+                            )),
+                        const SizedBox(
+                          width: 12,
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  )
+                ],
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 10)),
@@ -518,6 +643,9 @@ class UserInformationView extends StatelessWidget {
                         gender: provider.gender,
                         address: _addressController.text,
                         email: _emailController.text,
+                        nationalDate: _nationalDate,
+                        nationalId: _nationalIdController.text,
+                        oldNationalId: _oldNationalIdController.text,
                         imgId: UserInformationHelper.instance
                             .getAccountInformation()
                             .imgId,

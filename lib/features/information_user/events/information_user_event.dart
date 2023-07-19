@@ -60,3 +60,14 @@ class UserDeActiveEvent extends InformationUserEvent {
   @override
   List<Object?> get props => [userId];
 }
+
+class GetInformationUserEvent extends InformationUserEvent {
+  final String userId;
+
+  const GetInformationUserEvent({
+    required this.userId,
+  });
+
+  @override
+  List<Object?> get props => [userId];
+}

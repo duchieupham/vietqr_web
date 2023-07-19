@@ -59,7 +59,7 @@ class TextFieldWidget extends StatelessWidget {
     return (textfieldType != null && textfieldType == TextfieldType.LABEL)
         ? Container(
             width: width,
-            height: 60,
+            height: 50,
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
