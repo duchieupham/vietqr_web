@@ -440,12 +440,13 @@ class DialogWidget {
                   children: [
                     SfDateRangePicker(
                       maxDate: DateTime.now(),
+                      minDate: DateTime(1900),
                       initialDisplayDate: initDate,
                       onSelectionChanged: (date) {
                         Navigator.pop(context);
-                        onChanged(date.value.first);
+                        onChanged(date.value);
                       },
-                      selectionMode: DateRangePickerSelectionMode.multiple,
+                      selectionMode: DateRangePickerSelectionMode.single,
                     ),
                     Positioned(
                       top: 5,

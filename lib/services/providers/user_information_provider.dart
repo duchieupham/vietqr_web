@@ -13,6 +13,9 @@ class UserInformationProvider with ChangeNotifier {
   bool _isOldPassErr = false;
   bool _isNewPassErr = false;
   bool _isConfirmPassErr = false;
+  bool _isValidNationalIdlErr = false;
+  bool _isValidOldNationalIdErr = false;
+  bool _isValidNationalDateErr = false;
 
   get availableUpdate => _isAvailableUpdate;
   int get gender => _gender;
@@ -21,7 +24,9 @@ class UserInformationProvider with ChangeNotifier {
   get oldPassErr => _isOldPassErr;
   get newPassErr => _isNewPassErr;
   get confirmPassErr => _isConfirmPassErr;
-
+  get validNationalId => _isValidNationalIdlErr;
+  get validOldNationalId => _isValidOldNationalIdErr;
+  get validNationalDate => _isValidNationalDateErr;
   Uint8List? _bytesData;
   Uint8List? get bytesData => _bytesData;
   List<int>? _selectedFile;
@@ -46,9 +51,15 @@ class UserInformationProvider with ChangeNotifier {
     if (email.isNotEmpty) {
       if (!EmailValidator.validate(email)) {
         _isValidEmailErr = true;
-
         notifyListeners();
       }
+    }
+  }
+
+  void updateNationalIdErrors(String nationalId) {
+    if (nationalId.isNotEmpty) {
+      _isValidEmailErr = true;
+      notifyListeners();
     }
   }
 

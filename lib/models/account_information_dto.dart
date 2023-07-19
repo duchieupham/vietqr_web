@@ -9,6 +9,9 @@ class AccountInformationDTO {
   final String email;
   final String imgId;
   final String phoneNo;
+  final String nationalId;
+  final String oldNationalId;
+  final String nationalDate;
 
   const AccountInformationDTO({
     required this.userId,
@@ -21,6 +24,9 @@ class AccountInformationDTO {
     required this.email,
     required this.imgId,
     required this.phoneNo,
+    this.nationalDate = '',
+    this.nationalId = '',
+    this.oldNationalId = '',
   });
 
   factory AccountInformationDTO.fromJson(Map<String, dynamic> json) {
@@ -35,6 +41,9 @@ class AccountInformationDTO {
       email: json['email'] ?? '',
       imgId: json['imgId'] ?? '',
       phoneNo: json['phoneNo'] ?? '',
+      oldNationalId: json['oldNationalId'] ?? '',
+      nationalId: json['nationalId'] ?? '',
+      nationalDate: json['nationalDate'] ?? '',
     );
   }
 
@@ -50,6 +59,9 @@ class AccountInformationDTO {
     data['email'] = email;
     data['imgId'] = imgId;
     data['phoneNo'] = phoneNo;
+    data['oldNationalId'] = oldNationalId;
+    data['nationalId'] = nationalId;
+    data['nationalDate'] = nationalDate;
     return data;
   }
 
@@ -65,6 +77,9 @@ class AccountInformationDTO {
     data['"email"'] = (email == '') ? '""' : '"$email"';
     data['"imgId"'] = (imgId == '') ? '""' : '"$imgId"';
     data['"phoneNo"'] = (phoneNo == '') ? '""' : '"$phoneNo"';
+    data['"oldNationalId"'] = (oldNationalId == '') ? '""' : '"$oldNationalId"';
+    data['"nationalId"'] = (nationalId == '') ? '""' : '"$nationalId"';
+    data['"nationalDate"'] = (nationalDate == '') ? '""' : '"$nationalDate"';
     return data;
   }
 }
