@@ -41,6 +41,10 @@ class _CreateQRCodeState extends State<CreateQRCode> {
   static final TextEditingController bankAccountController =
       TextEditingController();
   static final TextEditingController nameController = TextEditingController();
+  static final TextEditingController amountController =
+      TextEditingController(text: '');
+  static final TextEditingController contentController =
+      TextEditingController(text: '');
   final FocusNode _focusNode = FocusNode();
   late QRCodeUnUTBloc qrCodeUnUTBloc;
 
@@ -60,6 +64,18 @@ class _CreateQRCodeState extends State<CreateQRCode> {
     qrCodeUnUTBloc = BlocProvider.of(context);
   }
 
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return DefaultTheme.BLUE_TEXT;
+    }
+    return DefaultTheme.WINTER_COLOR;
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -72,7 +88,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                 child: SizedBox(
                   width: width,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 80, 10, 30),
+                    padding: const EdgeInsets.fromLTRB(10, 50, 10, 30),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -161,7 +177,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   ),
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(top: 10)),
+              const Padding(padding: EdgeInsets.only(top: 5)),
               BorderLayout(
                 height: 50,
                 isError: provider.nameErr,
@@ -216,6 +232,68 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
+              BorderLayout(
+                height: 50,
+                isError: provider.nameErr,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextFieldWidget(
+                  isObscureText: false,
+                  maxLines: 1,
+                  hintText: 'Số tiền',
+                  controller: amountController,
+                  inputType: TextInputType.number,
+                  keyboardAction: TextInputAction.next,
+                  onSubmitted: (value) {},
+                  onChange: (value) {
+                    if (amountController.text.isNotEmpty) {
+                      if (StringUtils.instance
+                          .isNumeric(amountController.text)) {
+                        provider.updateAmountErr(false);
+                        if (amountController.text.length >= 4) {
+                          provider.updateValidCreate(true);
+                        } else {
+                          provider.updateValidCreate(false);
+                        }
+                      } else {
+                        provider.updateAmountErr(true);
+                        provider.updateValidCreate(false);
+                      }
+                    } else {
+                      provider.updateAmountErr(false);
+                      provider.updateValidCreate(true);
+                    }
+                  },
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 5)),
+              if (provider.isAmountErr)
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Số tiền không đúng định dạng',
+                    style: TextStyle(
+                      color: DefaultTheme.RED_CALENDAR,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              BorderLayout(
+                height: 50,
+                isError: provider.nameErr,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextFieldWidget(
+                  isObscureText: false,
+                  maxLines: 1,
+                  hintText: 'Nội dung không được quá 50 kí tự',
+                  controller: contentController,
+                  inputType: TextInputType.number,
+                  keyboardAction: TextInputAction.done,
+                  onSubmitted: (value) {},
+                  onChange: (value) {},
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(top: 5)),
               Row(
                 children: [
                   Switch(
@@ -232,16 +310,19 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   ))
                 ],
               ),
-              const Padding(padding: EdgeInsets.only(top: 50)),
+              const Padding(padding: EdgeInsets.only(top: 20)),
               ButtonWidget(
                 width: (provider.bankType.status == 0) ? 380 : 380 / 2 - 10,
                 height: 40,
                 text: 'Tạo mã VietQR',
                 borderRadius: 5,
                 textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                bgColor: !provider.isValidCreate
+                    ? DefaultTheme.GREY_TEXT
+                    : DefaultTheme.BLUE_TEXT,
                 function: () {
-                  if (provider.bankType.bankCode.isNotEmpty) {
+                  if (!provider.isValidCreate) {
+                  } else if (provider.bankType.bankCode.isNotEmpty) {
                     provider.updateBankAccountErr(
                       (bankAccountController.text.isEmpty ||
                           !StringUtils.instance
@@ -255,6 +336,8 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                       data['bankAccount'] = bankAccountController.text;
                       data['userBankName'] = nameController.text;
                       data['bankCode'] = provider.bankType.bankCode;
+                      data['amount'] = amountController.text;
+                      data['content'] = contentController.text;
                       qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
                     }
                   } else {
@@ -390,7 +473,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                             .showBankAccount,
                   ),
                   const SizedBox(
-                    height: 12,
+                    height: 8,
                   ),
                   SizedBox(
                     width: horizontalInfo ? 300 : width - 40,
@@ -506,7 +589,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: const EdgeInsets.only(top: 50),
+        padding: const EdgeInsets.only(top: 24),
         child: BoxLayout(
           width: 300,
           height: 300,

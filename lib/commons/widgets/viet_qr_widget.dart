@@ -270,7 +270,7 @@ class VietQRWidget extends StatelessWidget {
       height: _getHeightCardQR(),
       bgImage: _getPathBGCardQR(),
       bgColor: Colors.transparent,
-      padding: const EdgeInsets.fromLTRB(35, 5, 35, 0),
+      padding: const EdgeInsets.fromLTRB(30, 5, 35, 0),
       borderRadius: 22,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
