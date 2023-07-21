@@ -205,7 +205,7 @@ class _Login extends State<Login> {
                 text: 'Đăng nhập',
                 borderRadius: 5,
                 textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                bgColor: DefaultTheme.BLUE_TEXT,
                 function: () {
                   openPinDialog(context);
                 },
