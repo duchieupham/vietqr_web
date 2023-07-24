@@ -337,7 +337,8 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                       data['userBankName'] = nameController.text;
                       data['bankCode'] = provider.bankType.bankCode;
                       data['amount'] = amountController.text;
-                      data['content'] = contentController.text;
+                      data['content'] = StringUtils.instance
+                          .removeDiacritic(contentController.text);
                       qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
                     }
                   } else {

@@ -377,60 +377,54 @@ class CreateQR extends StatelessWidget {
                     Consumer<CreateQRProvider>(
                       builder: (context, provider, child) {
                         return Container(
-                          width: width,
-                          alignment: Alignment.centerLeft,
-                          child: (provider.isValidCreate)
-                              ? ButtonIconWidget(
-                                  width: 300,
-                                  height: 40,
-                                  icon: Icons.add_rounded,
-                                  title: 'Tạo mã QR',
-                                  function: () {
-                                    if (amountController.text.isNotEmpty &&
-                                        StringUtils.instance
-                                            .isNumeric(amountController.text)) {
-                                      QRCreateDTO qrCreateDTO = QRCreateDTO(
-                                        bankId: bankDetailDTO.id,
-                                        amount: amountController.text,
-                                        content: StringUtils.instance
-                                            .removeDiacritic(
-                                                contentController.text),
-                                        branchId: (bankDetailDTO
-                                                .businessDetails.isNotEmpty)
-                                            ? bankDetailDTO
-                                                .businessDetails
-                                                .first
-                                                .branchDetails
-                                                .first
-                                                .branchId
-                                            : '',
-                                        businessId: (bankDetailDTO
-                                                .businessDetails.isNotEmpty)
-                                            ? bankDetailDTO.businessDetails
-                                                .first.businessId
-                                            : '',
-                                        userId: UserInformationHelper.instance
-                                            .getUserId(),
-                                      );
-                                      _qrBloc.add(
-                                          QREventGenerate(dto: qrCreateDTO));
-                                    }
-                                  },
-                                  bgColor: DefaultTheme.GREEN,
-                                  textColor: DefaultTheme.WHITE,
-                                )
-                              : ButtonIconWidget(
-                                  width: 300,
-                                  height: 40,
-                                  icon: Icons.add_rounded,
-                                  title: 'Tạo mã QR',
-                                  function: () {},
-                                  bgColor: Theme.of(context)
-                                      .cardColor
-                                      .withOpacity(0.4),
-                                  textColor: DefaultTheme.GREY_TEXT,
-                                ),
-                        );
+                            width: width,
+                            alignment: Alignment.centerLeft,
+                            child: ButtonIconWidget(
+                              width: 300,
+                              height: 40,
+                              icon: Icons.add_rounded,
+                              title: 'Tạo mã QR',
+                              function: () {
+                                if (amountController.text.isEmpty) {
+                                  DialogWidget.instance.openMsgDialog(
+                                      title: 'Số tiền không hợp lệ',
+                                      msg: 'Vui lòng nhập số tiền');
+                                }
+                                if (provider.amountErr) {
+                                  DialogWidget.instance.openMsgDialog(
+                                      title: 'Số tiền không hợp lệ',
+                                      msg: 'Vui lòng nhập số tiền là số');
+                                }
+                                // (provider.isValidCreate)
+                                if (amountController.text.isNotEmpty &&
+                                    StringUtils.instance
+                                        .isNumeric(amountController.text)) {
+                                  QRCreateDTO qrCreateDTO = QRCreateDTO(
+                                    bankId: bankDetailDTO.id,
+                                    amount: amountController.text,
+                                    content: StringUtils.instance
+                                        .removeDiacritic(
+                                            contentController.text),
+                                    branchId: (bankDetailDTO
+                                            .businessDetails.isNotEmpty)
+                                        ? bankDetailDTO.businessDetails.first
+                                            .branchDetails.first.branchId
+                                        : '',
+                                    businessId: (bankDetailDTO
+                                            .businessDetails.isNotEmpty)
+                                        ? bankDetailDTO
+                                            .businessDetails.first.businessId
+                                        : '',
+                                    userId: UserInformationHelper.instance
+                                        .getUserId(),
+                                  );
+                                  _qrBloc
+                                      .add(QREventGenerate(dto: qrCreateDTO));
+                                }
+                              },
+                              bgColor: DefaultTheme.GREEN,
+                              textColor: DefaultTheme.WHITE,
+                            ));
                       },
                     ),
                   ],

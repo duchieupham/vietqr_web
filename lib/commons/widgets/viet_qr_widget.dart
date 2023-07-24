@@ -398,6 +398,7 @@ class VietQRWidget extends StatelessWidget {
           Text(
             qrGeneratedDTO.content,
             maxLines: 2,
+            textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontSize: 12, color: DefaultTheme.BLACK),
           ),
