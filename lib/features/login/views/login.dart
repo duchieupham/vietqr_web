@@ -299,8 +299,8 @@ class _Login extends State<Login> {
           height: 40,
           text: 'Đăng ký',
           borderRadius: 5,
-          textColor: DefaultTheme.WHITE,
-          bgColor: DefaultTheme.BLUE_TEXT,
+          textColor: DefaultTheme.BLUE_TEXT,
+          bgColor: DefaultTheme.WHITE,
           function: () {
             context.go('/register');
           },

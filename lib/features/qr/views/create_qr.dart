@@ -393,7 +393,7 @@ class CreateQR extends StatelessWidget {
                                 if (provider.amountErr) {
                                   DialogWidget.instance.openMsgDialog(
                                       title: 'Số tiền không hợp lệ',
-                                      msg: 'Vui lòng nhập số tiền là số');
+                                      msg: 'Vui lòng nhập lại số tiền');
                                 }
                                 // (provider.isValidCreate)
                                 if (amountController.text.isNotEmpty &&
