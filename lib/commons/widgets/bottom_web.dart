@@ -90,12 +90,12 @@ class BottomWeb extends StatelessWidget {
                     onTap: () async {
                       final Uri launchUri = Uri(
                         scheme: 'tel',
-                        path: '0936382222',
+                        path: '0922333636',
                       );
                       await launchUrl(launchUri);
                     },
                     child: const Text(
-                      '0936382222',
+                      '09.2233.3636',
                       style: TextStyle(
                           // fontWeight: FontWeight.bold,
                           ),
