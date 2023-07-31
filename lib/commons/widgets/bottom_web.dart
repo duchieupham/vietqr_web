@@ -79,7 +79,7 @@ class BottomWeb extends StatelessWidget {
                       await launchUrl(launchUri);
                     },
                     child: const Text(
-                      '19006234',
+                      '1900.6234',
                       style: TextStyle(
                           // fontWeight: FontWeight.bold,
                           ),
