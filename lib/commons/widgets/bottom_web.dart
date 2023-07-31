@@ -105,10 +105,15 @@ class BottomWeb extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(
-              child: PlatformUtils.instance.resizeWhen(width, 750)
-                  ? _buildButtonInstallApp()
-                  : const SizedBox.shrink()),
+          const Spacer(),
+          PlatformUtils.instance.resizeWhen(width, 600)
+              ? _buildButtonInstallApp()
+              : const SizedBox.shrink(),
+          const SizedBox(
+            width: 50,
+          ),
+          Align(alignment: Alignment.centerLeft, child: _buildUrlSystem()),
+          const Spacer(),
           Image.asset(
             'assets/images/logo-vietqr-vn.png',
             width: 120,
@@ -123,7 +128,7 @@ class BottomWeb extends StatelessWidget {
       children: [
         const Text(
           'Tải ứng dụng trên cửa hàng',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
               // fontWeight: FontWeight.bold,
               ),
         ),
@@ -133,7 +138,7 @@ class BottomWeb extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildButton(
-                width: 300,
+                width: 280,
                 text: 'App Store',
                 assetImage: 'assets/images/logo-app-store.png',
                 onTap: () async {
@@ -143,7 +148,7 @@ class BottomWeb extends StatelessWidget {
               ),
               const Padding(padding: EdgeInsets.only(left: 10)),
               _buildButton(
-                width: 300,
+                width: 280,
                 text: 'Google Play',
                 assetImage: 'assets/images/logo-google-play.png',
                 onTap: () async {
@@ -155,6 +160,55 @@ class BottomWeb extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildUrlSystem() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Hệ thống VietQR VN:',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
+              // fontWeight: FontWeight.bold,
+              ),
+        ),
+        const Padding(padding: EdgeInsets.only(top: 25)),
+        SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildItemTitle('vietqr.vn'),
+              const SizedBox(
+                  height: 12,
+                  child: VerticalDivider(
+                    color: DefaultTheme.GREY_LIGHT,
+                  )),
+              _buildItemTitle('vietqr.com'),
+              const SizedBox(
+                  height: 12,
+                  child: VerticalDivider(
+                    color: DefaultTheme.GREY_LIGHT,
+                  )),
+              _buildItemTitle('vietqr.org'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildItemTitle(String text) {
+    return GestureDetector(
+      onTap: () async {
+        await launchUrl(Uri.parse('https://$text'));
+      },
+      child: Text(
+        text,
+        style: const TextStyle(
+            decoration: TextDecoration.underline,
+            color: DefaultTheme.BLUE_TEXT),
+      ),
     );
   }
 
