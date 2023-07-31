@@ -20,6 +20,7 @@ import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
+import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
 import 'package:VietQR/features/qr/views/qr_generate.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
@@ -212,6 +213,12 @@ final GoRouter _router = GoRouter(
       redirect: (context, state) => '/naptk',
       builder: (BuildContext context, GoRouterState state) =>
           const TopUpAccount(),
+    ),
+    GoRoute(
+      path: '/create-vietqr',
+      redirect: (context, state) => '/create-vietqr',
+      builder: (BuildContext context, GoRouterState state) =>
+          const CreateQRUnAuthen(),
     ),
   ],
 );
