@@ -6,6 +6,7 @@ import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -49,35 +50,38 @@ class WebMobileBlankWidget extends StatelessWidget {
                             width: 150,
                           ),
                           const Spacer(),
-                          BlocListener<LogoutBloc, LogoutState>(
-                            listener: (context, state) {
-                              if (state is LogoutLoadingState) {
-                                DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is LogoutSuccessfulState) {
-                                Navigator.pop(context);
-                                context.push('/login');
-                              }
-                              if (state is LogoutFailedState) {
-                                Navigator.pop(context);
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Không thể đăng xuất',
-                                  msg: 'Vui lòng thử lại sau.',
-                                );
-                              }
-                            },
-                            child: ButtonIconWidget(
-                              width: 120,
-                              height: 35,
-                              icon: Icons.logout_rounded,
-                              title: 'Đăng xuất',
-                              function: () {
-                                logoutBloc.add(const LogoutEventSubmit());
+                          if (UserInformationHelper.instance
+                              .getUserId()
+                              .isNotEmpty)
+                            BlocListener<LogoutBloc, LogoutState>(
+                              listener: (context, state) {
+                                if (state is LogoutLoadingState) {
+                                  DialogWidget.instance.openLoadingDialog();
+                                }
+                                if (state is LogoutSuccessfulState) {
+                                  Navigator.pop(context);
+                                  context.push('/login');
+                                }
+                                if (state is LogoutFailedState) {
+                                  Navigator.pop(context);
+                                  DialogWidget.instance.openMsgDialog(
+                                    title: 'Không thể đăng xuất',
+                                    msg: 'Vui lòng thử lại sau.',
+                                  );
+                                }
                               },
-                              bgColor: Theme.of(context).cardColor,
-                              textColor: DefaultTheme.RED_TEXT,
+                              child: ButtonIconWidget(
+                                width: 120,
+                                height: 35,
+                                icon: Icons.logout_rounded,
+                                title: 'Đăng xuất',
+                                function: () {
+                                  logoutBloc.add(const LogoutEventSubmit());
+                                },
+                                bgColor: Theme.of(context).cardColor,
+                                textColor: DefaultTheme.RED_TEXT,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
