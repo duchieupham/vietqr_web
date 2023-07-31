@@ -1,13 +1,16 @@
 import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/commons/widgets/bottom_web.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
+import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/events/qrcode_un_authen_event.dart';
@@ -61,24 +64,41 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: DefaultTheme.WHITE,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            Expanded(flex: 2, child: _buildFormInput()),
-            const SizedBox(
-              width: 60,
+      body: LayoutBuilder(builder: (context, constraints) {
+        return Column(children: [
+          if (!PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800))
+            const WebMobileBlankWidget()
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 60),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  Expanded(flex: 6, child: _buildFormInput()),
+                  const SizedBox(
+                    width: 60,
+                  ),
+                  SizedBox(width: 400, child: _buildQRCode()),
+                  const Spacer(),
+                ],
+              ),
             ),
-            Expanded(child: _buildQRCode()),
-            const Spacer(),
+          const Spacer(),
+          if (PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800)) ...[
+            const Divider(
+              color: DefaultTheme.BLACK_DARK,
+              thickness: 0.5,
+              height: 0.5,
+            ),
+            const BottomWeb()
           ],
-        ),
-      ),
+        ]);
+      }),
     );
   }
 
@@ -364,7 +384,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                             child: ButtonIconWidget(
                               height: 40,
                               icon: Icons.print_rounded,
-                              title: 'In',
+                              title: '',
                               function: () {
                                 String paramData = Session.instance
                                     .formatDataParamUrl(qrGeneratedDTO,
@@ -396,7 +416,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                             child: ButtonIconWidget(
                               height: 40,
                               icon: Icons.photo_rounded,
-                              title: 'Lưu ảnh',
+                              title: '',
                               function: () {
                                 Provider.of<ActionShareProvider>(context,
                                         listen: false)
