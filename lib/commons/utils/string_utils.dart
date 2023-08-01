@@ -85,4 +85,12 @@ class StringUtils {
         .join(" ");
     return result;
   }
+
+  static String formatNumber(dynamic value) {
+    if (value == null) {
+      return '0';
+    }
+    var numberFormat = NumberFormat.decimalPattern('vi-VI');
+    return numberFormat.format(value);
+  }
 }
