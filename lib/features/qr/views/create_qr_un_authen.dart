@@ -65,13 +65,24 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: DefaultTheme.WHITE,
       body: LayoutBuilder(builder: (context, constraints) {
         return Column(children: [
           if (!PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800))
-            const WebMobileBlankWidget()
-          else
+            Expanded(
+                child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 28),
+              children: [
+                _buildFormInput(),
+                const SizedBox(
+                  height: 24,
+                ),
+                _buildQRCode()
+              ],
+            ))
+          else ...[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 60),
               child: Row(
@@ -88,15 +99,17 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                 ],
               ),
             ),
-          const Spacer(),
-          if (PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800)) ...[
-            const Divider(
-              color: DefaultTheme.BLACK_DARK,
-              thickness: 0.5,
-              height: 0.5,
-            ),
-            const BottomWeb()
-          ],
+            const Spacer(),
+            if (PlatformUtils.instance
+                .resizeWhen(constraints.maxWidth, 800)) ...[
+              const Divider(
+                color: DefaultTheme.BLACK_DARK,
+                thickness: 0.5,
+                height: 0.5,
+              ),
+              const BottomWeb()
+            ],
+          ]
         ]);
       }),
     );
@@ -223,11 +236,15 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   keyboardAction: TextInputAction.next,
                   onSubmitted: (value) {},
                   onChange: (value) {
-                    if (amountController.text.isNotEmpty) {
-                      if (StringUtils.instance
-                          .isNumeric(amountController.text)) {
+                    provider.updateMoney(value.toString());
+                    amountController.text = provider.money;
+                    amountController.selection = TextSelection.collapsed(
+                        offset: amountController.text.length);
+                    String valueMoney = provider.money.replaceAll('.', '');
+                    if (valueMoney.isNotEmpty) {
+                      if (StringUtils.instance.isNumeric(valueMoney)) {
                         provider.updateAmountErr(false);
-                        if (amountController.text.length >= 4) {
+                        if (valueMoney.length >= 4) {
                           provider.updateValidCreate(true);
                         } else {
                           provider.updateValidCreate(false);
@@ -314,7 +331,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                       data['bankAccount'] = bankAccountController.text;
                       data['userBankName'] = nameController.text;
                       data['bankCode'] = provider.bankType.bankCode;
-                      data['amount'] = amountController.text;
+                      data['amount'] = provider.money.replaceAll('.', '');
                       data['content'] = StringUtils.instance
                           .removeDiacritic(contentController.text);
                       qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
@@ -398,7 +415,8 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                                                 : 0);
                                 html.window.open(
                                     Uri.base.toString().replaceFirst(
-                                        '/login', '/qr_generate$paramData'),
+                                        '/create-vietqr',
+                                        '/qr_generate$paramData'),
                                     'new tab');
                               },
                               bgColor:
@@ -433,7 +451,8 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                                                 : 0);
                                 html.window.open(
                                     Uri.base.toString().replaceFirst(
-                                        '/login', '/qr_generate$paramData'),
+                                        '/create-vietqr',
+                                        '/qr_generate$paramData'),
                                     'new tab');
                               },
                               bgColor:
@@ -570,8 +589,8 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
       child: Padding(
         padding: const EdgeInsets.only(top: 24),
         child: BoxLayout(
-          width: 300,
-          height: 300,
+          width: 270,
+          height: 270,
           bgColor: DefaultTheme.WHITE,
           enableShadow: true,
           padding: const EdgeInsets.all(20),

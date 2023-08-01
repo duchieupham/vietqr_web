@@ -1,7 +1,17 @@
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:flutter/widgets.dart';
 
 class BankTypeProvider with ChangeNotifier {
+  String _money = '';
+
+  String get money => _money;
+  void updateMoney(String value) {
+    int data = int.parse(value.replaceAll('.', ''));
+    _money = StringUtils.formatNumber(data);
+    notifyListeners();
+  }
+
   BankTypeDTO _bankType = const BankTypeDTO(
     id: '',
     bankCode: '',

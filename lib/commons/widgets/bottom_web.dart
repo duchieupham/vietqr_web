@@ -12,130 +12,136 @@ class BottomWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Container(
-      height: 110,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      color: bgColor,
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Thông tin liên hệ',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Padding(padding: EdgeInsets.only(top: 10)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 60,
-                    child: Text(
-                      'Email: ',
-                      style: TextStyle(color: DefaultTheme.GREY_TEXT),
-                    ),
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        height: 105,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        color: bgColor,
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Thông tin liên hệ',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
                   ),
-                  InkWell(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'mailto',
-                        path: 'sales@vietqr.vn',
-                      );
-                      await launchUrl(launchUri);
-                    },
-                    child: const Text(
-                      'sales@vietqr.vn',
-                      style: TextStyle(
-                        color: DefaultTheme.BLUE_TEXT,
-                        decoration: TextDecoration.underline,
+                ),
+                const Padding(padding: EdgeInsets.only(top: 10)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 60,
+                      child: Text(
+                        'Email: ',
+                        style: TextStyle(color: DefaultTheme.GREY_TEXT),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const Padding(padding: EdgeInsets.only(top: 5)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    width: 60,
-                    child: Text(
-                      'Hotline: ',
-                      style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                    InkWell(
+                      onTap: () async {
+                        final Uri launchUri = Uri(
+                          scheme: 'mailto',
+                          path: 'sales@vietqr.vn',
+                        );
+                        await launchUrl(launchUri);
+                      },
+                      child: const Text(
+                        'sales@vietqr.vn',
+                        style: TextStyle(
+                          color: DefaultTheme.BLUE_TEXT,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'tel',
-                        path: '19006234',
-                      );
-                      await launchUrl(launchUri);
-                    },
-                    child: const Text(
-                      '1900.6234',
-                      style: TextStyle(
-                          // fontWeight: FontWeight.bold,
-                          ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.only(top: 5)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 60,
+                      child: Text(
+                        'Hotline: ',
+                        style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                      ),
                     ),
-                  ),
-                  const Text(' - '),
-                  InkWell(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'tel',
-                        path: '0922333636',
-                      );
-                      await launchUrl(launchUri);
-                    },
-                    child: const Text(
-                      '09.2233.3636',
-                      style: TextStyle(
-                          // fontWeight: FontWeight.bold,
-                          ),
+                    InkWell(
+                      onTap: () async {
+                        final Uri launchUri = Uri(
+                          scheme: 'tel',
+                          path: '19006234',
+                        );
+                        await launchUrl(launchUri);
+                      },
+                      child: const Text(
+                        '1900.6234',
+                        style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const Spacer(),
-          PlatformUtils.instance.resizeWhen(width, 600)
-              ? _buildButtonInstallApp()
-              : const SizedBox.shrink(),
-          const SizedBox(
-            width: 50,
-          ),
-          Align(alignment: Alignment.centerLeft, child: _buildUrlSystem()),
-          const Spacer(),
-          Image.asset(
-            'assets/images/logo-vietqr-vn.png',
-            width: 120,
-          ),
-        ],
-      ),
-    );
+                    const Text(' - '),
+                    InkWell(
+                      onTap: () async {
+                        final Uri launchUri = Uri(
+                          scheme: 'tel',
+                          path: '0922333636',
+                        );
+                        await launchUrl(launchUri);
+                      },
+                      child: const Text(
+                        '09.2233.3636',
+                        style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const Spacer(),
+            _buildButtonInstallApp(isVertical: constraints.maxWidth < 880),
+            const SizedBox(
+              width: 50,
+            ),
+            Align(
+                alignment: Alignment.centerLeft,
+                child: _buildUrlSystem(isVertical: constraints.maxWidth < 880)),
+            const Spacer(),
+            Image.asset(
+              'assets/images/logo-vietqr-vn.png',
+              width: 120,
+            ),
+          ],
+        ),
+      );
+    });
   }
 
-  Widget _buildButtonInstallApp() {
+  Widget _buildButtonInstallApp({bool isVertical = false}) {
     return Column(
+      crossAxisAlignment:
+          isVertical ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
-        const Text(
-          'Tải ứng dụng trên cửa hàng',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
-              // fontWeight: FontWeight.bold,
-              ),
-        ),
-        const Padding(padding: EdgeInsets.only(top: 10)),
-        SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        if (!isVertical) ...[
+          const Text(
+            'Tải ứng dụng trên cửa hàng',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
+                // fontWeight: FontWeight.bold,
+                ),
+          ),
+          const Padding(padding: EdgeInsets.only(top: 10)),
+        ],
+        if (isVertical)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildButton(
                 width: 280,
@@ -146,7 +152,7 @@ class BottomWeb extends StatelessWidget {
                       'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
                 },
               ),
-              const Padding(padding: EdgeInsets.only(left: 10)),
+              const Padding(padding: EdgeInsets.only(top: 8)),
               _buildButton(
                 width: 280,
                 text: 'Google Play',
@@ -157,13 +163,39 @@ class BottomWeb extends StatelessWidget {
                 },
               ),
             ],
+          )
+        else
+          SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildButton(
+                  width: 280,
+                  text: 'App Store',
+                  assetImage: 'assets/images/logo-app-store.png',
+                  onTap: () async {
+                    await launchUrl(Uri.parse(
+                        'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+                  },
+                ),
+                const Padding(padding: EdgeInsets.only(left: 10)),
+                _buildButton(
+                  width: 280,
+                  text: 'Google Play',
+                  assetImage: 'assets/images/logo-google-play.png',
+                  onTap: () async {
+                    await launchUrl(Uri.parse(
+                        'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }
 
-  Widget _buildUrlSystem() {
+  Widget _buildUrlSystem({bool isVertical = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -222,7 +254,7 @@ class BottomWeb extends StatelessWidget {
       onTap: onTap,
       child: BoxLayout(
         width: width * 0.4,
-        height: 35,
+        height: 28,
         padding: const EdgeInsets.all(0),
         bgColor: DefaultTheme.BLACK,
         borderRadius: 5,

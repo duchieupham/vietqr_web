@@ -161,9 +161,9 @@ class WebMobileBlankWidget extends StatelessWidget {
             ),
           ),
           const Padding(padding: EdgeInsets.only(top: 5)),
-          BottomWeb(
-            bgColor: Theme.of(context).cardColor,
-          ),
+          // BottomWeb(
+          //   bgColor: Theme.of(context).cardColor,
+          // ),
         ],
       ),
     );
