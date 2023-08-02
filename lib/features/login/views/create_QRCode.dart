@@ -187,7 +187,6 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   maxLines: 1,
                   hintText: 'Chủ tài khoản \u002A',
                   controller: nameController,
-                  inputType: TextInputType.number,
                   keyboardAction: TextInputAction.done,
                   onSubmitted: (value) {
                     if (provider.bankType.bankCode.isNotEmpty) {
