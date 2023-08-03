@@ -178,6 +178,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   maxLines: 1,
                   hintText: 'Chủ tài khoản \u002A',
                   controller: nameController,
+                  inputType: TextInputType.text,
                   keyboardAction: TextInputAction.done,
                   onSubmitted: (value) {
                     if (provider.bankType.bankCode.isNotEmpty) {
