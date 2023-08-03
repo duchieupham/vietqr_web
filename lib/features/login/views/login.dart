@@ -82,8 +82,7 @@ class _Login extends State<Login> {
               //show msg dialog
               DialogWidget.instance.openMsgDialog(
                 title: 'Đăng nhập không thành công',
-                msg:
-                    'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.',
+                msg: 'Tài khoản đăng nhập hoặc mật khẩu không hợp lệ',
               );
             }
           }),
