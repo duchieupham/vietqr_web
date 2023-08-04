@@ -282,7 +282,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   maxLines: 1,
                   hintText: 'Nội dung không được quá 50 kí tự',
                   controller: contentController,
-                  inputType: TextInputType.number,
+                  inputType: TextInputType.text,
                   keyboardAction: TextInputAction.done,
                   onSubmitted: (value) {},
                   onChange: (value) {},
