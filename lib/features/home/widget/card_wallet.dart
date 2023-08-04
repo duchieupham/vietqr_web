@@ -90,7 +90,7 @@ class WalletCard extends StatelessWidget {
                 children: <TextSpan>[
                   TextSpan(
                       text:
-                          '${CurrencyUtils.instance.getCurrencyFormatted(Session.instance.wallet.amount)} VND',
+                          '${CurrencyUtils.instance.getCurrencyFormatted(Session.instance.wallet.amount)} VQR',
                       style: const TextStyle(
                           fontSize: 13, fontWeight: FontWeight.bold)),
                 ],
