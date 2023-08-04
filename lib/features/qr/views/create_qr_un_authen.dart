@@ -285,7 +285,9 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   inputType: TextInputType.text,
                   keyboardAction: TextInputAction.done,
                   onSubmitted: (value) {},
-                  onChange: (value) {},
+                  onChange: (value) {
+                    //
+                  },
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
