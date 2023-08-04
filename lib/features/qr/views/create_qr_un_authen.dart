@@ -180,30 +180,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   controller: nameController,
                   inputType: TextInputType.text,
                   keyboardAction: TextInputAction.next,
-                  onSubmitted: (value) {
-                    if (provider.bankType.bankCode.isNotEmpty) {
-                      provider.updateBankAccountErr(
-                        (bankAccountController.text.isEmpty ||
-                            !StringUtils.instance
-                                .isNumeric(bankAccountController.text)),
-                      );
-                      provider.updateNameErr(
-                        nameController.text.isEmpty,
-                      );
-                      if (provider.isValidUnauthenticateForm()) {
-                        Map<String, dynamic> data = {};
-                        data['bankAccount'] = bankAccountController.text;
-                        data['userBankName'] = nameController.text;
-                        data['bankCode'] = provider.bankType.bankCode;
-                        qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
-                      }
-                    } else {
-                      DialogWidget.instance.openMsgDialog(
-                        title: 'Không thể tạo',
-                        msg: 'Vui lòng chọn ngân hàng thụ hưởng',
-                      );
-                    }
-                  },
+                  onSubmitted: (value) {},
                   onChange: (vavlue) {
                     provider.updateNameErr(
                       nameController.text.isEmpty,
