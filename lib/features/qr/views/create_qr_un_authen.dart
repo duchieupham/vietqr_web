@@ -179,7 +179,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   hintText: 'Chủ tài khoản \u002A',
                   controller: nameController,
                   inputType: TextInputType.text,
-                  keyboardAction: TextInputAction.done,
+                  keyboardAction: TextInputAction.next,
                   onSubmitted: (value) {
                     if (provider.bankType.bankCode.isNotEmpty) {
                       provider.updateBankAccountErr(
@@ -284,10 +284,35 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   controller: contentController,
                   inputType: TextInputType.text,
                   keyboardAction: TextInputAction.done,
-                  onSubmitted: (value) {},
-                  onChange: (value) {
-                    //
+                  onSubmitted: (value) {
+                    if (!provider.isValidCreate) {
+                    } else if (provider.bankType.bankCode.isNotEmpty) {
+                      provider.updateBankAccountErr(
+                        (bankAccountController.text.isEmpty ||
+                            !StringUtils.instance
+                                .isNumeric(bankAccountController.text)),
+                      );
+                      provider.updateNameErr(
+                        nameController.text.isEmpty,
+                      );
+                      if (provider.isValidUnauthenticateForm()) {
+                        Map<String, dynamic> data = {};
+                        data['bankAccount'] = bankAccountController.text;
+                        data['userBankName'] = nameController.text;
+                        data['bankCode'] = provider.bankType.bankCode;
+                        data['amount'] = provider.money.replaceAll('.', '');
+                        data['content'] = StringUtils.instance
+                            .removeDiacritic(contentController.text);
+                        qrCodeUnUTBloc.add(QRCodeUnUTCreateQR(data: data));
+                      }
+                    } else {
+                      DialogWidget.instance.openMsgDialog(
+                        title: 'Không thể tạo',
+                        msg: 'Vui lòng chọn ngân hàng thụ hưởng',
+                      );
+                    }
                   },
+                  onChange: (value) {},
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
