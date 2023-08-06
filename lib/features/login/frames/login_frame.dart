@@ -36,17 +36,6 @@ class LoginFrame extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      BoxLayout(
-                        width: 400,
-                        height: 850,
-                        borderRadius: 20,
-                        bgColor: Theme.of(context).canvasColor,
-                        enableShadow: true,
-                        child: widget1,
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
                       Expanded(
                         child: BoxLayout(
                           width: width - 90,
@@ -56,6 +45,17 @@ class LoginFrame extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           child: widget2,
                         ),
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      BoxLayout(
+                        width: 400,
+                        height: 850,
+                        borderRadius: 20,
+                        bgColor: Theme.of(context).canvasColor,
+                        enableShadow: true,
+                        child: widget1,
                       ),
                     ],
                   ),
