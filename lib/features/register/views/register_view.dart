@@ -138,6 +138,7 @@ class RegisterView extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
+                          _buildLaBle('Số điện thoại'),
                           BorderLayout(
                             width: width,
                             height: 50,
@@ -150,7 +151,7 @@ class RegisterView extends StatelessWidget {
                               // textfieldType: TextfieldType.LABEL,
                               // title: 'Số điện thoại',
                               // titleWidth: 100,
-                              hintText: 'Số điện thoại',
+                              hintText: '',
                               controller: _phoneNoController,
                               inputType: TextInputType.number,
                               keyboardAction: TextInputAction.next,
@@ -172,6 +173,7 @@ class RegisterView extends StatelessWidget {
                             ),
                           ),
                           const Padding(padding: EdgeInsets.only(top: 15)),
+                          _buildLaBle('Mật khẩu (6 số)'),
                           BorderLayout(
                             width: width,
                             height: 50,
@@ -184,7 +186,7 @@ class RegisterView extends StatelessWidget {
                               // textfieldType: TextfieldType.LABEL,
                               // title: 'Mật khẩu',
                               // titleWidth: 100,
-                              hintText: 'Mật khẩu (6 số)',
+                              hintText: '',
                               controller: _passwordController,
                               inputType: TextInputType.number,
                               keyboardAction: TextInputAction.next,
@@ -206,6 +208,7 @@ class RegisterView extends StatelessWidget {
                             ),
                           ),
                           const Padding(padding: EdgeInsets.only(top: 15)),
+                          _buildLaBle('Xác nhận lại mật khẩu'),
                           BorderLayout(
                             width: width,
                             height: 50,
@@ -218,7 +221,7 @@ class RegisterView extends StatelessWidget {
                               // textfieldType: TextfieldType.LABEL,
                               // title: 'Xác nhận lại',
                               // titleWidth: 100,
-                              hintText: 'Xác nhận lại Mật khẩu',
+                              hintText: '',
                               controller: _confirmPassController,
                               inputType: TextInputType.number,
                               keyboardAction: TextInputAction.next,
@@ -240,25 +243,34 @@ class RegisterView extends StatelessWidget {
                             ),
                           ),
                           const Padding(padding: EdgeInsets.only(top: 15)),
-                          shareCode.isNotEmpty
-                              ? _buildFiledShareCode(width)
-                              : BorderLayout(
-                                  width: width,
-                                  height: 50,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  isError: false,
-                                  child: TextFieldWidget(
-                                    width: width,
-                                    maxLines: 1,
-                                    hintText: 'Mã giới thiệu',
-                                    controller: _shareCodeController,
-                                    inputType: TextInputType.text,
-                                    keyboardAction: TextInputAction.next,
-                                    onChange: (vavlue) {},
-                                    isObscureText: false,
-                                  ),
-                                ),
+                          if (shareCode.isNotEmpty)
+                            _buildFiledShareCode(width)
+                          else ...[
+                            const Text(
+                              'Mã giới thiệu(nếu có)',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            BorderLayout(
+                              width: width,
+                              height: 50,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              isError: false,
+                              child: TextFieldWidget(
+                                width: width,
+                                maxLines: 1,
+                                hintText: '',
+                                controller: _shareCodeController,
+                                inputType: TextInputType.text,
+                                keyboardAction: TextInputAction.next,
+                                onChange: (vavlue) {},
+                                isObscureText: false,
+                              ),
+                            ),
+                          ],
                           const Spacer(),
                           _buildButtonSubmit(context, width),
                           const Padding(padding: EdgeInsets.only(bottom: 20)),
@@ -404,4 +416,21 @@ class RegisterView extends StatelessWidget {
   //     });
   //   }
   // }
+  Widget _buildLaBle(String laBel) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Text(
+            laBel,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const Text(
+            '*',
+            style: TextStyle(fontSize: 16, color: DefaultTheme.RED_TEXT),
+          )
+        ],
+      ),
+    );
+  }
 }
