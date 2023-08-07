@@ -23,6 +23,7 @@ class TextFieldWidget extends StatelessWidget {
   final int? maxLength;
   final bool readOnly;
   final TextAlign? textAlign;
+  final bool required;
   final Function(PointerDownEvent)? onTapOutside;
   final EdgeInsets contentPadding;
   final TextStyle? textStyle;
@@ -52,6 +53,7 @@ class TextFieldWidget extends StatelessWidget {
     this.readOnly = false,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
     this.textStyle,
+    this.required = false,
   }) : super(key: key);
 
   @override
@@ -65,11 +67,21 @@ class TextFieldWidget extends StatelessWidget {
               children: [
                 SizedBox(
                   width: (titleWidth != null) ? titleWidth : 80,
-                  child: Text(
-                    title ?? '',
-                    style: TextStyle(
-                      fontSize: (fontSize != null) ? fontSize : 16,
-                    ),
+                  child: Row(
+                    children: [
+                      Text(
+                        title ?? '',
+                        style: TextStyle(
+                          fontSize: (fontSize != null) ? fontSize : 16,
+                        ),
+                      ),
+                      if (required)
+                        const Text(
+                          '*',
+                          style: TextStyle(
+                              fontSize: 16, color: DefaultTheme.RED_TEXT),
+                        )
+                    ],
                   ),
                 ),
                 Flexible(
