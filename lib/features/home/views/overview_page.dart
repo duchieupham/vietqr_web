@@ -1,9 +1,10 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
-import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
@@ -17,7 +18,6 @@ import 'package:VietQR/features/home/widget/menu_left.dart';
 import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
 import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
-import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/layouts/box_layout.dart';
@@ -29,7 +29,6 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class OverViewPage extends StatefulWidget {
@@ -95,11 +94,7 @@ class _OverViewPageState extends State<OverViewPage> {
             .updateShowMenu(!showCardMenu);
         break;
       case MenuHomeType.OPEN_BANK_MB_ACCOUNT:
-        DialogWidget.instance.openPopup(
-          child: const DialogOpenBankAccount(),
-          width: 500,
-          height: 650,
-        );
+        html.window.open('https://www.mbbank.com.vn/', 'new tab');
         break;
       case MenuHomeType.SETTING:
         DialogWidget.instance.openPopup(
