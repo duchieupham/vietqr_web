@@ -1,10 +1,13 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/features/setting/blocs/setting_bloc.dart';
 import 'package:VietQR/features/setting/views/add_hook_view.dart';
 import 'package:VietQR/features/setting/views/get_key_view.dart';
+import 'package:VietQR/features/setting/views/setting_bdsd_screen.dart';
 import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../blocs/setting_bloc.dart';
 
 class PopupSetting extends StatefulWidget {
   const PopupSetting({Key? key}) : super(key: key);
@@ -24,6 +27,7 @@ class _PopupSettingState extends State<PopupSetting> {
 
   List<Widget> pages = [
     const ThemeSettingWidget(),
+    const SettingBDSD(),
     GetKeyView(),
     AddHookView()
   ];
@@ -31,6 +35,8 @@ class _PopupSettingState extends State<PopupSetting> {
     if (indexPage == 0) {
       return 'Giao diện';
     } else if (indexPage == 1) {
+      return 'Cài đặt nhận biến động số dư';
+    } else if (indexPage == 2) {
       return 'Get key';
     }
     return 'Thêm hook';
@@ -38,64 +44,67 @@ class _PopupSettingState extends State<PopupSetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Theme.of(context).scaffoldBackgroundColor,
-      ),
-      child: Row(
-        children: [
-          Expanded(child: _buildTitle()),
-          Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        bottomRight: Radius.circular(20))),
-                child: Stack(
-                  children: [
-                    pages[indexPage],
-                    Positioned(
-                      top: 16,
-                      right: 0,
-                      left: 16,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            getTitle(),
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: 25,
-                              height: 25,
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Theme.of(context)
-                                    .canvasColor
-                                    .withOpacity(0.3),
-                              ),
-                              child: const Icon(
-                                Icons.close_rounded,
-                                size: 15,
+    return BlocProvider<SettingBloc>(
+      create: (context) => SettingBloc(),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        child: Row(
+          children: [
+            Expanded(child: _buildTitle()),
+            Expanded(
+                flex: 3,
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          bottomRight: Radius.circular(20))),
+                  child: Stack(
+                    children: [
+                      pages[indexPage],
+                      Positioned(
+                        top: 16,
+                        right: 0,
+                        left: 16,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              getTitle(),
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: 25,
+                                height: 25,
+                                alignment: Alignment.center,
+                                margin: const EdgeInsets.only(right: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context)
+                                      .canvasColor
+                                      .withOpacity(0.3),
+                                ),
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  size: 15,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ))
-        ],
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ))
+          ],
+        ),
       ),
     );
   }
@@ -117,12 +126,15 @@ class _PopupSettingState extends State<PopupSetting> {
         _buildItemTitle(AppImages.icThemeBlue, 'Giao diện', () {
           changePage(0);
         }, isSelected: indexPage == 0),
-        _buildItemTitle(AppImages.icKeyBlue, 'Get key', () {
+        _buildItemTitle(AppImages.icKeyBlue, 'Setting BĐSD', () {
           changePage(1);
         }, isSelected: indexPage == 1),
-        _buildItemTitle(AppImages.icHookBlue, 'Thêm hook', () {
+        _buildItemTitle(AppImages.icKeyBlue, 'Get key', () {
           changePage(2);
         }, isSelected: indexPage == 2),
+        _buildItemTitle(AppImages.icHookBlue, 'Thêm hook', () {
+          changePage(3);
+        }, isSelected: indexPage == 3),
       ],
     );
   }

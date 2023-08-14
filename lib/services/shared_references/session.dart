@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:html' as html;
+
 import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
 import 'package:VietQR/features/information_user/repositories/wallet_repository.dart';
 import 'package:VietQR/models/wallet_dto.dart';
-import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:async/async.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../commons/enums/event_type.dart';
+import '../../features/setting/repositories/setting_repository.dart';
 import '../../models/bank_account_dto.dart';
 import '../../models/qr_generated_dto.dart';
 
@@ -123,12 +123,23 @@ class Session {
 
   // Wallet
   final WalletRepository walletRepository = const WalletRepository();
+
   WalletDTO _wallet = WalletDTO();
   WalletDTO get wallet => _wallet;
   Future fetchWallet() async {
     String userId = UserInformationHelper.instance.getUserId();
     final WalletDTO dto = await walletRepository.getInfoWallet(userId);
     _wallet = dto;
+  }
+
+  // Account setting
+  final SettingRepository settingRepository = const SettingRepository();
+  Future fetchAccountSetting() async {
+    String userId = UserInformationHelper.instance.getUserId();
+    final settingAccount = await settingRepository.getSettingAccount(userId);
+    if (settingAccount.userId.isNotEmpty) {
+      await UserInformationHelper.instance.setAccountSetting(settingAccount);
+    }
   }
 
   List<BankAccountDTO> _bankAccounts = [];

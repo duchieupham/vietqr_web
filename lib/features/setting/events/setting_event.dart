@@ -17,3 +17,14 @@ class SettingGetTokenPlusEvent extends SettingEvent {
 }
 
 class SettingGetListBankOfMeEvent extends SettingEvent {}
+
+class UpdateVoiceSetting extends SettingEvent {
+  final Map<String, dynamic> param;
+
+  const UpdateVoiceSetting({
+    required this.param,
+  });
+
+  @override
+  List<Object?> get props => [param];
+}

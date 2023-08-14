@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
   SettingBloc() : super(SettingInitialState()) {
     on<SettingGetTokenPlusEvent>(_requestTokenPlus);
+    on<UpdateVoiceSetting>(_updateVoiceSetting);
   }
 }
 
@@ -34,5 +35,25 @@ void _requestTokenPlus(SettingEvent event, Emitter emit) async {
   } catch (e) {
     LOG.error(e.toString());
     emit(SettingGetTokenPlusFailedState());
+  }
+}
+
+void _updateVoiceSetting(SettingEvent event, Emitter emit) async {
+  String userId = UserInformationHelper.instance.getUserId();
+  try {
+    if (event is UpdateVoiceSetting) {
+      bool updateStatus =
+          await _settingRepository.updateVoiceSetting(event.param);
+      if (updateStatus) {
+        final settingAccount =
+            await _settingRepository.getSettingAccount(userId);
+        if (settingAccount.userId.isNotEmpty) {
+          await UserInformationHelper.instance
+              .setAccountSetting(settingAccount);
+        }
+      }
+    }
+  } catch (e) {
+    LOG.error('Error at _getPointAccount: $e');
   }
 }
