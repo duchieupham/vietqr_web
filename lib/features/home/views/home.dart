@@ -1,24 +1,19 @@
-import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/enums/type_menu_home.dart';
-import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'dart:html' as html;
+
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
-import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'dart:js' as js;
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/features/bank/widgets/detail_bank_widget.dart';
 import 'package:VietQR/features/home/frames/home_frame.dart';
-import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
-import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
-import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/token/events/token_event.dart';
 import 'package:VietQR/features/token/states/token_state.dart';
@@ -36,7 +31,6 @@ import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
-import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -92,6 +86,7 @@ class _HomeScreen extends State<HomeScreen> {
               offset: currentPage)));
     });
     Session.instance.fetchWallet();
+    Session.instance.fetchAccountSetting();
   }
 
   @override

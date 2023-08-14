@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:VietQR/main.dart';
 import 'package:VietQR/models/account_information_dto.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 
 class UserInformationHelper {
   const UserInformationHelper._privateConsrtructor();
@@ -58,6 +59,15 @@ class UserInformationHelper {
   String getUserFullname() {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();
+  }
+
+  Future<void> setAccountSetting(SettingAccountDTO dto) async {
+    await sharedPrefs.setString('ACCOUNT_SETTING', dto.toSPJson().toString());
+  }
+
+  SettingAccountDTO getAccountSetting() {
+    return SettingAccountDTO.fromJson(
+        json.decode(sharedPrefs.getString('ACCOUNT_SETTING')!));
   }
 
   Future<void> setImageId(String imgId) async {

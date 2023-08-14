@@ -15,135 +15,129 @@ import 'package:provider/provider.dart';
 
 class GetKeyView extends StatelessWidget {
   GetKeyView({Key? key}) : super(key: key);
-  final SettingBloc _settingBloc = SettingBloc();
+
   final TextEditingController hostingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SettingBloc>(
-        create: (context) => _settingBloc,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 80,
-                    ),
-                    const Text(
-                      'Số điện thoại',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    BorderLayout(
-                      height: 40,
-                      isError: false,
-                      borderWidth: 1,
-                      child: TextFieldWidget(
-                        isObscureText: false,
-                        autoFocus: true,
-                        fontSize: 10,
-                        readOnly: true,
-                        textStyle: const TextStyle(fontSize: 13),
-                        contentPadding:
-                            const EdgeInsets.only(left: 20, bottom: 8),
-                        controller: TextEditingController(
-                            text: UserInformationHelper.instance
-                                .getAccountInformation()
-                                .phoneNo),
-                        inputType: TextInputType.number,
-                        keyboardAction: TextInputAction.next,
-                        onChange: (vavlue) {},
-                        hintText: '',
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'Đường dẫn trang web nhận biến động số dư*',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    BorderLayout(
-                      height: 42,
-                      isError: false,
-                      borderWidth: 1,
-                      child: TextFieldWidget(
-                        isObscureText: false,
-                        autoFocus: true,
-                        fontSize: 13,
-                        textStyle: const TextStyle(fontSize: 13),
-                        contentPadding:
-                            const EdgeInsets.only(left: 20, bottom: 8),
-                        controller: hostingController,
-                        inputType: TextInputType.number,
-                        keyboardAction: TextInputAction.next,
-                        onChange: (vavlue) {},
-                        hintText: 'http://example.com',
-                      ),
-                    ),
-                    Consumer<SettingProvider>(
-                        builder: (context, provider, child) {
-                      if (provider.validateHosting) {
-                        return const Padding(
-                          padding: EdgeInsets.only(top: 4),
-                          child: Text(
-                            'Hãy nhập hosting',
-                            style: TextStyle(
-                                color: DefaultTheme.RED_TEXT, fontSize: 13),
-                          ),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 120,
-                      child: Tooltip(
-                        message: 'Get key',
-                        child: ButtonWidget(
-                          height: 40,
-                          textColor: DefaultTheme.WHITE,
-                          bgColor: DefaultTheme.BLUE_CARD,
-                          borderRadius: 5,
-                          function: () {
-                            if (hostingController.text.isEmpty) {
-                              Provider.of<SettingProvider>(context,
-                                      listen: false)
-                                  .updateValidHosting(true);
-                            } else {
-                              Provider.of<SettingProvider>(context,
-                                      listen: false)
-                                  .updateValidHosting(false);
-                              _settingBloc.add(SettingGetTokenPlusEvent(
-                                  hosting: hostingController.text));
-                            }
-                          },
-                          text: 'Get key',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 35,
-                    ),
-                    _buildValueKey()
-                  ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 80,
                 ),
-              ),
-              const Expanded(child: SizedBox.shrink())
-            ],
+                const Text(
+                  'Số điện thoại',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                BorderLayout(
+                  height: 40,
+                  isError: false,
+                  borderWidth: 1,
+                  child: TextFieldWidget(
+                    isObscureText: false,
+                    autoFocus: true,
+                    fontSize: 10,
+                    readOnly: true,
+                    textStyle: const TextStyle(fontSize: 13),
+                    contentPadding: const EdgeInsets.only(left: 20, bottom: 8),
+                    controller: TextEditingController(
+                        text: UserInformationHelper.instance
+                            .getAccountInformation()
+                            .phoneNo),
+                    inputType: TextInputType.number,
+                    keyboardAction: TextInputAction.next,
+                    onChange: (vavlue) {},
+                    hintText: '',
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Text(
+                  'Đường dẫn trang web nhận biến động số dư*',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                BorderLayout(
+                  height: 42,
+                  isError: false,
+                  borderWidth: 1,
+                  child: TextFieldWidget(
+                    isObscureText: false,
+                    autoFocus: true,
+                    fontSize: 13,
+                    textStyle: const TextStyle(fontSize: 13),
+                    contentPadding: const EdgeInsets.only(left: 20, bottom: 8),
+                    controller: hostingController,
+                    inputType: TextInputType.number,
+                    keyboardAction: TextInputAction.next,
+                    onChange: (vavlue) {},
+                    hintText: 'http://example.com',
+                  ),
+                ),
+                Consumer<SettingProvider>(builder: (context, provider, child) {
+                  if (provider.validateHosting) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        'Hãy nhập hosting',
+                        style: TextStyle(
+                            color: DefaultTheme.RED_TEXT, fontSize: 13),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 120,
+                  child: Tooltip(
+                    message: 'Get key',
+                    child: ButtonWidget(
+                      height: 40,
+                      textColor: DefaultTheme.WHITE,
+                      bgColor: DefaultTheme.BLUE_CARD,
+                      borderRadius: 5,
+                      function: () {
+                        if (hostingController.text.isEmpty) {
+                          Provider.of<SettingProvider>(context, listen: false)
+                              .updateValidHosting(true);
+                        } else {
+                          Provider.of<SettingProvider>(context, listen: false)
+                              .updateValidHosting(false);
+                          BlocProvider.of<SettingBloc>(context).add(
+                              SettingGetTokenPlusEvent(
+                                  hosting: hostingController.text));
+                        }
+                      },
+                      text: 'Get key',
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                _buildValueKey()
+              ],
+            ),
           ),
-        ));
+          const Expanded(child: SizedBox.shrink())
+        ],
+      ),
+    );
   }
 
   Widget _buildValueKey() {

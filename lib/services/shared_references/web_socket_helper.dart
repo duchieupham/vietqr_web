@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/main.dart';
+import 'package:VietQR/services/shared_references/media_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -50,6 +51,7 @@ class WebSocketHelper {
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
                 Session.instance.sendEvent(EventTypes.refreshListTransaction);
                 Session.instance.sendEvent(EventTypes.updateCountNotification);
+                MediaHelper.instance.playAudio(data);
                 DialogWidget.instance.openWidgetDialog(
                   child: TransactionSuccessWidget(
                     dto: NotificationTransactionSuccessDTO.fromJson(data),
