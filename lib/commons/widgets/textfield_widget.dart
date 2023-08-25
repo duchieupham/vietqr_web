@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/textfield_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final double? width;
@@ -27,34 +28,35 @@ class TextFieldWidget extends StatelessWidget {
   final Function(PointerDownEvent)? onTapOutside;
   final EdgeInsets contentPadding;
   final TextStyle? textStyle;
-
-  const TextFieldWidget({
-    Key? key,
-    this.width,
-    required this.hintText,
-    required this.controller,
-    required this.keyboardAction,
-    required this.onChange,
-    required this.inputType,
-    required this.isObscureText,
-    this.fontSize,
-    this.textfieldType,
-    this.title,
-    this.titleWidth,
-    this.autoFocus,
-    this.focusNode,
-    this.maxLines,
-    this.onEdittingComplete,
-    this.onSubmitted,
-    this.maxLength,
-    this.enable,
-    this.textAlign,
-    this.onTapOutside,
-    this.readOnly = false,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
-    this.textStyle,
-    this.required = false,
-  }) : super(key: key);
+  final List<TextInputFormatter>? inputFormatter;
+  const TextFieldWidget(
+      {Key? key,
+      this.width,
+      required this.hintText,
+      required this.controller,
+      required this.keyboardAction,
+      required this.onChange,
+      required this.inputType,
+      required this.isObscureText,
+      this.fontSize,
+      this.textfieldType,
+      this.title,
+      this.titleWidth,
+      this.autoFocus,
+      this.focusNode,
+      this.maxLines,
+      this.onEdittingComplete,
+      this.onSubmitted,
+      this.maxLength,
+      this.enable,
+      this.textAlign,
+      this.onTapOutside,
+      this.readOnly = false,
+      this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
+      this.textStyle,
+      this.required = false,
+      this.inputFormatter})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +105,7 @@ class TextFieldWidget extends StatelessWidget {
                     keyboardType: inputType,
                     maxLines: (maxLines == null) ? 1 : maxLines,
                     textInputAction: keyboardAction,
+                    inputFormatters: inputFormatter,
                     decoration: InputDecoration(
                       hintText: hintText,
                       counterText: '',
@@ -143,6 +146,7 @@ class TextFieldWidget extends StatelessWidget {
               autofocus: false,
               focusNode: focusNode,
               onTapOutside: onTapOutside,
+              inputFormatters: inputFormatter,
               decoration: InputDecoration(
                 hintText: hintText,
                 counterText: '',

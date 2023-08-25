@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
@@ -9,8 +11,6 @@ import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
-import 'dart:js' as js;
-import 'dart:html' as html;
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
@@ -28,6 +28,7 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -227,6 +228,9 @@ class CreateQR extends StatelessWidget {
                                       fontSize: 12,
                                       controller: amountController,
                                       inputType: TextInputType.number,
+                                      inputFormatter: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                       keyboardAction: TextInputAction.next,
                                       onChange: (vavlue) {
                                         if (amountController.text.isNotEmpty) {
