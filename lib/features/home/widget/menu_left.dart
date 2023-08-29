@@ -207,6 +207,17 @@ class MenuLeft extends StatelessWidget {
               ],
             ),
             ItemMenuHome(
+              title: 'Tạo mã VietQR',
+              pathIcon: AppImages.icCreateQR,
+              isSelect: provider.menuHomeType == MenuHomeType.CREATE_QR,
+              onTap: () {
+                onTab(MenuHomeType.CREATE_QR);
+                provider.updateShowMenu(!provider.showMenu);
+                provider.selectMenu(MenuHomeType.CREATE_QR);
+                closeListCard();
+              },
+            ),
+            ItemMenuHome(
               title: 'Doanh nghiệp',
               pathIcon: AppImages.icMenuBusiness,
               isSelect: provider.menuHomeType == MenuHomeType.BUSINESS,
@@ -310,6 +321,19 @@ class MenuLeft extends StatelessWidget {
           isSelect: provider.menuHomeType == MenuHomeType.SCAN_QR,
           onTap: () {
             provider.selectMenu(MenuHomeType.SCAN_QR);
+          },
+        ),
+        ItemMenuHome(
+          title: 'Tạo mã VietQr',
+          pathIcon: AppImages.icCreateQR,
+          paddingIcon: const EdgeInsets.all(8),
+          isOnlyIcon: true,
+          isSelect: provider.menuHomeType == MenuHomeType.CREATE_QR,
+          onTap: () {
+            onTab(MenuHomeType.CREATE_QR);
+            provider.updateShowMenu(!provider.showMenu);
+            provider.selectMenu(MenuHomeType.CREATE_QR);
+            closeListCard();
           },
         ),
         ItemMenuHome(

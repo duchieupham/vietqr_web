@@ -14,6 +14,7 @@ class AppImages {
   static String icMenuScanBank = 'assets/icons_menu/ic-menu-scan-bank.png';
   static String icMenuScanCCCD = 'assets/icons_menu/ic-menu-scan-cccd.png';
   static String icMenuSetting = 'assets/icons_menu/ic-menu-setting.png';
+  static String icCreateQR = 'assets/images/ic-viet-qr-small.png';
 
   // Wallet
   static String icVietQrSmall = 'assets/images/ic-viet-qr-small.png';

@@ -1,7 +1,7 @@
-import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/ecom/register/blocs/ecom_register_bloc.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:flutter/material.dart';
 
 class ItemMenuHome extends StatefulWidget {
   final String pathIcon;
@@ -13,21 +13,23 @@ class ItemMenuHome extends StatefulWidget {
   final bool isDropDownItem;
   final double titleSize;
   final bool isOnlyIcon;
-  const ItemMenuHome({
-    Key? key,
-    required this.title,
-    required this.onTap,
-    this.pathIcon = '',
-    this.pathImage,
-    this.isSelect = false,
-    this.isLogout = false,
-    this.enableDropDownList = false,
-    this.listItemDrop = const [],
-    this.isDropDownItem = false,
-    this.titleSize = 13,
-    this.enableMenuCard = false,
-    this.isOnlyIcon = false,
-  }) : super(key: key);
+  final EdgeInsets paddingIcon;
+  const ItemMenuHome(
+      {Key? key,
+      required this.title,
+      required this.onTap,
+      this.pathIcon = '',
+      this.pathImage,
+      this.isSelect = false,
+      this.isLogout = false,
+      this.enableDropDownList = false,
+      this.listItemDrop = const [],
+      this.isDropDownItem = false,
+      this.titleSize = 13,
+      this.enableMenuCard = false,
+      this.isOnlyIcon = false,
+      this.paddingIcon = EdgeInsets.zero})
+      : super(key: key);
 
   @override
   State<ItemMenuHome> createState() => _ItemMenuHomeState();
@@ -95,6 +97,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
           message: widget.title,
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
+            padding: widget.paddingIcon,
             color: widget.isSelect
                 ? DefaultTheme.ITEM_MENU_SELECTED
                 : Colors.transparent,

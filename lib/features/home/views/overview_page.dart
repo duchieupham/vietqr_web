@@ -31,6 +31,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../login/views/create_QRCode.dart';
+
 class OverViewPage extends StatefulWidget {
   const OverViewPage({Key? key}) : super(key: key);
 
@@ -125,7 +127,10 @@ class _OverViewPageState extends State<OverViewPage> {
       AddBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
-      const BusinessManagerView()
+      const BusinessManagerView(),
+      const CreateQRCode(
+        isLogined: true,
+      )
     ];
     return pages;
   }
