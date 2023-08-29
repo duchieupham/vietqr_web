@@ -32,7 +32,8 @@ import '../../../commons/widgets/bottom_web.dart';
 import '../events/qrcode_un_authen_event.dart';
 
 class CreateQRCode extends StatefulWidget {
-  const CreateQRCode({super.key});
+  final bool isLogined;
+  const CreateQRCode({super.key, this.isLogined = false});
 
   @override
   State<CreateQRCode> createState() => _CreateQRCodeState();
@@ -80,48 +81,95 @@ class _CreateQRCodeState extends State<CreateQRCode> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          children: [
-            if (PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800))
-              Expanded(
-                child: SizedBox(
-                  width: width,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 50, 10, 30),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(child: _buildFormInput()),
-                        Expanded(child: _buildQRCode())
-                      ],
+    final double height = MediaQuery.of(context).size.height;
+    if (widget.isLogined) {
+      return SizedBox(
+        width: width,
+        height: height - 60,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                if (PlatformUtils.instance
+                    .resizeWhen(constraints.maxWidth, 800))
+                  Expanded(
+                    child: SizedBox(
+                      width: width,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 50, 10, 30),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(child: _buildFormInput()),
+                            Expanded(child: _buildQRCode())
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                else ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: _buildFormInput(),
+                  ),
+                  _buildQRCode(
+                      horizontalInfo: true,
+                      horizontalInfoWidth: constraints.maxWidth,
+                      width: 320)
+                ],
+              ],
+            );
+          },
+        ),
+      );
+    }
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            children: [
+              if (PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800))
+                Expanded(
+                  child: SizedBox(
+                    width: width,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 50, 10, 30),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: _buildFormInput()),
+                          Expanded(child: _buildQRCode())
+                        ],
+                      ),
                     ),
                   ),
+                )
+              else ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: _buildFormInput(),
                 ),
-              )
-            else ...[
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: _buildFormInput(),
-              ),
-              _buildQRCode(
-                  horizontalInfo: true,
-                  horizontalInfoWidth: constraints.maxWidth,
-                  width: 320)
+                _buildQRCode(
+                    horizontalInfo: true,
+                    horizontalInfoWidth: constraints.maxWidth,
+                    width: 320)
+              ],
+              if (PlatformUtils.instance
+                  .resizeWhen(constraints.maxWidth, 800)) ...[
+                const Divider(
+                  color: DefaultTheme.BLACK_DARK,
+                  thickness: 0.5,
+                  height: 0.5,
+                ),
+                const BottomWeb()
+              ]
             ],
-            if (PlatformUtils.instance
-                .resizeWhen(constraints.maxWidth, 800)) ...[
-              const Divider(
-                color: DefaultTheme.BLACK_DARK,
-                thickness: 0.5,
-                height: 0.5,
-              ),
-              const BottomWeb()
-            ]
-          ],
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

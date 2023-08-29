@@ -28,6 +28,8 @@ class MenuProvider with ChangeNotifier {
       _initPage = 1;
     } else if (value == MenuHomeType.BUSINESS) {
       _initPage = 2;
+    } else if (value == MenuHomeType.CREATE_QR) {
+      _initPage = 3;
     }
   }
 }
