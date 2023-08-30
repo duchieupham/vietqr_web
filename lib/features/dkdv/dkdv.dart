@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
 
+import '../../commons/constants/configurations/theme.dart';
+
 class DkDv extends StatelessWidget {
   const DkDv({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-          child: Column(
-        children: [
-          const SizedBox(
-            height: 12,
-          ),
-          _buildLogo(),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 52, vertical: 12),
-              children: [
-                const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'ĐIỀU KHOẢN VÀ ĐIỀU KIỆN SỬ DỤNG DỊCH VỤ NHẬN BIẾN ĐỘNG SỐ DƯ',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                _buildContent(),
-              ],
+    return Theme(
+      data: DefaultThemeData(context: context).lightTheme,
+      child: Scaffold(
+        body: SizedBox(
+            child: Column(
+          children: [
+            const SizedBox(
+              height: 12,
             ),
-          ),
-        ],
-      )),
+            _buildLogo(),
+            Expanded(
+              child: ListView(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 52, vertical: 12),
+                children: [
+                  const Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'ĐIỀU KHOẢN VÀ ĐIỀU KIỆN SỬ DỤNG DỊCH VỤ NHẬN BIẾN ĐỘNG SỐ DƯ',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildContent(),
+                ],
+              ),
+            ),
+          ],
+        )),
+      ),
     );
   }
 
