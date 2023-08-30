@@ -11,6 +11,7 @@ import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
+import 'package:VietQR/features/dkdv/dkdv.dart';
 import 'package:VietQR/features/home/views/overview_page.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
@@ -55,6 +56,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
@@ -219,6 +221,11 @@ final GoRouter _router = GoRouter(
       redirect: (context, state) => '/create-vietqr',
       builder: (BuildContext context, GoRouterState state) =>
           const CreateQRUnAuthen(),
+    ),
+    GoRoute(
+      path: '/mbbank-dkdv',
+      redirect: (context, state) => '/mbbank-dkdv',
+      builder: (BuildContext context, GoRouterState state) => const DkDv(),
     ),
   ],
 );
