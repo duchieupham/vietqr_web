@@ -2,6 +2,7 @@ import 'dart:html' as html;
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
@@ -319,7 +320,9 @@ class _HomeScreen extends State<HomeScreen> {
     final double height = MediaQuery.of(context).size.height;
     return Container(
       width: width,
-      height: height - 120,
+      height: (PlatformUtils.instance.resizeWhen(width, 550))
+          ? height - 120
+          : height - 165,
       alignment: Alignment.topCenter,
       child: BlocConsumer<TransactionBloc, TransactionState>(
         listener: (context, state) {
