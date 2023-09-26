@@ -26,19 +26,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class AddBankView extends StatefulWidget {
+class AddMBBankView extends StatefulWidget {
   final String userId;
 
-  const AddBankView({
+  const AddMBBankView({
     super.key,
     required this.userId,
   });
 
   @override
-  State<StatefulWidget> createState() => _AddBankView();
+  State<StatefulWidget> createState() => _AddMBBankView();
 }
 
-class _AddBankView extends State<AddBankView> {
+class _AddMBBankView extends State<AddMBBankView> {
   static final TextEditingController phoneController = TextEditingController();
   static final TextEditingController nationalController =
       TextEditingController();
@@ -53,6 +53,16 @@ class _AddBankView extends State<AddBankView> {
     super.initState();
     Provider.of<BankTypeProvider>(context, listen: false).reset();
     bankBloc = BlocProvider.of(context);
+
+    BankTypeDTO dto = const BankTypeDTO(
+        id: 'aa4e489b-254e-4351-9cd4-f62e09c63ebc',
+        bankCode: 'MB',
+        bankShortName: 'MBBank',
+        bankName: 'Ngân hàng TMCP Quân đội',
+        imageId: '58b7190b-a294-4b14-968f-cd365593893e',
+        caiValue: '970422',
+        status: 1);
+    Provider.of<BankTypeProvider>(context, listen: false).updateBankType(dto);
   }
 
   @override

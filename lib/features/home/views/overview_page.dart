@@ -9,6 +9,7 @@ import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
+import 'package:VietQR/features/bank/views/add_bank_mb_view.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/home/frames/overview_frame.dart';
@@ -96,7 +97,7 @@ class _OverViewPageState extends State<OverViewPage> {
             .updateShowMenu(!showCardMenu);
         break;
       case MenuHomeType.OPEN_BANK_MB_ACCOUNT:
-        html.window.open('https://www.mbbank.com.vn/', 'new tab');
+        html.window.open('https://www.mbbank.com.vn/registration', 'new tab');
         break;
       case MenuHomeType.SETTING:
         DialogWidget.instance.openPopup(
@@ -125,6 +126,9 @@ class _OverViewPageState extends State<OverViewPage> {
         bankBloc: _bankBloc,
       ),
       AddBankView(
+        userId: UserInformationHelper.instance.getUserId(),
+      ),
+      AddMBBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
       const BusinessManagerView(),

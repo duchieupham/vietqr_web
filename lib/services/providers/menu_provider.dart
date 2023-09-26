@@ -23,13 +23,14 @@ class MenuProvider with ChangeNotifier {
   void changePage(MenuHomeType value) {
     if (value == MenuHomeType.HOME) {
       _initPage = 0;
-    } else if (value == MenuHomeType.ADD_LINK_BANK_ACCOUNT ||
-        value == MenuHomeType.ADD_LINK_BANK_MB) {
+    } else if (value == MenuHomeType.ADD_LINK_BANK_ACCOUNT) {
       _initPage = 1;
-    } else if (value == MenuHomeType.BUSINESS) {
+    } else if (value == MenuHomeType.ADD_LINK_BANK_MB) {
       _initPage = 2;
-    } else if (value == MenuHomeType.CREATE_QR) {
+    } else if (value == MenuHomeType.BUSINESS) {
       _initPage = 3;
+    } else if (value == MenuHomeType.CREATE_QR) {
+      _initPage = 4;
     }
   }
 }
