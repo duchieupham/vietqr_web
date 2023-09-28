@@ -7,11 +7,12 @@ import 'package:flutter/widgets.dart';
 class HeaderWidget extends StatelessWidget {
   final bool? isSubHeader;
   final bool isHeaderGuest;
-
+  final bool showAvatar;
   const HeaderWidget({
     super.key,
     this.isSubHeader,
     this.isHeaderGuest = false,
+    this.showAvatar = true,
   });
 
   @override
@@ -27,7 +28,10 @@ class HeaderWidget extends StatelessWidget {
           ? HeaderFullWidget(
               isSubHeader: isSubHeader,
             )
-          : HeaderHalfWidget(isSubHeader: isSubHeader),
+          : HeaderHalfWidget(
+              isSubHeader: isSubHeader,
+              showAvatar: showAvatar,
+            ),
     );
   }
 }

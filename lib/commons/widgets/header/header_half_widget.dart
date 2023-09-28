@@ -6,10 +6,12 @@ import 'package:go_router/go_router.dart';
 
 class HeaderHalfWidget extends StatelessWidget {
   final bool? isSubHeader;
+  final bool showAvatar;
 
   const HeaderHalfWidget({
     super.key,
     this.isSubHeader,
+    this.showAvatar = true,
   });
 
   @override
@@ -43,7 +45,7 @@ class HeaderHalfWidget extends StatelessWidget {
           // _buildTitle('Trang chủ'),
           //time
           const Spacer(),
-          _buildAvatar(context, imgId, 35),
+          if (showAvatar) _buildAvatar(context, imgId, 35),
         ],
       ),
     );

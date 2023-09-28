@@ -17,6 +17,7 @@ class Introduction extends StatelessWidget {
           children: [
             const HeaderWidget(
               isSubHeader: true,
+              showAvatar: false,
             ),
             Expanded(
               child: ListView(
@@ -42,9 +43,22 @@ class Introduction extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(
+          height: 16,
+        ),
+        const Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            'Giới thiệu về danh bạ QR',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
         _buildTemplate('',
             child: const Text(
                 '     “VietQR xin thông báo tính năng mới của chúng tôi: "Lưu danh bạ với VietQR." Chức năng này sẽ giúp bạn lưu trữ và chia sẻ danh bạ một cách hiệu quả hơn thông qua mã QR. Chúng tôi muốn bạn tham gia vào trải nghiệm này và chia sẻ cơ hội tuyệt vời này với bạn bè và người thân.')),
+        const SizedBox(
+          height: 8,
+        ),
         _buildTemplate(
             'Tại sao nên sử dụng tính năng danh bạ với VietQR của chúng tôi?',
             child: Column(
@@ -88,7 +102,7 @@ class Introduction extends StatelessWidget {
 
   Widget _buildTemplate(String title, {required Widget child}) {
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.only(top: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
