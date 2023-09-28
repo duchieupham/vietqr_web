@@ -1,6 +1,4 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/utils/platform_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,6 +11,120 @@ class BottomWeb extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return LayoutBuilder(builder: (context, constraints) {
+      print(constraints.maxWidth);
+      if (constraints.maxWidth < 580) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          color: bgColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Thông tin liên hệ',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 60,
+                        child: Text(
+                          'Email: ',
+                          style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          final Uri launchUri = Uri(
+                            scheme: 'mailto',
+                            path: 'sales@vietqr.vn',
+                          );
+                          await launchUrl(launchUri);
+                        },
+                        child: const Text(
+                          'sales@vietqr.vn',
+                          style: TextStyle(
+                            color: DefaultTheme.BLUE_TEXT,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 5)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 60,
+                        child: Text(
+                          'Hotline: ',
+                          style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          final Uri launchUri = Uri(
+                            scheme: 'tel',
+                            path: '19006234',
+                          );
+                          await launchUrl(launchUri);
+                        },
+                        child: const Text(
+                          '1900.6234',
+                          style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ),
+                      const Text(' - '),
+                      InkWell(
+                        onTap: () async {
+                          final Uri launchUri = Uri(
+                            scheme: 'tel',
+                            path: '0922333636',
+                          );
+                          await launchUrl(launchUri);
+                        },
+                        child: const Text(
+                          '09.2233.3636',
+                          style: TextStyle(
+                              // fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              _buildButtonInstallApp(isVertical: constraints.maxWidth < 880),
+              const SizedBox(
+                height: 20,
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child:
+                      _buildUrlSystem(isVertical: constraints.maxWidth < 880)),
+              Image.asset(
+                'assets/images/logo-vietqr-vn.png',
+                width: 120,
+              ),
+            ],
+          ),
+        );
+      }
       return Container(
         height: 105,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),

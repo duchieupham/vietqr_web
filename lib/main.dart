@@ -2,6 +2,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/widgets/introduc.dart';
 import 'package:VietQR/ecom/bank/views/ecom_add_bank_view.dart';
 import 'package:VietQR/ecom/home/views/ecom_home.dart';
 import 'package:VietQR/ecom/login/views/ecom_login.dart';
@@ -226,6 +227,12 @@ final GoRouter _router = GoRouter(
       path: '/mbbank-dkdv',
       redirect: (context, state) => '/mbbank-dkdv',
       builder: (BuildContext context, GoRouterState state) => const DkDv(),
+    ),
+    GoRoute(
+      path: '/contact/introducing',
+      redirect: (context, state) => '/contact/introducing',
+      builder: (BuildContext context, GoRouterState state) =>
+          const Introduction(),
     ),
   ],
 );
