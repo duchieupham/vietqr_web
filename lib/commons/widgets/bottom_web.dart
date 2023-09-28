@@ -19,90 +19,99 @@ class BottomWeb extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+              Row(
                 children: [
-                  const Text(
-                    'Thông tin liên hệ',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(
-                        width: 60,
-                        child: Text(
-                          'Email: ',
-                          style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                      const Text(
+                        'Thông tin liên hệ',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      InkWell(
-                        onTap: () async {
-                          final Uri launchUri = Uri(
-                            scheme: 'mailto',
-                            path: 'sales@vietqr.vn',
-                          );
-                          await launchUrl(launchUri);
-                        },
-                        child: const Text(
-                          'sales@vietqr.vn',
-                          style: TextStyle(
-                            color: DefaultTheme.BLUE_TEXT,
-                            decoration: TextDecoration.underline,
+                      const Padding(padding: EdgeInsets.only(top: 10)),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 60,
+                            child: Text(
+                              'Email: ',
+                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                            ),
                           ),
-                        ),
+                          InkWell(
+                            onTap: () async {
+                              final Uri launchUri = Uri(
+                                scheme: 'mailto',
+                                path: 'sales@vietqr.vn',
+                              );
+                              await launchUrl(launchUri);
+                            },
+                            child: const Text(
+                              'sales@vietqr.vn',
+                              style: TextStyle(
+                                color: DefaultTheme.BLUE_TEXT,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Padding(padding: EdgeInsets.only(top: 5)),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 60,
+                            child: Text(
+                              'Hotline: ',
+                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              final Uri launchUri = Uri(
+                                scheme: 'tel',
+                                path: '19006234',
+                              );
+                              await launchUrl(launchUri);
+                            },
+                            child: const Text(
+                              '1900.6234',
+                              style: TextStyle(
+                                  // fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ),
+                          const Text(' - '),
+                          InkWell(
+                            onTap: () async {
+                              final Uri launchUri = Uri(
+                                scheme: 'tel',
+                                path: '0922333636',
+                              );
+                              await launchUrl(launchUri);
+                            },
+                            child: const Text(
+                              '09.2233.3636',
+                              style: TextStyle(
+                                  // fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const Padding(padding: EdgeInsets.only(top: 5)),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        width: 60,
-                        child: Text(
-                          'Hotline: ',
-                          style: TextStyle(color: DefaultTheme.GREY_TEXT),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () async {
-                          final Uri launchUri = Uri(
-                            scheme: 'tel',
-                            path: '19006234',
-                          );
-                          await launchUrl(launchUri);
-                        },
-                        child: const Text(
-                          '1900.6234',
-                          style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ),
-                      const Text(' - '),
-                      InkWell(
-                        onTap: () async {
-                          final Uri launchUri = Uri(
-                            scheme: 'tel',
-                            path: '0922333636',
-                          );
-                          await launchUrl(launchUri);
-                        },
-                        child: const Text(
-                          '09.2233.3636',
-                          style: TextStyle(
-                              // fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ),
-                    ],
+                  const Spacer(),
+                  Image.asset(
+                    'assets/images/logo-vietqr-vn.png',
+                    width: 120,
                   ),
                 ],
               ),
@@ -113,14 +122,7 @@ class BottomWeb extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child:
-                      _buildUrlSystem(isVertical: constraints.maxWidth < 880)),
-              Image.asset(
-                'assets/images/logo-vietqr-vn.png',
-                width: 120,
-              ),
+              _buildUrlSystem(isVertical: constraints.maxWidth < 880),
             ],
           ),
         );
@@ -225,7 +227,7 @@ class BottomWeb extends StatelessWidget {
             ),
             Align(
                 alignment: Alignment.centerLeft,
-                child: _buildUrlSystem(isVertical: constraints.maxWidth < 880)),
+                child: _buildUrlSystem(isVertical: true)),
             const Spacer(),
             Image.asset(
               'assets/images/logo-vietqr-vn.png',
@@ -308,6 +310,42 @@ class BottomWeb extends StatelessWidget {
   }
 
   Widget _buildUrlSystem({bool isVertical = false}) {
+    if (isVertical) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Hệ thống VietQR VN:',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
+                // fontWeight: FontWeight.bold,
+                ),
+          ),
+          const Padding(padding: EdgeInsets.only(top: 25)),
+          const SizedBox(width: 16,),
+          SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildItemTitle('vietqr.vn'),
+                const SizedBox(
+                    height: 12,
+                    child: VerticalDivider(
+                      color: DefaultTheme.GREY_LIGHT,
+                    )),
+                _buildItemTitle('vietqr.com'),
+                const SizedBox(
+                    height: 12,
+                    child: VerticalDivider(
+                      color: DefaultTheme.GREY_LIGHT,
+                    )),
+                _buildItemTitle('vietqr.org'),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
