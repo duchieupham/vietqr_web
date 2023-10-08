@@ -1,14 +1,18 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/widgets/header/header_widget.dart';
+import 'package:VietQR/features/home/widget/menu_left.dart';
 import 'package:flutter/material.dart';
 
 class HomeFrame extends StatefulWidget {
   final Widget widget1;
   final Widget widget2;
+  final Widget menu;
   const HomeFrame({
     super.key,
     required this.widget1,
     required this.widget2,
+    required this.menu,
   });
 
   @override
@@ -22,25 +26,35 @@ class _HomeFrameState extends State<HomeFrame> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    return SizedBox(
-      width: width,
-      height: height - 60,
-      child: (PlatformUtils.instance.resizeWhen(width, 550))
-          ? SizedBox(
-              width: width,
-              height: height,
-              child: Row(
-                children: [
-                  Expanded(child: widget.widget1),
-                  SizedBox(
-                    width: 400,
-                    height: height - 60,
-                    child: widget.widget2,
-                  ),
-                ],
-              ),
-            )
-          : _forMobile(),
+    return Material(
+      child: SizedBox(
+        width: width,
+        height: height - 60,
+        child: (PlatformUtils.instance.resizeWhen(width, 550))
+            ? SizedBox(
+                width: width,
+                height: height,
+                child: Column(
+                  children: [
+                    const HeaderWidget(),
+                    Expanded(
+                      child: Row(
+                        children: [
+                        widget.menu,
+                          Expanded(child: widget.widget1),
+                          SizedBox(
+                            width: 400,
+                            height: height - 60,
+                            child: widget.widget2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : _forMobile(),
+      ),
     );
   }
 

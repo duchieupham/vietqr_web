@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
 import 'package:VietQR/features/business/events/business_information_event.dart';
@@ -14,6 +15,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../home/widget/menu_left.dart';
 
 class BusinessManagerView extends StatefulWidget {
   const BusinessManagerView({
@@ -52,7 +55,9 @@ class _DashboardViewState extends State<BusinessManagerView> {
   Widget build(BuildContext context) {
     return BusinessInformationFrame(
       widget1: [_buildListShortcut()],
-      widget2: [_buildBusinessWidget()],
+      widget2: [_buildBusinessWidget()], menu:const MenuLeft(
+      currentType:  MenuHomeType.BUSINESS,
+    ),
     );
   }
 

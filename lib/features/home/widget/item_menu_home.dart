@@ -63,7 +63,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   getBgItem() {
     if (widget.isSelect) {
-      return DefaultTheme.ITEM_MENU_SELECTED;
+      return DefaultTheme.BLUE_TEXT.withOpacity(0.30);
     } else if (amIHovering) {
       return DefaultTheme.GREY_BUTTON;
     }
@@ -79,7 +79,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
             color: widget.isSelect
-                ? DefaultTheme.ITEM_MENU_SELECTED
+                ? DefaultTheme.BLUE_TEXT.withOpacity(0.3)
                 : Colors.transparent,
             width: 40,
             height: 40,
@@ -150,7 +150,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                   else
                     Text(
                       widget.title,
-                      style: TextStyle(fontSize: widget.titleSize),
+                      style: TextStyle(fontSize: widget.titleSize, color: widget.isSelect ? DefaultTheme.BLUE_TEXT: DefaultTheme.BLACK),
                     ),
                   const Spacer(),
                   if (widget.enableMenuCard)

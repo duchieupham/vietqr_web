@@ -50,8 +50,7 @@ class _OverViewPageState extends State<OverViewPage> {
   void initState() {
     super.initState();
     String userId = UserInformationHelper.instance.getUserId();
-    _bankBloc = BlocProvider.of(context);
-    _transactionBloc = BlocProvider.of(context);
+
   }
 
   void _resetBank() {
@@ -70,27 +69,7 @@ class _OverViewPageState extends State<OverViewPage> {
         );
         break;
 
-      case MenuHomeType.CONTACT:
-        DialogWidget.instance.openMsgDialog(
-          title: 'Tính năng đang bảo trì',
-          msg: 'Vui lòng thử lại sau',
-        );
-        break;
-
-      case MenuHomeType.SCAN_CCCD:
-        DialogWidget.instance.openMsgDialog(
-          title: 'Tính năng đang bảo trì',
-          msg: 'Vui lòng thử lại sau',
-        );
-        break;
-
-      case MenuHomeType.SCAN_BANK:
-        DialogWidget.instance.openMsgDialog(
-          title: 'Tính năng đang bảo trì',
-          msg: 'Vui lòng thử lại sau',
-        );
-        break;
-      case MenuHomeType.BANKLIST:
+      case MenuHomeType.TRANSACTION:
         bool showCardMenu =
             Provider.of<MenuCardProvider>(context, listen: false).showMenu;
         Provider.of<MenuCardProvider>(context, listen: false)
@@ -121,10 +100,7 @@ class _OverViewPageState extends State<OverViewPage> {
 
   List<Widget> _getPage() {
     List<Widget> pages = [
-      HomeScreen(
-        transactionBloc: _transactionBloc,
-        bankBloc: _bankBloc,
-      ),
+    const  HomeScreen(),
       AddBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
@@ -147,10 +123,7 @@ class _OverViewPageState extends State<OverViewPage> {
           page: Consumer<MenuProvider>(builder: (context, provider, child) {
             return _getPage()[provider.initPage];
           }),
-          menu: MenuLeft(
-            onTab: (menuType) {
-              handleOnTabMenu(menuType);
-            },
+          menu: MenuLeft(currentType: MenuHomeType.LOGOUT,
           ),
           menuCard: _buildCardATM(context),
         );

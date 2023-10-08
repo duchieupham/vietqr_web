@@ -12,7 +12,9 @@ import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
+import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
+import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/home/views/overview_page.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
@@ -180,7 +182,7 @@ final GoRouter _router = GoRouter(
               ? '/home'
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
-          const OverViewPage(),
+          const HomeScreen(),
     ),
     GoRoute(
       path: '/qr/create/:id',
@@ -233,6 +235,14 @@ final GoRouter _router = GoRouter(
       redirect: (context, state) => '/contact/introducing',
       builder: (BuildContext context, GoRouterState state) =>
           const Introduction(),
+    ),
+    GoRoute(
+      path: '/business',
+      redirect: (context, state) =>   (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+          ? '/business'
+          : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+      const BusinessManagerView(),
     ),
   ],
 );

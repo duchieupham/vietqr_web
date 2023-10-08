@@ -16,7 +16,6 @@ class MenuProvider with ChangeNotifier {
   MenuHomeType get menuHomeType => _menuHomeType;
   void selectMenu(MenuHomeType value) {
     _menuHomeType = value;
-    changePage(value);
     notifyListeners();
   }
 
@@ -25,9 +24,11 @@ class MenuProvider with ChangeNotifier {
       _initPage = 0;
     } else if (value == MenuHomeType.ADD_LINK_BANK_ACCOUNT) {
       _initPage = 1;
-    } else if (value == MenuHomeType.ADD_LINK_BANK_MB) {
-      _initPage = 2;
-    } else if (value == MenuHomeType.BUSINESS) {
+    }
+    // else if (value == MenuHomeType.ADD_LINK_BANK_MB) {
+    //   _initPage = 2;
+    // }
+    else if (value == MenuHomeType.BUSINESS) {
       _initPage = 3;
     } else if (value == MenuHomeType.CREATE_QR) {
       _initPage = 4;

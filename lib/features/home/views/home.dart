@@ -1,6 +1,6 @@
 import 'dart:html' as html;
-
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
@@ -15,6 +15,7 @@ import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/features/bank/widgets/detail_bank_widget.dart';
 import 'package:VietQR/features/home/frames/home_frame.dart';
+import 'package:VietQR/features/home/widget/menu_left.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/token/events/token_event.dart';
 import 'package:VietQR/features/token/states/token_state.dart';
@@ -46,10 +47,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../commons/enums/event_type.dart';
 
 class HomeScreen extends StatefulWidget {
-  final BankBloc bankBloc;
-  final TransactionBloc transactionBloc;
   const HomeScreen(
-      {super.key, required this.transactionBloc, required this.bankBloc});
+      {super.key});
 
   @override
   State<StatefulWidget> createState() => _HomeScreen();
@@ -60,7 +59,8 @@ class _HomeScreen extends State<HomeScreen> {
   int currentPage = 0;
   List<BankAccountDTO> bankAccounts = [];
   List<Color> cardColors = [];
-
+  late BankBloc _bankBloc;
+  late TransactionBloc _transactionBloc;
   late WebSocketChannel channel;
 
   List<RelatedTransactionReceiveDTO> transactions = [];
@@ -71,15 +71,22 @@ class _HomeScreen extends State<HomeScreen> {
     String userId = UserInformationHelper.instance.getUserId();
     _tokenBloc = BlocProvider.of(context);
     _tokenBloc.add(const TokenEventCheckValid());
-
-    widget.bankBloc.add(BankEventGetList(userId: userId));
+    _bankBloc = BlocProvider.of(context);
+    _transactionBloc = BlocProvider.of(context);
+    _bankBloc.add(BankEventGetList(userId: userId));
     Session.instance.registerEventListener(EventTypes.refreshListAccountBank,
         () {
-      widget.bankBloc.add(BankEventGetList(userId: userId));
+          _bankBloc.add(BankEventGetList(userId: userId));
     });
+    _transactionBloc.add(TransactionEventGetList(
+        dto: TransactionInputDTO(
+            bankId: Provider.of<MenuCardProvider>(context, listen: false)
+                .bankDetailDTO
+                .id,
+            offset: currentPage)));
     Session.instance.registerEventListener(EventTypes.refreshListTransaction,
         () {
-      widget.transactionBloc.add(TransactionEventGetList(
+          _transactionBloc.add(TransactionEventGetList(
           dto: TransactionInputDTO(
               bankId: Provider.of<MenuCardProvider>(context, listen: false)
                   .bankDetailDTO
@@ -157,6 +164,9 @@ class _HomeScreen extends State<HomeScreen> {
         }
       },
       child: HomeFrame(
+        menu:const  MenuLeft(
+          currentType:  MenuHomeType.HOME,
+        ),
         widget1: Column(
           children: [
             _buildTableRow(),
@@ -198,7 +208,7 @@ class _HomeScreen extends State<HomeScreen> {
                                                 bankId: bankId,
                                                 offset: prevPage);
 
-                                        widget.transactionBloc.add(
+                                       _transactionBloc.add(
                                             TransactionEventFetch(
                                                 dto: transactionInputDTO));
                                       },
@@ -242,7 +252,7 @@ class _HomeScreen extends State<HomeScreen> {
                                           bankId: bankId,
                                           offset: prevPage,
                                         );
-                                        widget.transactionBloc.add(
+                                       _transactionBloc.add(
                                             TransactionEventFetch(
                                                 dto: transactionInputDTO));
                                       },
@@ -283,7 +293,7 @@ class _HomeScreen extends State<HomeScreen> {
                                             TransactionInputDTO(
                                                 bankId: bankId,
                                                 offset: nextPage);
-                                        widget.transactionBloc.add(
+                                   _transactionBloc.add(
                                             TransactionEventFetch(
                                                 dto: transactionInputDTO));
                                       },
@@ -655,7 +665,7 @@ class _HomeScreen extends State<HomeScreen> {
                                       accountBankDetailDTO:
                                           provider.bankDetailDTO,
                                       qrGeneratedDTO: provider.qrGeneratedDTO,
-                                      bankBloc: widget.bankBloc,
+                                      bankBloc:_bankBloc,
                                     ),
                                     width: 760,
                                     height: 450,
