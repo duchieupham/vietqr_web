@@ -9,12 +9,12 @@ class StgEnv implements Env {
 
   @override
   String getBaseUrl() {
-    return 'http://112.78.1.220:8084/vqr/api/';
+    return 'https://dev.vietqr.org/vqr/api/';
   }
 
   @override
   String getUrl() {
-    return 'http://112.78.1.220:8084/vqr/';
+    return 'https://dev.vietqr.org/vqr/';
   }
 
   // @override

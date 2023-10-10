@@ -9,6 +9,7 @@ enum MenuHomeType {
   SCAN_QR,
   CREATE_QR,
   SCAN_CCCD,
+  MERCHANT,
   SCAN_BANK,
   ADD_LINK_BANK_ACCOUNT,
   BUSINESS,
@@ -16,4 +17,9 @@ enum MenuHomeType {
   SETTING,
   LOGOUT,
   OTHER,
+}
+
+enum SubMenuType {
+  LIST_TRANSACTION,
+  SALE_REPORT,
 }

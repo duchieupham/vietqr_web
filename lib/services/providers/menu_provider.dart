@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
@@ -23,14 +24,34 @@ class MenuProvider with ChangeNotifier {
   void changePage(MenuHomeType value) {
     if (value == MenuHomeType.HOME) {
       _initPage = 0;
-    } else if (value == MenuHomeType.ADD_LINK_BANK_ACCOUNT) {
+    } else if (value == MenuHomeType.MERCHANT) {
       _initPage = 1;
+    } else if (value == MenuHomeType.ADD_LINK_BANK_ACCOUNT) {
+      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
+        _initPage = 2;
+      }else{
+        _initPage = 1;
+      }
+
     } else if (value == MenuHomeType.ADD_LINK_BANK_MB) {
-      _initPage = 2;
+      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
+        _initPage = 3;
+      }else{
+        _initPage = 2;
+      }
+
     } else if (value == MenuHomeType.BUSINESS) {
-      _initPage = 3;
+      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
+        _initPage = 4;
+      }else{
+        _initPage = 3;
+      }
     } else if (value == MenuHomeType.CREATE_QR) {
-      _initPage = 4;
+      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
+        _initPage = 5;
+      }else{
+        _initPage = 3;
+      }
     }
   }
 }

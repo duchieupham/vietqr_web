@@ -69,6 +69,7 @@ class LoginRepository {
             .setAccountInformation(accountInformationDTO);
         await Session.instance.getGuideWeb();
         Session.instance.fetchWallet();
+        Session.instance.checkAccountIsMerchant();
         result = true;
       }
     } catch (e) {

@@ -18,6 +18,7 @@ import 'package:VietQR/features/home/widget/card_wallet.dart';
 import 'package:VietQR/features/home/widget/menu_left.dart';
 import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
 import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
+import 'package:VietQR/features/merchant/views/merchant.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
@@ -125,6 +126,7 @@ class _OverViewPageState extends State<OverViewPage> {
         transactionBloc: _transactionBloc,
         bankBloc: _bankBloc,
       ),
+     const MerchantView(),
       AddBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),

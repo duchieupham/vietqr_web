@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
 import 'package:VietQR/features/information_user/repositories/wallet_repository.dart';
+import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
+import 'package:VietQR/models/account_is_merchant.dart';
 import 'package:VietQR/models/wallet_dto.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -132,6 +134,23 @@ class Session {
     _wallet = dto;
   }
 
+  final MerchantRepository merchantRepository = const MerchantRepository();
+
+  AccountIsMerchantDTO _accountIsMerchantDTO = const AccountIsMerchantDTO();
+  AccountIsMerchantDTO get accountIsMerchantDTO => _accountIsMerchantDTO;
+  List<BankAccountDTO> _listBankAccountOfMerchant = [];
+  List<BankAccountDTO> get listBankAccountOfMerchant =>
+      _listBankAccountOfMerchant;
+
+  Future checkAccountIsMerchant() async {
+    String userId = UserInformationHelper.instance.getUserId();
+    AccountIsMerchantDTO dto =
+        await merchantRepository.checkAccountIsMerchant(userId);
+    _accountIsMerchantDTO = dto;
+    _listBankAccountOfMerchant =
+        await merchantRepository.getListBank(dto.customerSyncId);
+  }
+
   // Account setting
   final SettingRepository settingRepository = const SettingRepository();
   Future fetchAccountSetting() async {
@@ -143,6 +162,7 @@ class Session {
   }
 
   List<BankAccountDTO> _bankAccounts = [];
+
   List<BankAccountDTO> get listBankAuth => _bankAccounts;
 
   void updateBankAccountsAuth(List<BankAccountDTO> value) {

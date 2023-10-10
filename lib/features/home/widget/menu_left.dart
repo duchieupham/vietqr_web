@@ -4,6 +4,7 @@ import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -102,6 +103,18 @@ class MenuLeft extends StatelessWidget {
                 closeListCard();
               },
             ),
+            if (Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty)
+              ItemMenuHome(
+                title: 'Đại lý',
+                pathIcon: AppImages.icMenuHome,
+                isSelect: provider.menuHomeType == MenuHomeType.MERCHANT,
+                onTap: () {
+                  onTab(MenuHomeType.MERCHANT);
+                  provider.selectMenu(MenuHomeType.MERCHANT);
+                  provider.updateShowMenu(!provider.showMenu);
+                  closeListCard();
+                },
+              ),
             ItemMenuHome(
               title: 'Danh sách tài khoản',
               pathIcon: AppImages.icMenuBank,

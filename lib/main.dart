@@ -54,6 +54,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -254,6 +255,9 @@ class _VietQRApp extends State<VietQRApp> {
     WebSocketHelper.instance.listenTransactionSocket();
     Session.load;
     Session.instance.getGuideWeb();
+    if (UserInformationHelper.instance.getUserId().trim().isNotEmpty) {
+      Session.instance.checkAccountIsMerchant();
+    }
   }
 
   @override
@@ -346,6 +350,7 @@ class _VietQRApp extends State<VietQRApp> {
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
+                  MonthYearPickerLocalizations.delegate,
                 ],
                 supportedLocales: const [
                   //  Locale('en'), // English
