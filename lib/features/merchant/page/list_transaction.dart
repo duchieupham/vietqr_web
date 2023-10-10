@@ -151,139 +151,170 @@ class _ListTransactionState extends State<ListTransaction> {
   }
 
   Widget _buildItem(TransactionMerchantDTO dto, int index) {
-    return SizedBox(
-      height: 50,
+    return Container(
+      color: index % 2 == 0 ? DefaultTheme.GREY_BG : DefaultTheme.WHITE,
+      alignment: Alignment.center,
       child: Row(
         children: [
-          SizedBox(
+          Container(
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
             width: 50,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Text(
-                '$index',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
+            height: 50,
+            alignment: Alignment.center,
+            child: Text(
+              '$index',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
-          SizedBox(
+          Container(
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.centerLeft,
+            height: 50,
             width: 130,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  dto.bankAccount,
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
+            child: Text(
+              dto.bankAccount,
+              textAlign: TextAlign.left,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
-          SizedBox(
+          Container(
             width: 110,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  dto.orderId.isNotEmpty ? dto.orderId : '-',
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
+            height: 50,
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.centerLeft,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.orderId.isNotEmpty ? dto.orderId : '-',
+              textAlign: TextAlign.left,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
-          SizedBox(
+          Container(
             width: 140,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  dto.referenceNumber.isNotEmpty ? dto.referenceNumber : '-',
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
+            height: 50,
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.referenceNumber.isNotEmpty ? dto.referenceNumber : '-',
+              textAlign: TextAlign.left,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
-          SizedBox(
+          Container(
             width: 150,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Text(
-                dto.transType == 'D'
-                    ? '- ${StringUtils.formatNumber(dto.amount)} VND'
-                    : '+ ${StringUtils.formatNumber(dto.amount)} VND',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: dto.getAmountColor()),
-              ),
+            height: 50,
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.transType == 'D'
+                  ? '- ${StringUtils.formatNumber(dto.amount)} VND'
+                  : '+ ${StringUtils.formatNumber(dto.amount)} VND',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: dto.getAmountColor()),
             ),
           ),
-          SizedBox(
+          Container(
             width: 110,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Text(
-                dto.getStatus(),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: dto.getStatusColor()),
-              ),
+            height: 50,
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.getStatus(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: dto.getStatusColor()),
             ),
           ),
-          SizedBox(
+          Container(
             width: 120,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Text(
-                dto.timeCreated == 0
-                    ? '-'
-                    : TimeUtils.instance.formatTimeDateFromInt(dto.timeCreated),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
+            height: 50,
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.timeCreated == 0
+                  ? '-'
+                  : TimeUtils.instance.formatTimeDateFromInt(dto.timeCreated),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
-          SizedBox(
+          Container(
             width: 140,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: Text(
-                dto.timePaid == 0
-                    ? '-'
-                    : TimeUtils.instance.formatTimeDateFromInt(dto.timePaid),
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
+            height: 50,
+            padding: const EdgeInsets.only(left: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.timePaid == 0
+                  ? '-'
+                  : TimeUtils.instance.formatTimeDateFromInt(dto.timePaid),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12),
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20),
-              child: SelectionArea(
-                child: Text(
-                  dto.content,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12),
-                ),
+            child: Container(
+              height: 50,
+              padding: const EdgeInsets.only(left: 12),
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                      right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+              child: Text(
+                dto.content,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12),
               ),
             ),
           ),
-          SizedBox(
+          Container(
             width: 100,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 20, right: 20),
-              child: Text(
-                dto.type == 0 ? 'Mã VietQR' : 'Khác',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 12,
-                ),
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
+                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+            child: Text(
+              dto.type == 0 ? 'Mã VietQR' : 'Khác',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
               ),
             ),
           ),
@@ -310,7 +341,7 @@ class _ListTransactionState extends State<ListTransaction> {
               height: 50,
               width: 110,
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.center),
+              alignment: Alignment.centerLeft),
           _buildItemTitle('Mã GD',
               height: 50,
               width: 140,

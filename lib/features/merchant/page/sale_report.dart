@@ -63,7 +63,7 @@ class _SaleReportState extends State<SaleReport> {
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: SizedBox(
-                        width: 1109,
+                        width: 1110,
                         child: Column(
                           children: [
                             _buildTitleItem(),
@@ -90,21 +90,21 @@ class _SaleReportState extends State<SaleReport> {
       decoration: const BoxDecoration(
           border: Border(
               bottom: BorderSide(width: 0.5, color: DefaultTheme.BLACK_LIGHT))),
-      child: Padding(
-        padding: EdgeInsets.only(top: index == 0 ? 12 : 0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (dto.bankAccounts?.isNotEmpty ?? false)
-              Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (dto.bankAccounts?.isNotEmpty ?? false)
+            Container(
+              color: index % 2 == 0 ? DefaultTheme.GREY_BG : DefaultTheme.WHITE,
+              alignment: Alignment.center,
+              child: Row(
                 children: [
-                  SizedBox(
-                    width: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12),
+                  Center(
+                    child: Container(
+                      width: 50,
+                      alignment: Alignment.center,
                       child: SelectableText(
                         '${index + 1}',
-                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 12,
                         ),
@@ -116,19 +116,29 @@ class _SaleReportState extends State<SaleReport> {
                     children: dto.bankAccounts!.map((bankAccount) {
                       int index = dto.bankAccounts!.indexOf(bankAccount);
                       return Container(
-                        padding: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
-                                    width: 0.5,
                                     color: index + 1 == dto.bankAccounts!.length
                                         ? DefaultTheme.TRANSPARENT
                                         : DefaultTheme.GREY_TEXT
-                                            .withOpacity(0.5)))),
+                                            .withOpacity(0.15)))),
                         child: Row(
                           children: [
-                            SizedBox(
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  right: BorderSide(
+                                      color: DefaultTheme.GREY_TEXT
+                                          .withOpacity(0.1)),
+                                  left: BorderSide(
+                                      color: DefaultTheme.GREY_TEXT
+                                          .withOpacity(0.1)),
+                                ),
+                              ),
                               width: 120,
+                              alignment: Alignment.center,
+                              height: (bankAccount.fees?.length ?? 0) * 50,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.only(top: 12, left: 12),
@@ -142,7 +152,11 @@ class _SaleReportState extends State<SaleReport> {
                             if (bankAccount.fees?.isNotEmpty ?? false)
                               Column(
                                 children: bankAccount.fees!.map((e) {
-                                  return _buildItemFee(e);
+                                  int feeIndex = bankAccount.fees!.indexOf(e);
+                                  return _buildItemFee(
+                                      e,
+                                      (feeIndex + 1) ==
+                                          bankAccount.fees!.length);
                                 }).toList(),
                               ),
                           ],
@@ -152,242 +166,94 @@ class _SaleReportState extends State<SaleReport> {
                   ),
                 ],
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
 
-  Widget _buildItemFee(FeeDTO dto) {
+  Widget _buildItemFee(FeeDTO dto, bool lastItem) {
     return Row(
       children: [
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              dto.shortName,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 139,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              dto.countingTransType == 0 ? 'Tất cả' : 'Chỉ GD có đối soát',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: dto.countingTransType == 1
-                      ? DefaultTheme.GREEN
-                      : DefaultTheme.BLACK),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 100,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              dto.totalTrans.toString(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 140,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              '${StringUtils.formatNumber(dto.totalAmount)} VND',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: dto.countingTransType == 1
-                      ? DefaultTheme.GREEN
-                      : DefaultTheme.BLACK),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 80,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              '${dto.vat}%',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              '${StringUtils.formatNumber(dto.discountAmount)} VND',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              '${StringUtils.formatNumber(dto.totalPayment)} VND',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: SelectableText(
-              dto.status == 1 ? 'Đã TT' : 'Chưa TT',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: dto.status == 1
-                      ? DefaultTheme.BLACK
-                      : DefaultTheme.RED_TEXT),
-            ),
-          ),
-        ),
+        _buildBoxItem(dto.shortName, width: 120, notBottomBorder: lastItem),
+        _buildBoxItem(
+            dto.countingTransType == 0 ? 'Tất cả' : 'Chỉ GD có đối soát',
+            width: 140,
+            notBottomBorder: lastItem,
+            valueColor: dto.countingTransType == 1
+                ? DefaultTheme.GREEN
+                : DefaultTheme.BLACK),
+        _buildBoxItem(dto.totalTrans.toString(),
+            width: 100, notBottomBorder: lastItem),
+        _buildBoxItem('${StringUtils.formatNumber(dto.totalAmount)} VND',
+            width: 140,
+            notBottomBorder: lastItem,
+            valueColor: dto.countingTransType == 1
+                ? DefaultTheme.GREEN
+                : DefaultTheme.BLACK),
+        _buildBoxItem('${dto.vat}%', width: 80, notBottomBorder: lastItem),
+        _buildBoxItem('${StringUtils.formatNumber(dto.discountAmount)} VND',
+            width: 120, notBottomBorder: lastItem),
+        _buildBoxItem('${StringUtils.formatNumber(dto.totalPayment)} VND',
+            width: 120, notBottomBorder: lastItem),
+        _buildBoxItem(dto.status == 1 ? 'Đã TT' : 'Chưa TT',
+            width: 120,
+            notBottomBorder: lastItem,
+            valueColor:
+                dto.status == 1 ? DefaultTheme.BLACK : DefaultTheme.RED_TEXT),
       ],
     );
   }
 
+  Widget _buildBoxItem(String value,
+      {double width = 100, bool notBottomBorder = true, Color? valueColor}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      decoration: BoxDecoration(
+          border: Border(
+              bottom: notBottomBorder
+                  ? BorderSide.none
+                  : BorderSide(color: DefaultTheme.GREY_TEXT.withOpacity(0.1)),
+              right:
+                  BorderSide(color: DefaultTheme.GREY_TEXT.withOpacity(0.1)))),
+      height: 50,
+      alignment: Alignment.center,
+      width: width,
+      child: SelectableText(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 12, color: valueColor),
+      ),
+    );
+  }
+
   Widget _buildTitleItem() {
-    return Row(
-      children: const [
-        SizedBox(
-          width: 50,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'No.',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 12),
-            child: Text(
-              'Tài khoản',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'Gói dịch vụ',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 139,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'GD ghi nhận',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 100,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'Tổng GD',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 140,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'Tổng tiền GD',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 80,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'VAT',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'Khuyến mại',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'Số tiền cần TT',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 120,
-          child: Padding(
-            padding: EdgeInsets.only(top: 12, left: 20),
-            child: Text(
-              'Trạng thái',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-      ],
+    return Container(
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(color: DefaultTheme.BLUE_DARK),
+      child: Row(
+        children: [
+          _buildItemTitle('No.', width: 50, padding: EdgeInsets.zero),
+          _buildItemTitle('Tài khoản',
+              width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Gói dịch vụ',
+              width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('GD ghi nhận',
+              width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Tổng GD',
+              width: 100, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Tổng tiền GD',
+              width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('VAT',
+              width: 80, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Khuyến mại',
+              width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Số tiền cần TT',
+              width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Trạng thái',
+              width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
+        ],
+      ),
     );
   }
 
@@ -469,6 +335,28 @@ class _SaleReportState extends State<SaleReport> {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildItemTitle(
+    String title, {
+    TextAlign? textAlign,
+    EdgeInsets? padding,
+    double? width,
+  }) {
+    return Container(
+      width: width,
+      height: 50,
+      padding: padding,
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+          border:
+              Border(left: BorderSide(color: DefaultTheme.WHITE, width: 0.5))),
+      child: Text(
+        title,
+        textAlign: textAlign,
+        style: const TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+      ),
     );
   }
 }
