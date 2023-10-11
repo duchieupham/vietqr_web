@@ -71,7 +71,7 @@ class ThemeSettingWidget extends StatelessWidget {
         width: width,
         bgColor: (isSelected)
             ? Theme.of(context).canvasColor
-            : DefaultTheme.TRANSPARENT,
+            : AppColor.TRANSPARENT,
         child: Column(
           children: [
             Image.asset(

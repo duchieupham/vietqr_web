@@ -73,9 +73,9 @@ class _CreateQRCodeState extends State<CreateQRCode> {
       MaterialState.focused,
     };
     if (states.any(interactiveStates.contains)) {
-      return DefaultTheme.BLUE_TEXT;
+      return AppColor.BLUE_TEXT;
     }
-    return DefaultTheme.WINTER_COLOR;
+    return AppColor.WINTER_COLOR;
   }
 
   @override
@@ -160,7 +160,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
               if (PlatformUtils.instance
                   .resizeWhen(constraints.maxWidth, 800)) ...[
                 const Divider(
-                  color: DefaultTheme.BLACK_DARK,
+                  color: AppColor.BLACK_DARK,
                   thickness: 0.5,
                   height: 0.5,
                 ),
@@ -222,7 +222,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   'Số tài khoản không hợp lệ',
                   style: TextStyle(
                     fontSize: 12,
-                    color: DefaultTheme.RED_TEXT,
+                    color: AppColor.RED_TEXT,
                   ),
                 ),
               ),
@@ -276,7 +276,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   'Chủ tài khoản không hợp lệ',
                   style: TextStyle(
                     fontSize: 12,
-                    color: DefaultTheme.RED_TEXT,
+                    color: AppColor.RED_TEXT,
                   ),
                 ),
               ),
@@ -322,7 +322,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   child: Text(
                     'Số tiền không đúng định dạng',
                     style: TextStyle(
-                      color: DefaultTheme.RED_CALENDAR,
+                      color: AppColor.RED_CALENDAR,
                       fontSize: 12,
                     ),
                   ),
@@ -348,7 +348,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                 children: [
                   Switch(
                     value: !provider.showBankAccount,
-                    activeColor: DefaultTheme.GREEN,
+                    activeColor: AppColor.GREEN,
                     onChanged: (bool value) {
                       provider.updateShowBankAccount(!value);
                     },
@@ -366,10 +366,10 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                 height: 40,
                 text: 'Tạo mã VietQR',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
+                textColor: AppColor.WHITE,
                 bgColor: !provider.isValidCreate
-                    ? DefaultTheme.GREY_TEXT
-                    : DefaultTheme.BLUE_TEXT,
+                    ? AppColor.GREY_TEXT
+                    : AppColor.BLUE_TEXT,
                 function: () {
                   if (!provider.isValidCreate) {
                   } else if (provider.bankType.bankCode.isNotEmpty) {
@@ -456,7 +456,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: DefaultTheme.GREY_TOP_TAB_BAR, width: 0.5),
+        border: Border.all(color: AppColor.GREY_TOP_TAB_BAR, width: 0.5),
       ),
       child: Row(
         children: [
@@ -503,7 +503,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
               width: 50,
               height: 50,
               child: CircularProgressIndicator(
-                color: DefaultTheme.GREEN,
+                color: AppColor.GREEN,
               ),
             ),
           );
@@ -613,8 +613,8 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 1,
-                                    backgroundColor: DefaultTheme.WHITE,
-                                    textColor: DefaultTheme.BLACK,
+                                    backgroundColor: AppColor.WHITE,
+                                    textColor: AppColor.BLACK,
                                     fontSize: 15,
                                     webBgColor: 'rgba(255, 255, 255)',
                                     webPosition: 'center',
@@ -644,7 +644,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
         child: BoxLayout(
           width: 300,
           height: 300,
-          bgColor: DefaultTheme.WHITE,
+          bgColor: AppColor.WHITE,
           enableShadow: true,
           padding: const EdgeInsets.all(20),
           child: Opacity(
@@ -652,7 +652,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
             child: QrImage(
               data: 'https://vietqr.vn',
               size: 250,
-              foregroundColor: DefaultTheme.BLACK,
+              foregroundColor: AppColor.BLACK,
               embeddedImage:
                   const AssetImage('assets/images/ic-viet-qr-small.png'),
               embeddedImageStyle: QrEmbeddedImageStyle(

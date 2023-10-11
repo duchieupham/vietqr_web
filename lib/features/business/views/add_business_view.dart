@@ -115,7 +115,7 @@ class AddBusinessView extends StatelessWidget {
                         height: 150,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: DefaultTheme.GREY_TOP_TAB_BAR.withOpacity(0.3),
+                          color: AppColor.GREY_TOP_TAB_BAR.withOpacity(0.3),
                           image: (provider.bytesData != null)
                               ? DecorationImage(
                                   fit: BoxFit.cover,
@@ -192,7 +192,7 @@ class AddBusinessView extends StatelessWidget {
                     height: 40,
                     borderRadius: 10,
                     text: 'Cập nhật ảnh bìa',
-                    textColor: DefaultTheme.GREEN,
+                    textColor: AppColor.GREEN,
                     bgColor: Theme.of(context).cardColor,
                     function: () async {
                       // await imagePicker
@@ -217,7 +217,7 @@ class AddBusinessView extends StatelessWidget {
                     height: 40,
                     borderRadius: 10,
                     text: 'Cập nhật ảnh đại diện',
-                    textColor: DefaultTheme.GREEN,
+                    textColor: AppColor.GREEN,
                     bgColor: Theme.of(context).cardColor,
                     function: () async {
                       // await imagePicker
@@ -240,7 +240,7 @@ class AddBusinessView extends StatelessWidget {
                   const Text(
                     'Lưu ý:\n-   Các trường có dấu \u002A là bắt buộc.\n-   Nếu doanh nghiệp/tổ chức của bạn không bao gồm chi nhánh nào, thì một chi nhánh mặc định tương ứng với tên và địa chỉ doanh nghiệp sẽ được tạo.\n-   Các quản trị viên sẽ được nhận tất cả thông báo giao dịch từ các chi nhánh thuộc doanh nghiệp này.',
                     style: TextStyle(
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                       height: 1.5,
                     ),
                   ),
@@ -319,7 +319,7 @@ class AddBusinessView extends StatelessWidget {
                         child: const Text(
                           'Thêm thành viên',
                           style: TextStyle(
-                            color: DefaultTheme.GREEN,
+                            color: AppColor.GREEN,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -371,7 +371,7 @@ class AddBusinessView extends StatelessWidget {
                         child: const Text(
                           'Thêm chi nhánh',
                           style: TextStyle(
-                            color: DefaultTheme.GREEN,
+                            color: AppColor.GREEN,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -406,8 +406,8 @@ class AddBusinessView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
               child: ButtonWidget(
                 text: 'Lưu',
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.GREEN,
                 function: () {
                   SystemChannels.textInput.invokeMethod('TextInput.hide');
                   if (isValidForm(context: context)) {
@@ -510,12 +510,12 @@ class AddBusinessView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              color: (isAdmin) ? DefaultTheme.BLUE_TEXT : DefaultTheme.ORANGE,
+              color: (isAdmin) ? AppColor.BLUE_TEXT : AppColor.ORANGE,
             ),
             child: Text(
               (isAdmin) ? 'Admin' : 'Quản lý',
               style: const TextStyle(
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
               ),
             ),
           ),
@@ -534,12 +534,12 @@ class AddBusinessView extends StatelessWidget {
                     height: 20,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: DefaultTheme.RED_TEXT.withOpacity(0.8),
+                      color: AppColor.RED_TEXT.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: const Icon(
                       Icons.remove_rounded,
-                      color: DefaultTheme.WHITE,
+                      color: AppColor.WHITE,
                       size: 12,
                     ),
                   ),
@@ -607,12 +607,12 @@ class AddBusinessView extends StatelessWidget {
               height: 20,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: DefaultTheme.RED_TEXT.withOpacity(0.8),
+                color: AppColor.RED_TEXT.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(25),
               ),
               child: const Icon(
                 Icons.remove_rounded,
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 size: 12,
               ),
             ),

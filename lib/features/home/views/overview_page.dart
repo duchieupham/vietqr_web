@@ -13,9 +13,9 @@ import 'package:VietQR/features/bank/views/add_bank_mb_view.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/home/frames/overview_frame.dart';
-import 'package:VietQR/features/home/views/home.dart';
+import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/home/widget/card_wallet.dart';
-import 'package:VietQR/features/home/widget/menu_left.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
 import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
@@ -46,11 +46,11 @@ class _OverViewPageState extends State<OverViewPage> {
   late TransactionBloc _transactionBloc;
   List<BankAccountDTO> bankAccounts = [];
   List<Color> cardColors = [];
+
   @override
   void initState() {
     super.initState();
     String userId = UserInformationHelper.instance.getUserId();
-
   }
 
   void _resetBank() {
@@ -100,7 +100,7 @@ class _OverViewPageState extends State<OverViewPage> {
 
   List<Widget> _getPage() {
     List<Widget> pages = [
-    const  HomeScreen(),
+      const HomeScreen(),
       AddBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
@@ -123,7 +123,8 @@ class _OverViewPageState extends State<OverViewPage> {
           page: Consumer<MenuProvider>(builder: (context, provider, child) {
             return _getPage()[provider.initPage];
           }),
-          menu: MenuLeft(currentType: MenuHomeType.LOGOUT,
+          menu: const MenuLeft(
+            currentType: MenuHomeType.LOGOUT,
           ),
           menuCard: _buildCardATM(context),
         );
@@ -197,13 +198,13 @@ class _OverViewPageState extends State<OverViewPage> {
                         borderRadius: 25,
                         padding: const EdgeInsets.all(0),
                         alignment: Alignment.center,
-                        bgColor: DefaultTheme.CARD_MY_QR.withOpacity(0.5),
+                        bgColor: AppColor.CARD_MY_QR.withOpacity(0.5),
                         child: Text(
                           bankAccounts.length.toString(),
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: DefaultTheme.BLUE_TEXT,
+                            color: AppColor.BLUE_TEXT,
                           ),
                         ),
                       ),
@@ -298,7 +299,7 @@ class _OverViewPageState extends State<OverViewPage> {
                                             decoration: BoxDecoration(
                                               border: (provider.index != index)
                                                   ? Border.all(
-                                                      color: DefaultTheme
+                                                      color: AppColor
                                                           .BLACK_LIGHT
                                                           .withOpacity(0.2))
                                                   : null,
@@ -306,7 +307,7 @@ class _OverViewPageState extends State<OverViewPage> {
                                                       index)
                                                   ? [
                                                       BoxShadow(
-                                                        color: DefaultTheme
+                                                        color: AppColor
                                                             .GREY_TEXT
                                                             .withOpacity(0.5),
                                                         spreadRadius: 0.6,
@@ -335,7 +336,7 @@ class _OverViewPageState extends State<OverViewPage> {
                                                       border: (provider.index !=
                                                               index)
                                                           ? Border.all(
-                                                              color: DefaultTheme
+                                                              color: AppColor
                                                                   .BLACK_LIGHT
                                                                   .withOpacity(
                                                                       0.2))
@@ -343,7 +344,7 @@ class _OverViewPageState extends State<OverViewPage> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               60),
-                                                      color: DefaultTheme.WHITE,
+                                                      color: AppColor.WHITE,
                                                       image: DecorationImage(
                                                         image: ImageUtils
                                                             .instance
@@ -378,9 +379,9 @@ class _OverViewPageState extends State<OverViewPage> {
                                                                   color: (provider
                                                                               .index ==
                                                                           index)
-                                                                      ? DefaultTheme
+                                                                      ? AppColor
                                                                           .WHITE
-                                                                      : DefaultTheme
+                                                                      : AppColor
                                                                           .BLACK,
                                                                   fontSize: 13),
                                                             ),
@@ -400,11 +401,11 @@ class _OverViewPageState extends State<OverViewPage> {
                                                               .userBankName
                                                               .toUpperCase(),
                                                           style: TextStyle(
-                                                            color: (provider.index ==
+                                                            color: (provider
+                                                                        .index ==
                                                                     index)
-                                                                ? DefaultTheme
-                                                                    .WHITE
-                                                                : DefaultTheme
+                                                                ? AppColor.WHITE
+                                                                : AppColor
                                                                     .BLACK,
                                                             fontSize: 10,
                                                           ),
@@ -417,8 +418,8 @@ class _OverViewPageState extends State<OverViewPage> {
                                                       'Đang chọn',
                                                       style: TextStyle(
                                                           fontSize: 9,
-                                                          color: DefaultTheme
-                                                              .WHITE),
+                                                          color:
+                                                              AppColor.WHITE),
                                                     )
                                                 ],
                                               ),
@@ -448,7 +449,6 @@ class _OverViewPageState extends State<OverViewPage> {
         child: ButtonIconWidget(
           width: 245,
           height: 40,
-          border: Border.all(color: DefaultTheme.BLUE_TEXT),
           pathIcon: AppImages.icMenuBank,
           title: 'Thêm/Liên kết TK ngân hàng',
           function: () {
@@ -459,8 +459,7 @@ class _OverViewPageState extends State<OverViewPage> {
           },
           bgColor: Theme.of(context).canvasColor.withOpacity(0.3),
           textSize: 11,
-          pathIconSize: 28,
-          textColor: DefaultTheme.BLUE_TEXT,
+          textColor: AppColor.BLUE_TEXT,
         ),
       ),
     );
@@ -474,12 +473,12 @@ class _OverViewPageState extends State<OverViewPage> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(25)),
           color: accountDTO.userId == UserInformationHelper.instance.getUserId()
-              ? DefaultTheme.BLUE_CARD
-              : DefaultTheme.ORANGE,
+              ? AppColor.BLUE_CARD
+              : AppColor.ORANGE,
         ),
         child: const Icon(
           Icons.check,
-          color: DefaultTheme.WHITE,
+          color: AppColor.WHITE,
           size: 7,
         ),
       );
@@ -497,7 +496,7 @@ class _OverViewPageState extends State<OverViewPage> {
             'Liên kết ngay',
             style: TextStyle(
               fontSize: 9,
-              color: DefaultTheme.BLUE_TEXT,
+              color: AppColor.BLUE_TEXT,
               decoration: TextDecoration.underline,
             ),
           ),

@@ -177,7 +177,7 @@ class BankDetailWidget extends StatelessWidget {
                           'Liên kết TK ngân hàng để nhận thông báo biến động số dư',
                           style: TextStyle(
                             // fontSize: 12,
-                            color: DefaultTheme.GREY_TEXT,
+                            color: AppColor.GREY_TEXT,
                           ),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
@@ -220,7 +220,7 @@ class BankDetailWidget extends StatelessWidget {
                                 child: ButtonIconWidget(
                                   width: 150,
                                   height: 40,
-                                  textColor: DefaultTheme.RED_TEXT,
+                                  textColor: AppColor.RED_TEXT,
                                   icon: Icons.delete_rounded,
                                   title: 'Xoá tài khoản',
                                   bgColor: Theme.of(context).canvasColor,
@@ -260,7 +260,7 @@ class BankDetailWidget extends StatelessWidget {
                                   child: ButtonIconWidget(
                                     width: 150,
                                     height: 40,
-                                    textColor: DefaultTheme.RED_TEXT,
+                                    textColor: AppColor.RED_TEXT,
                                     icon: Icons.remove_circle_rounded,
                                     title: 'Huỷ liên kết',
                                     bgColor: Theme.of(context).canvasColor,
@@ -295,8 +295,8 @@ class BankDetailWidget extends StatelessWidget {
                                   child: ButtonWidget(
                                     width: 150,
                                     height: 40,
-                                    textColor: DefaultTheme.WHITE,
-                                    bgColor: DefaultTheme.GREEN,
+                                    textColor: AppColor.WHITE,
+                                    bgColor: AppColor.GREEN,
                                     borderRadius: 5,
                                     function: () {
                                       BankTypeDTO bankTypeDTO = BankTypeDTO(
@@ -392,8 +392,8 @@ class BankDetailWidget extends StatelessWidget {
                   : Icons.pending_actions_rounded,
               size: 15,
               color: (isAuthenticated)
-                  ? DefaultTheme.BLUE_TEXT
-                  : DefaultTheme.ORANGE,
+                  ? AppColor.BLUE_TEXT
+                  : AppColor.ORANGE,
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
           ],
@@ -403,7 +403,7 @@ class BankDetailWidget extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 image: DecorationImage(
                   fit: BoxFit.contain,
                   image: ImageUtils.instance.getImageNetWork(imgId),
@@ -420,9 +420,9 @@ class BankDetailWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               color: (isAuthenticated != null && isAuthenticated)
-                  ? DefaultTheme.BLUE_TEXT
+                  ? AppColor.BLUE_TEXT
                   : (isAuthenticated != null && !isAuthenticated)
-                      ? DefaultTheme.ORANGE
+                      ? AppColor.ORANGE
                       : Theme.of(context).hintColor,
             ),
           ),

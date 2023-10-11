@@ -74,7 +74,7 @@ class PolicyBankWidget extends StatelessWidget {
                   TextSpan(
                     text: 'vietqr.vn',
                     style: const TextStyle(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
@@ -95,7 +95,7 @@ class PolicyBankWidget extends StatelessWidget {
                   TextSpan(
                     text: 'https://vietqr.vn/mbbank-dkdv/',
                     style: const TextStyle(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
@@ -125,7 +125,7 @@ class PolicyBankWidget extends StatelessWidget {
                 child: Consumer<BankTypeProvider>(
                   builder: (context, provider, child) {
                     return Checkbox(
-                      activeColor: DefaultTheme.GREEN,
+                      activeColor: AppColor.GREEN,
                       value: provider.agreeWithPolicy,
                       shape: const CircleBorder(),
                       onChanged: (bool? value) {
@@ -154,10 +154,10 @@ class PolicyBankWidget extends StatelessWidget {
               height: 40,
               borderRadius: 5,
               text: 'Xác thực',
-              textColor: DefaultTheme.WHITE,
+              textColor: AppColor.WHITE,
               bgColor: (provider.agreeWithPolicy)
-                  ? DefaultTheme.GREEN
-                  : DefaultTheme.GREY_TOP_TAB_BAR,
+                  ? AppColor.GREEN
+                  : AppColor.GREY_TOP_TAB_BAR,
               function: () {
                 Navigator.pop(context, true);
               },

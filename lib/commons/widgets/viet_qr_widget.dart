@@ -111,7 +111,7 @@ class VietQRWidget extends StatelessWidget {
           Text(
             '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
             style: const TextStyle(
-              color: DefaultTheme.ORANGE,
+              color: AppColor.ORANGE,
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
@@ -156,7 +156,7 @@ class VietQRWidget extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             image: (qrGeneratedDTO.imgId.isEmpty)
                 ? null
                 : DecorationImage(
@@ -187,7 +187,7 @@ class VietQRWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        color: DefaultTheme.WHITE,
+        color: AppColor.WHITE,
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).shadowColor.withOpacity(0.3),
@@ -225,7 +225,7 @@ class VietQRWidget extends StatelessWidget {
                 height: 30,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: DefaultTheme.WHITE,
+                  color: AppColor.WHITE,
                   image: (qrGeneratedDTO.imgId.isEmpty)
                       ? null
                       : DecorationImage(
@@ -290,7 +290,7 @@ class VietQRWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 boxShadow: [
                   BoxShadow(
                     color: Theme.of(context).shadowColor.withOpacity(0.3),
@@ -326,7 +326,7 @@ class VietQRWidget extends StatelessWidget {
                         height: 20,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                           image: (qrGeneratedDTO.imgId.isEmpty)
                               ? null
                               : DecorationImage(
@@ -361,7 +361,7 @@ class VietQRWidget extends StatelessWidget {
               child: Text(
                 '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
                 style: const TextStyle(
-                  color: DefaultTheme.ORANGE_Dark,
+                  color: AppColor.ORANGE_Dark,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
@@ -373,7 +373,7 @@ class VietQRWidget extends StatelessWidget {
           style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: DefaultTheme.BLACK),
+              color: AppColor.BLACK),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 5)),
         SelectableText(
@@ -381,7 +381,7 @@ class VietQRWidget extends StatelessWidget {
           style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w900,
-              color: DefaultTheme.BLACK),
+              color: AppColor.BLACK),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 5)),
         Text(
@@ -391,7 +391,7 @@ class VietQRWidget extends StatelessWidget {
           style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: DefaultTheme.BLACK),
+              color: AppColor.BLACK),
         ),
         if (qrGeneratedDTO.content.isNotEmpty) ...[
           const Padding(padding: EdgeInsets.only(bottom: 10)),
@@ -400,7 +400,7 @@ class VietQRWidget extends StatelessWidget {
             maxLines: 2,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12, color: DefaultTheme.BLACK),
+            style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
           ),
         ],
       ],

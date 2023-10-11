@@ -261,9 +261,9 @@ class BranchDetailView extends StatelessWidget {
                                                         height: 400,
                                                       );
                                                     },
-                                                    bgColor: DefaultTheme.GREEN,
+                                                    bgColor: AppColor.GREEN,
                                                     textColor:
-                                                        DefaultTheme.WHITE,
+                                                        AppColor.WHITE,
                                                   )
                                                 : const SizedBox();
                                           },
@@ -303,17 +303,17 @@ class BranchDetailView extends StatelessWidget {
                                     label: (provider.businessMembers.isEmpty)
                                         ? null
                                         : '${provider.businessMembers.length} thành viên',
-                                    color: DefaultTheme.BLUE_TEXT,
+                                    color: AppColor.BLUE_TEXT,
                                     icon: Icons.people_alt_rounded,
                                   ),
                                   if (provider.isLoadingGetMember)
                                     Container(
                                       margin: const EdgeInsets.only(top: 24),
-                                      color: DefaultTheme.TRANSPARENT,
+                                      color: AppColor.TRANSPARENT,
                                       width: 36,
                                       height: 36,
                                       child: const CircularProgressIndicator(
-                                        color: DefaultTheme.GREEN,
+                                        color: AppColor.GREEN,
                                       ),
                                     )
                                   else
@@ -330,7 +330,7 @@ class BranchDetailView extends StatelessWidget {
                                                 const Icon(
                                                   Icons.people_outline_rounded,
                                                   size: 40,
-                                                  color: DefaultTheme.BLUE_TEXT,
+                                                  color: AppColor.BLUE_TEXT,
                                                 ),
                                                 const Padding(
                                                     padding: EdgeInsets.only(
@@ -374,9 +374,9 @@ class BranchDetailView extends StatelessWidget {
                                                           );
                                                         },
                                                         bgColor:
-                                                            DefaultTheme.GREEN,
+                                                            AppColor.GREEN,
                                                         textColor:
-                                                            DefaultTheme.WHITE,
+                                                            AppColor.WHITE,
                                                       )
                                                     : const SizedBox(),
                                                 const Padding(
@@ -512,13 +512,13 @@ class BranchDetailView extends StatelessWidget {
                 builder: (context, provider, child) {
               return dto.isDelete
                   ? Container(
-                      color: DefaultTheme.TRANSPARENT,
+                      color: AppColor.TRANSPARENT,
                       margin: const EdgeInsets.only(left: 10),
                       width: 16,
                       height: 16,
                       child: const Center(
                         child: CircularProgressIndicator(
-                          color: DefaultTheme.GREEN,
+                          color: AppColor.GREEN,
                         ),
                       ),
                     )
@@ -542,7 +542,7 @@ class BranchDetailView extends StatelessWidget {
                           padding: const EdgeInsets.all(0),
                           child: const Icon(
                             Icons.remove_circle_outline_rounded,
-                            color: DefaultTheme.RED_TEXT,
+                            color: AppColor.RED_TEXT,
                             size: 12,
                           ),
                         ),
@@ -579,7 +579,7 @@ class BranchDetailView extends StatelessWidget {
                   width: 60,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: DefaultTheme.WHITE,
+                    color: AppColor.WHITE,
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
                       image: ImageUtils.instance.getImageNetWork(dto.imgId),
@@ -594,14 +594,14 @@ class BranchDetailView extends StatelessWidget {
                       Text(
                         '${dto.bankCode} - ${dto.bankAccount}',
                         style: const TextStyle(
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                           fontSize: 12,
                         ),
                       ),
                       Text(
                         dto.bankName,
                         style: const TextStyle(
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                           fontSize: 12,
                         ),
                       ),
@@ -615,7 +615,7 @@ class BranchDetailView extends StatelessWidget {
           Text(
             dto.userBankName.toUpperCase(),
             style: const TextStyle(
-              color: DefaultTheme.WHITE,
+              color: AppColor.WHITE,
               fontSize: 15,
             ),
           ),
@@ -623,7 +623,7 @@ class BranchDetailView extends StatelessWidget {
           Text(
             'Trạng thái: ${(dto.authenticated) ? 'Đã liên kết' : 'Chưa liên kết'}',
             style: const TextStyle(
-              color: DefaultTheme.WHITE,
+              color: AppColor.WHITE,
               fontSize: 12,
             ),
           ),
@@ -647,8 +647,8 @@ class BranchDetailView extends StatelessWidget {
                 //   },
                 // );
               },
-              bgColor: DefaultTheme.TRANSPARENT,
-              textColor: DefaultTheme.WHITE,
+              bgColor: AppColor.TRANSPARENT,
+              textColor: AppColor.WHITE,
             ),
           ],
           if (isDelete) ...[
@@ -672,7 +672,7 @@ class BranchDetailView extends StatelessWidget {
                       // );
                     },
                     bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                    textColor: DefaultTheme.WHITE,
+                    textColor: AppColor.WHITE,
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 10),
@@ -698,7 +698,7 @@ class BranchDetailView extends StatelessWidget {
                               dto: accountBankBranchInsertDTO));
                     },
                     bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-                    textColor: DefaultTheme.WHITE,
+                    textColor: AppColor.WHITE,
                   ),
                 ],
               ),
@@ -760,7 +760,7 @@ class BranchDetailView extends StatelessWidget {
               },
               child: const Icon(
                 Icons.copy_rounded,
-                color: DefaultTheme.GREY_TEXT,
+                color: AppColor.GREY_TEXT,
                 size: 15,
               ),
             ),

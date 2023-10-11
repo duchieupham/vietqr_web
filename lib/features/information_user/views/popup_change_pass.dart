@@ -83,7 +83,7 @@ class _UserUpdatePasswordState extends State<ModalUpdatePassword> {
                 ),
                 const Divider(
                   height: 0.5,
-                  color: DefaultTheme.GREY_LIGHT,
+                  color: AppColor.GREY_LIGHT,
                 ),
                 TextFieldWidget(
                   width: width,
@@ -99,7 +99,7 @@ class _UserUpdatePasswordState extends State<ModalUpdatePassword> {
                 ),
                 const Divider(
                   height: 0.5,
-                  color: DefaultTheme.GREY_LIGHT,
+                  color: AppColor.GREY_LIGHT,
                 ),
                 TextFieldWidget(
                   width: width,
@@ -120,7 +120,7 @@ class _UserUpdatePasswordState extends State<ModalUpdatePassword> {
                     child: Text(
                       'Mật khẩu cũ không đúng định dạng.',
                       style:
-                          TextStyle(color: DefaultTheme.RED_TEXT, fontSize: 13),
+                          TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                     ),
                   ),
                 ),
@@ -131,7 +131,7 @@ class _UserUpdatePasswordState extends State<ModalUpdatePassword> {
                     child: Text(
                       'Mật khẩu mới bao gồm 6 số.',
                       style:
-                          TextStyle(color: DefaultTheme.RED_TEXT, fontSize: 13),
+                          TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                     ),
                   ),
                 ),
@@ -142,7 +142,7 @@ class _UserUpdatePasswordState extends State<ModalUpdatePassword> {
                     child: Text(
                       'Xác nhận Mật khẩu không trùng khớp.',
                       style:
-                          TextStyle(color: DefaultTheme.RED_TEXT, fontSize: 13),
+                          TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                     ),
                   ),
                 ),
@@ -154,8 +154,8 @@ class _UserUpdatePasswordState extends State<ModalUpdatePassword> {
             child: ButtonWidget(
               width: width - 40,
               text: 'Cập nhật',
-              textColor: DefaultTheme.WHITE,
-              bgColor: DefaultTheme.GREEN,
+              textColor: AppColor.WHITE,
+              bgColor: AppColor.GREEN,
               function: () {
                 _checkValidateOldPass();
                 _checkValidateNewPass();

@@ -93,7 +93,7 @@ class GetKeyView extends StatelessWidget {
                       child: Text(
                         'Hãy nhập hosting',
                         style: TextStyle(
-                            color: DefaultTheme.RED_TEXT, fontSize: 13),
+                            color: AppColor.RED_TEXT, fontSize: 13),
                       ),
                     );
                   }
@@ -108,8 +108,8 @@ class GetKeyView extends StatelessWidget {
                     message: 'Get key',
                     child: ButtonWidget(
                       height: 40,
-                      textColor: DefaultTheme.WHITE,
-                      bgColor: DefaultTheme.BLUE_CARD,
+                      textColor: AppColor.WHITE,
+                      bgColor: AppColor.BLUE_CARD,
                       borderRadius: 5,
                       function: () {
                         if (hostingController.text.isEmpty) {
@@ -162,7 +162,7 @@ class GetKeyView extends StatelessWidget {
                   height: 42,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                      color: DefaultTheme.ITEM_MENU_SELECTED,
+                      color: AppColor.ITEM_MENU_SELECTED,
                       borderRadius: BorderRadius.circular(5)),
                   child: Row(
                     children: [
@@ -171,7 +171,7 @@ class GetKeyView extends StatelessWidget {
                         state.tokenPlus,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 12, color: DefaultTheme.GREY_TEXT),
+                            fontSize: 12, color: AppColor.GREY_TEXT),
                       )),
                       const SizedBox(
                         width: 8,
@@ -184,8 +184,8 @@ class GetKeyView extends StatelessWidget {
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.CENTER,
                               timeInSecForIosWeb: 1,
-                              backgroundColor: DefaultTheme.WHITE,
-                              textColor: DefaultTheme.BLACK,
+                              backgroundColor: AppColor.WHITE,
+                              textColor: AppColor.BLACK,
                               fontSize: 15,
                               webBgColor: 'rgba(255, 255, 255)',
                               webPosition: 'center',
@@ -196,7 +196,7 @@ class GetKeyView extends StatelessWidget {
                           children: const [
                             Icon(
                               Icons.copy_rounded,
-                              color: DefaultTheme.BLUE_TEXT,
+                              color: AppColor.BLUE_TEXT,
                               size: 16,
                             ),
                             SizedBox(
@@ -205,7 +205,7 @@ class GetKeyView extends StatelessWidget {
                             Text(
                               'Sao chép',
                               style: TextStyle(
-                                  color: DefaultTheme.BLUE_TEXT, fontSize: 13),
+                                  color: AppColor.BLUE_TEXT, fontSize: 13),
                             )
                           ],
                         ),

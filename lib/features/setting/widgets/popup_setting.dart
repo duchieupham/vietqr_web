@@ -146,7 +146,7 @@ class _PopupSettingState extends State<PopupSetting> {
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           color:
-              isSelected ? DefaultTheme.ITEM_MENU_SELECTED : Colors.transparent,
+              isSelected ? AppColor.ITEM_MENU_SELECTED : Colors.transparent,
           alignment: Alignment.centerLeft,
           child: Row(
             children: [

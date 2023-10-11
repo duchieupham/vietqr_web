@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class BankAccountDTO {
   final String id;
   final String bankAccount;
@@ -11,11 +13,14 @@ class BankAccountDTO {
   final String branchName;
   final String businessName;
   final bool isAuthenticated;
-  final String userId;
+  final String? userId;
+
+  Color? bankColor;
+
   // final String branchCode;
   // final String businessCode;
 
-  const BankAccountDTO({
+  BankAccountDTO({
     required this.id,
     required this.bankAccount,
     required this.userBankName,
@@ -28,12 +33,17 @@ class BankAccountDTO {
     required this.branchName,
     required this.businessName,
     required this.isAuthenticated,
-    this.userId = '',
+    this.userId,
+    this.bankColor,
     // required this.branchCode,
     // required this.businessCode,
   });
 
-  factory BankAccountDTO.fromJson(Map<String, dynamic> json) {
+  setColor(value) {
+    bankColor = value;
+  }
+
+  factory BankAccountDTO.fromJson(Map<String, dynamic> json, {Color? color}) {
     return BankAccountDTO(
       id: json['id'] ?? '',
       bankAccount: json['bankAccount'] ?? '',
@@ -67,6 +77,7 @@ class BankAccountDTO {
     data['branchName'] = branchName;
     data['businessName'] = businessName;
     data['authenticated'] = isAuthenticated;
+    data['userId'] = userId;
     return data;
   }
 }

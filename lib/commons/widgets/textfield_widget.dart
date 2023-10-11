@@ -81,7 +81,7 @@ class TextFieldWidget extends StatelessWidget {
                         const Text(
                           '*',
                           style: TextStyle(
-                              fontSize: 16, color: DefaultTheme.RED_TEXT),
+                              fontSize: 16, color: AppColor.RED_TEXT),
                         )
                     ],
                   ),
@@ -113,7 +113,7 @@ class TextFieldWidget extends StatelessWidget {
                       hintStyle: TextStyle(
                         fontSize: (fontSize != null) ? fontSize : 16,
                         color: (title != null)
-                            ? DefaultTheme.GREY_TEXT
+                            ? AppColor.GREY_TEXT
                             : Theme.of(context).hintColor,
                       ),
                       contentPadding: contentPadding,
@@ -153,7 +153,7 @@ class TextFieldWidget extends StatelessWidget {
                 border: InputBorder.none,
                 hintStyle: TextStyle(
                   fontSize: (fontSize != null) ? fontSize : 16,
-                  color: DefaultTheme.GREY_TEXT,
+                  color: AppColor.GREY_TEXT,
                 ),
                 contentPadding: contentPadding,
                 focusedBorder: InputBorder.none,

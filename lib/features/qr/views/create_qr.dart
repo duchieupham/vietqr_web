@@ -123,7 +123,7 @@ class CreateQR extends StatelessWidget {
                             height: 30,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: DefaultTheme.WHITE,
+                              color: AppColor.WHITE,
                               image: DecorationImage(
                                 image: ImageUtils.instance
                                     .getImageNetWork(bankDetailDTO.imgId),
@@ -270,7 +270,7 @@ class CreateQR extends StatelessWidget {
                                 child: Text(
                                   'Số tiền không đúng định dạng',
                                   style: TextStyle(
-                                    color: DefaultTheme.RED_CALENDAR,
+                                    color: AppColor.RED_CALENDAR,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -426,8 +426,8 @@ class CreateQR extends StatelessWidget {
                                       .add(QREventGenerate(dto: qrCreateDTO));
                                 }
                               },
-                              bgColor: DefaultTheme.GREEN,
-                              textColor: DefaultTheme.WHITE,
+                              bgColor: AppColor.GREEN,
+                              textColor: AppColor.WHITE,
                             ));
                       },
                     ),
@@ -445,7 +445,7 @@ class CreateQR extends StatelessWidget {
                             width: 50,
                             height: 50,
                             child: CircularProgressIndicator(
-                              color: DefaultTheme.GREEN,
+                              color: AppColor.GREEN,
                             ),
                           ),
                         );
@@ -563,8 +563,8 @@ class CreateQR extends StatelessWidget {
                                                   gravity: ToastGravity.CENTER,
                                                   timeInSecForIosWeb: 1,
                                                   backgroundColor:
-                                                      DefaultTheme.WHITE,
-                                                  textColor: DefaultTheme.BLACK,
+                                                      AppColor.WHITE,
+                                                  textColor: AppColor.BLACK,
                                                   fontSize: 15,
                                                   webBgColor:
                                                       'rgba(255, 255, 255)',

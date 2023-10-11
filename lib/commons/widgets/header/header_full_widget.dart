@@ -177,7 +177,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: DefaultTheme.RED_CALENDAR,
+                                color: AppColor.RED_CALENDAR,
                               ),
                               child: Text(
                                 _notificationCount.toString(),
@@ -188,7 +188,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                                               3)
                                           ? 8
                                           : 10,
-                                  color: DefaultTheme.WHITE,
+                                  color: AppColor.WHITE,
                                 ),
                               ),
                             ),

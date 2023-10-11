@@ -72,7 +72,7 @@ class _Login extends State<Login> {
               //   Navigator.of(context).popUntil((route) => route.isFirst);
               //   Navigator.of(context).pushReplacementNamed(Routes.HOME,
               //       arguments: {'isFromLogin': true});
-              context.push('/home');
+              context.push('/dashboard');
             }
             if (state is LoginFailedState) {
               FocusManager.instance.primaryFocus?.unfocus();
@@ -203,8 +203,8 @@ class _Login extends State<Login> {
                 height: 40,
                 text: 'Đăng nhập',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.BLUE_TEXT,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.BLUE_TEXT,
                 function: () {
                   openPinDialog(context);
                 },
@@ -227,7 +227,7 @@ class _Login extends State<Login> {
                   'hoặc',
                   style: TextStyle(
                     fontSize: 13,
-                    color: DefaultTheme.GREY_TEXT,
+                    color: AppColor.GREY_TEXT,
                   ),
                 ),
               ),
@@ -262,8 +262,8 @@ class _Login extends State<Login> {
                   child: _buildButtonSignIn(
                     assetImage: 'assets/images/ic-card.png',
                     text: 'VietQR ID Card',
-                    bgColor: DefaultTheme.PURPLE_NEON,
-                    textColor: DefaultTheme.WHITE,
+                    bgColor: AppColor.PURPLE_NEON,
+                    textColor: AppColor.WHITE,
                     function: () async {
                       await DialogWidget.instance
                           .openPopup(
@@ -298,8 +298,8 @@ class _Login extends State<Login> {
           height: 40,
           text: 'Đăng ký',
           borderRadius: 5,
-          textColor: DefaultTheme.BLUE_TEXT,
-          bgColor: DefaultTheme.WHITE,
+          textColor: AppColor.BLUE_TEXT,
+          bgColor: AppColor.WHITE,
           function: () {
             context.go('/register');
           },
@@ -368,7 +368,7 @@ class _Login extends State<Login> {
               borderRadius: 5,
               enableShadow: true,
               alignment: Alignment.center,
-              bgColor: DefaultTheme.WHITE,
+              bgColor: AppColor.WHITE,
               padding: const EdgeInsets.all(0),
               child: QrImage(
                 data: code,

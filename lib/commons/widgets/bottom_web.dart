@@ -41,7 +41,7 @@ class BottomWeb extends StatelessWidget {
                             width: 60,
                             child: Text(
                               'Email: ',
-                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                              style: TextStyle(color: AppColor.GREY_TEXT),
                             ),
                           ),
                           InkWell(
@@ -55,7 +55,7 @@ class BottomWeb extends StatelessWidget {
                             child: const Text(
                               'sales@vietqr.vn',
                               style: TextStyle(
-                                color: DefaultTheme.BLUE_TEXT,
+                                color: AppColor.BLUE_TEXT,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
@@ -70,7 +70,7 @@ class BottomWeb extends StatelessWidget {
                             width: 60,
                             child: Text(
                               'Hotline: ',
-                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                              style: TextStyle(color: AppColor.GREY_TEXT),
                             ),
                           ),
                           InkWell(
@@ -153,7 +153,7 @@ class BottomWeb extends StatelessWidget {
                       width: 60,
                       child: Text(
                         'Email: ',
-                        style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                        style: TextStyle(color: AppColor.GREY_TEXT),
                       ),
                     ),
                     InkWell(
@@ -167,7 +167,7 @@ class BottomWeb extends StatelessWidget {
                       child: const Text(
                         'sales@vietqr.vn',
                         style: TextStyle(
-                          color: DefaultTheme.BLUE_TEXT,
+                          color: AppColor.BLUE_TEXT,
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -182,7 +182,7 @@ class BottomWeb extends StatelessWidget {
                       width: 60,
                       child: Text(
                         'Hotline: ',
-                        style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                        style: TextStyle(color: AppColor.GREY_TEXT),
                       ),
                     ),
                     InkWell(
@@ -330,13 +330,13 @@ class BottomWeb extends StatelessWidget {
                 const SizedBox(
                     height: 12,
                     child: VerticalDivider(
-                      color: DefaultTheme.GREY_LIGHT,
+                      color: AppColor.GREY_LIGHT,
                     )),
                 _buildItemTitle('vietqr.com'),
                 const SizedBox(
                     height: 12,
                     child: VerticalDivider(
-                      color: DefaultTheme.GREY_LIGHT,
+                      color: AppColor.GREY_LIGHT,
                     )),
                 _buildItemTitle('vietqr.org'),
               ],
@@ -364,13 +364,13 @@ class BottomWeb extends StatelessWidget {
               const SizedBox(
                   height: 12,
                   child: VerticalDivider(
-                    color: DefaultTheme.GREY_LIGHT,
+                    color: AppColor.GREY_LIGHT,
                   )),
               _buildItemTitle('vietqr.com'),
               const SizedBox(
                   height: 12,
                   child: VerticalDivider(
-                    color: DefaultTheme.GREY_LIGHT,
+                    color: AppColor.GREY_LIGHT,
                   )),
               _buildItemTitle('vietqr.org'),
             ],
@@ -389,7 +389,7 @@ class BottomWeb extends StatelessWidget {
         text,
         style: const TextStyle(
             decoration: TextDecoration.underline,
-            color: DefaultTheme.BLUE_TEXT),
+            color: AppColor.BLUE_TEXT),
       ),
     );
   }
@@ -406,7 +406,7 @@ class BottomWeb extends StatelessWidget {
         width: width * 0.4,
         height: 28,
         padding: const EdgeInsets.all(0),
-        bgColor: DefaultTheme.BLACK,
+        bgColor: AppColor.BLACK,
         borderRadius: 5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -426,12 +426,12 @@ class BottomWeb extends StatelessWidget {
               children: [
                 const Text(
                   'Tải ứng dụng trên',
-                  style: TextStyle(color: DefaultTheme.WHITE, fontSize: 6),
+                  style: TextStyle(color: AppColor.WHITE, fontSize: 6),
                 ),
                 Text(
                   text,
                   style:
-                      const TextStyle(color: DefaultTheme.WHITE, fontSize: 12),
+                      const TextStyle(color: AppColor.WHITE, fontSize: 12),
                 ),
               ],
             )

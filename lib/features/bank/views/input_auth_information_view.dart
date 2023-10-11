@@ -145,7 +145,7 @@ class InputAuthInformationView extends StatelessWidget {
                     'Lưu ý: Đối với loại tài khoản ngân hàng doanh nghiệp, "CCCD/CMT" tương ứng với mã số giấy phép kinh doanh; "SĐT" là số điện thoại người đại diện cho doanh nghiệp',
                     style: TextStyle(
                       fontSize: 13,
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                 ),
@@ -214,7 +214,7 @@ class InputAuthInformationView extends StatelessWidget {
                               'CCCD/CMT không hợp lệ',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: DefaultTheme.RED_TEXT,
+                                color: AppColor.RED_TEXT,
                               ),
                             ),
                           ),
@@ -225,7 +225,7 @@ class InputAuthInformationView extends StatelessWidget {
                               'Số điện thoại xác thực không hợp lệ',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: DefaultTheme.RED_TEXT,
+                                color: AppColor.RED_TEXT,
                               ),
                             ),
                           ),
@@ -246,10 +246,10 @@ class InputAuthInformationView extends StatelessWidget {
                     ButtonWidget(
                       text: 'Bỏ qua',
                       width: 80,
-                      textColor: DefaultTheme.GREEN,
+                      textColor: AppColor.GREEN,
                       borderRadius: 5,
                       height: 40,
-                      bgColor: DefaultTheme.WHITE,
+                      bgColor: AppColor.WHITE,
                       function: () {
                         Navigator.pop(context);
                       },
@@ -260,8 +260,8 @@ class InputAuthInformationView extends StatelessWidget {
                         text: 'Xác thực',
                         borderRadius: 5,
                         height: 40,
-                        textColor: DefaultTheme.WHITE,
-                        bgColor: DefaultTheme.GREEN,
+                        textColor: AppColor.WHITE,
+                        bgColor: AppColor.GREEN,
                         function: () {
                           if (nationalController.text.isEmpty) {
                             DialogWidget.instance.openMsgDialog(
@@ -362,7 +362,7 @@ class InputAuthInformationView extends StatelessWidget {
           height: size - 10,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(size - 10),
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).shadowColor.withOpacity(0.3),

@@ -72,7 +72,7 @@ class SelectBankConnectBranchWidget extends StatelessWidget {
                     child: const Text(
                       'Xong',
                       style: TextStyle(
-                        color: DefaultTheme.GREEN,
+                        color: AppColor.GREEN,
                       ),
                     ),
                   ),
@@ -154,7 +154,7 @@ class SelectBankConnectBranchWidget extends StatelessWidget {
                             width: 60,
                             height: 30,
                             decoration: BoxDecoration(
-                              color: DefaultTheme.WHITE,
+                              color: AppColor.WHITE,
                               borderRadius: BorderRadius.circular(5),
                               image: DecorationImage(
                                 image: ImageUtils.instance.getImageNetWork(
@@ -170,7 +170,7 @@ class SelectBankConnectBranchWidget extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                color: DefaultTheme.WHITE,
+                                color: AppColor.WHITE,
                               ),
                             ),
                           ),
@@ -191,7 +191,7 @@ class SelectBankConnectBranchWidget extends StatelessWidget {
                                 Text(
                                   dto.bankAccountName.toUpperCase(),
                                   style: const TextStyle(
-                                    color: DefaultTheme.WHITE,
+                                    color: AppColor.WHITE,
                                     fontSize: 18,
                                   ),
                                 ),
@@ -202,7 +202,7 @@ class SelectBankConnectBranchWidget extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    color: DefaultTheme.WHITE,
+                                    color: AppColor.WHITE,
                                   ),
                                 ),
                               ],
@@ -237,12 +237,12 @@ class SelectBankConnectBranchWidget extends StatelessWidget {
                                     'Chọn',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: DefaultTheme.WHITE,
+                                      color: AppColor.WHITE,
                                     ),
                                   ),
                                   Icon(
                                     Icons.navigate_next_rounded,
-                                    color: DefaultTheme.WHITE,
+                                    color: AppColor.WHITE,
                                     size: 15,
                                   ),
                                 ],

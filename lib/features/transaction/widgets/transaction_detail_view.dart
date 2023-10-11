@@ -166,7 +166,7 @@ class TransactionDetailView extends StatelessWidget {
                                                   dto.transType),
                                           style: const TextStyle(
                                             fontSize: 13,
-                                            color: DefaultTheme.GREY_TEXT,
+                                            color: AppColor.GREY_TEXT,
                                           ),
                                         ),
                                         const Padding(
@@ -187,11 +187,11 @@ class TransactionDetailView extends StatelessWidget {
                                                 width: 30,
                                                 height: 30,
                                                 decoration: BoxDecoration(
-                                                  color: DefaultTheme.WHITE,
+                                                  color: AppColor.WHITE,
                                                   borderRadius:
                                                       BorderRadius.circular(30),
                                                   border: Border.all(
-                                                    color: DefaultTheme
+                                                    color: AppColor
                                                         .GREY_TOP_TAB_BAR,
                                                     width: 0.5,
                                                   ),
@@ -393,7 +393,7 @@ class TransactionDetailView extends StatelessWidget {
             child: Text(
               title,
               style: const TextStyle(
-                color: DefaultTheme.GREY_TEXT,
+                color: AppColor.GREY_TEXT,
               ),
             ),
           ),
