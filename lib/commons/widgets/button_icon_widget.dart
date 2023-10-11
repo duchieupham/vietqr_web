@@ -7,34 +7,39 @@ class ButtonIconWidget extends StatelessWidget {
   final VoidCallback function;
   final Color bgColor;
   final Color textColor;
+  final Color? iconPathColor;
   final double? height;
-  final double? textSize;
+  final double? textSize, iconSize;
   final bool? autoFocus;
   final double? borderRadius;
   final FocusNode? focusNode;
   final Alignment? alignment;
-  final BoxBorder? border;
+  final EdgeInsets contentPadding;
+  final EdgeInsets customPaddingIcon;
+  final bool enableShadow;
   final String pathIcon;
-  final double pathIconSize;
 
-  const ButtonIconWidget({
-    super.key,
-    this.width,
-    this.icon = Icons.add,
-    required this.title,
-    required this.function,
-    required this.bgColor,
-    required this.textColor,
-    this.height,
-    this.textSize,
-    this.autoFocus,
-    this.borderRadius,
-    this.focusNode,
-    this.alignment,
-    this.border,
-    this.pathIcon = '',
-    this.pathIconSize = 20,
-  });
+  const ButtonIconWidget(
+      {super.key,
+        this.width,
+        this.icon = Icons.add,
+        required this.title,
+        required this.function,
+        required this.bgColor,
+        required this.textColor,
+        this.height,
+        this.textSize,
+        this.autoFocus,
+        this.borderRadius,
+        this.focusNode,
+        this.alignment,
+        this.iconSize,
+        this.pathIcon = '',
+        this.contentPadding =
+        const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        this.enableShadow = false,
+        this.iconPathColor,
+        this.customPaddingIcon = const EdgeInsets.only(left: 6)});
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +50,22 @@ class ButtonIconWidget extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        padding: contentPadding,
         alignment: alignment,
         decoration: BoxDecoration(
           color: bgColor,
-          border: border,
+          boxShadow: enableShadow
+              ? [
+            BoxShadow(
+              color: Theme.of(context).shadowColor.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 4,
+              offset: const Offset(1, 2),
+            ),
+          ]
+              : null,
           borderRadius:
-              BorderRadius.circular((borderRadius != null) ? borderRadius! : 5),
+          BorderRadius.circular((borderRadius != null) ? borderRadius! : 5),
         ),
         child: Row(
           mainAxisAlignment: (alignment == Alignment.centerLeft)
@@ -61,17 +75,17 @@ class ButtonIconWidget extends StatelessWidget {
             if (pathIcon.isNotEmpty)
               Image.asset(
                 pathIcon,
-                height: pathIconSize,
-                fit: BoxFit.fitHeight,
+                width: iconSize,
+                color: iconPathColor,
               )
             else
               Icon(
                 icon,
                 color: textColor,
-                size: (textSize != null) ? textSize : 15,
+                size: iconSize ?? 15,
               ),
             if (title.isNotEmpty) ...[
-              const Padding(padding: EdgeInsets.only(left: 5)),
+              if (pathIcon.isEmpty) Padding(padding: customPaddingIcon),
               Text(
                 title,
                 style: TextStyle(

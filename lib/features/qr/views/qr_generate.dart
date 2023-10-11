@@ -33,6 +33,7 @@ class _QrGenerateState extends State<QrGenerate> {
   final GlobalKey globalKey = GlobalKey();
   final WaterMarkProvider _waterMarkProvider = WaterMarkProvider(false);
   bool showBgNapas = true;
+
   @override
   void initState() {
     getData();
@@ -75,9 +76,7 @@ class _QrGenerateState extends State<QrGenerate> {
     _waterMarkProvider.updateWaterMark(true);
     await Future.delayed(const Duration(milliseconds: 1000), () async {
       _waterMarkProvider.updateWaterMark(false);
-      await ShareUtils.instance
-          .saveImageToGallery(globalKey, nameFile)
-          .then((value) {
+      await ShareUtils.instance.saveImageToGallery(globalKey).then((value) {
         Fluttertoast.showToast(
           msg: 'Đã lưu ảnh',
           toastLength: Toast.LENGTH_SHORT,
@@ -125,7 +124,7 @@ class _QrGenerateState extends State<QrGenerate> {
                   width: 50,
                   height: 50,
                   child: CircularProgressIndicator(
-                    color: DefaultTheme.GREEN,
+                    color: AppColor.GREEN,
                   ),
                 ),
               );
@@ -176,7 +175,7 @@ class _QrGenerateState extends State<QrGenerate> {
             BoxLayout(
               width: 300,
               height: 300,
-              bgColor: DefaultTheme.WHITE,
+              bgColor: AppColor.WHITE,
               enableShadow: true,
               padding: const EdgeInsets.all(20),
               child: Opacity(
@@ -184,7 +183,7 @@ class _QrGenerateState extends State<QrGenerate> {
                 child: QrImage(
                   data: 'https://vietqr.vn',
                   size: 250,
-                  foregroundColor: DefaultTheme.BLACK,
+                  foregroundColor: AppColor.BLACK,
                   embeddedImage:
                       const AssetImage('assets/images/ic-viet-qr-small.png'),
                   embeddedImageStyle: QrEmbeddedImageStyle(

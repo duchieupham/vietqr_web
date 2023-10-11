@@ -124,7 +124,7 @@ class Session {
   // Wallet
   final WalletRepository walletRepository = const WalletRepository();
 
-  WalletDTO _wallet = WalletDTO();
+  WalletDTO _wallet = const WalletDTO();
   WalletDTO get wallet => _wallet;
   Future fetchWallet() async {
     String userId = UserInformationHelper.instance.getUserId();

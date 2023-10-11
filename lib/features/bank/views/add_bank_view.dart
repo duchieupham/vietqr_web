@@ -133,8 +133,8 @@ class _AddBankView extends State<AddBankView> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
-            backgroundColor: DefaultTheme.WHITE,
-            textColor: DefaultTheme.BLACK,
+            backgroundColor: AppColor.WHITE,
+            textColor: AppColor.BLACK,
             fontSize: 15,
             webBgColor: 'rgba(255, 255, 255)',
             webPosition: 'center',
@@ -228,8 +228,8 @@ class _AddBankView extends State<AddBankView> {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
-            backgroundColor: DefaultTheme.WHITE,
-            textColor: DefaultTheme.BLACK,
+            backgroundColor: AppColor.WHITE,
+            textColor: AppColor.BLACK,
             fontSize: 15,
             webBgColor: 'rgba(255, 255, 255)',
             webPosition: 'center',
@@ -270,7 +270,7 @@ class _AddBankView extends State<AddBankView> {
                 'Hệ thống hỗ trợ: ',
                 style: TextStyle(
                   fontSize: 13,
-                  color: DefaultTheme.GREY_TEXT,
+                  color: AppColor.GREY_TEXT,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 10)),
@@ -278,7 +278,7 @@ class _AddBankView extends State<AddBankView> {
                 '-   Tạo mã VietQR thanh toán.',
                 style: TextStyle(
                   fontSize: 13,
-                  color: DefaultTheme.GREY_TEXT,
+                  color: AppColor.GREY_TEXT,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
@@ -286,7 +286,7 @@ class _AddBankView extends State<AddBankView> {
                 '-   Đối với TK MB Bank sau khi được liên kết, hệ thống hỗ trợ đối soát thanh toán.',
                 style: TextStyle(
                   fontSize: 13,
-                  color: DefaultTheme.GREY_TEXT,
+                  color: AppColor.GREY_TEXT,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 5)),
@@ -294,7 +294,7 @@ class _AddBankView extends State<AddBankView> {
                 '-   Khi thực hiện liên kết, CCCD/Mã số thuế và Số điện thoại xác thực là bắt buộc.',
                 style: TextStyle(
                   fontSize: 13,
-                  color: DefaultTheme.GREY_TEXT,
+                  color: AppColor.GREY_TEXT,
                 ),
               ),
             ],
@@ -404,7 +404,7 @@ class _AddBankView extends State<AddBankView> {
                       'Số tài khoản không hợp lệ',
                       style: TextStyle(
                         fontSize: 12,
-                        color: DefaultTheme.RED_TEXT,
+                        color: AppColor.RED_TEXT,
                       ),
                     ),
                   ),
@@ -436,7 +436,7 @@ class _AddBankView extends State<AddBankView> {
                       'Chủ tài khoản không hợp lệ',
                       style: TextStyle(
                         fontSize: 12,
-                        color: DefaultTheme.RED_TEXT,
+                        color: AppColor.RED_TEXT,
                       ),
                     ),
                   ),
@@ -492,7 +492,7 @@ class _AddBankView extends State<AddBankView> {
                         'CCCD/Mã số thuế không hợp lệ',
                         style: TextStyle(
                           fontSize: 12,
-                          color: DefaultTheme.RED_TEXT,
+                          color: AppColor.RED_TEXT,
                         ),
                       ),
                     ),
@@ -503,7 +503,7 @@ class _AddBankView extends State<AddBankView> {
                         'Số điện thoại xác thực không hợp lệ',
                         style: TextStyle(
                           fontSize: 12,
-                          color: DefaultTheme.RED_TEXT,
+                          color: AppColor.RED_TEXT,
                         ),
                       ),
                     ),
@@ -520,7 +520,7 @@ class _AddBankView extends State<AddBankView> {
                           height: 40,
                           text: 'Lưu tài khoản',
                           borderRadius: 5,
-                          textColor: DefaultTheme.BLUE_TEXT,
+                          textColor: AppColor.BLUE_TEXT,
                           bgColor: Theme.of(context).cardColor,
                           function: () {
                             if (provider.bankType.id.isNotEmpty) {
@@ -560,8 +560,8 @@ class _AddBankView extends State<AddBankView> {
                             height: 40,
                             text: 'Liên kết',
                             borderRadius: 5,
-                            textColor: DefaultTheme.WHITE,
-                            bgColor: DefaultTheme.GREEN,
+                            textColor: AppColor.WHITE,
+                            bgColor: AppColor.GREEN,
                             function: () async {
                               provider.updateBankAccountErr(
                                 (bankAccountController.text.isEmpty ||
@@ -689,7 +689,7 @@ class _AddBankView extends State<AddBankView> {
           height: size - 10,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(size - 10),
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).shadowColor.withOpacity(0.3),

@@ -84,7 +84,7 @@ class SelectBankAccountPopup extends StatelessWidget {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: DefaultTheme.WHITE,
+              color: AppColor.WHITE,
               image: DecorationImage(
                 image: ImageUtils.instance.getImageNetWork(
                   dto.imgId,
@@ -102,7 +102,7 @@ class SelectBankAccountPopup extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: DefaultTheme.BLACK,
+                    color: AppColor.BLACK,
                     fontSize: 13),
               ),
               const SizedBox(
@@ -111,7 +111,7 @@ class SelectBankAccountPopup extends StatelessWidget {
               Text(
                 dto.userBankName.toUpperCase(),
                 style: const TextStyle(
-                  color: DefaultTheme.BLACK,
+                  color: AppColor.BLACK,
                   fontSize: 10,
                 ),
               ),

@@ -93,7 +93,7 @@ class LoginByCardWidget extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 2.5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: DefaultTheme.GREY_TEXT,
+                          color: AppColor.GREY_TEXT,
                         ),
                       ),
                     ),

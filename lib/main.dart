@@ -13,8 +13,9 @@ import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
+import 'package:VietQR/features/dashboard/dashboard_screen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
-import 'package:VietQR/features/home/views/home.dart';
+import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/home/views/overview_page.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
@@ -66,6 +67,7 @@ import 'services/providers/setting_provider.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
@@ -151,7 +153,7 @@ final GoRouter _router = GoRouter(
       path: '/',
       redirect: (context, state) {
         return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-            ? '/home'
+            ? '/dashboard'
             : '/login';
       },
     ),
@@ -159,7 +161,7 @@ final GoRouter _router = GoRouter(
       path: '/login',
       redirect: (context, state) =>
           (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/home'
+              ? '/dashboard'
               : '/login',
       builder: (BuildContext context, GoRouterState state) => const Login(),
     ),
@@ -175,14 +177,23 @@ final GoRouter _router = GoRouter(
       },
       builder: (BuildContext context, GoRouterState state) => RegisterView(),
     ),
+    // GoRoute(
+    //   path: '/home',
+    //   redirect: (context, state) =>
+    //       (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+    //           ? '/home'
+    //           : '/login',
+    //   builder: (BuildContext context, GoRouterState state) =>
+    //       const HomeScreen(),
+    // ),
     GoRoute(
-      path: '/home',
+      path: '/dashboard',
       redirect: (context, state) =>
           (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/home'
+              ? '/dashboard'
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
-          const HomeScreen(),
+          const DashboardScreen(),
     ),
     GoRoute(
       path: '/qr/create/:id',
@@ -238,11 +249,12 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/business',
-      redirect: (context, state) =>   (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-          ? '/business'
-          : '/login',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/business'
+              : '/login',
       builder: (BuildContext context, GoRouterState state) =>
-      const BusinessManagerView(),
+          const BusinessManagerView(),
     ),
   ],
 );
@@ -345,9 +357,9 @@ class _VietQRApp extends State<VietQRApp> {
                 routerConfig: _router,
                 debugShowCheckedModeBanner: false,
                 themeMode:
-                    (themeSelect.themeSystem == DefaultTheme.THEME_SYSTEM)
+                    (themeSelect.themeSystem == AppColor.THEME_SYSTEM)
                         ? ThemeMode.system
-                        : (themeSelect.themeSystem == DefaultTheme.THEME_LIGHT)
+                        : (themeSelect.themeSystem == AppColor.THEME_LIGHT)
                             ? ThemeMode.light
                             : ThemeMode.dark,
                 darkTheme: DefaultThemeData(context: context).darkTheme,

@@ -54,7 +54,7 @@ class ShortcutIcon extends StatelessWidget {
                     description,
                     style: const TextStyle(
                       fontSize: 12,
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                 ],

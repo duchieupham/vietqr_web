@@ -206,7 +206,7 @@ class PolicyBankView extends StatelessWidget {
                             const TextSpan(
                               text: 'vietqr.vn',
                               style: TextStyle(
-                                color: DefaultTheme.GREEN,
+                                color: AppColor.GREEN,
                                 decoration: TextDecoration.underline,
                               ),
                               // recognizer: TapGestureRecognizer()
@@ -275,7 +275,7 @@ class PolicyBankView extends StatelessWidget {
                       child: Consumer<AddBankProvider>(
                         builder: (context, provider, child) {
                           return Checkbox(
-                            activeColor: DefaultTheme.GREEN,
+                            activeColor: AppColor.GREEN,
                             value: provider.isAgreeWithPolicy,
                             shape: const CircleBorder(),
                             onChanged: (bool? value) {
@@ -304,8 +304,8 @@ class PolicyBankView extends StatelessWidget {
                     text: 'Quay lại',
                     borderRadius: 5,
                     height: 40,
-                    textColor: DefaultTheme.GREEN,
-                    bgColor: DefaultTheme.WHITE,
+                    textColor: AppColor.GREEN,
+                    bgColor: AppColor.WHITE,
                     function: () {
                       callBack!(0);
                     },
@@ -320,10 +320,10 @@ class PolicyBankView extends StatelessWidget {
                           borderRadius: 5,
                           height: 40,
                           text: 'Xác thực',
-                          textColor: DefaultTheme.WHITE,
+                          textColor: AppColor.WHITE,
                           bgColor: (provider.isAgreeWithPolicy)
-                              ? DefaultTheme.GREEN
-                              : DefaultTheme.GREY_TOP_TAB_BAR,
+                              ? AppColor.GREEN
+                              : AppColor.GREY_TOP_TAB_BAR,
                           function: () async {
                             if (provider.isAgreeWithPolicy) {
                               String formattedName = StringUtils.instance

@@ -211,8 +211,8 @@ class _Login extends State<ECOMLogin> {
                 height: 40,
                 text: 'Đăng nhập',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.GREEN,
                 function: () {
                   login(context);
                 },
@@ -235,7 +235,7 @@ class _Login extends State<ECOMLogin> {
                   'hoặc',
                   style: TextStyle(
                     fontSize: 13,
-                    color: DefaultTheme.GREY_TEXT,
+                    color: AppColor.GREY_TEXT,
                   ),
                 ),
               ),
@@ -251,8 +251,8 @@ class _Login extends State<ECOMLogin> {
           height: 40,
           text: 'Đăng ký',
           borderRadius: 5,
-          textColor: DefaultTheme.WHITE,
-          bgColor: DefaultTheme.BLUE_TEXT,
+          textColor: AppColor.WHITE,
+          bgColor: AppColor.BLUE_TEXT,
           function: () {
             context.go('/ecom/register');
           },

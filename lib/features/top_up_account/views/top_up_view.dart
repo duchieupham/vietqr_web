@@ -105,8 +105,8 @@ class _TopUpAccountState extends State<TopUpAccount> {
                     msg: 'Vui lòng thử lại sau',
                   );
                 },
-                bgColor: DefaultTheme.GREEN,
-                textColor: DefaultTheme.WHITE,
+                bgColor: AppColor.GREEN,
+                textColor: AppColor.WHITE,
               ),
             ],
           ),
@@ -188,7 +188,7 @@ class _TopUpAccountState extends State<TopUpAccount> {
                             child: Text(
                               'Số tiền không đúng định dạng',
                               style: TextStyle(
-                                color: DefaultTheme.RED_CALENDAR,
+                                color: AppColor.RED_CALENDAR,
                                 fontSize: 12,
                               ),
                             ),
@@ -204,8 +204,8 @@ class _TopUpAccountState extends State<TopUpAccount> {
                   height: 40,
                   text: 'XÁC NHẬN',
                   borderRadius: 5,
-                  textColor: DefaultTheme.WHITE,
-                  bgColor: DefaultTheme.GREY_BUTTON,
+                  textColor: AppColor.WHITE,
+                  bgColor: AppColor.GREY_BUTTON,
                   function: () {},
                 ),
               ],

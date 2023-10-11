@@ -127,7 +127,7 @@ class ECOMRegisterView extends StatelessWidget {
                         child: Text(
                           'Số điện thoại không đúng định dạng.',
                           style: TextStyle(
-                              color: DefaultTheme.RED_TEXT, fontSize: 13),
+                              color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -157,7 +157,7 @@ class ECOMRegisterView extends StatelessWidget {
                         child: Text(
                           'Mật khẩu bao gồm 6 số.',
                           style: TextStyle(
-                              color: DefaultTheme.RED_TEXT, fontSize: 13),
+                              color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -187,7 +187,7 @@ class ECOMRegisterView extends StatelessWidget {
                         child: Text(
                           'Xác nhận Mật khẩu không trùng khớp.',
                           style: TextStyle(
-                              color: DefaultTheme.RED_TEXT, fontSize: 13),
+                              color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -215,7 +215,7 @@ class ECOMRegisterView extends StatelessWidget {
                         child: Text(
                           'Domain không được trống',
                           style: TextStyle(
-                              color: DefaultTheme.RED_TEXT, fontSize: 13),
+                              color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -250,7 +250,7 @@ class ECOMRegisterView extends StatelessWidget {
               height: 40,
               text: 'Trang chủ',
               borderRadius: 5,
-              textColor: DefaultTheme.GREEN,
+              textColor: AppColor.GREEN,
               bgColor: Theme.of(context).canvasColor,
               function: () {
                 backToPreviousPage(context);
@@ -265,8 +265,8 @@ class ECOMRegisterView extends StatelessWidget {
                 height: 40,
                 text: 'Đăng ký',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.GREEN,
                 function: () async {
                   Provider.of<ECOMRegisterProvider>(context, listen: false)
                       .updateErrs(
