@@ -144,9 +144,9 @@ class TimeUtils {
     now ??= DateTime.now();
     DateFormat format;
     if (isExport) {
-      format = DateFormat('yyyy-MM-dd');
+      format = DateFormat('yyyy-MM-dd HH:mm:ss');
     } else {
-      format = DateFormat('dd/MM/yyyy');
+      format = DateFormat('dd/MM/yyyy HH:mm:ss');
     }
 
     String formatted = format.format(now);

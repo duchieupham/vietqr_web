@@ -1,19 +1,16 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:VietQR/commons/constants/configurations/numeral.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
-import 'package:VietQR/commons/widgets/countdown_time_otp.dart';
-import 'package:VietQR/commons/widgets/dialog_input_otp.dart';
 import 'package:VietQR/commons/widgets/pin_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/main.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DialogWidget {
@@ -589,7 +586,7 @@ class DialogWidget {
                     height: 40,
                     text: 'Đóng',
                     textColor: DefaultTheme.WHITE,
-                    bgColor: DefaultTheme.GREEN,
+                    bgColor: DefaultTheme.BLUE_TEXT,
                     borderRadius: 5,
                     function: (function != null)
                         ? function
