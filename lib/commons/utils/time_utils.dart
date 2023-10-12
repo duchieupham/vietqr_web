@@ -1,6 +1,6 @@
-import 'package:VietQR/commons/utils/log.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:VietQR/commons/utils/log.dart';
 
 class TimeUtils {
   const TimeUtils._privateConsrtructor();
@@ -141,6 +141,7 @@ class TimeUtils {
   }
 
   String formatDateToString(DateTime? now, {bool isExport = false}) {
+
     now ??= DateTime.now();
     DateFormat format;
     if (isExport) {

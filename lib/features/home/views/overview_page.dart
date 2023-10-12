@@ -1,39 +1,37 @@
 import 'dart:html' as html;
-
-import 'package:VietQR/commons/constants/configurations/app_image.dart';
-import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../login/views/create_QRCode.dart';
+import 'package:VietQR/layouts/box_layout.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/commons/widgets/button_icon_widget.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
+import 'package:VietQR/features/home/widget/menu_left.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
-import 'package:VietQR/features/bank/views/add_bank_mb_view.dart';
-import 'package:VietQR/features/bank/views/add_bank_view.dart';
-import 'package:VietQR/features/business/views/business_manager_view.dart';
-import 'package:VietQR/features/home/frames/overview_frame.dart';
-import 'package:VietQR/features/home/views/home.dart';
 import 'package:VietQR/features/home/widget/card_wallet.dart';
-import 'package:VietQR/features/home/widget/menu_left.dart';
-import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
-import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/merchant/views/merchant.dart';
-import 'package:VietQR/features/setting/widgets/popup_setting.dart';
-import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
-import 'package:VietQR/features/transaction/events/transaction_event.dart';
-import 'package:VietQR/layouts/box_layout.dart';
-import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/transaction_input_dto.dart';
-import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
+import 'package:VietQR/features/bank/views/add_bank_view.dart';
+import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/features/home/frames/overview_frame.dart';
+import 'package:VietQR/features/bank/views/add_bank_mb_view.dart';
+import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/features/setting/widgets/popup_setting.dart';
+import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/features/business/views/business_manager_view.dart';
+import 'package:VietQR/features/transaction/events/transaction_event.dart';
+import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-
-import '../../login/views/create_QRCode.dart';
 
 class OverViewPage extends StatefulWidget {
   const OverViewPage({Key? key}) : super(key: key);
@@ -126,7 +124,7 @@ class _OverViewPageState extends State<OverViewPage> {
         transactionBloc: _transactionBloc,
         bankBloc: _bankBloc,
       ),
-     const MerchantView(),
+      const MerchantView(),
       AddBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
@@ -144,19 +142,29 @@ class _OverViewPageState extends State<OverViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<MenuProvider>(builder: (context, provider, child) {
-        return OverViewFrame(
-          page: Consumer<MenuProvider>(builder: (context, provider, child) {
-            return _getPage()[provider.initPage];
+      body: FutureBuilder(
+          future: Session.instance.checkAccountIsMerchant(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Consumer<MenuProvider>(
+                  builder: (context, provider, child) {
+                return OverViewFrame(
+                  page: Consumer<MenuProvider>(
+                      builder: (context, provider, child) {
+                    return _getPage()[provider.initPage];
+                  }),
+                  menu: MenuLeft(
+                    onTab: (menuType) {
+                      handleOnTabMenu(menuType);
+                    },
+                  ),
+                  menuCard: _buildCardATM(context),
+                );
+              });
+            } else {
+              return const SizedBox.shrink();
+            }
           }),
-          menu: MenuLeft(
-            onTab: (menuType) {
-              handleOnTabMenu(menuType);
-            },
-          ),
-          menuCard: _buildCardATM(context),
-        );
-      }),
     );
   }
 

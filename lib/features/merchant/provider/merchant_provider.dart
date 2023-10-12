@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
-import 'package:flutter/material.dart';
 
 class MerchantProvider with ChangeNotifier {
   List<FilterTransaction> listFilter = [
@@ -22,10 +22,11 @@ class MerchantProvider with ChangeNotifier {
   FilterTimeTransaction _valueTimeFilter =
       const FilterTimeTransaction(id: 0, title: 'Tất cả');
   FilterTimeTransaction get valueTimeFilter => _valueTimeFilter;
-  DateTime _toDate = DateTime.now();
+  
+  DateTime _toDate = DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day,0,0,0 );
   DateTime get toDate => _toDate;
 
-  DateTime _formDate = DateTime.now();
+  DateTime _formDate = DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day,0,0,0 );
   DateTime get fromDate => _formDate;
 
   BankAccountDTO _bankAccountDTO =
