@@ -182,7 +182,7 @@ class _ListTransactionState extends State<ListTransaction> {
             height: 50,
             width: 130,
             child: Text(
-              dto.bankAccount,
+              '${dto.bankAccount}\n${dto.bankShortName}',
               textAlign: TextAlign.left,
               style: const TextStyle(fontSize: 12),
             ),
@@ -255,7 +255,7 @@ class _ListTransactionState extends State<ListTransaction> {
             width: 120,
             height: 50,
             padding: const EdgeInsets.only(left: 12),
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
@@ -264,7 +264,7 @@ class _ListTransactionState extends State<ListTransaction> {
               dto.timeCreated == 0
                   ? '-'
                   : TimeUtils.instance.formatTimeDateFromInt(dto.timeCreated),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -272,7 +272,7 @@ class _ListTransactionState extends State<ListTransaction> {
             width: 140,
             height: 50,
             padding: const EdgeInsets.only(left: 12),
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
@@ -281,7 +281,7 @@ class _ListTransactionState extends State<ListTransaction> {
               dto.timePaid == 0
                   ? '-'
                   : TimeUtils.instance.formatTimeDateFromInt(dto.timePaid),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               style: const TextStyle(fontSize: 12),
             ),
           ),
