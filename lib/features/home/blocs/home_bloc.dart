@@ -93,25 +93,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with BaseManager {
         PaletteGenerator? paletteGenerator;
         BuildContext context = NavigationService.navigatorKey.currentContext!;
         if (list.isNotEmpty) {
-          List<BankAccountDTO> listLinked =
-              list.where((e) => e.isAuthenticated).toList();
-          List<BankAccountDTO> listNotLinked =
-              list.where((e) => !e.isAuthenticated).toList();
-
-          list = [...listLinked, ...listNotLinked];
-
           for (BankAccountDTO dto in list) {
             NetworkImage image = ImageUtils.instance.getImageNetWork(dto.imgId);
             paletteGenerator = await PaletteGenerator.fromImageProvider(image);
             if (paletteGenerator.dominantColor != null) {
-              dto.setColor(paletteGenerator.dominantColor!.color);
+              colors.add(paletteGenerator.dominantColor!.color);
             } else {
-              if (!mounted) return;
-              dto.setColor(Theme.of(context).cardColor);
+              colors.add(Theme.of(context).cardColor);
             }
           }
         }
-        // list = [otd, ...list, otd2];
 
         emit(state.copyWith(
             request: BankType.BANK,

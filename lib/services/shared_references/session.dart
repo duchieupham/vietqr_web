@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
 import 'package:VietQR/features/information_user/repositories/wallet_repository.dart';
+import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
+import 'package:VietQR/models/account_is_merchant.dart';
 import 'package:VietQR/models/wallet_dto.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -112,7 +114,7 @@ class Session {
   }
 
   String formatDataParamUrl(QRGeneratedDTO qrGeneratedDTO,
-      {String action = '', int showBankAccount = 1}) {
+      {String action = '', int showBankAccount = 1, int isAuthen = 0}) {
     String bankCode = qrGeneratedDTO.bankCode;
     String account = qrGeneratedDTO.bankAccount;
     String name = qrGeneratedDTO.userBankName.replaceAll(' ', '_');
@@ -151,5 +153,31 @@ class Session {
             bankAccount.isAuthenticated &&
             bankAccount.userId == UserInformationHelper.instance.getUserId())
         .toList();
+  }
+
+  final MerchantRepository merchantRepository = const MerchantRepository();
+
+  AccountIsMerchantDTO _accountIsMerchantDTO = const AccountIsMerchantDTO();
+  AccountIsMerchantDTO get accountIsMerchantDTO => _accountIsMerchantDTO;
+  List<BankAccountDTO> _listBankAccountOfMerchant = [];
+  List<BankAccountDTO> get listBankAccountOfMerchant =>
+      _listBankAccountOfMerchant;
+
+  Future checkAccountIsMerchant() async {
+    String userId = UserInformationHelper.instance.getUserId();
+    if (userId.isNotEmpty) {
+      if (_accountIsMerchantDTO.accountId.isEmpty) {
+        AccountIsMerchantDTO dto =
+            await merchantRepository.checkAccountIsMerchant(userId);
+        _accountIsMerchantDTO = dto;
+        _listBankAccountOfMerchant =
+            await merchantRepository.getListBank(dto.customerSyncId);
+      }
+    }
+  }
+
+  clearData() {
+    _accountIsMerchantDTO = const AccountIsMerchantDTO();
+    _listBankAccountOfMerchant = [];
   }
 }

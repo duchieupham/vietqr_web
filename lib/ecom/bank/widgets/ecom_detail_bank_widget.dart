@@ -234,10 +234,12 @@ class BankDetailWidget extends StatelessWidget {
                 ),
               ),
               const Padding(padding: EdgeInsets.only(left: 30)),
-              VietQRWidget(
+              SizedBox(
                 width: 350,
-                qrGeneratedDTO: qrGeneratedDTO,
-                showQROnly: true,
+                child: VietQRWidget(
+                  qrGeneratedDTO: qrGeneratedDTO,
+                  showQROnly: true,
+                ),
               ),
               const Padding(padding: EdgeInsets.only(right: 20)),
             ],
@@ -275,8 +277,7 @@ class BankDetailWidget extends StatelessWidget {
                   ? Icons.check_rounded
                   : Icons.pending_actions_rounded,
               size: 15,
-              color:
-                  (isAuthenticated) ? AppColor.GREEN : AppColor.ORANGE,
+              color: (isAuthenticated) ? AppColor.GREEN : AppColor.ORANGE,
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
           ],

@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
@@ -10,7 +11,6 @@ import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
-import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/events/qrcode_un_authen_event.dart';
@@ -383,11 +383,9 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   VietQRWidget(
-                    width: width,
                     horizontalInfoWidth: horizontalInfoWidth,
                     horizontalInfo: horizontalInfo,
                     qrGeneratedDTO: qrGeneratedDTO,
-                    hasBgNapas: true,
                     showBankAccount:
                         Provider.of<BankTypeProvider>(context, listen: false)
                             .showBankAccount,

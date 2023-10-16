@@ -7,17 +7,20 @@ class QRGeneratedDTO {
   final String content;
   final String qrCode;
   final String imgId;
+  final String email;
+  final int type;
 
-  const QRGeneratedDTO({
-    required this.bankCode,
-    required this.bankName,
-    required this.bankAccount,
-    required this.userBankName,
-    required this.amount,
-    required this.content,
-    required this.qrCode,
-    required this.imgId,
-  });
+  const QRGeneratedDTO(
+      {this.bankCode = '',
+      this.bankName = '',
+      this.bankAccount = '',
+      this.userBankName = '',
+      this.amount = '',
+      this.content = '',
+      this.qrCode = '',
+      this.imgId = '',
+      this.type = 0,
+      this.email = ''});
 
   factory QRGeneratedDTO.fromJson(Map<String, dynamic> json) {
     return QRGeneratedDTO(

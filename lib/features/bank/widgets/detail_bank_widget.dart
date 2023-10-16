@@ -13,7 +13,6 @@ import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/features/bank/widgets/confirm_opt_widget.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_remove_dto.dart';
-import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
@@ -350,7 +349,6 @@ class BankDetailWidget extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.only(left: 30)),
                 VietQRWidget(
-                  width: 350,
                   qrGeneratedDTO: qrGeneratedDTO,
                   showQROnly: true,
                 ),
@@ -391,9 +389,7 @@ class BankDetailWidget extends StatelessWidget {
                   ? Icons.check_rounded
                   : Icons.pending_actions_rounded,
               size: 15,
-              color: (isAuthenticated)
-                  ? AppColor.BLUE_TEXT
-                  : AppColor.ORANGE,
+              color: (isAuthenticated) ? AppColor.BLUE_TEXT : AppColor.ORANGE,
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
           ],

@@ -1,6 +1,6 @@
 import 'package:VietQR/commons/utils/log.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimeUtils {
   const TimeUtils._privateConsrtructor();
@@ -301,5 +301,54 @@ class TimeUtils {
       final formattedTime = formatter.format(time);
       return formattedTime;
     }
+  }
+
+  String getFormatMonth(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('yyyy-MM');
+    String formatted = format.format(now);
+    return formatted;
+  }
+
+  String formatDateToString(DateTime? now, {bool isExport = false}) {
+    now ??= DateTime.now();
+    DateFormat format;
+    if (isExport) {
+      format = DateFormat('yyyy-MM-dd HH:mm:ss');
+    } else {
+      format = DateFormat('dd/MM/yyyy HH:mm:ss');
+    }
+
+    String formatted = format.format(now);
+    return formatted;
+  }
+
+  String getCurrentDate(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('yyyy-MM-dd');
+    String formatted = format.format(now);
+    return formatted;
+  }
+
+  String formatTimeDateFromInt(num time) {
+    String result = '';
+    try {
+      if (time != 0) {
+        DateTime timeConverted =
+            DateTime.fromMillisecondsSinceEpoch(time.toInt() * 1000);
+        DateFormat format = DateFormat('HH:mm dd/MM/yyyy');
+        result = format.format(timeConverted).toString();
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  String formatMonthToString(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('MM/yyyy');
+    String formatted = format.format(now);
+    return formatted;
   }
 }

@@ -16,12 +16,11 @@ import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/account_login_method_dto.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -72,7 +71,7 @@ class _Login extends State<Login> {
               //   Navigator.of(context).popUntil((route) => route.isFirst);
               //   Navigator.of(context).pushReplacementNamed(Routes.HOME,
               //       arguments: {'isFromLogin': true});
-              context.push('/dashboard');
+              context.push('/home');
             }
             if (state is LoginFailedState) {
               FocusManager.instance.primaryFocus?.unfocus();

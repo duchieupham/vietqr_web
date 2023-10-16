@@ -12,10 +12,10 @@ import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/features/bank/views/add_bank_mb_view.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/frames/overview_frame.dart';
 import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/home/widget/card_wallet.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
 import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
@@ -26,7 +26,6 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
-import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -150,7 +149,7 @@ class _OverViewPageState extends State<OverViewPage> {
           _resetBank();
           if (bankAccounts.isEmpty) {
             bankAccounts.addAll(state.list);
-            Session.instance.updateBankAccountsAuth(state.list);
+
             cardColors.addAll(state.colors);
             if (state.list.isNotEmpty) {
               TransactionInputDTO transactionInputDTO = TransactionInputDTO(

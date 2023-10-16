@@ -7,12 +7,13 @@ import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/top_up_account/blocs/top_up_bloc.dart';
 import 'package:VietQR/features/top_up_account/states/top_up_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
-import 'package:VietQR/services/providers/create_qr_provider.dart';
+
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../create_qr/provider/create_qr_provider.dart';
 import '../frames/top_up_frame.dart';
 
 class TopUpAccount extends StatefulWidget {

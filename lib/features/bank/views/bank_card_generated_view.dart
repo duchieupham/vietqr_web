@@ -117,7 +117,6 @@ class _BankCardGeneratedView extends State<BankCardGeneratedView> {
                     milliseconds: 800,
                   ),
                   child: VietQRWidget(
-                    width: width,
                     qrGeneratedDTO: qrGeneratedDTO,
                   ),
                   //  BankCardWidget(dto: dto, width: width * 0.9),

@@ -113,9 +113,9 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                     child: _buildFormInput(),
                   ),
                   _buildQRCode(
-                      horizontalInfo: true,
-                      horizontalInfoWidth: constraints.maxWidth,
-                      width: 320)
+                    horizontalInfo: true,
+                    horizontalInfoWidth: constraints.maxWidth,
+                  )
                 ],
               ],
             );
@@ -153,9 +153,9 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                   child: _buildFormInput(),
                 ),
                 _buildQRCode(
-                    horizontalInfo: true,
-                    horizontalInfoWidth: constraints.maxWidth,
-                    width: 320)
+                  horizontalInfo: true,
+                  horizontalInfoWidth: constraints.maxWidth,
+                )
               ],
               if (PlatformUtils.instance
                   .resizeWhen(constraints.maxWidth, 800)) ...[
@@ -487,9 +487,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
   }
 
   Widget _buildQRCode(
-      {bool horizontalInfo = false,
-      double horizontalInfoWidth = 400,
-      double width = 430}) {
+      {bool horizontalInfo = false, double horizontalInfoWidth = 400}) {
     return BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
       listener: (context, state) {
         if (state is CreateSuccessfulState) {
@@ -513,21 +511,22 @@ class _CreateQRCodeState extends State<CreateQRCode> {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  VietQRWidget(
-                    width: width,
-                    horizontalInfoWidth: horizontalInfoWidth,
-                    horizontalInfo: horizontalInfo,
-                    qrGeneratedDTO: qrGeneratedDTO,
-                    hasBgNapas: true,
-                    showBankAccount:
-                        Provider.of<BankTypeProvider>(context, listen: false)
-                            .showBankAccount,
+                  SizedBox(
+                    width: 380,
+                    child: VietQRWidget(
+                      horizontalInfoWidth: horizontalInfoWidth,
+                      horizontalInfo: horizontalInfo,
+                      qrGeneratedDTO: qrGeneratedDTO,
+                      showBankAccount:
+                          Provider.of<BankTypeProvider>(context, listen: false)
+                              .showBankAccount,
+                    ),
                   ),
                   const SizedBox(
-                    height: 8,
+                    height: 12,
                   ),
                   SizedBox(
-                    width: horizontalInfo ? 300 : width - 40,
+                    width: horizontalInfo ? double.infinity : 380,
                     child: Row(
                       children: [
                         Expanded(
@@ -549,8 +548,8 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                                                 ? 1
                                                 : 0);
                                 html.window.open(
-                                    Uri.base.toString().replaceFirst(
-                                        '/login', '/qr_generate$paramData'),
+                                    Uri.base.toString().replaceFirst('/login',
+                                        '/qr_generate/print$paramData'),
                                     'new tab');
                               },
                               bgColor:

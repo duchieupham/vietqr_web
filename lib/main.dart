@@ -3,6 +3,7 @@ import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/widgets/introduc.dart';
+import 'package:VietQR/commons/widgets/print_qr.dart';
 import 'package:VietQR/ecom/bank/views/ecom_add_bank_view.dart';
 import 'package:VietQR/ecom/home/views/ecom_home.dart';
 import 'package:VietQR/ecom/login/views/ecom_login.dart';
@@ -13,31 +14,35 @@ import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
+import 'package:VietQR/features/create_qr/create_qr_screen.dart';
+import 'package:VietQR/features/create_qr/qr_generate.dart';
 import 'package:VietQR/features/dashboard/dashboard_screen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
 import 'package:VietQR/features/home/home_screen.dart';
-import 'package:VietQR/features/home/views/overview_page.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
+import 'package:VietQR/features/merchant/provider/merchant_provider.dart';
+import 'package:VietQR/features/merchant/views/merchant.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
-import 'package:VietQR/features/qr/views/qr_generate.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/features/transaction_user/views/transaction_user_screen.dart';
+import 'package:VietQR/features/wallet/wallet_card_generate.dart';
+import 'package:VietQR/features/wallet/wallet_screen.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/add_business_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
-import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/guide_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
@@ -57,11 +62,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
+import 'features/create_qr/provider/create_qr_provider.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
 
@@ -153,7 +160,7 @@ final GoRouter _router = GoRouter(
       path: '/',
       redirect: (context, state) {
         return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-            ? '/dashboard'
+            ? '/home'
             : '/login';
       },
     ),
@@ -161,7 +168,7 @@ final GoRouter _router = GoRouter(
       path: '/login',
       redirect: (context, state) =>
           (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/dashboard'
+              ? '/home'
               : '/login',
       builder: (BuildContext context, GoRouterState state) => const Login(),
     ),
@@ -177,15 +184,15 @@ final GoRouter _router = GoRouter(
       },
       builder: (BuildContext context, GoRouterState state) => RegisterView(),
     ),
-    // GoRoute(
-    //   path: '/home',
-    //   redirect: (context, state) =>
-    //       (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-    //           ? '/home'
-    //           : '/login',
-    //   builder: (BuildContext context, GoRouterState state) =>
-    //       const HomeScreen(),
-    // ),
+    GoRoute(
+      path: '/home',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/home'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const HomeScreen(),
+    ),
     GoRoute(
       path: '/dashboard',
       redirect: (context, state) =>
@@ -215,15 +222,36 @@ final GoRouter _router = GoRouter(
           UserInformationView(),
     ),
     GoRoute(
-      path: '/qr_generate',
-      redirect: (context, state) {
-        Map<String, String> params = state.queryParams;
+        path: '/qr_generate',
+        // redirect: (context, state) {
+        //   Map<String, String> params = state.queryParams;
+        //   return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+        // },
+        builder: (context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          bool isAuthen = false;
+          if (state.extra != null) {
+            isAuthen = state.extra as bool;
+          }
+          return QrGenerate(
+            params: params,
+            isAuthen: isAuthen,
+          );
+        }),
+    GoRoute(
+        path: '/qr_generate/print',
+        redirect: (context, state) {
+          Map<String, String> params = state.queryParams;
 
-        return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
-      },
-      builder: (BuildContext context, GoRouterState state) =>
-          const QrGenerate(),
-    ),
+          return '/qr_generate/print?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+        },
+        builder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return QrPrint(
+            params: params,
+          );
+        }),
     GoRoute(
       path: '/naptk',
       redirect: (context, state) => '/naptk',
@@ -256,6 +284,64 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           const BusinessManagerView(),
     ),
+    GoRoute(
+      path: '/merchant',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/merchant'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const MerchantView(),
+    ),
+    GoRoute(
+      path: '/transaction',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/transaction'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const TransactionUserScreen(),
+    ),
+    GoRoute(
+      path: '/create-qr/:id',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/create-qr/${state.params['id'] ?? ''}'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) => CreateQrScreen(
+        bankAccountId: state.params['id'] ?? '',
+      ),
+    ),
+    GoRoute(
+      path: '/create-qr',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/create-qr'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const CreateQrScreen(),
+    ),
+    GoRoute(
+      path: '/qr-wallet',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/qr-wallet'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const WalletScreen(),
+    ),
+    GoRoute(
+        path: '/qr-wallet/detail',
+        redirect: (context, state) {
+          Map<String, String> params = state.queryParams;
+          return '/qr-wallet/detail?id=${params['id']}';
+        },
+        builder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return QrCardGenerate(
+            params: params,
+          );
+        }),
   ],
 );
 
@@ -348,6 +434,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => AddBankProvider()),
             ChangeNotifierProvider(create: (context) => ActionShareProvider()),
             ChangeNotifierProvider(create: (context) => SettingProvider()),
+            ChangeNotifierProvider(create: (context) => MerchantProvider()),
           ],
           child: Consumer<ThemeProvider>(
             builder: (context, themeSelect, child) {
@@ -356,18 +443,18 @@ class _VietQRApp extends State<VietQRApp> {
                     'VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam',
                 routerConfig: _router,
                 debugShowCheckedModeBanner: false,
-                themeMode:
-                    (themeSelect.themeSystem == AppColor.THEME_SYSTEM)
-                        ? ThemeMode.system
-                        : (themeSelect.themeSystem == AppColor.THEME_LIGHT)
-                            ? ThemeMode.light
-                            : ThemeMode.dark,
+                themeMode: (themeSelect.themeSystem == AppColor.THEME_SYSTEM)
+                    ? ThemeMode.system
+                    : (themeSelect.themeSystem == AppColor.THEME_LIGHT)
+                        ? ThemeMode.light
+                        : ThemeMode.dark,
                 darkTheme: DefaultThemeData(context: context).darkTheme,
                 theme: DefaultThemeData(context: context).lightTheme,
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
+                  MonthYearPickerLocalizations.delegate,
                 ],
                 supportedLocales: const [
                   //  Locale('en'), // English

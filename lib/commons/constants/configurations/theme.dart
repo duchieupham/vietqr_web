@@ -25,7 +25,7 @@ class AppColor {
   static const Color SUCCESS_STATUS = Color(0xFF06B271);
   static const Color GREEN = Color(0xFF00CA28);
   static const Color DARK_GREEN = Color(0xFF0D5F34);
-  static const Color BLUE_LIGHT = Color(0xFF96D8FF);
+  static const Color BLUE_LIGHT = Color(0xffcee5ff);
   static const Color DARK_PURPLE = Color(0xFF7951F8);
   static const Color VERY_PERI = Color(0xFF6868AC);
   static const Color LIGHT_PURPLE = Color(0xFFAF93FF);
@@ -61,6 +61,7 @@ class AppColor {
   static const Color CARD_CODE_BG = Color(0xFFf0f0f0);
   static const Color ITEM_MENU_SELECTED = Color(0xFFb5d7ff);
   static const Color CARD_MY_QR = Color(0xFF54a2ff);
+
   //THEME NAME
   static const String THEME_LIGHT = 'LIGHT';
   static const String THEME_DARK = 'DARK';
@@ -84,7 +85,7 @@ class DefaultThemeData {
       fontFamily: 'SF-Pro',
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColor.BLACK,
-      colorScheme: const ColorScheme.dark(primary: AppColor.GREEN),
+      colorScheme: const ColorScheme.dark(primary: AppColor.BLUE_TEXT),
       canvasColor: AppColor.GREY_HIGHLIGHT,
       buttonColor: AppColor.BLACK_BUTTON,
       primaryColor: AppColor.BLACK,
@@ -114,7 +115,7 @@ class DefaultThemeData {
       fontFamily: 'SF-Pro',
       brightness: Brightness.light,
       scaffoldBackgroundColor: AppColor.GREY_BG,
-      colorScheme: const ColorScheme.light(primary: AppColor.GREEN),
+      colorScheme: const ColorScheme.light(primary: AppColor.BLUE_TEXT),
       canvasColor: AppColor.GREY_BG,
       buttonColor: AppColor.GREY_VIEW,
       primaryColor: AppColor.WHITE,

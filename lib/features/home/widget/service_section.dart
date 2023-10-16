@@ -24,7 +24,10 @@ class _ServiceSectionState extends State<ServiceSection> {
       children: [
         const Text(
           'Dịch vụ',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline),
         ),
         const SizedBox(
           height: 10,
@@ -35,7 +38,10 @@ class _ServiceSectionState extends State<ServiceSection> {
         ),
         const Text(
           'Mạng xã hội',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline),
         ),
         const SizedBox(
           height: 10,

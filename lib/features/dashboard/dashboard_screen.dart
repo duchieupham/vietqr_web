@@ -1,6 +1,4 @@
-import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:flutter/material.dart';
@@ -43,16 +41,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Expanded(
             child: Row(
               children: [
-                Consumer<MenuProvider>(
-                  builder: (context, provider, child) {
-                    return MenuLeft(
-                      currentType: provider.menuHomeType,
-                      onSelectMenu: (index) {
-                        _animatedToPage(index);
-                      },
-                    );
-                  },
-                ),
                 Expanded(
                   child: Consumer<MenuProvider>(
                     builder: (context, provider, child) {
@@ -72,19 +60,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
     );
-  }
-
-  void _animatedToPage(int index) {
-    try {
-      _pageController.jumpToPage(index);
-    } catch (e) {
-      int value =
-          Provider.of<MenuProvider>(context, listen: false).menuHomeType.value;
-      _pageController = PageController(
-        initialPage: value,
-        keepPage: true,
-      );
-      _animatedToPage(index);
-    }
   }
 }

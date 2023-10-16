@@ -23,7 +23,6 @@ import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/qr_create_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
-import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:clipboard/clipboard.dart';
@@ -32,6 +31,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
+import '../../create_qr/provider/create_qr_provider.dart';
 
 class CreateQR extends StatelessWidget {
   final String bankId;
@@ -459,8 +460,6 @@ class CreateQR extends StatelessWidget {
                                     padding: EdgeInsets.only(top: 30)),
                                 UnconstrainedBox(
                                   child: VietQRWidget(
-                                    width: 400,
-                                    hasBgNapas: true,
                                     qrGeneratedDTO: qrGeneratedDTO,
                                   ),
                                 ),

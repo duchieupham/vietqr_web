@@ -19,6 +19,7 @@ class MenuLeft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<MenuProvider>(context, listen: false).checkAccountIsMerchant();
     return Consumer<MenuProvider>(
       builder: (context, provider, child) {
         double width = 0;
@@ -88,22 +89,24 @@ class MenuLeft extends StatelessWidget {
                 pathIcon: AppImages.icMenuHome,
                 isSelect: currentType == MenuHomeType.HOME,
                 onTap: () {
-                  onSelectMenu!(MenuHomeType.HOME.value);
-                  provider.selectMenu(MenuHomeType.HOME);
-                  // context.go('/home');
+                  context.go('/home');
                 },
               ),
+              if (provider.isAccountIsMerchant)
+                ItemMenuHome(
+                  title: 'Đại lý',
+                  pathIcon: AppImages.icMenuHome,
+                  isSelect: currentType == MenuHomeType.MERCHANT,
+                  onTap: () {
+                    context.go('/merchant');
+                  },
+                ),
               ItemMenuHome(
                 title: 'Giao dịch',
                 pathIcon: AppImages.icMenuBank,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
-                  onSelectMenu!(MenuHomeType.TRANSACTION.value);
-                  provider.selectMenu(MenuHomeType.TRANSACTION);
-                  // DialogWidget.instance.openMsgDialog(
-                  //   title: 'Tính năng đang bảo trì',
-                  //   msg: 'Vui lòng thử lại sau',
-                  // );
+                  context.go('/transaction');
                 },
               ),
               ItemMenuHome(
@@ -122,10 +125,7 @@ class MenuLeft extends StatelessWidget {
                 pathIcon: AppImages.icCreateQR,
                 isSelect: currentType == MenuHomeType.CREATE_QR,
                 onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Tính năng đang bảo trì',
-                    msg: 'Vui lòng thử lại sau',
-                  );
+                  context.go('/create-qr');
                 },
               ),
               ItemMenuHome(
@@ -133,10 +133,7 @@ class MenuLeft extends StatelessWidget {
                 pathIcon: AppImages.icMenuBusiness,
                 isSelect: currentType == MenuHomeType.WALLET_QR,
                 onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Tính năng đang bảo trì',
-                    msg: 'Vui lòng thử lại sau',
-                  );
+                  context.go('/qr-wallet');
                 },
               ),
               ItemMenuHome(
@@ -145,8 +142,8 @@ class MenuLeft extends StatelessWidget {
                 isSelect: currentType == MenuHomeType.BUSINESS,
                 onTap: () {
                   // onTab(MenuHomeType.BUSINESS);
-                  provider.selectMenu(MenuHomeType.BUSINESS);
-                  // context.go('/business');
+
+                  context.go('/business');
                 },
               ),
               ItemMenuHome(

@@ -1,19 +1,19 @@
-import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/blocs/home_bloc.dart';
 import 'package:VietQR/features/home/blocs/home_provider.dart';
 import 'package:VietQR/features/home/event/home_event.dart';
+import 'package:VietQR/features/home/frames/home_frame.dart';
 import 'package:VietQR/features/home/states/home_state.dart';
-import 'package:VietQR/features/home/views/home_frame.dart';
 import 'package:VietQR/features/home/views/info_account_view.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +100,8 @@ class _HomeScreenState extends State<_HomeScreen> {
     super.dispose();
   }
 
+  updateBankAccount() {}
+
   void selectRow(String id) {
     DialogWidget.instance.openPopup(
       child: TransactionDetailView(transactionId: id),
@@ -112,6 +114,7 @@ class _HomeScreenState extends State<_HomeScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) {
+        print('-----------------------${state.request}');
         if (state.request == BankType.GET_DETAIL) {
           if (state.bankDetailDTO != null) {
             dto = state.bankDetailDTO!;
@@ -127,12 +130,19 @@ class _HomeScreenState extends State<_HomeScreen> {
             imgId: dto.imgId,
           );
         }
+        if (state.request == BankType.BANK) {
+          context.read<HomeProvider>().onChangeBankId(state.listBanks.first.id);
+          _bloc.add(BankCardGetDetailEvent(bankId: state.listBanks.first.id));
+        }
       },
       builder: (context, state) {
         return HomeFrame(
-          home: _buildHome(),
-          listBank: _buildListBank(state.listBanks),
-          infoAccount: _buildInfoAccount(dto, qrGeneratedDTO),
+          menu: const MenuLeft(
+            currentType: MenuHomeType.HOME,
+          ),
+          widget1: _buildHome(),
+          widget2: _buildListBank(state.listBanks),
+          widget3: _buildInfoAccount(dto, qrGeneratedDTO),
         );
       },
     );

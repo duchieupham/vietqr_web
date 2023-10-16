@@ -36,7 +36,7 @@ class ItemMenuHome extends StatefulWidget {
 }
 
 class _ItemMenuHomeState extends State<ItemMenuHome> {
-  double heightItem = 40;
+  double heightItem = 45;
   bool openListDropDown = false;
   bool amIHovering = false;
   bool openMenuCard = true;
@@ -144,13 +144,16 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                          fontSize: widget.titleSize,
-                          color: AppColor.RED_TEXT),
+                          fontSize: widget.titleSize, color: AppColor.RED_TEXT),
                     )
                   else
                     Text(
                       widget.title,
-                      style: TextStyle(fontSize: widget.titleSize, color: widget.isSelect ? AppColor.BLUE_TEXT: AppColor.BLACK),
+                      style: TextStyle(
+                          fontSize: widget.titleSize,
+                          color: widget.isSelect
+                              ? AppColor.BLUE_TEXT
+                              : AppColor.BLACK),
                     ),
                   const Spacer(),
                   if (widget.enableMenuCard)

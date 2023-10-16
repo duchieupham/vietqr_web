@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
@@ -14,6 +15,10 @@ class MenuProvider with ChangeNotifier {
 
   MenuHomeType _menuHomeType = MenuHomeType.HOME;
   MenuHomeType get menuHomeType => _menuHomeType;
+
+  bool _isAccountIsMerchant = false;
+  bool get isAccountIsMerchant => _isAccountIsMerchant;
+
   void selectMenu(MenuHomeType value) {
     _menuHomeType = value;
     notifyListeners();
@@ -33,5 +38,15 @@ class MenuProvider with ChangeNotifier {
     } else if (value == MenuHomeType.CREATE_QR) {
       _initPage = 4;
     }
+  }
+
+  checkAccountIsMerchant() async {
+    await Session.instance.checkAccountIsMerchant();
+    if (Session.instance.accountIsMerchantDTO.accountId.isNotEmpty) {
+      _isAccountIsMerchant = true;
+    } else {
+      _isAccountIsMerchant = false;
+    }
+    notifyListeners();
   }
 }
