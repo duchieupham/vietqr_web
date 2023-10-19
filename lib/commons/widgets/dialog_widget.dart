@@ -589,7 +589,7 @@ class DialogWidget {
                     height: 40,
                     text: 'Đóng',
                     textColor: AppColor.WHITE,
-                    bgColor: AppColor.GREEN,
+                    bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
                     function: (function != null)
                         ? function

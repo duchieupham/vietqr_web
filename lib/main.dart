@@ -17,6 +17,7 @@ import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/create_qr/create_qr_screen.dart';
 import 'package:VietQR/features/create_qr/qr_generate.dart';
 import 'package:VietQR/features/dashboard/dashboard_screen.dart';
+import 'package:VietQR/features/dashboard/qr_generate_un_authen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
 import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
@@ -89,6 +90,7 @@ void main() async {
 
 Future<void> _initialServiceHelper() async {
   await WebSocketHelper.instance.initialWebSocket();
+  await WebSocketHelper.instance.setListenTransactionQRWS(false);
   if (!sharedPrefs.containsKey('THEME_SYSTEM') ||
       sharedPrefs.getString('THEME_SYSTEM') == null) {
     await ThemeHelper.instance.initialTheme();
@@ -233,6 +235,12 @@ final GoRouter _router = GoRouter(
           if (state.extra != null) {
             isAuthen = state.extra as bool;
           }
+          if (params['token'] == null) {
+            return QrGenerateUnAuthen(
+              params: params,
+              isAuthen: isAuthen,
+            );
+          }
           return QrGenerate(
             params: params,
             isAuthen: isAuthen,
@@ -358,10 +366,10 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
-
     WebSocketHelper.instance.listenTransactionSocket();
     Session.load;
     Session.instance.getGuideWeb();
+    Session.instance.updateQRGeneratePage(false);
   }
 
   @override

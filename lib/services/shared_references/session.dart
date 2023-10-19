@@ -180,4 +180,9 @@ class Session {
     _accountIsMerchantDTO = const AccountIsMerchantDTO();
     _listBankAccountOfMerchant = [];
   }
+
+  bool inQRGeneratePage = false;
+  updateQRGeneratePage(bool value) {
+    inQRGeneratePage = value;
+  }
 }

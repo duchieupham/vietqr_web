@@ -9,6 +9,8 @@ class QRGeneratedDTO {
   final String imgId;
   final String email;
   final int type;
+  final String transactionRefId;
+  final String qrLink;
 
   const QRGeneratedDTO(
       {this.bankCode = '',
@@ -20,19 +22,22 @@ class QRGeneratedDTO {
       this.qrCode = '',
       this.imgId = '',
       this.type = 0,
-      this.email = ''});
+      this.email = '',
+      this.qrLink = '',
+      this.transactionRefId = ''});
 
   factory QRGeneratedDTO.fromJson(Map<String, dynamic> json) {
     return QRGeneratedDTO(
-      bankCode: json['bankCode'],
-      bankName: json['bankName'],
-      bankAccount: json['bankAccount'],
-      userBankName: json['userBankName'],
-      amount: json['amount'],
-      content: json['content'],
-      qrCode: json['qrCode'],
-      imgId: json['imgId'],
-    );
+        bankCode: json['bankCode'],
+        bankName: json['bankName'],
+        bankAccount: json['bankAccount'],
+        userBankName: json['userBankName'],
+        amount: json['amount'],
+        content: json['content'],
+        qrCode: json['qrCode'],
+        imgId: json['imgId'],
+        transactionRefId: json['transactionRefId'],
+        qrLink: json['qrLink']);
   }
 
   Map<String, dynamic> toJson() {

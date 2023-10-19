@@ -127,6 +127,12 @@ class _Login extends State<Login> {
               fcmToken: '',
               platform: '',
             );
+
+            print(
+                '--------------------------------------- ${EncryptUtils.instance.encrypted(
+              '0966516688',
+              '000000',
+            )}');
             _loginBloc.add(
               LoginEventByPhone(dto: dto),
             );

@@ -13,7 +13,6 @@ import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/qr_create_dto.dart';
-import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,10 +74,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {}
           }
           if (state is QRGenerateSuccessState) {
-            String paramData =
-                Session.instance.formatDataParamUrl(state.dto, isAuthen: 1);
-
-            context.go('/qr_generate$paramData', extra: true);
+            context.go('/qr_generate?token=${state.dto.transactionRefId}',
+                extra: true);
           }
         }, builder: (context, state) {
           return CreateQRFrame(

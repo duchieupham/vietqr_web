@@ -175,7 +175,7 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                       }
                     },
                     bgColor: Theme.of(context).canvasColor,
-                    textColor: AppColor.GREEN,
+                    textColor: AppColor.BLUE_TEXT,
                   ),
                   const Padding(padding: EdgeInsets.only(left: 10)),
                   ButtonIconWidget(
@@ -186,7 +186,7 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     function: () {
                       Navigator.pop(context);
                     },
-                    bgColor: AppColor.GREEN,
+                    bgColor: AppColor.BLUE_TEXT,
                     textColor: AppColor.WHITE,
                   ),
                 ],
