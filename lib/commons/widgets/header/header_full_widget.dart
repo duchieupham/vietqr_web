@@ -121,7 +121,9 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           ),
           ButtonIconWidget(
             title: 'Thêm TK ngân hàng',
-            function: () {},
+            function: () {
+              context.go('/add-bank/step1');
+            },
             height: 32,
             textSize: 11,
             bgColor: AppColor.WHITE.withOpacity(0.7),

@@ -9,6 +9,9 @@ import 'package:VietQR/ecom/home/views/ecom_home.dart';
 import 'package:VietQR/ecom/login/views/ecom_login.dart';
 import 'package:VietQR/ecom/register/provider/ecom_register_provider.dart';
 import 'package:VietQR/ecom/register/views/ecom_register_view.dart';
+import 'package:VietQR/features/add_bank/add_bank_step1.dart';
+import 'package:VietQR/features/add_bank/add_bank_step2.dart';
+import 'package:VietQR/features/add_bank/add_bank_step3.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
@@ -403,7 +406,6 @@ final GoRouter _router = GoRouter(
         builder: (BuildContext context, GoRouterState state) =>
             const WalletScreen(),
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
           return buildPageWithoutAnimation(
             context: context,
             state: state,
@@ -430,6 +432,58 @@ final GoRouter _router = GoRouter(
             child: QrCardGenerate(
               params: params,
             ),
+          );
+        }),
+    GoRoute(
+        path: '/add-bank/step1',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/add-bank/step1'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const AddBankStep1(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const AddBankStep1(),
+          );
+        }),
+    GoRoute(
+        path: '/add-bank/step2',
+        redirect: (context, state) {
+          Map<String, String> params = state.queryParams;
+          return '/add-bank/step2?bankId=${params['bankId']}';
+        },
+        builder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return AddBankStep2(
+            bankId: params['bankId'].toString(),
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: AddBankStep2(
+              bankId: params['bankId'].toString(),
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/add-bank/step3',
+        redirect: (context, state) =>
+        (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+            ? '/add-bank/step3'
+            : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+        const AddBankStep3(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const AddBankStep3(),
           );
         }),
   ],

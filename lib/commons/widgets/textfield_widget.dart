@@ -32,6 +32,7 @@ class TextFieldWidget extends StatefulWidget {
   final EdgeInsets contentPadding;
   final TextStyle? textStyle;
   final List<TextInputFormatter>? inputFormatter;
+  final Color? fillColor;
   const TextFieldWidget(
       {Key? key,
       this.width,
@@ -59,7 +60,8 @@ class TextFieldWidget extends StatefulWidget {
       this.textStyle,
       this.required = false,
       this.value,
-      this.inputFormatter})
+      this.inputFormatter,
+      this.fillColor})
       : super(key: key);
 
   @override
@@ -153,6 +155,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     textInputAction: widget.keyboardAction,
                     inputFormatters: widget.inputFormatter,
                     decoration: InputDecoration(
+                      fillColor: widget.fillColor,
                       hintText: widget.hintText,
                       counterText: '',
                       border: InputBorder.none,

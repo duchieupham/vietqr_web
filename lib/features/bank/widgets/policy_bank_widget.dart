@@ -1,7 +1,8 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
-import 'dart:html' as html;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -153,10 +154,10 @@ class PolicyBankWidget extends StatelessWidget {
               width: 600 - 40,
               height: 40,
               borderRadius: 5,
-              text: 'Xác thực',
+              text: 'Xác nhận',
               textColor: AppColor.WHITE,
               bgColor: (provider.agreeWithPolicy)
-                  ? AppColor.GREEN
+                  ? AppColor.BLUE_TEXT
                   : AppColor.GREY_TOP_TAB_BAR,
               function: () {
                 Navigator.pop(context, true);

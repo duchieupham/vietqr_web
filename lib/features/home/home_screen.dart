@@ -18,6 +18,7 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -114,7 +115,6 @@ class _HomeScreenState extends State<_HomeScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) {
-        print('-----------------------${state.request}');
         if (state.request == BankType.GET_DETAIL) {
           if (state.bankDetailDTO != null) {
             dto = state.bankDetailDTO!;
@@ -232,7 +232,9 @@ class _HomeScreenState extends State<_HomeScreen> {
               ),
               const SizedBox(height: 16),
               GestureDetector(
-                onTap: () async {},
+                onTap: () async {
+                  context.go('/add-bank/step1');
+                },
                 child: Container(
                   height: 45,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
