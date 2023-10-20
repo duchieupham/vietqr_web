@@ -76,7 +76,10 @@ class _WalletFrameState extends State<WalletFrame> {
                                   const SizedBox(width: 16),
                                   Expanded(flex: 3, child: widget.widget1),
                                   const SizedBox(width: 30),
-                                  Expanded(flex: 2, child: widget.widget2),
+                                  LayoutBuilder(
+                                      builder: (context, constraints) {
+                                    return widget.widget2;
+                                  }),
                                   const SizedBox(width: 30),
                                 ],
                               ))

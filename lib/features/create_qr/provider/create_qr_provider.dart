@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,7 +9,7 @@ class CreateQRProvider with ChangeNotifier {
   bool _isValidCreate = false;
   String _transactionAmount = '0';
   String _currencyFormatted = '0';
-
+  String money = StringUtils.formatNumber(0);
   final NumberFormat numberFormat = NumberFormat("##,#0", "en_US");
   static const _locale = 'en';
 
@@ -51,6 +52,16 @@ class CreateQRProvider with ChangeNotifier {
   voidChooseBank(String id) {
     bankId = id;
     notifyListeners();
+  }
+
+  void updateMoney(String value) {
+    if (value.isNotEmpty) {
+      int data = int.parse(value.replaceAll(',', ''));
+
+      money = StringUtils.formatNumber(data);
+    } else {
+      money = value;
+    }
   }
 
   void updateCurrencyFormat(String value) {

@@ -161,7 +161,7 @@ class _WalletScreenState extends State<WalletScreen> {
         );
       }
 
-      return _buildViewCard();
+      return SingleChildScrollView(child: _buildViewCard());
     });
   }
 
@@ -277,7 +277,8 @@ class _WalletScreenState extends State<WalletScreen> {
                         decoration: BoxDecoration(
                             color: AppColor.WHITE,
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: AppColor.BLACK_LIGHT)),
+                            border: Border.all(
+                                color: AppColor.BLACK_LIGHT.withOpacity(0.5))),
                         child: Row(
                           children: [
                             Expanded(
@@ -326,6 +327,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         width: 80,
                         text: 'Tìm kiếm',
                         textColor: AppColor.WHITE,
+                        textSize: 12,
                         bgColor: AppColor.BLUE_TEXT,
                         borderRadius: 5,
                         function: () {
@@ -481,14 +483,14 @@ class _WalletScreenState extends State<WalletScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 400,
+              width: 360,
               child: VietQRWidget(
                 qrGeneratedDTO: qrGeneratedDTO,
               ),
             ),
             const SizedBox(height: 10),
             const SizedBox(
-              width: 400,
+              width: 360,
               child: Text(
                 'Mô tả QR',
                 textAlign: TextAlign.left,
@@ -496,7 +498,7 @@ class _WalletScreenState extends State<WalletScreen> {
               ),
             ),
             Container(
-              width: 400,
+              width: 360,
               margin: const EdgeInsets.symmetric(vertical: 8),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
@@ -519,7 +521,7 @@ class _WalletScreenState extends State<WalletScreen> {
         child: Column(
           children: [
             Container(
-              width: 400,
+              width: 360,
               decoration: BoxDecoration(
                   gradient: contactDetailDTO.getBgGradient(),
                   borderRadius: BorderRadius.circular(12)),
@@ -544,8 +546,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         const SizedBox(
                           width: 8,
                         ),
-                        Expanded(
-                            child: Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -568,7 +569,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               ),
                             ),
                           ],
-                        ))
+                        )
                       ],
                     ),
                   ),
@@ -587,7 +588,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         QrImage(
                           data: contactDetailDTO.value,
                           version: QrVersions.auto,
-                          size: 240,
+                          size: 200,
                         ),
                         Positioned.fill(
                           child: Align(
@@ -644,7 +645,7 @@ class _WalletScreenState extends State<WalletScreen> {
               height: 12,
             ),
             ButtonWidget(
-                width: 400,
+                width: 360,
                 height: 40,
                 text: 'Cập nhật thẻ QR',
                 textColor: AppColor.BLUE_TEXT,
@@ -659,7 +660,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   Widget _buildButtonShare(bool isVietQRCard) {
     return SizedBox(
-      width: 400,
+      width: 360,
       height: 40,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

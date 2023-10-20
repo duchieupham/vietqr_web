@@ -366,28 +366,4 @@ class VietQRWidget extends StatelessWidget {
       ],
     );
   }
-
-  double _getHeightCardQR() {
-    if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0' &&
-        qrGeneratedDTO.content.isNotEmpty) {
-      return 580;
-    } else if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0') {
-      return 540;
-    }
-    return 500;
-  }
-
-  String _getPathBGCardQR() {
-    if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0' &&
-        qrGeneratedDTO.content.isNotEmpty) {
-      return 'assets/images/bg_napas_qr_has_amout_content.png';
-    } else if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0') {
-      return 'assets/images/bg_napas_qr_has_amout.png';
-    }
-    return 'assets/images/bg_napas_qr.png';
-  }
 }

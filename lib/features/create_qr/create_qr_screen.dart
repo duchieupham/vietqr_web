@@ -102,9 +102,9 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
           const Text(
             'Thông tin tạo mã VietQR',
             style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline),
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(
             height: 32,
@@ -132,25 +132,22 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                         focusNode: focusNode,
                         hintText: 'VD: 50,000',
                         fontSize: 12,
-                        controller: amountController,
+                        value: provider.money,
                         inputType: TextInputType.number,
                         inputFormatter: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
                         keyboardAction: TextInputAction.next,
-                        onChange: (vavlue) {
-                          if (amountController.text.isNotEmpty) {
-                            if (StringUtils.instance
-                                .isNumeric(amountController.text)) {
+                        onChange: (value) {
+                          provider.updateMoney(value.toString());
+                          if (provider.money.isNotEmpty) {
+                            if (provider.money.replaceAll(',', '').length >=
+                                4) {
+                              provider.updateValidCreate(true);
                               provider.updateAmountErr(false);
-                              if (amountController.text.length >= 4) {
-                                provider.updateValidCreate(true);
-                              } else {
-                                provider.updateValidCreate(false);
-                              }
                             } else {
-                              provider.updateAmountErr(true);
                               provider.updateValidCreate(false);
+                              provider.updateAmountErr(true);
                             }
                           } else {
                             provider.updateAmountErr(false);
@@ -209,17 +206,17 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     StringUtils.instance.isNumeric(amountController.text)) {
                   QRCreateDTO qrCreateDTO = QRCreateDTO(
                     bankId: bankDetailDTO.id,
-                    amount: amountController.text,
+                    amount: provider.money.replaceAll(',', ''),
                     content: StringUtils.instance
                         .removeDiacritic(contentController.text),
                     branchId:
-                        (bankDetailDTO.businessDetails?.isNotEmpty ?? false)
-                            ? bankDetailDTO.businessDetails!.first.branchDetails
+                        (bankDetailDTO.businessDetails.isNotEmpty ?? false)
+                            ? bankDetailDTO.businessDetails.first.branchDetails
                                 .first.branchId
                             : '',
                     businessId:
-                        (bankDetailDTO.businessDetails?.isNotEmpty ?? false)
-                            ? bankDetailDTO.businessDetails!.first.businessId
+                        (bankDetailDTO.businessDetails.isNotEmpty ?? false)
+                            ? bankDetailDTO.businessDetails.first.businessId
                             : '',
                     userId: UserInformationHelper.instance.getUserId(),
                   );
@@ -366,7 +363,6 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                 'Danh sách TK ngân hàng',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.underline,
                   fontSize: 12,
                 ),
               ),
@@ -388,7 +384,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                               horizontal: 12, vertical: 12),
                           decoration: BoxDecoration(
                             color: provider.bankId == dto.id
-                                ? AppColor.BLUE_TEXT
+                                ? colors[index]
                                 : AppColor.WHITE,
                             border: Border.all(color: AppColor.GREY_BUTTON),
                             borderRadius: BorderRadius.circular(5),

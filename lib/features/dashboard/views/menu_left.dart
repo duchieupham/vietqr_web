@@ -26,7 +26,7 @@ class MenuLeft extends StatelessWidget {
         if (provider.showMenu) {
           width = 220;
         } else {
-          width = 60;
+          width = 0;
         }
         return Container(
           width: width,
@@ -52,21 +52,6 @@ class MenuLeft extends StatelessWidget {
                     Provider.of<MenuCardProvider>(context, listen: false)
                         .updateShowMenu(false);
                   }, context),
-                )
-              else
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      provider.updateShowMenu(!provider.showMenu);
-                    },
-                    child: _buildListICon(
-                      provider,
-                      () {
-                        Provider.of<MenuCardProvider>(context, listen: false)
-                            .updateShowMenu(false);
-                      },
-                    ),
-                  ),
                 )
             ],
           ),

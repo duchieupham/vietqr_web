@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -78,7 +79,7 @@ class _ServiceSectionState extends State<ServiceSection> {
             title: 'Tính năng đang bảo trì',
             msg: 'Vui lòng thử lại sau',
           );
-        }),
+        }, isFirst: true),
         _buildItemService(context, 'assets/images/logo-mobile-money-3D.png',
             'Nạp tiền\nđiện thoại', () {
           // Navigator.pushNamed(context, Routes.MOBILE_RECHARGE);
@@ -137,7 +138,8 @@ class _ServiceSectionState extends State<ServiceSection> {
   }
 
   Widget _buildItemService(
-      BuildContext context, String pathIcon, String title, VoidCallback onTap) {
+      BuildContext context, String pathIcon, String title, VoidCallback onTap,
+      {bool isFirst = false}) {
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
       width: getDeviceType() == 'phone' ? width / 5 - 7 : 70,
@@ -146,7 +148,14 @@ class _ServiceSectionState extends State<ServiceSection> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(pathIcon, height: 45),
+            isFirst
+                ? Container(
+                    padding: const EdgeInsets.only(left: 4),
+                    decoration: BoxDecoration(
+                        color: AppColor.WHITE,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Image.asset(pathIcon, height: 44))
+                : Image.asset(pathIcon, height: 45),
             const SizedBox(height: 8),
             Text(
               title,

@@ -25,7 +25,7 @@ class EnvConfig {
 
   static EnvType getEnv() {
     // const EnvType env = EnvType.STG;
-    const EnvType env = EnvType.PROD;
+    const EnvType env = EnvType.STG;
     return env;
   }
 }

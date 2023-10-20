@@ -111,7 +111,7 @@ class BottomWeb extends StatelessWidget {
                   const Spacer(),
                   Image.asset(
                     'assets/images/logo-vietqr-vn.png',
-                    width: 120,
+                    width: 80,
                   ),
                 ],
               ),
@@ -122,7 +122,7 @@ class BottomWeb extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              _buildUrlSystem(isVertical: constraints.maxWidth < 880),
+              _buildUrlSystem(isVertical: constraints.maxWidth < 980),
             ],
           ),
         );
@@ -231,7 +231,7 @@ class BottomWeb extends StatelessWidget {
             const Spacer(),
             Image.asset(
               'assets/images/logo-vietqr-vn.png',
-              width: 120,
+              width: 80,
             ),
           ],
         ),
@@ -310,7 +310,7 @@ class BottomWeb extends StatelessWidget {
   }
 
   Widget _buildUrlSystem({bool isVertical = false}) {
-    if (isVertical) {
+    if (!isVertical) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -321,7 +321,9 @@ class BottomWeb extends StatelessWidget {
                 ),
           ),
           const Padding(padding: EdgeInsets.only(top: 25)),
-          const SizedBox(width: 16,),
+          const SizedBox(
+            width: 16,
+          ),
           SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -388,8 +390,7 @@ class BottomWeb extends StatelessWidget {
       child: Text(
         text,
         style: const TextStyle(
-            decoration: TextDecoration.underline,
-            color: AppColor.BLUE_TEXT),
+            decoration: TextDecoration.underline, color: AppColor.BLUE_TEXT),
       ),
     );
   }
@@ -430,8 +431,7 @@ class BottomWeb extends StatelessWidget {
                 ),
                 Text(
                   text,
-                  style:
-                      const TextStyle(color: AppColor.WHITE, fontSize: 12),
+                  style: const TextStyle(color: AppColor.WHITE, fontSize: 12),
                 ),
               ],
             )

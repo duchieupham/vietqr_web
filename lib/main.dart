@@ -115,6 +115,17 @@ class NavigationService {
 
 // final isLoggedIn = UserInformationHelper.instance.getUserId().trim().isNotEmpty;
 // final String authenticatedRedirect = (isLoggedIn) ? '/home' : '/login';
+CustomTransitionPage<Widget> buildPageWithoutAnimation({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<Widget>(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+          child);
+}
 
 final GoRouter _router = GoRouter(
   navigatorKey: NavigationService.navigatorKey,
@@ -175,17 +186,23 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) => const Login(),
     ),
     GoRoute(
-      path: '/register',
-      redirect: (context, state) {
-        Map<String, String> params = state.queryParams;
-        String shareCode = '';
-        if (params['share_code'] != null && params['share_code'] != 'null') {
-          shareCode = params['share_code'].toString();
-        }
-        return '/register?share_code=$shareCode';
-      },
-      builder: (BuildContext context, GoRouterState state) => RegisterView(),
-    ),
+        path: '/register',
+        redirect: (context, state) {
+          Map<String, String> params = state.queryParams;
+          String shareCode = '';
+          if (params['share_code'] != null && params['share_code'] != 'null') {
+            shareCode = params['share_code'].toString();
+          }
+          return '/register?share_code=$shareCode';
+        },
+        builder: (BuildContext context, GoRouterState state) => RegisterView(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: RegisterView(),
+          );
+        }),
     GoRoute(
       path: '/home',
       redirect: (context, state) =>
@@ -224,42 +241,44 @@ final GoRouter _router = GoRouter(
           UserInformationView(),
     ),
     GoRoute(
-        path: '/qr_generate',
-        // redirect: (context, state) {
-        //   Map<String, String> params = state.queryParams;
-        //   return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
-        // },
-        builder: (context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
-          bool isAuthen = false;
-          if (state.extra != null) {
-            isAuthen = state.extra as bool;
-          }
-          if (params['token'] == null) {
-            return QrGenerateUnAuthen(
-              params: params,
-              isAuthen: isAuthen,
-            );
-          }
-          return QrGenerate(
+      path: '/qr_generate',
+      // redirect: (context, state) {
+      //   Map<String, String> params = state.queryParams;
+      //   return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+      // },
+      builder: (context, GoRouterState state) {
+        Map<String, String> params = state.queryParams;
+        bool isAuthen = false;
+        if (state.extra != null) {
+          isAuthen = state.extra as bool;
+        }
+        if (params['token'] == null) {
+          return QrGenerateUnAuthen(
             params: params,
             isAuthen: isAuthen,
           );
-        }),
+        }
+        return QrGenerate(
+          params: params,
+          isAuthen: isAuthen,
+        );
+      },
+    ),
     GoRoute(
-        path: '/qr_generate/print',
-        redirect: (context, state) {
-          Map<String, String> params = state.queryParams;
+      path: '/qr_generate/print',
+      redirect: (context, state) {
+        Map<String, String> params = state.queryParams;
 
-          return '/qr_generate/print?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
-        },
-        builder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+        return '/qr_generate/print?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+      },
+      builder: (BuildContext context, GoRouterState state) {
+        Map<String, String> params = state.queryParams;
 
-          return QrPrint(
-            params: params,
-          );
-        }),
+        return QrPrint(
+          params: params,
+        );
+      },
+    ),
     GoRoute(
       path: '/naptk',
       redirect: (context, state) => '/naptk',
@@ -273,71 +292,124 @@ final GoRouter _router = GoRouter(
           const CreateQRUnAuthen(),
     ),
     GoRoute(
-      path: '/mbbank-dkdv',
-      redirect: (context, state) => '/mbbank-dkdv',
-      builder: (BuildContext context, GoRouterState state) => const DkDv(),
-    ),
+        path: '/mbbank-dkdv',
+        redirect: (context, state) => '/mbbank-dkdv',
+        builder: (BuildContext context, GoRouterState state) => const DkDv(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const DkDv(),
+          );
+        }),
     GoRoute(
-      path: '/contact/introducing',
-      redirect: (context, state) => '/contact/introducing',
-      builder: (BuildContext context, GoRouterState state) =>
-          const Introduction(),
-    ),
+        path: '/contact/introducing',
+        redirect: (context, state) => '/contact/introducing',
+        builder: (BuildContext context, GoRouterState state) =>
+            const Introduction(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const Introduction(),
+          );
+        }),
     GoRoute(
-      path: '/business',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/business'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) =>
-          const BusinessManagerView(),
-    ),
+        path: '/business',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/business'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const BusinessManagerView(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const BusinessManagerView(),
+          );
+        }),
     GoRoute(
-      path: '/merchant',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/merchant'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) =>
-          const MerchantView(),
-    ),
+        path: '/merchant',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantView(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantView(),
+          );
+        }),
     GoRoute(
-      path: '/transaction',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/transaction'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) =>
-          const TransactionUserScreen(),
-    ),
+        path: '/transaction',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/transaction'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const TransactionUserScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const TransactionUserScreen(),
+          );
+        }),
     GoRoute(
-      path: '/create-qr/:id',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/create-qr/${state.params['id'] ?? ''}'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) => CreateQrScreen(
-        bankAccountId: state.params['id'] ?? '',
-      ),
-    ),
+        path: '/create-qr/:id',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/create-qr/${state.params['id'] ?? ''}'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) => CreateQrScreen(
+              bankAccountId: state.params['id'] ?? '',
+            ),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: CreateQrScreen(
+              bankAccountId: state.params['id'] ?? '',
+            ),
+          );
+        }),
     GoRoute(
-      path: '/create-qr',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/create-qr'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) =>
-          const CreateQrScreen(),
-    ),
+        path: '/create-qr',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/create-qr'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const CreateQrScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const CreateQrScreen(),
+          );
+        }),
     GoRoute(
-      path: '/qr-wallet',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/qr-wallet'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) =>
-          const WalletScreen(),
-    ),
+        path: '/qr-wallet',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/qr-wallet'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const WalletScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const WalletScreen(),
+          );
+        }),
     GoRoute(
         path: '/qr-wallet/detail',
         redirect: (context, state) {
@@ -348,6 +420,16 @@ final GoRouter _router = GoRouter(
           Map<String, String> params = state.queryParams;
           return QrCardGenerate(
             params: params,
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: QrCardGenerate(
+              params: params,
+            ),
           );
         }),
   ],

@@ -137,7 +137,7 @@ class _QrGenerateState extends State<QrGenerate> {
         create: (context) => TransactionQRProvider(),
         child: Center(
           child: SizedBox(
-            width: 1080,
+            width: 900,
             child: Padding(
               padding: const EdgeInsets.only(
                   top: 24, bottom: 40, left: 12, right: 12),
@@ -194,10 +194,6 @@ class _QrGenerateState extends State<QrGenerate> {
                             if (constraints.maxWidth > 760) {
                               return Column(
                                 children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  _buildCountDown(),
                                   Expanded(
                                     child: Row(
                                       children: [
@@ -213,6 +209,7 @@ class _QrGenerateState extends State<QrGenerate> {
                             }
                             return Center(
                               child: ListView(
+                                padding: EdgeInsets.zero,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
@@ -245,19 +242,26 @@ class _QrGenerateState extends State<QrGenerate> {
   }
 
   Widget _buildCountDown() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/images/logo-vietqr-vn.png',
-            height: 50,
-            fit: BoxFit.fitHeight,
-          ),
-          const Spacer(),
-          if (!isSuccess) _buildTimeCountDown()
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Image.asset(
+          'assets/images/logo-vietqr-vn.png',
+          height: 50,
+          fit: BoxFit.fitHeight,
+        ),
+        const Spacer(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Text(
+              'Giao dịch có thời hạn 15 phút',
+              style: TextStyle(fontSize: 12),
+            ),
+            if (!isSuccess) _buildTimeCountDown()
+          ],
+        ),
+      ],
     );
   }
 
@@ -283,7 +287,7 @@ class _QrGenerateState extends State<QrGenerate> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 20),
+                padding: EdgeInsets.only(top: 32, bottom: 20),
                 child: Text(
                   'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -385,115 +389,124 @@ class _QrGenerateState extends State<QrGenerate> {
         crossAxisAlignment:
             isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 70,
-          ),
-          const Text(
-            'Thông tin mã VietQR',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          if (qrGeneratedDTO.amount != '0') ...[
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 8),
-              child: Text(
-                'Số tiền thanh toán',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+          _buildCountDown(),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                const Text(
+                  'Thông tin mã VietQR',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                if (qrGeneratedDTO.amount != '0') ...[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 8),
+                    child: Text(
+                      'Số tiền thanh toán',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(
+                    '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                    style: const TextStyle(
+                      color: AppColor.ORANGE_Dark,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+                const Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 8),
+                  child: Text(
+                    'Tài khoản nhận',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  qrGeneratedDTO.bankAccount,
+                ),
+                Text(
+                  '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
+                ),
+                if (transactionQRdto.orderId.isNotEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 8),
+                    child: Text(
+                      'Mã hóa đơn',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(
+                    transactionQRdto.orderId,
+                  ),
+                ],
+                if (transactionQRdto.terminalCode.isNotEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 8),
+                    child: Text(
+                      'Mã điểm bán',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(
+                    transactionQRdto.terminalCode,
+                  ),
+                ],
+                if (qrGeneratedDTO.content.isNotEmpty) ...[
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 8),
+                    child: Text(
+                      'Nội dung',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(
+                    qrGeneratedDTO.content,
+                  ),
+                ],
+                if (widget.isAuthen) ...[
+                  const Spacer(),
+                  ButtonIconWidget(
+                    height: 40,
+                    icon: Icons.home_rounded,
+                    title: 'Trang chủ',
+                    textColor: AppColor.BLUE_TEXT,
+                    bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+                    function: () {
+                      _doEndAnimation();
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        context.go('/');
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  ButtonWidget(
+                    height: 40,
+                    borderRadius: 5,
+                    text: 'Tạo mã VietQR khác',
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
+                    function: () {
+                      _doEndAnimation();
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        Navigator.pop(context);
+                        html.window.history.back();
+                      });
+                    },
+                  ),
+                ]
+              ],
             ),
-            Text(
-              '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-              style: const TextStyle(
-                color: AppColor.ORANGE_Dark,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-          const Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 8),
-            child: Text(
-              'Tài khoản nhận',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Text(
-            qrGeneratedDTO.bankAccount,
-          ),
-          Text(
-            '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
-          ),
-          if (transactionQRdto.orderId.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 8),
-              child: Text(
-                'Mã hóa đơn',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            Text(
-              transactionQRdto.orderId,
-            ),
-          ],
-          if (transactionQRdto.terminalCode.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 8),
-              child: Text(
-                'Mã điểm bán',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            Text(
-              transactionQRdto.terminalCode,
-            ),
-          ],
-          if (qrGeneratedDTO.content.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 8),
-              child: Text(
-                'Nội dung',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            Text(
-              qrGeneratedDTO.content,
-            ),
-          ],
-          if (widget.isAuthen) ...[
-            const Spacer(),
-            ButtonIconWidget(
-              height: 40,
-              icon: Icons.home_rounded,
-              title: 'Trang chủ',
-              textColor: AppColor.BLUE_TEXT,
-              bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
-              function: () {
-                _doEndAnimation();
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  context.go('/');
-                });
-              },
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            ButtonWidget(
-              height: 40,
-              borderRadius: 5,
-              text: 'Tạo mã VietQR khác',
-              textColor: AppColor.WHITE,
-              bgColor: AppColor.BLUE_TEXT,
-              function: () {
-                _doEndAnimation();
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  Navigator.pop(context);
-                  html.window.history.back();
-                });
-              },
-            ),
-          ]
+          )
         ],
       ),
     );
@@ -592,37 +605,46 @@ class _QrGenerateState extends State<QrGenerate> {
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
                               color: AppColor.BLUE_TEXT.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Text('$minutes',
+                            child: Text(
+                                minutes < 10 ? '0$minutes' : minutes.toString(),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
-                                    color: AppColor.BLUE_TEXT, fontSize: 16)),
+                                    color: AppColor.BLUE_TEXT, fontSize: 14)),
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4),
                             child: Text(
                               ':',
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 14),
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
                               color: AppColor.BLUE_TEXT.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Text('$seconds',
+                            child: Text(
+                                seconds < 10 ? '0$seconds' : seconds.toString(),
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
-                                    color: AppColor.BLUE_TEXT, fontSize: 16)),
+                                    color: AppColor.BLUE_TEXT, fontSize: 14)),
                           ),
                         ],
                       ));
                 }),
+            const SizedBox(
+              width: 4,
+            ),
+            const Text(
+              'phút',
+              style: TextStyle(fontSize: 12),
+            ),
           ],
         );
       } else {
@@ -693,6 +715,7 @@ class _QrGenerateState extends State<QrGenerate> {
         Padding(
           padding: const EdgeInsets.all(40),
           child: ButtonIconWidget(
+            width: 400,
             height: 40,
             icon: Icons.home_rounded,
             title: 'Trang chủ',

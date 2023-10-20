@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -47,8 +48,8 @@ class WalletCard extends StatelessWidget {
   Widget _buildTitle() {
     return Row(
       children: [
-        Image.asset(
-          AppImages.icVietQrSmall,
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
           width: 35,
           height: 35,
         ),

@@ -141,7 +141,7 @@ class _HomeScreenState extends State<_HomeScreen> {
             currentType: MenuHomeType.HOME,
           ),
           widget1: _buildHome(),
-          widget2: _buildListBank(state.listBanks),
+          widget2: _buildListBank(state.listBanks, state.colors),
           widget3: _buildInfoAccount(dto, qrGeneratedDTO),
         );
       },
@@ -212,7 +212,7 @@ class _HomeScreenState extends State<_HomeScreen> {
     );
   }
 
-  Widget _buildListBank(List<BankAccountDTO> list) {
+  Widget _buildListBank(List<BankAccountDTO> list, List<Color> colors) {
     String userId = UserInformationHelper.instance.getUserId();
 
     return Consumer<HomeProvider>(
@@ -281,7 +281,7 @@ class _HomeScreenState extends State<_HomeScreen> {
                               horizontal: 12, vertical: 12),
                           decoration: BoxDecoration(
                             color: provider.bankId == dto.id
-                                ? AppColor.BLUE_TEXT
+                                ? colors[index]
                                 : AppColor.WHITE,
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -385,7 +385,7 @@ class _HomeScreenState extends State<_HomeScreen> {
         ),
         const Spacer(),
         const Padding(
-          padding: EdgeInsets.only(top: 10, right: 6),
+          padding: EdgeInsets.only(top: 10, right: 6, bottom: 8),
           child: Icon(
             Icons.arrow_forward_ios,
             color: AppColor.WHITE,
