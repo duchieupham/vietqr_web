@@ -309,7 +309,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     DialogWidget.instance.openMsgDialog(
                         title: 'TK ngân hàng không hợp lệ',
                         msg: 'Vui lòng chọn tài khoản ngân hàng');
-                  } else if (amountController.text.isEmpty) {
+                  } else if (provider.money.isEmpty) {
                     DialogWidget.instance.openMsgDialog(
                         title: 'Số tiền không hợp lệ',
                         msg: 'Vui lòng nhập số tiền');
@@ -320,12 +320,13 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                         msg: 'Vui lòng nhập lại số tiền');
                   }
                   // (provider.isValidCreate)
-                  if (amountController.text.isNotEmpty &&
-                      StringUtils.instance.isNumeric(amountController.text) &&
+                  if (provider.money.isNotEmpty &&
+                      StringUtils.instance
+                          .isNumeric(provider.money.replaceAll(',', '')) &&
                       provider.bankAccountDTO.id.isNotEmpty) {
                     QRCreateDTO qrCreateDTO = QRCreateDTO(
                       bankId: bankDetailDTO.id,
-                      amount: amountController.text,
+                      amount: provider.money.replaceAll(',', ''),
                       content: StringUtils.instance
                           .removeDiacritic(contentController.text),
                       branchId: (bankDetailDTO.businessDetails.isNotEmpty)

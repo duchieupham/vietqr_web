@@ -10,11 +10,9 @@ import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
-import 'package:VietQR/features/bank/widgets/confirm_opt_widget.dart';
 import 'package:VietQR/features/bank/widgets/policy_bank_widget.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
-import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_name_search_dto.dart';
@@ -188,16 +186,26 @@ class _AddBankView extends State<AddBankStep2> {
                               }
                               if (state is BankRequestOTPSuccessState) {
                                 Navigator.pop(context);
-                                DialogWidget.instance.openPopup(
-                                  width: 300,
-                                  height: 400,
-                                  child: ConfirmOTPWidget(
-                                    requestId: state.requestId,
-                                    phone: phoneController.text,
-                                    bankBloc: bankBloc,
-                                    dto: state.dto,
-                                  ),
-                                );
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateRequestId(state.requestId);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateBankCardRequestOTP(state.dto);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateBankAccount(
+                                        bankAccountController.text);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateName(nameController.text);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateNationalId(nationalController.text);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updatePhone(phoneController.text);
+                                context.go('/add-bank/step3');
                               }
                               if (state is BankRequestOTPFailedState) {
                                 Navigator.pop(context);
@@ -211,75 +219,6 @@ class _AddBankView extends State<AddBankStep2> {
                               }
                               if (state is BankConfirmOTPLoadingState) {
                                 DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is BankConfirmOTPSuccessState) {
-                                // Navigator.pop(context);
-                                // String bankId =
-                                //     Provider.of<AddBankProvider>(context, listen: false).bankId;
-                                // if (bankId.trim().isEmpty) {
-                                BankTypeDTO bankTypeDTO =
-                                    Provider.of<BankTypeProvider>(context,
-                                            listen: false)
-                                        .bankType;
-                                String userId =
-                                    UserInformationHelper.instance.getUserId();
-                                String formattedName = StringUtils.instance
-                                    .removeDiacritic(StringUtils.instance
-                                        .capitalFirstCharacter(
-                                            nameController.text));
-                                BankCardInsertDTO dto = BankCardInsertDTO(
-                                  bankTypeId: bankTypeDTO.id,
-                                  userId: userId,
-                                  userBankName: formattedName,
-                                  bankAccount: bankAccountController.text,
-                                  type: 0,
-                                  branchId: '',
-                                  nationalId: nationalController.text,
-                                  phoneAuthenticated: phoneController.text,
-                                );
-                                bankBloc.add(BankEventInsert(dto: dto));
-                                // } else {
-                                //   RegisterAuthenticationDTO dto = RegisterAuthenticationDTO(
-                                //     bankId: bankId,
-                                //     nationalId: nationalController.text,
-                                //     phoneAuthenticated: phoneAuthenController.text,
-                                //     bankAccountName: nameController.text,
-                                //     bankAccount: bankAccountController.text,
-                                //   );
-                                //   bankCardBloc.add(BankEventRegisterAuthentication(dto: dto));
-                                // }
-                              }
-                              if (state is BankConfirmOTPFailedState) {
-                                Navigator.pop(context);
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Lỗi',
-                                  msg: state.message,
-                                );
-                              }
-                              if (state is BankInsertSuccessfulState) {
-                                //pop loading
-                                Navigator.pop(context);
-                                phoneController.clear();
-                                nameController.clear();
-                                nationalController.clear();
-                                bankAccountController.clear();
-                                //navigate
-                                Fluttertoast.showToast(
-                                  msg:
-                                      'Liên kết tài khoản ngân hàng thành công',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: AppColor.WHITE,
-                                  textColor: AppColor.BLACK,
-                                  fontSize: 15,
-                                  webBgColor: 'rgba(255, 255, 255)',
-                                  webPosition: 'center',
-                                );
-                                Provider.of<BankTypeProvider>(context,
-                                        listen: false)
-                                    .reset();
-                                context.go('/');
                               }
                               if (state is BankInsertFailedState) {
                                 DialogWidget.instance.openMsgDialog(

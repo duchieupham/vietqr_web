@@ -390,121 +390,123 @@ class _QrGenerateState extends State<QrGenerate> {
             isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           _buildCountDown(),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                const Text(
-                  'Thông tin mã VietQR',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                if (qrGeneratedDTO.amount != '0') ...[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 8),
-                    child: Text(
-                      'Số tiền thanh toán',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-                    style: const TextStyle(
-                      color: AppColor.ORANGE_Dark,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-                const Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 8),
-                  child: Text(
-                    'Tài khoản nhận',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  qrGeneratedDTO.bankAccount,
-                ),
-                Text(
-                  '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
-                ),
-                if (transactionQRdto.orderId.isNotEmpty) ...[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 8),
-                    child: Text(
-                      'Mã hóa đơn',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    transactionQRdto.orderId,
-                  ),
-                ],
-                if (transactionQRdto.terminalCode.isNotEmpty) ...[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 8),
-                    child: Text(
-                      'Mã điểm bán',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    transactionQRdto.terminalCode,
-                  ),
-                ],
-                if (qrGeneratedDTO.content.isNotEmpty) ...[
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 8),
-                    child: Text(
-                      'Nội dung',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    qrGeneratedDTO.content,
-                  ),
-                ],
-                if (widget.isAuthen) ...[
-                  const Spacer(),
-                  ButtonIconWidget(
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
                     height: 40,
-                    icon: Icons.home_rounded,
-                    title: 'Trang chủ',
-                    textColor: AppColor.BLUE_TEXT,
-                    bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
-                    function: () {
-                      _doEndAnimation();
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        context.go('/');
-                      });
-                    },
+                  ),
+                  const Text(
+                    'Thông tin mã VietQR',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  if (qrGeneratedDTO.amount != '0') ...[
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20, bottom: 8),
+                      child: Text(
+                        'Số tiền thanh toán',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(
+                      '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                      style: const TextStyle(
+                        color: AppColor.ORANGE_Dark,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                  const Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 8),
+                    child: Text(
+                      'Tài khoản nhận',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                   const SizedBox(
-                    height: 8,
+                    height: 4,
                   ),
-                  ButtonWidget(
-                    height: 40,
-                    borderRadius: 5,
-                    text: 'Tạo mã VietQR khác',
-                    textColor: AppColor.WHITE,
-                    bgColor: AppColor.BLUE_TEXT,
-                    function: () {
-                      _doEndAnimation();
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        Navigator.pop(context);
-                        html.window.history.back();
-                      });
-                    },
+                  Text(
+                    qrGeneratedDTO.bankAccount,
                   ),
-                ]
-              ],
+                  Text(
+                    '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
+                  ),
+                  if (transactionQRdto.orderId.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20, bottom: 8),
+                      child: Text(
+                        'Mã hóa đơn',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(
+                      transactionQRdto.orderId,
+                    ),
+                  ],
+                  if (transactionQRdto.terminalCode.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20, bottom: 8),
+                      child: Text(
+                        'Mã điểm bán',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(
+                      transactionQRdto.terminalCode,
+                    ),
+                  ],
+                  if (qrGeneratedDTO.content.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20, bottom: 8),
+                      child: Text(
+                        'Nội dung',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(
+                      qrGeneratedDTO.content,
+                    ),
+                  ],
+                  if (widget.isAuthen) ...[
+                    const Spacer(),
+                    ButtonIconWidget(
+                      height: 40,
+                      icon: Icons.home_rounded,
+                      title: 'Trang chủ',
+                      textColor: AppColor.BLUE_TEXT,
+                      bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+                      function: () {
+                        _doEndAnimation();
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          context.go('/');
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    ButtonWidget(
+                      height: 40,
+                      borderRadius: 5,
+                      text: 'Tạo mã VietQR khác',
+                      textColor: AppColor.WHITE,
+                      bgColor: AppColor.BLUE_TEXT,
+                      function: () {
+                        _doEndAnimation();
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          Navigator.pop(context);
+                          html.window.history.back();
+                        });
+                      },
+                    ),
+                  ]
+                ],
+              ),
             ),
           )
         ],

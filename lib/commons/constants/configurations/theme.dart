@@ -61,6 +61,8 @@ class AppColor {
   static const Color CARD_CODE_BG = Color(0xFFf0f0f0);
   static const Color ITEM_MENU_SELECTED = Color(0xFFb5d7ff);
   static const Color CARD_MY_QR = Color(0xFF54a2ff);
+  static const Color GREY_444B56 = Color(0xff444B56);
+  static const secondary400 = Color(0xff464F77);
 
   //THEME NAME
   static const String THEME_LIGHT = 'LIGHT';
