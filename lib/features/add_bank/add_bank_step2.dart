@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
@@ -425,6 +426,7 @@ class _AddBankView extends State<AddBankStep2> {
                             },
                           ),
                         ),
+                        const FooterWeb(),
                       ],
                     ),
                   ),

@@ -234,7 +234,7 @@ class BusinessItem extends StatelessWidget {
                 child: const Text(
                   'Xem thêm',
                   style: TextStyle(
-                    color: AppColor.GREEN,
+                    color: AppColor.BLUE_TEXT,
                     decoration: TextDecoration.underline,
                   ),
                 ),

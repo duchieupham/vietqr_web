@@ -1,19 +1,17 @@
-import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
 import 'package:VietQR/features/business/events/business_information_event.dart';
-import 'package:VietQR/features/business/frame/user_information_frame.dart';
+import 'package:VietQR/features/business/frame/business_information_frame.dart';
 import 'package:VietQR/features/business/states/business_information_state.dart';
 import 'package:VietQR/features/business/views/add_business_view.dart';
 import 'package:VietQR/features/business/views/business_information_view.dart';
 import 'package:VietQR/features/business/widget/business_item.dart';
 import 'package:VietQR/features/business/widget/shortcut_icon.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../dashboard/views/menu_left.dart';
@@ -55,9 +53,10 @@ class _DashboardViewState extends State<BusinessManagerView> {
   Widget build(BuildContext context) {
     return BusinessInformationFrame(
       widget1: [_buildListShortcut()],
-      widget2: [_buildBusinessWidget()], menu:const MenuLeft(
-      currentType:  MenuHomeType.BUSINESS,
-    ),
+      widget2: [_buildBusinessWidget()],
+      menu: const MenuLeft(
+        currentType: MenuHomeType.BUSINESS,
+      ),
     );
   }
 

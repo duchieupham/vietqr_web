@@ -4,6 +4,7 @@ import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
+import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
@@ -136,9 +137,10 @@ class MenuLeft extends StatelessWidget {
                 pathImage: AppImages.icMenuIntroVietQrVN,
                 isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
                 onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Tính năng đang bảo trì',
-                    msg: 'Vui lòng thử lại sau',
+                  DialogWidget.instance.openPopup(
+                    width: 500,
+                    height: 300,
+                    child: const PopupShareCode(),
                   );
                 },
               ),

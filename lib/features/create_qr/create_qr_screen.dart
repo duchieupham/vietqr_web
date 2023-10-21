@@ -8,6 +8,7 @@ import 'package:VietQR/features/create_qr/blocs/create_qr_bloc.dart';
 import 'package:VietQR/features/create_qr/frame/create_qr_frame.dart';
 import 'package:VietQR/features/create_qr/provider/create_qr_provider.dart';
 import 'package:VietQR/features/create_qr/states/create_qr_state.dart';
+import 'package:VietQR/features/create_qr/widget/calculator_view.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
@@ -290,8 +291,20 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               runSpacing: 12,
               spacing: 12,
               children: [
-                _buildTemplateSubButton(
-                    'Máy tính', () {}, Icons.calculate_outlined),
+                _buildTemplateSubButton('Máy tính', () {
+                  DialogWidget.instance.openPopup(
+                    width: 400,
+                    height: 560,
+                    child: CalculatorScreen(
+                      onSubmit: (vale) {
+                        double money = double.parse(vale);
+
+                        provider.updateMoneyFormCalculator(
+                            money.round().toString());
+                      },
+                    ),
+                  );
+                }, Icons.calculate_outlined),
                 _buildTemplateSubButton(
                     'Quét QR/Barcode nội dung', () {}, Icons.qr_code_outlined),
               ],

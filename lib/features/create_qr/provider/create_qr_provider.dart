@@ -64,6 +64,17 @@ class CreateQRProvider with ChangeNotifier {
     }
   }
 
+  void updateMoneyFormCalculator(String value) {
+    if (value.isNotEmpty) {
+      int data = int.parse(value.replaceAll(',', ''));
+
+      money = StringUtils.formatNumber(data);
+    } else {
+      money = value;
+    }
+    notifyListeners();
+  }
+
   void updateCurrencyFormat(String value) {
     if (value.isNotEmpty && value.characters.first == '0') {
       value = value.substring(1);

@@ -93,10 +93,12 @@ class _QrGenerateState extends State<QrGenerate> {
   void getData() {
     qrCodeUnUTBloc = BlocProvider.of(context);
     data['token'] = widget.params['token'] ?? '';
-    WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
-      setState(() {
-        _doEndAnimation();
-        isSuccess = true;
+    Future.delayed(const Duration(seconds: 1), () {
+      WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
+        setState(() {
+          _doEndAnimation();
+          isSuccess = true;
+        });
       });
     });
     qrCodeUnUTBloc.add(GetTransactionQRBytToken(token: data['token']));

@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/features/add_bank/states/list_bank_state.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
@@ -131,6 +132,7 @@ class _AddBankScreenState extends State<AddBankStep1> {
                             },
                           ),
                         ),
+                        const FooterWeb(),
                       ],
                     )),
                   ],

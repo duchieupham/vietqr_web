@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -54,13 +55,25 @@ class _HomeFrameState extends State<HomeFrame> {
                       child: Row(
                         children: [
                           widget.menu,
-                          const SizedBox(width: 16),
-                          Expanded(child: widget.widget1),
-                          const SizedBox(width: 30),
-                          Expanded(child: widget.widget2),
-                          const SizedBox(width: 30),
-                          Expanded(child: widget.widget3),
-                          const SizedBox(width: 16),
+                          Expanded(
+                              child: Column(
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 16),
+                                    Expanded(child: widget.widget1),
+                                    const SizedBox(width: 30),
+                                    Expanded(child: widget.widget2),
+                                    const SizedBox(width: 30),
+                                    Expanded(child: widget.widget3),
+                                    const SizedBox(width: 16),
+                                  ],
+                                ),
+                              ),
+                              const FooterWeb(),
+                            ],
+                          )),
                         ],
                       ),
                     ),

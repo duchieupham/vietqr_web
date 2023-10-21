@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -82,7 +83,8 @@ class _WalletFrameState extends State<WalletFrame> {
                                   }),
                                   const SizedBox(width: 30),
                                 ],
-                              ))
+                              )),
+                              const FooterWeb(),
                             ],
                           )),
                         ],
