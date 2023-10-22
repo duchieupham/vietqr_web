@@ -141,7 +141,7 @@ class _QrGenerateState extends State<QrGenerate> {
                             userBankName: transactionQRdto.userBankName,
                             amount: transactionQRdto.amount.toString(),
                           );
-                          if (transactionQRdto.status == 1) {
+                          if (transactionQRdto.status == 0) {
                             isSuccess = true;
                           }
                           timeCountDown = DateTime.fromMillisecondsSinceEpoch(
@@ -173,7 +173,7 @@ class _QrGenerateState extends State<QrGenerate> {
                                     child: Row(
                                       children: [
                                         Expanded(
-                                          child: _buildWidgetQr(state),
+                                          child: _buildWidgetQr(state, false),
                                         ),
                                         Expanded(child: _buildInfo(false)),
                                       ],
@@ -194,7 +194,9 @@ class _QrGenerateState extends State<QrGenerate> {
                                         height: 20,
                                       ),
                                       _buildCountDown(),
-                                      _buildWidgetQr(state),
+                                      SizedBox(
+                                          height: 400,
+                                          child: _buildWidgetQr(state, true)),
                                     ],
                                   ),
                                   SizedBox(
@@ -241,9 +243,9 @@ class _QrGenerateState extends State<QrGenerate> {
     );
   }
 
-  Widget _buildWidgetQr(QRCodeUnUTState state) {
+  Widget _buildWidgetQr(QRCodeUnUTState state, bool isVertical) {
     if (isSuccess) {
-      return _buildTransactionSuccess();
+      return _buildTransactionSuccess(isVertical);
     }
     if (state is CreateQRLoadingState) {
       return const UnconstrainedBox(
@@ -360,12 +362,14 @@ class _QrGenerateState extends State<QrGenerate> {
 
   Widget _buildInfo(bool isVertical) {
     return Padding(
-      padding: isVertical ? EdgeInsets.zero : const EdgeInsets.all(20),
+      padding: isVertical
+          ? const EdgeInsets.only(bottom: 20)
+          : const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment:
             isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          _buildCountDown(),
+          if (!isVertical) _buildCountDown(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 16),
@@ -389,8 +393,10 @@ class _QrGenerateState extends State<QrGenerate> {
                     ),
                     Text(
                       '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-                      style: const TextStyle(
-                        color: AppColor.ORANGE_Dark,
+                      style: TextStyle(
+                        color: isSuccess
+                            ? AppColor.BLUE_TEXT
+                            : AppColor.ORANGE_Dark,
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -475,6 +481,20 @@ class _QrGenerateState extends State<QrGenerate> {
                         Future.delayed(const Duration(milliseconds: 500), () {
                           Navigator.pop(context);
                           html.window.history.back();
+                        });
+                      },
+                    ),
+                  ] else ...[
+                    const Spacer(),
+                    ButtonIconWidget(
+                      height: 40,
+                      icon: Icons.home_rounded,
+                      title: 'Trang chủ',
+                      textColor: AppColor.WHITE,
+                      bgColor: AppColor.BLUE_TEXT,
+                      function: () {
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          context.go('/');
                         });
                       },
                     ),
@@ -629,7 +649,7 @@ class _QrGenerateState extends State<QrGenerate> {
     });
   }
 
-  Widget _buildTransactionSuccess() {
+  Widget _buildTransactionSuccess(bool isVertical) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -640,16 +660,20 @@ class _QrGenerateState extends State<QrGenerate> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 60),
-          child: SizedBox(
-            width: 300,
-            height: 300,
-            child: Image(
-                image: ImageUtils.instance
-                    .getImageNetWork('a8a40f57-c23a-4f6f-aeba-4af1c0734d9d')),
+        Expanded(
+          child: Padding(
+            padding: isVertical
+                ? EdgeInsets.zero
+                : const EdgeInsets.only(bottom: 80),
+            child: SizedBox(
+              width: 300,
+              height: 300,
+              child: Image(
+                  image: ImageUtils.instance
+                      .getImageNetWork('a8a40f57-c23a-4f6f-aeba-4af1c0734d9d')),
+            ),
           ),
-        )
+        ),
       ],
     );
   }

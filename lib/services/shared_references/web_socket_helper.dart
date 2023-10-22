@@ -86,7 +86,7 @@ class WebSocketHelper {
     if (!isListenWebSocket) {
       try {
         setListenTransactionQRWS(true);
-        final wsUrl = Uri.parse('wss://dev.vietqr.org/vqr/socket?refId=$id');
+        final wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
         _channelTransaction = WebSocketChannel.connect(wsUrl);
 
         if (_channelTransaction.closeCode == null) {
