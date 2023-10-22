@@ -187,18 +187,20 @@ class _QrGenerateState extends State<QrGenerate> {
                               child: ListView(
                                 padding: EdgeInsets.zero,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      _buildCountDown(),
-                                      SizedBox(
-                                          height: 400,
-                                          child: _buildWidgetQr(state, true)),
-                                    ],
+                                  SizedBox(
+                                    height: isSuccess ? 440 : 780,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        _buildCountDown(),
+                                        Expanded(
+                                            child: _buildWidgetQr(state, true)),
+                                      ],
+                                    ),
                                   ),
                                   SizedBox(
                                       height: 650, child: _buildInfo(true)),
