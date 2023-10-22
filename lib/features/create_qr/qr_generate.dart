@@ -69,6 +69,7 @@ class _QrGenerateState extends State<QrGenerate> {
       WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
         setState(() {
           isSuccess = true;
+          print('--------------------------------$isSuccess');
         });
       });
     });
@@ -479,7 +480,6 @@ class _QrGenerateState extends State<QrGenerate> {
                       bgColor: AppColor.BLUE_TEXT,
                       function: () {
                         Future.delayed(const Duration(milliseconds: 500), () {
-                          Navigator.pop(context);
                           html.window.history.back();
                         });
                       },

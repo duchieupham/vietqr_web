@@ -17,6 +17,10 @@ class WebSocketHelper {
   WebSocketHelper._privateConstructor();
   static late WebSocketChannel _channelTransaction;
   WebSocketChannel get channelTransaction => _channelTransaction;
+
+  static late WebSocketChannel _channelQRLink;
+  WebSocketChannel get channelQRLink => _channelQRLink;
+
   static final WebSocketHelper _instance =
       WebSocketHelper._privateConstructor();
   static WebSocketHelper get instance => _instance;
@@ -80,30 +84,24 @@ class WebSocketHelper {
   }
 
   void listenTransactionQRSocket(String id, Function transactionSuccess) {
-    bool isListenWebSocket =
-        WebSocketHelper.instance.getListenTransactionQRWS();
-
-    if (!isListenWebSocket) {
-      try {
-        setListenTransactionQRWS(true);
-        final wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
-        _channelTransaction = WebSocketChannel.connect(wsUrl);
-
-        if (_channelTransaction.closeCode == null) {
-          _channelTransaction.stream.listen((event) {
-            var data = jsonDecode(event);
-            if (data['notificationType'] != null &&
-                data['notificationType'] ==
-                    Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-              transactionSuccess();
-            }
-          });
-        } else {
-          setListenTransactionQRWS(false);
-        }
-      } catch (e) {
-        LOG.error('WS: $e');
+    try {
+      setListenTransactionQRWS(true);
+      final wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
+      _channelQRLink = WebSocketChannel.connect(wsUrl);
+      if (_channelQRLink.closeCode == null) {
+        _channelQRLink.stream.listen((event) {
+          var data = jsonDecode(event);
+          if (data['notificationType'] != null &&
+              data['notificationType'] ==
+                  Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+            transactionSuccess();
+          }
+        });
+      } else {
+        setListenTransactionQRWS(false);
       }
+    } catch (e) {
+      LOG.error('WS: $e');
     }
   }
 }

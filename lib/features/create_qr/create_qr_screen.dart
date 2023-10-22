@@ -322,37 +322,33 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     DialogWidget.instance.openMsgDialog(
                         title: 'TK ngân hàng không hợp lệ',
                         msg: 'Vui lòng chọn tài khoản ngân hàng');
-                  } else if (provider.money.isEmpty) {
+                  } else if (provider.money.isEmpty ||
+                      provider.money == '0' ||
+                      provider.amountErr) {
                     DialogWidget.instance.openMsgDialog(
                         title: 'Số tiền không hợp lệ',
                         msg: 'Vui lòng nhập số tiền');
-                  }
-                  if (provider.amountErr) {
-                    DialogWidget.instance.openMsgDialog(
-                        title: 'Số tiền không hợp lệ',
-                        msg: 'Vui lòng nhập lại số tiền');
-                  }
-                  // (provider.isValidCreate)
-                  if (provider.money.isNotEmpty &&
-                      StringUtils.instance
-                          .isNumeric(provider.money.replaceAll(',', '')) &&
-                      provider.bankAccountDTO.id.isNotEmpty) {
-                    QRCreateDTO qrCreateDTO = QRCreateDTO(
-                      bankId: bankDetailDTO.id,
-                      amount: provider.money.replaceAll(',', ''),
-                      content: StringUtils.instance
-                          .removeDiacritic(contentController.text),
-                      branchId: (bankDetailDTO.businessDetails.isNotEmpty)
-                          ? bankDetailDTO.businessDetails.first.branchDetails
-                              .first.branchId
-                          : '',
-                      businessId:
-                          (bankDetailDTO.businessDetails.isNotEmpty ?? false)
-                              ? bankDetailDTO.businessDetails.first.businessId
-                              : '',
-                      userId: UserInformationHelper.instance.getUserId(),
-                    );
-                    createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
+                  } else {
+                    if (StringUtils.instance
+                            .isNumeric(provider.money.replaceAll(',', '')) &&
+                        provider.bankAccountDTO.id.isNotEmpty) {
+                      QRCreateDTO qrCreateDTO = QRCreateDTO(
+                        bankId: bankDetailDTO.id,
+                        amount: provider.money.replaceAll(',', ''),
+                        content: StringUtils.instance
+                            .removeDiacritic(contentController.text),
+                        branchId: (bankDetailDTO.businessDetails.isNotEmpty)
+                            ? bankDetailDTO.businessDetails.first.branchDetails
+                                .first.branchId
+                            : '',
+                        businessId:
+                            (bankDetailDTO.businessDetails.isNotEmpty ?? false)
+                                ? bankDetailDTO.businessDetails.first.businessId
+                                : '',
+                        userId: UserInformationHelper.instance.getUserId(),
+                      );
+                      createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
+                    }
                   }
                 },
                 bgColor: AppColor.BLUE_TEXT,
