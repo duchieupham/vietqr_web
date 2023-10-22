@@ -1,6 +1,5 @@
 import 'dart:html' as html;
 
-import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
@@ -26,8 +25,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:rive/rive.dart' as rive;
 
+import '../../commons/utils/image_utils.dart';
 import '../../commons/widgets/repaint_boundary_widget.dart';
 import '../login/states/qrcode_un_authen_state.dart';
 
@@ -50,9 +49,7 @@ class _QrGenerateState extends State<QrGenerate> {
   bool showBgNapas = true;
   int timeCountDown = 0;
   bool isSuccess = false;
-  late final rive.StateMachineController _riveController;
-  late rive.SMITrigger _action;
-  bool _isRiveInit = false;
+
   @override
   void initState() {
     Session.instance.updateQRGeneratePage(true);
@@ -62,32 +59,7 @@ class _QrGenerateState extends State<QrGenerate> {
 
   @override
   void dispose() {
-    if (_isRiveInit) {
-      _riveController.dispose();
-    }
     super.dispose();
-  }
-
-  _onRiveInit(rive.Artboard artboard) {
-    _riveController = rive.StateMachineController.fromArtboard(
-        artboard, Stringify.SUCCESS_ANI_STATE_MACHINE)!;
-    artboard.addController(_riveController);
-    _isRiveInit = true;
-    _doInitAnimation();
-  }
-
-  void _doInitAnimation() {
-    _action =
-        _riveController.findInput<bool>(Stringify.SUCCESS_ANI_ACTION_DO_INIT)
-            as rive.SMITrigger;
-    _action.fire();
-  }
-
-  void _doEndAnimation() {
-    _action =
-        _riveController.findInput<bool>(Stringify.SUCCESS_ANI_ACTION_DO_END)
-            as rive.SMITrigger;
-    _action.fire();
   }
 
   void getData() {
@@ -96,7 +68,6 @@ class _QrGenerateState extends State<QrGenerate> {
     Future.delayed(const Duration(seconds: 1), () {
       WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
         setState(() {
-          _doEndAnimation();
           isSuccess = true;
         });
       });
@@ -170,7 +141,9 @@ class _QrGenerateState extends State<QrGenerate> {
                             userBankName: transactionQRdto.userBankName,
                             amount: transactionQRdto.amount.toString(),
                           );
-
+                          if (transactionQRdto.status == 1) {
+                            isSuccess = true;
+                          }
                           timeCountDown = DateTime.fromMillisecondsSinceEpoch(
                                       transactionQRdto.timeCreated * 1000)
                                   .add(const Duration(minutes: 15))
@@ -253,16 +226,17 @@ class _QrGenerateState extends State<QrGenerate> {
           fit: BoxFit.fitHeight,
         ),
         const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            const Text(
-              'Giao dịch có thời hạn 15 phút',
-              style: TextStyle(fontSize: 12),
-            ),
-            if (!isSuccess) _buildTimeCountDown()
-          ],
-        ),
+        if (!isSuccess)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const Text(
+                'Giao dịch có thời hạn 15 phút',
+                style: TextStyle(fontSize: 12),
+              ),
+              _buildTimeCountDown()
+            ],
+          ),
       ],
     );
   }
@@ -483,7 +457,6 @@ class _QrGenerateState extends State<QrGenerate> {
                       textColor: AppColor.BLUE_TEXT,
                       bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
                       function: () {
-                        _doEndAnimation();
                         Future.delayed(const Duration(milliseconds: 500), () {
                           context.go('/');
                         });
@@ -499,7 +472,6 @@ class _QrGenerateState extends State<QrGenerate> {
                       textColor: AppColor.WHITE,
                       bgColor: AppColor.BLUE_TEXT,
                       function: () {
-                        _doEndAnimation();
                         Future.delayed(const Duration(milliseconds: 500), () {
                           Navigator.pop(context);
                           html.window.history.back();
@@ -662,24 +634,20 @@ class _QrGenerateState extends State<QrGenerate> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
+          padding: EdgeInsets.only(top: 32, bottom: 20),
           child: Text(
             'Thanh toán thành công',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 160),
+          padding: const EdgeInsets.only(top: 60),
           child: SizedBox(
             width: 300,
-            height: 150,
-            child: rive.RiveAnimation.asset(
-              'assets/rives/success_ani.riv',
-              fit: BoxFit.fitWidth,
-              antialiasing: false,
-              animations: const [Stringify.SUCCESS_ANI_INITIAL_STATE],
-              onInit: _onRiveInit,
-            ),
+            height: 300,
+            child: Image(
+                image: ImageUtils.instance
+                    .getImageNetWork('a8a40f57-c23a-4f6f-aeba-4af1c0734d9d')),
           ),
         )
       ],
