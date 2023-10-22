@@ -41,7 +41,7 @@ class BoxLayout extends StatelessWidget {
       decoration: BoxDecoration(
         color: (bgColor != null) ? bgColor! : Theme.of(context).cardColor,
         image: bgImage != null
-            ? DecorationImage(image: AssetImage(bgImage!), fit: BoxFit.fitWidth)
+            ? DecorationImage(image: AssetImage(bgImage!), fit: BoxFit.fill)
             : null,
         borderRadius:
             BorderRadius.circular((borderRadius != null) ? borderRadius! : 15),

@@ -2,7 +2,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
+import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
@@ -109,14 +109,40 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               },
               child: Image.asset(
                 'assets/images/logo-vietqr-vn.png',
-                height: 50,
+                height: 40,
                 fit: BoxFit.fitHeight,
               ),
             ),
           ),
           // _buildTitle('Trang chủ'),
           //time
+          const SizedBox(
+            width: 12,
+          ),
+          ButtonIconWidget(
+            title: 'Thêm TK ngân hàng',
+            function: () {
+              context.go('/add-bank/step1');
+            },
+            height: 32,
+            textSize: 11,
+            bgColor: AppColor.WHITE.withOpacity(0.7),
+            textColor: AppColor.BLUE_TEXT,
+          ),
           const Spacer(),
+          ButtonIconWidget(
+            title: 'Quét QR',
+            function: () {},
+            height: 32,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            icon: Icons.qr_code_outlined,
+            textSize: 11,
+            bgColor: AppColor.WHITE.withOpacity(0.7),
+            textColor: AppColor.BLUE_TEXT,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
           Tooltip(
             message: 'Thông báo',
             child: InkWell(
@@ -177,7 +203,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: DefaultTheme.RED_CALENDAR,
+                                color: AppColor.RED_CALENDAR,
                               ),
                               child: Text(
                                 _notificationCount.toString(),
@@ -188,7 +214,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                                               3)
                                           ? 8
                                           : 10,
-                                  color: DefaultTheme.WHITE,
+                                  color: AppColor.WHITE,
                                 ),
                               ),
                             ),
@@ -204,6 +230,13 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           ),
           const Padding(padding: EdgeInsets.only(right: 10)),
           //shortcut
+          Text(
+            UserInformationHelper.instance.getUserFullname(),
+            style: const TextStyle(color: AppColor.GREY_TEXT),
+          ),
+          const SizedBox(
+            width: 8,
+          ),
           _buildAvatar(context, imgId, 35),
         ],
       ),

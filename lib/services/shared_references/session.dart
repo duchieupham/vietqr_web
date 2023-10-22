@@ -114,7 +114,7 @@ class Session {
   }
 
   String formatDataParamUrl(QRGeneratedDTO qrGeneratedDTO,
-      {String action = '', int showBankAccount = 1}) {
+      {String action = '', int showBankAccount = 1, int isAuthen = 0}) {
     String bankCode = qrGeneratedDTO.bankCode;
     String account = qrGeneratedDTO.bankAccount;
     String name = qrGeneratedDTO.userBankName.replaceAll(' ', '_');
@@ -126,29 +126,12 @@ class Session {
   // Wallet
   final WalletRepository walletRepository = const WalletRepository();
 
-  WalletDTO _wallet = WalletDTO();
+  WalletDTO _wallet = const WalletDTO();
   WalletDTO get wallet => _wallet;
   Future fetchWallet() async {
     String userId = UserInformationHelper.instance.getUserId();
     final WalletDTO dto = await walletRepository.getInfoWallet(userId);
     _wallet = dto;
-  }
-
-  final MerchantRepository merchantRepository = const MerchantRepository();
-
-  AccountIsMerchantDTO _accountIsMerchantDTO = const AccountIsMerchantDTO();
-  AccountIsMerchantDTO get accountIsMerchantDTO => _accountIsMerchantDTO;
-  List<BankAccountDTO> _listBankAccountOfMerchant = [];
-  List<BankAccountDTO> get listBankAccountOfMerchant =>
-      _listBankAccountOfMerchant;
-
-  Future checkAccountIsMerchant() async {
-    String userId = UserInformationHelper.instance.getUserId();
-    AccountIsMerchantDTO dto =
-        await merchantRepository.checkAccountIsMerchant(userId);
-    _accountIsMerchantDTO = dto;
-    _listBankAccountOfMerchant =
-        await merchantRepository.getListBank(dto.customerSyncId);
   }
 
   // Account setting
@@ -171,5 +154,36 @@ class Session {
             bankAccount.isAuthenticated &&
             bankAccount.userId == UserInformationHelper.instance.getUserId())
         .toList();
+  }
+
+  final MerchantRepository merchantRepository = const MerchantRepository();
+
+  AccountIsMerchantDTO _accountIsMerchantDTO = const AccountIsMerchantDTO();
+  AccountIsMerchantDTO get accountIsMerchantDTO => _accountIsMerchantDTO;
+  List<BankAccountDTO> _listBankAccountOfMerchant = [];
+  List<BankAccountDTO> get listBankAccountOfMerchant =>
+      _listBankAccountOfMerchant;
+
+  Future checkAccountIsMerchant() async {
+    String userId = UserInformationHelper.instance.getUserId();
+    if (userId.isNotEmpty) {
+      if (_accountIsMerchantDTO.accountId.isEmpty) {
+        AccountIsMerchantDTO dto =
+            await merchantRepository.checkAccountIsMerchant(userId);
+        _accountIsMerchantDTO = dto;
+        _listBankAccountOfMerchant =
+            await merchantRepository.getListBank(dto.customerSyncId);
+      }
+    }
+  }
+
+  clearData() {
+    _accountIsMerchantDTO = const AccountIsMerchantDTO();
+    _listBankAccountOfMerchant = [];
+  }
+
+  bool inQRGeneratePage = false;
+  updateQRGeneratePage(bool value) {
+    inQRGeneratePage = value;
   }
 }

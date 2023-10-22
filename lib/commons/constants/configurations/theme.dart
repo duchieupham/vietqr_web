@@ -1,9 +1,9 @@
-// ignore_for_file: constant_identifier_names, deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore_for_file: constant_identifier_names, deprecated_member_use
 
-class DefaultTheme {
+
+class AppColor {
   //COLOR
   static const Color BLACK = Color(0xFF000000);
   static const Color BLACK_DARK = Color(0xFF1B1C1E);
@@ -25,7 +25,7 @@ class DefaultTheme {
   static const Color SUCCESS_STATUS = Color(0xFF06B271);
   static const Color GREEN = Color(0xFF00CA28);
   static const Color DARK_GREEN = Color(0xFF0D5F34);
-  static const Color BLUE_LIGHT = Color(0xFF96D8FF);
+  static const Color BLUE_LIGHT = Color(0xffcee5ff);
   static const Color DARK_PURPLE = Color(0xFF7951F8);
   static const Color VERY_PERI = Color(0xFF6868AC);
   static const Color LIGHT_PURPLE = Color(0xFFAF93FF);
@@ -61,6 +61,9 @@ class DefaultTheme {
   static const Color CARD_CODE_BG = Color(0xFFf0f0f0);
   static const Color ITEM_MENU_SELECTED = Color(0xFFb5d7ff);
   static const Color CARD_MY_QR = Color(0xFF54a2ff);
+  static const Color GREY_444B56 = Color(0xff444B56);
+  static const secondary400 = Color(0xff464F77);
+
   //THEME NAME
   static const String THEME_LIGHT = 'LIGHT';
   static const String THEME_DARK = 'DARK';
@@ -83,26 +86,26 @@ class DefaultThemeData {
     return ThemeData(
       fontFamily: 'SF-Pro',
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: DefaultTheme.BLACK,
-      colorScheme: const ColorScheme.dark(primary: DefaultTheme.BLUE_TEXT),
-      canvasColor: DefaultTheme.GREY_HIGHLIGHT,
-      buttonColor: DefaultTheme.BLACK_BUTTON,
-      primaryColor: DefaultTheme.BLACK,
-      accentColor: DefaultTheme.GREY_LIGHT,
-      hoverColor: DefaultTheme.TRANSPARENT,
-      toggleableActiveColor: DefaultTheme.BLACK_LIGHT,
+      scaffoldBackgroundColor: AppColor.BLACK,
+      colorScheme: const ColorScheme.dark(primary: AppColor.BLUE_TEXT),
+      canvasColor: AppColor.GREY_HIGHLIGHT,
+      buttonColor: AppColor.BLACK_BUTTON,
+      primaryColor: AppColor.BLACK,
+      accentColor: AppColor.GREY_LIGHT,
+      hoverColor: AppColor.TRANSPARENT,
+      toggleableActiveColor: AppColor.BLACK_LIGHT,
       //  focusColor: DefaultTheme.BLUE_TEXT,
-      cardColor: DefaultTheme.BLACK_BUTTON,
-      shadowColor: DefaultTheme.BLACK_LIGHT,
-      hintColor: DefaultTheme.WHITE,
-      indicatorColor: DefaultTheme.LIGHT_PINK,
-      splashColor: DefaultTheme.TRANSPARENT,
-      highlightColor: DefaultTheme.TRANSPARENT,
+      cardColor: AppColor.BLACK_BUTTON,
+      shadowColor: AppColor.BLACK_LIGHT,
+      hintColor: AppColor.WHITE,
+      indicatorColor: AppColor.LIGHT_PINK,
+      splashColor: AppColor.TRANSPARENT,
+      highlightColor: AppColor.TRANSPARENT,
       textTheme: Theme.of(context).textTheme.apply(
-            bodyColor: DefaultTheme.WHITE,
+            bodyColor: AppColor.WHITE,
           ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: DefaultTheme.TRANSPARENT,
+        backgroundColor: AppColor.TRANSPARENT,
         systemOverlayStyle: SystemUiOverlayStyle.light,
         elevation: 0,
       ),
@@ -113,28 +116,28 @@ class DefaultThemeData {
     return ThemeData(
       fontFamily: 'SF-Pro',
       brightness: Brightness.light,
-      scaffoldBackgroundColor: DefaultTheme.GREY_BG,
-      colorScheme: const ColorScheme.light(primary: DefaultTheme.BLUE_TEXT),
-      canvasColor: DefaultTheme.GREY_BG,
-      buttonColor: DefaultTheme.GREY_VIEW,
-      primaryColor: DefaultTheme.WHITE,
-      hoverColor: DefaultTheme.TRANSPARENT,
-      toggleableActiveColor: DefaultTheme.WHITE,
+      scaffoldBackgroundColor: AppColor.GREY_BG,
+      colorScheme: const ColorScheme.light(primary: AppColor.BLUE_TEXT),
+      canvasColor: AppColor.GREY_BG,
+      buttonColor: AppColor.GREY_VIEW,
+      primaryColor: AppColor.WHITE,
+      hoverColor: AppColor.TRANSPARENT,
+      toggleableActiveColor: AppColor.WHITE,
       // focusColor: DefaultTheme.BLUE_DARK,
-      accentColor: DefaultTheme.GREY_TEXT,
-      cardColor: DefaultTheme.WHITE,
-      shadowColor: DefaultTheme.GREY_TOP_TAB_BAR,
-      indicatorColor: DefaultTheme.DARK_PINK,
-      hintColor: DefaultTheme.BLACK,
-      splashColor: DefaultTheme.TRANSPARENT,
-      highlightColor: DefaultTheme.TRANSPARENT,
+      accentColor: AppColor.GREY_TEXT,
+      cardColor: AppColor.WHITE,
+      shadowColor: AppColor.GREY_TOP_TAB_BAR,
+      indicatorColor: AppColor.DARK_PINK,
+      hintColor: AppColor.BLACK,
+      splashColor: AppColor.TRANSPARENT,
+      highlightColor: AppColor.TRANSPARENT,
       textTheme: Theme.of(context).textTheme.apply(
-            bodyColor: DefaultTheme.BLACK,
+            bodyColor: AppColor.BLACK,
           ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
-        backgroundColor: DefaultTheme.TRANSPARENT,
+        backgroundColor: AppColor.TRANSPARENT,
       ),
     );
   }

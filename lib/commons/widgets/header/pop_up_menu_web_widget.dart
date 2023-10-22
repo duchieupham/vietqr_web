@@ -155,7 +155,7 @@ class PopupMenuWebWidget {
                   children: const [
                     Icon(
                       Icons.logout_rounded,
-                      color: DefaultTheme.RED_CALENDAR,
+                      color: AppColor.RED_CALENDAR,
                       size: 15,
                     ),
                     Padding(padding: EdgeInsets.only(left: 10)),
@@ -163,7 +163,7 @@ class PopupMenuWebWidget {
                       'Đăng xuất',
                       style: TextStyle(
                         fontSize: 13,
-                        color: DefaultTheme.RED_CALENDAR,
+                        color: AppColor.RED_CALENDAR,
                       ),
                     ),
                   ],

@@ -60,7 +60,7 @@ class HeaderGuest extends StatelessWidget {
             child: const Text(
               'Mở tài khoản MB Bank',
               style: TextStyle(
-                color: DefaultTheme.MB_BLUE,
+                color: AppColor.MB_BLUE,
                 decoration: TextDecoration.underline,
                 fontSize: 16,
               ),

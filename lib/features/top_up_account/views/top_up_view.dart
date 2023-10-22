@@ -7,12 +7,13 @@ import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/top_up_account/blocs/top_up_bloc.dart';
 import 'package:VietQR/features/top_up_account/states/top_up_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
-import 'package:VietQR/services/providers/create_qr_provider.dart';
+
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
+import '../../create_qr/provider/create_qr_provider.dart';
 import '../frames/top_up_frame.dart';
 
 class TopUpAccount extends StatefulWidget {
@@ -105,8 +106,8 @@ class _TopUpAccountState extends State<TopUpAccount> {
                     msg: 'Vui lòng thử lại sau',
                   );
                 },
-                bgColor: DefaultTheme.GREEN,
-                textColor: DefaultTheme.WHITE,
+                bgColor: AppColor.GREEN,
+                textColor: AppColor.WHITE,
               ),
             ],
           ),
@@ -188,7 +189,7 @@ class _TopUpAccountState extends State<TopUpAccount> {
                             child: Text(
                               'Số tiền không đúng định dạng',
                               style: TextStyle(
-                                color: DefaultTheme.RED_CALENDAR,
+                                color: AppColor.RED_CALENDAR,
                                 fontSize: 12,
                               ),
                             ),
@@ -204,8 +205,8 @@ class _TopUpAccountState extends State<TopUpAccount> {
                   height: 40,
                   text: 'XÁC NHẬN',
                   borderRadius: 5,
-                  textColor: DefaultTheme.WHITE,
-                  bgColor: DefaultTheme.GREY_BUTTON,
+                  textColor: AppColor.WHITE,
+                  bgColor: AppColor.GREY_BUTTON,
                   function: () {},
                 ),
               ],

@@ -1,17 +1,17 @@
-import 'dart:async';
 import 'dart:ui';
-
-import 'package:VietQR/commons/constants/configurations/numeral.dart';
-import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/utils/platform_utils.dart';
-import 'package:VietQR/commons/widgets/button_widget.dart';
-import 'package:VietQR/commons/widgets/pin_widget.dart';
-import 'package:VietQR/layouts/box_layout.dart';
+import 'dart:async';
 import 'package:VietQR/main.dart';
-import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/commons/widgets/pin_widget.dart';
+import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/configurations/numeral.dart';
+
 
 class DialogWidget {
   //
@@ -29,7 +29,7 @@ class DialogWidget {
       context: NavigationService.navigatorKey.currentContext!,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
             child: (PlatformUtils.instance.isWeb())
                 ? Container(
@@ -86,8 +86,8 @@ class DialogWidget {
                           width: 250,
                           height: 30,
                           text: 'Đóng',
-                          textColor: DefaultTheme.WHITE,
-                          bgColor: DefaultTheme.GREEN,
+                          textColor: AppColor.WHITE,
+                          bgColor: AppColor.GREEN,
                           borderRadius: 5,
                           function: () {
                             focusNode.dispose();
@@ -133,7 +133,7 @@ class DialogWidget {
                               ),
                               child: const Icon(
                                 Icons.close_rounded,
-                                color: DefaultTheme.RED_TEXT,
+                                color: AppColor.RED_TEXT,
                                 size: 15,
                               ),
                             ),
@@ -190,7 +190,7 @@ class DialogWidget {
   }) {
     return showDialog(
         context: NavigationService.navigatorKey.currentContext!,
-        barrierColor: DefaultTheme.TRANSPARENT,
+        barrierColor: AppColor.TRANSPARENT,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return GestureDetector(
@@ -199,7 +199,7 @@ class DialogWidget {
               onTapBarrier();
             },
             child: Material(
-              color: DefaultTheme.TRANSPARENT,
+              color: AppColor.TRANSPARENT,
               child: Align(
                 alignment: Alignment.topRight,
                 child: BoxLayout(
@@ -247,7 +247,7 @@ class DialogWidget {
         context: NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
               child: Container(
                 width: 300,
@@ -293,10 +293,10 @@ class DialogWidget {
                       width: 250,
                       height: 30,
                       text: confirmText,
-                      textColor: DefaultTheme.WHITE,
+                      textColor: AppColor.WHITE,
                       bgColor: (confirmColor != null)
                           ? confirmColor
-                          : DefaultTheme.BLUE_TEXT,
+                          : AppColor.BLUE_TEXT,
                       borderRadius: 5,
                       function: confirmFunction,
                     ),
@@ -333,7 +333,7 @@ class DialogWidget {
         context: context,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
               child: Container(
                 width: width,
@@ -364,7 +364,7 @@ class DialogWidget {
         isScrollControlled: true,
         enableDrag: false, // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: DefaultTheme.TRANSPARENT,
+        backgroundColor: AppColor.TRANSPARENT,
         builder: (context) {
           return Container(
             width: width,
@@ -387,7 +387,7 @@ class DialogWidget {
         isScrollControlled: true,
         enableDrag: false, // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: DefaultTheme.TRANSPARENT,
+        backgroundColor: AppColor.TRANSPARENT,
         builder: (context) {
           final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
           return BackdropFilter(
@@ -423,7 +423,7 @@ class DialogWidget {
         context: context,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
               child: Container(
                 width: 400,
@@ -474,7 +474,7 @@ class DialogWidget {
           context: NavigationService.navigatorKey.currentContext!,
           builder: (BuildContext context) {
             return Material(
-              color: DefaultTheme.TRANSPARENT,
+              color: AppColor.TRANSPARENT,
               child: Center(
                 child: (PlatformUtils.instance.isWeb())
                     ? Container(
@@ -492,7 +492,7 @@ class DialogWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
                             CircularProgressIndicator(
-                              color: DefaultTheme.GREEN,
+                              color: AppColor.GREEN,
                             ),
                             Padding(padding: EdgeInsets.only(top: 30)),
                             Text(
@@ -515,7 +515,7 @@ class DialogWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const CircularProgressIndicator(
-                          color: DefaultTheme.GREEN,
+                          color: AppColor.GREEN,
                         ),
                       ),
               ),
@@ -534,7 +534,7 @@ class DialogWidget {
         context: context ?? NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
                 child:
                     // (PlatformUtils.instance.isWeb())
@@ -585,8 +585,8 @@ class DialogWidget {
                     width: 250,
                     height: 40,
                     text: 'Đóng',
-                    textColor: DefaultTheme.WHITE,
-                    bgColor: DefaultTheme.BLUE_TEXT,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
                     function: (function != null)
                         ? function
@@ -650,7 +650,7 @@ class DialogWidget {
         context: context ?? NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
                 child: Container(
               width: 300,
@@ -694,8 +694,8 @@ class DialogWidget {
                     width: 250,
                     height: 35,
                     text: 'Đóng',
-                    textColor: DefaultTheme.WHITE,
-                    bgColor: DefaultTheme.GREEN,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.GREEN,
                     borderRadius: 5,
                     function: (function != null)
                         ? function
@@ -723,7 +723,7 @@ class DialogWidget {
       context: context,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
               child: Container(
             width: width,
@@ -747,7 +747,7 @@ class DialogWidget {
       context: context,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
               child: Container(
             width: 800,
@@ -771,7 +771,7 @@ class DialogWidget {
       context: NavigationService.navigatorKey.currentContext!,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
             child: Container(
               padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
@@ -806,7 +806,7 @@ class DialogWidget {
                             'Từ: ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                             ),
                           ),
                         ),
@@ -835,7 +835,7 @@ class DialogWidget {
                             'Nội dung: ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                             ),
                           ),
                         ),
@@ -863,14 +863,14 @@ class DialogWidget {
                       width: 250,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: DefaultTheme.GREEN,
+                        color: AppColor.GREEN,
                         borderRadius: BorderRadius.circular(25),
                       ),
                       alignment: Alignment.center,
                       child: const Text(
                         'OK',
                         style: TextStyle(
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                         ),
                       ),
                     ),
@@ -895,7 +895,7 @@ class DialogWidget {
       enableDrag: false,
       useRootNavigator: true,
       context: context,
-      backgroundColor: DefaultTheme.TRANSPARENT,
+      backgroundColor: AppColor.TRANSPARENT,
       builder: (context) {
         final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
         return BackdropFilter(
@@ -936,7 +936,7 @@ class DialogWidget {
         context: context ?? NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
                 child: Container(
               width: 300,
@@ -987,8 +987,8 @@ class DialogWidget {
                           width: 250,
                           height: 40,
                           text: 'Đóng',
-                          textColor: DefaultTheme.GREEN,
-                          bgColor: DefaultTheme.WHITE,
+                          textColor: AppColor.GREEN,
+                          bgColor: AppColor.WHITE,
                           borderRadius: 5,
                           function: (onCancel != null)
                               ? onCancel
@@ -1005,8 +1005,8 @@ class DialogWidget {
                           width: 250,
                           height: 40,
                           text: 'Xác nhận',
-                          textColor: DefaultTheme.WHITE,
-                          bgColor: DefaultTheme.GREEN,
+                          textColor: AppColor.WHITE,
+                          bgColor: AppColor.GREEN,
                           borderRadius: 5,
                           function: (onConfirm != null)
                               ? onConfirm

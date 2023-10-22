@@ -25,3 +25,48 @@ extension TypeMemberExt on TypeAddMember {
     }
   }
 }
+
+enum BlocStatus {
+  NONE,
+  LOADING,
+  UNLOADING,
+}
+
+enum BankType {
+  QR,
+  NONE,
+  SCAN,
+  BANK,
+  GET_BANK,
+  SCAN_ERROR,
+  SCAN_NOT_FOUND,
+  ERROR,
+  GET_DETAIL,
+}
+
+enum TypeQR {
+  NONE,
+  QR_ID,
+  QR_CMT,
+  QR_BANK,
+  QR_BARCODE,
+  OTHER,
+  QR_LINK,
+  NEGATIVE_TWO,
+  NEGATIVE_ONE,
+}
+
+extension TypeQRExt on TypeQR {
+  String get value {
+    switch (this) {
+      case TypeQR.NEGATIVE_TWO:
+        return '-2';
+      case TypeQR.NEGATIVE_ONE:
+        return '-1';
+      case TypeQR.QR_CMT:
+      case TypeQR.QR_BANK:
+      default:
+        return '0';
+    }
+  }
+}

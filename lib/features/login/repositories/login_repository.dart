@@ -1,17 +1,17 @@
-import 'package:VietQR/commons/constants/env/env_config.dart';
-import 'package:VietQR/commons/enums/authentication_type.dart';
-import 'package:VietQR/commons/utils/base_api.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/utils/base_api.dart';
+import 'package:VietQR/models/account_login_dto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/models/account_information_dto.dart';
-import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/account_login_method_dto.dart';
-import 'package:VietQR/services/shared_references/account_helper.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LoginRepository {
   // static final codeLoginController = BehaviorSubject<CodeLoginDTO>();
@@ -68,7 +68,7 @@ class LoginRepository {
         await UserInformationHelper.instance
             .setAccountInformation(accountInformationDTO);
         await Session.instance.getGuideWeb();
-        await Session.instance.checkAccountIsMerchant();
+        await  Session.instance.checkAccountIsMerchant();
         Session.instance.fetchWallet();
 
         result = true;

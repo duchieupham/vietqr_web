@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/services/shared_references/session.dart';
-import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
   int _initPage = 0;
@@ -15,9 +15,12 @@ class MenuProvider with ChangeNotifier {
 
   MenuHomeType _menuHomeType = MenuHomeType.HOME;
   MenuHomeType get menuHomeType => _menuHomeType;
+
+  bool _isAccountIsMerchant = false;
+  bool get isAccountIsMerchant => _isAccountIsMerchant;
+
   void selectMenu(MenuHomeType value) {
     _menuHomeType = value;
-    changePage(value);
     notifyListeners();
   }
 
@@ -26,26 +29,12 @@ class MenuProvider with ChangeNotifier {
       _initPage = 0;
     } else if (value == MenuHomeType.MERCHANT) {
       _initPage = 1;
-    } else if (value == MenuHomeType.ADD_LINK_BANK_ACCOUNT) {
-      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
-        _initPage = 2;
-      }else{
-        _initPage = 1;
-      }
-
-    } else if (value == MenuHomeType.ADD_LINK_BANK_MB) {
-      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
-        _initPage = 3;
-      }else{
-        _initPage = 2;
-      }
-
-    } else if (value == MenuHomeType.BUSINESS) {
-      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
-        _initPage = 4;
-      }else{
-        _initPage = 3;
-      }
+    }
+    // else if (value == MenuHomeType.ADD_LINK_BANK_MB) {
+    //   _initPage = 2;
+    // }
+    else if (value == MenuHomeType.BUSINESS) {
+      _initPage = 3;
     } else if (value == MenuHomeType.CREATE_QR) {
       if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
         _initPage = 5;
@@ -53,5 +42,15 @@ class MenuProvider with ChangeNotifier {
         _initPage = 3;
       }
     }
+  }
+
+  checkAccountIsMerchant() async {
+    await Session.instance.checkAccountIsMerchant();
+    if (Session.instance.accountIsMerchantDTO.accountId.isNotEmpty) {
+      _isAccountIsMerchant = true;
+    } else {
+      _isAccountIsMerchant = false;
+    }
+    notifyListeners();
   }
 }

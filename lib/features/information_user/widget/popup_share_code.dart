@@ -123,7 +123,7 @@ class PopupShareCode extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-          color: DefaultTheme.CARD_CODE_BG,
+          color: AppColor.CARD_CODE_BG,
           borderRadius: BorderRadius.circular(3)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +131,7 @@ class PopupShareCode extends StatelessWidget {
           Text(
             code,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: DefaultTheme.GREY_TEXT),
+            style: const TextStyle(color: AppColor.GREY_TEXT),
           ),
           InkWell(
               onTap: () async {
@@ -141,8 +141,8 @@ class PopupShareCode extends StatelessWidget {
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
-                    backgroundColor: DefaultTheme.WHITE,
-                    textColor: DefaultTheme.BLACK,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
                     fontSize: 15,
                     webBgColor: 'rgba(255, 255, 255)',
                     webPosition: 'center',

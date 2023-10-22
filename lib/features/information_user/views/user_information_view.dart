@@ -157,7 +157,7 @@ class UserInformationView extends StatelessWidget {
           height: 40,
           borderRadius: 8,
           text: 'Cập nhật ảnh đại diện',
-          textColor: DefaultTheme.BLUE_TEXT,
+          textColor: AppColor.BLUE_TEXT,
           bgColor: Theme.of(context).cardColor,
           function: () async {
             DialogWidget.instance.openMsgDialog(
@@ -184,7 +184,7 @@ class UserInformationView extends StatelessWidget {
           text: 'Đổi mật khẩu',
           height: 40,
           borderRadius: 8,
-          textColor: DefaultTheme.BLUE_TEXT,
+          textColor: AppColor.BLUE_TEXT,
           bgColor: Theme.of(context).cardColor,
           function: () {
             DialogWidget.instance.openPopup(
@@ -222,11 +222,11 @@ class UserInformationView extends StatelessWidget {
                 String userId = UserInformationHelper.instance.getUserId();
                 _userInformationBloc.add(UserDeActiveEvent(userId: userId));
               },
-              confirmColor: DefaultTheme.RED_TEXT,
+              confirmColor: AppColor.RED_TEXT,
             );
           },
           bgColor: Theme.of(context).cardColor.withOpacity(0.6),
-          textColor: DefaultTheme.RED_TEXT,
+          textColor: AppColor.RED_TEXT,
         ),
       ],
     );
@@ -356,7 +356,7 @@ class UserInformationView extends StatelessWidget {
                   child: Text(
                     'Tên không được bỏ trống.',
                     style: TextStyle(
-                      color: DefaultTheme.RED_TEXT,
+                      color: AppColor.RED_TEXT,
                       fontSize: 14,
                     ),
                   ),
@@ -483,7 +483,7 @@ class UserInformationView extends StatelessWidget {
                         child: Text(
                           'Email không đúng định dạng',
                           style: TextStyle(
-                            color: DefaultTheme.RED_TEXT,
+                            color: AppColor.RED_TEXT,
                             fontSize: 12,
                           ),
                         ),
@@ -601,7 +601,7 @@ class UserInformationView extends StatelessWidget {
                             hintText: 'Nhập địa chỉ thường trú',
                             hintStyle: TextStyle(
                               fontSize: 14,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                             ),
                           ),
                           onChanged: (value) {
@@ -626,8 +626,8 @@ class UserInformationView extends StatelessWidget {
                   height: 40,
                   borderRadius: 8,
                   text: 'Cập nhật',
-                  textColor: DefaultTheme.WHITE,
-                  bgColor: DefaultTheme.BLUE_CARD,
+                  textColor: AppColor.WHITE,
+                  bgColor: AppColor.BLUE_CARD,
                   function: () {
                     FocusManager.instance.primaryFocus?.unfocus();
                     provider.updateErrors(_firstNameController.text.isEmpty);

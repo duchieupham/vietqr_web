@@ -106,7 +106,7 @@ class OverViewFrame extends StatelessWidget {
                                           color: Theme.of(context).cardColor,
                                           border: const Border(
                                               left: BorderSide(
-                                                  color: DefaultTheme
+                                                  color: AppColor
                                                       .GREY_BUTTON))),
                                       padding: EdgeInsets.zero,
                                       child: menuCard,
@@ -131,7 +131,7 @@ class OverViewFrame extends StatelessWidget {
                   : Container(
                       width: width,
                       height: height,
-                      color: DefaultTheme.BLACK.withOpacity(0.9),
+                      color: AppColor.BLACK.withOpacity(0.9),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
@@ -162,7 +162,7 @@ class OverViewFrame extends StatelessWidget {
                                       bgColor: Theme.of(context)
                                           .canvasColor
                                           .withOpacity(0.3),
-                                      textColor: DefaultTheme.WHITE,
+                                      textColor: AppColor.WHITE,
                                     ),
                                   ),
                                 ),
@@ -196,7 +196,7 @@ class OverViewFrame extends StatelessWidget {
                                       bgColor: Theme.of(context)
                                           .canvasColor
                                           .withOpacity(0.3),
-                                      textColor: DefaultTheme.WHITE,
+                                      textColor: AppColor.WHITE,
                                     ),
                                   ),
                                 ),
@@ -223,10 +223,10 @@ class OverViewFrame extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Checkbox(
-              checkColor: DefaultTheme.WHITE, // color of tick Mark
-              activeColor: DefaultTheme.GREY_LIGHT,
+              checkColor: AppColor.WHITE, // color of tick Mark
+              activeColor: AppColor.GREY_LIGHT,
               value: provider.guideWeb,
-              side: const BorderSide(color: DefaultTheme.GREY_LIGHT, width: 2),
+              side: const BorderSide(color: AppColor.GREY_LIGHT, width: 2),
 
               onChanged: (bool? value) {
                 provider.changeGuideWeb(value!);
@@ -234,7 +234,7 @@ class OverViewFrame extends StatelessWidget {
             ),
             const Text(
               'Không hiển thị hướng dẫn cho lần đăng nhập tiếp theo',
-              style: TextStyle(color: DefaultTheme.WHITE),
+              style: TextStyle(color: AppColor.WHITE),
             ),
           ],
         ),

@@ -93,8 +93,8 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
                   color: (widget.dto.transType.trim() == 'C')
-                      ? DefaultTheme.NEON
-                      : DefaultTheme.RED_CALENDAR,
+                      ? AppColor.NEON
+                      : AppColor.RED_CALENDAR,
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 50)),
@@ -175,7 +175,7 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                       }
                     },
                     bgColor: Theme.of(context).canvasColor,
-                    textColor: DefaultTheme.GREEN,
+                    textColor: AppColor.BLUE_TEXT,
                   ),
                   const Padding(padding: EdgeInsets.only(left: 10)),
                   ButtonIconWidget(
@@ -186,8 +186,8 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     function: () {
                       Navigator.pop(context);
                     },
-                    bgColor: DefaultTheme.GREEN,
-                    textColor: DefaultTheme.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
+                    textColor: AppColor.WHITE,
                   ),
                 ],
               ),

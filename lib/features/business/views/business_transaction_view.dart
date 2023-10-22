@@ -221,7 +221,7 @@ class BusinessTransactionView extends StatelessWidget {
                                         width: 50,
                                         height: 50,
                                         child: CircularProgressIndicator(
-                                          color: DefaultTheme.GREEN,
+                                          color: AppColor.GREEN,
                                         ),
                                       ),
                                     )
@@ -300,7 +300,7 @@ class BusinessTransactionView extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                 ],

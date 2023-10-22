@@ -138,8 +138,8 @@ class _AddBankView extends State<ECOMAddBankView> {
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
-                backgroundColor: DefaultTheme.WHITE,
-                textColor: DefaultTheme.BLACK,
+                backgroundColor: AppColor.WHITE,
+                textColor: AppColor.BLACK,
                 fontSize: 15,
                 webBgColor: 'rgba(255, 255, 255)',
                 webPosition: 'center',
@@ -235,8 +235,8 @@ class _AddBankView extends State<ECOMAddBankView> {
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
-                backgroundColor: DefaultTheme.WHITE,
-                textColor: DefaultTheme.BLACK,
+                backgroundColor: AppColor.WHITE,
+                textColor: AppColor.BLACK,
                 fontSize: 15,
                 webBgColor: 'rgba(255, 255, 255)',
                 webPosition: 'center',
@@ -277,7 +277,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                     'Hệ thống hỗ trợ: ',
                     style: TextStyle(
                       fontSize: 13,
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 10)),
@@ -285,7 +285,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                     '-   Tạo mã VietQR thanh toán.',
                     style: TextStyle(
                       fontSize: 13,
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 5)),
@@ -293,7 +293,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                     '-   Đối với TK MB Bank sau khi được liên kết, hệ thống hỗ trợ đối soát thanh toán.',
                     style: TextStyle(
                       fontSize: 13,
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 5)),
@@ -301,7 +301,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                     '-   Khi thực hiện liên kết, CCCD/Mã số thuế và Số điện thoại xác thực là bắt buộc.',
                     style: TextStyle(
                       fontSize: 13,
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                 ],
@@ -415,7 +415,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                           'Số tài khoản không hợp lệ',
                           style: TextStyle(
                             fontSize: 12,
-                            color: DefaultTheme.RED_TEXT,
+                            color: AppColor.RED_TEXT,
                           ),
                         ),
                       ),
@@ -447,7 +447,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                           'Chủ tài khoản không hợp lệ',
                           style: TextStyle(
                             fontSize: 12,
-                            color: DefaultTheme.RED_TEXT,
+                            color: AppColor.RED_TEXT,
                           ),
                         ),
                       ),
@@ -480,7 +480,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                             'CCCD/Mã số thuế không hợp lệ',
                             style: TextStyle(
                               fontSize: 12,
-                              color: DefaultTheme.RED_TEXT,
+                              color: AppColor.RED_TEXT,
                             ),
                           ),
                         ),
@@ -514,7 +514,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                             'Số điện thoại xác thực không hợp lệ',
                             style: TextStyle(
                               fontSize: 12,
-                              color: DefaultTheme.RED_TEXT,
+                              color: AppColor.RED_TEXT,
                             ),
                           ),
                         ),
@@ -531,8 +531,8 @@ class _AddBankView extends State<ECOMAddBankView> {
                               height: 40,
                               text: 'Thêm',
                               borderRadius: 5,
-                              textColor: DefaultTheme.WHITE,
-                              bgColor: DefaultTheme.GREEN,
+                              textColor: AppColor.WHITE,
+                              bgColor: AppColor.GREEN,
                               function: () {
                                 if (provider.bankType.id.isNotEmpty) {
                                   provider.updateBankAccountErr(
@@ -573,8 +573,8 @@ class _AddBankView extends State<ECOMAddBankView> {
                                 height: 40,
                                 text: 'Liên kết',
                                 borderRadius: 5,
-                                textColor: DefaultTheme.WHITE,
-                                bgColor: DefaultTheme.PURPLE_NEON,
+                                textColor: AppColor.WHITE,
+                                bgColor: AppColor.PURPLE_NEON,
                                 function: () async {
                                   provider.updateBankAccountErr(
                                     (bankAccountController.text.isEmpty ||
@@ -638,7 +638,7 @@ class _AddBankView extends State<ECOMAddBankView> {
                         height: 40,
                         text: 'Về trang chủ',
                         borderRadius: 5,
-                        textColor: DefaultTheme.GREEN,
+                        textColor: AppColor.GREEN,
                         bgColor: Theme.of(context).cardColor,
                         function: () {
                           context.push('/ecom/home');
@@ -722,7 +722,7 @@ class _AddBankView extends State<ECOMAddBankView> {
           height: size - 10,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(size - 10),
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).shadowColor.withOpacity(0.3),

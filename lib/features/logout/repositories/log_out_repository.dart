@@ -4,13 +4,14 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/main.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
-import 'package:VietQR/services/providers/create_qr_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../create_qr/provider/create_qr_provider.dart';
 
 class LogoutRepository {
   const LogoutRepository();

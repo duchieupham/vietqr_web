@@ -18,23 +18,23 @@ class AccountBankDetailDTO {
   final String caiValue;
 
   const AccountBankDetailDTO({
-    required this.id,
-    required this.bankAccount,
-    required this.userBankName,
-    required this.bankCode,
-    required this.bankName,
-    required this.imgId,
-    required this.type,
-    required this.userId,
-    required this.bankTypeId,
-    required this.bankTypeStatus,
-    required this.nationalId,
-    required this.qrCode,
-    required this.phoneAuthenticated,
+    this.id = '',
+    this.bankAccount = '',
+    this.userBankName = '',
+    this.bankCode = '',
+    this.bankName = '',
+    this.imgId = '',
+    this.type = 0,
+    this.userId = '',
+    this.bankTypeId = '',
+    this.bankTypeStatus = 0,
+    this.nationalId = '',
+    this.qrCode = '',
+    this.phoneAuthenticated = '',
     required this.businessDetails,
     required this.transactions,
-    required this.authenticated,
-    required this.caiValue,
+    this.authenticated = false,
+    this.caiValue = '',
   });
 
   factory AccountBankDetailDTO.fromJson(Map<String, dynamic> json) {
@@ -84,13 +84,13 @@ class AccountBankDetailDTO {
     data['qrCode'] = qrCode;
     data['phoneAuthenticated'] = phoneAuthenticated;
 
-    data['businessDetails'] = (businessDetails.isEmpty)
+    data['businessDetails'] = (businessDetails?.isEmpty ?? false)
         ? []
-        : businessDetails.map((v) => v.toJson()).toList();
+        : businessDetails!.map((v) => v.toJson()).toList();
 
-    data['transactions'] = (transactions.isEmpty)
+    data['transactions'] = (transactions?.isEmpty ?? false)
         ? []
-        : transactions.map((v) => v.toJson()).toList();
+        : transactions!.map((v) => v.toJson()).toList();
 
     data['authenticated'] = authenticated;
     return data;

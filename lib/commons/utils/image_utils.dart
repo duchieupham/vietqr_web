@@ -1,4 +1,3 @@
-import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,7 @@ class ImageUtils {
   //
   NetworkImage getImageNetWork(String imageId) {
     return NetworkImage(
-      '${EnvConfig.getBaseUrl()}images/$imageId',
+      'https://api.vietqr.org/vqr/api/images/$imageId',
       headers: {"Authorization": 'Bearer ${AccountHelper.instance.getToken()}'},
       scale: 1.0,
     );
@@ -21,7 +20,7 @@ class ImageUtils {
 
   CachedNetworkImageProvider getImageNetworkCache(String imageId) {
     return CachedNetworkImageProvider(
-      '${EnvConfig.getBaseUrl()}images/$imageId',
+      'https://api.vietqr.org/vqr/api/images/$imageId',
       headers: {"Authorization": 'Bearer ${AccountHelper.instance.getToken()}'},
       cacheKey: const Uuid().v4(),
     );

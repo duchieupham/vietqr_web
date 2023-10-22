@@ -22,11 +22,10 @@ class MerchantProvider with ChangeNotifier {
   FilterTimeTransaction _valueTimeFilter =
       const FilterTimeTransaction(id: 0, title: 'Tất cả');
   FilterTimeTransaction get valueTimeFilter => _valueTimeFilter;
-  
-  DateTime _toDate = DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day,0,0,0 );
+  DateTime _toDate = DateTime.now();
   DateTime get toDate => _toDate;
 
-  DateTime _formDate = DateTime(DateTime.now().year,DateTime.now().month, DateTime.now().day,0,0,0 );
+  DateTime _formDate = DateTime.now();
   DateTime get fromDate => _formDate;
 
   BankAccountDTO _bankAccountDTO =

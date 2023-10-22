@@ -1,19 +1,20 @@
-import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
 import 'package:VietQR/features/business/events/business_information_event.dart';
-import 'package:VietQR/features/business/frame/user_information_frame.dart';
+import 'package:VietQR/features/business/frame/business_information_frame.dart';
 import 'package:VietQR/features/business/states/business_information_state.dart';
 import 'package:VietQR/features/business/views/add_business_view.dart';
 import 'package:VietQR/features/business/views/business_information_view.dart';
 import 'package:VietQR/features/business/widget/business_item.dart';
 import 'package:VietQR/features/business/widget/shortcut_icon.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../dashboard/views/menu_left.dart';
 
 class BusinessManagerView extends StatefulWidget {
   const BusinessManagerView({
@@ -53,6 +54,9 @@ class _DashboardViewState extends State<BusinessManagerView> {
     return BusinessInformationFrame(
       widget1: [_buildListShortcut()],
       widget2: [_buildBusinessWidget()],
+      menu: const MenuLeft(
+        currentType: MenuHomeType.BUSINESS,
+      ),
     );
   }
 
@@ -74,7 +78,7 @@ class _DashboardViewState extends State<BusinessManagerView> {
             height: 200,
             child: const Center(
               child: CircularProgressIndicator(
-                color: DefaultTheme.GREEN,
+                color: AppColor.GREEN,
               ),
             ),
           );
@@ -96,7 +100,7 @@ class _DashboardViewState extends State<BusinessManagerView> {
                       Container(
                         width: 5,
                         height: 20,
-                        color: DefaultTheme.GREEN,
+                        color: AppColor.GREEN,
                       ),
                       const Padding(padding: EdgeInsets.only(left: 10)),
                       const Text(
@@ -156,7 +160,7 @@ class _DashboardViewState extends State<BusinessManagerView> {
             title: 'Tạo doanh nghiệp',
             description: 'Quản lý doanh nghiệp trên hệ thống',
             icon: Icons.business_rounded,
-            color: DefaultTheme.GREEN,
+            color: AppColor.GREEN,
             function: () {
               DialogWidget.instance.openPopup(
                 child: const AddBusinessView(),
@@ -173,7 +177,7 @@ class _DashboardViewState extends State<BusinessManagerView> {
             title: 'Tài khoản ngân hàng',
             description: 'Thêm và Liên kết tài khoản ngân hàng',
             icon: Icons.credit_card_rounded,
-            color: DefaultTheme.PURPLE_NEON,
+            color: AppColor.PURPLE_NEON,
             function: () {
               String userId = UserInformationHelper.instance.getUserId();
               context.go('/bank/create/$userId');

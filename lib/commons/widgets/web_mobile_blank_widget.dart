@@ -79,7 +79,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                                   logoutBloc.add(const LogoutEventSubmit());
                                 },
                                 bgColor: Theme.of(context).cardColor,
-                                textColor: DefaultTheme.RED_TEXT,
+                                textColor: AppColor.RED_TEXT,
                               ),
                             ),
                         ],
@@ -98,7 +98,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                       width: width * 0.45,
                       height: width * 0.45,
                       padding: const EdgeInsets.all(0),
-                      bgColor: DefaultTheme.WHITE,
+                      bgColor: AppColor.WHITE,
                       enableShadow: true,
                       child: UnconstrainedBox(
                         child: QrImage(
@@ -152,7 +152,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                     const Text(
                       'VietQR chỉ hỗ trợ trình duyệt web cho PC.',
                       style: TextStyle(
-                        color: DefaultTheme.GREY_TEXT,
+                        color: AppColor.GREY_TEXT,
                       ),
                     ),
                   ],
@@ -181,7 +181,7 @@ class WebMobileBlankWidget extends StatelessWidget {
         width: width * 0.4,
         height: 45,
         padding: const EdgeInsets.all(0),
-        bgColor: DefaultTheme.BLACK,
+        bgColor: AppColor.BLACK,
         borderRadius: 5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -201,12 +201,12 @@ class WebMobileBlankWidget extends StatelessWidget {
               children: [
                 const Text(
                   'Tải ứng dụng trên',
-                  style: TextStyle(color: DefaultTheme.WHITE, fontSize: 8),
+                  style: TextStyle(color: AppColor.WHITE, fontSize: 8),
                 ),
                 Text(
                   text,
                   style:
-                      const TextStyle(color: DefaultTheme.WHITE, fontSize: 18),
+                      const TextStyle(color: AppColor.WHITE, fontSize: 18),
                 ),
               ],
             )

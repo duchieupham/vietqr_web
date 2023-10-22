@@ -41,8 +41,8 @@ class SliverHeader extends StatelessWidget {
             topLeft: Radius.circular(8), topRight: Radius.circular(8)),
         gradient: LinearGradient(
           colors: [
-            DefaultTheme.BLACK.withOpacity(0.2),
-            DefaultTheme.BLACK.withOpacity(0.7),
+            AppColor.BLACK.withOpacity(0.2),
+            AppColor.BLACK.withOpacity(0.7),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -83,7 +83,7 @@ class SliverHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             style: const TextStyle(
-              color: DefaultTheme.WHITE,
+              color: AppColor.WHITE,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -103,7 +103,7 @@ class SliverHeader extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-          color: DefaultTheme.GREY_TEXT,
+          color: AppColor.GREY_TEXT,
           image: (coverImgId.isNotEmpty)
               ? DecorationImage(
                   image: ImageUtils.instance.getImageNetWork(coverImgId),

@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
@@ -10,7 +11,6 @@ import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
-import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/events/qrcode_un_authen_event.dart';
@@ -67,7 +67,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
     final double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: DefaultTheme.WHITE,
+      backgroundColor: AppColor.WHITE,
       body: LayoutBuilder(builder: (context, constraints) {
         return Column(children: [
           if (!PlatformUtils.instance.resizeWhen(constraints.maxWidth, 800))
@@ -103,7 +103,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
             if (PlatformUtils.instance
                 .resizeWhen(constraints.maxWidth, 800)) ...[
               const Divider(
-                color: DefaultTheme.BLACK_DARK,
+                color: AppColor.BLACK_DARK,
                 thickness: 0.5,
                 height: 0.5,
               ),
@@ -164,7 +164,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   'Số tài khoản không hợp lệ',
                   style: TextStyle(
                     fontSize: 12,
-                    color: DefaultTheme.RED_TEXT,
+                    color: AppColor.RED_TEXT,
                   ),
                 ),
               ),
@@ -195,7 +195,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   'Chủ tài khoản không hợp lệ',
                   style: TextStyle(
                     fontSize: 12,
-                    color: DefaultTheme.RED_TEXT,
+                    color: AppColor.RED_TEXT,
                   ),
                 ),
               ),
@@ -244,7 +244,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                   child: Text(
                     'Số tiền không đúng định dạng',
                     style: TextStyle(
-                      color: DefaultTheme.RED_CALENDAR,
+                      color: AppColor.RED_CALENDAR,
                       fontSize: 12,
                     ),
                   ),
@@ -297,7 +297,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                 children: [
                   Switch(
                     value: !provider.showBankAccount,
-                    activeColor: DefaultTheme.GREEN,
+                    activeColor: AppColor.GREEN,
                     onChanged: (bool value) {
                       provider.updateShowBankAccount(!value);
                     },
@@ -315,10 +315,10 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                 height: 40,
                 text: 'Tạo mã VietQR',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
+                textColor: AppColor.WHITE,
                 bgColor: !provider.isValidCreate
-                    ? DefaultTheme.GREY_TEXT
-                    : DefaultTheme.BLUE_TEXT,
+                    ? AppColor.GREY_TEXT
+                    : AppColor.BLUE_TEXT,
                 function: () {
                   if (!provider.isValidCreate) {
                   } else if (provider.bankType.bankCode.isNotEmpty) {
@@ -372,7 +372,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
               width: 50,
               height: 50,
               child: CircularProgressIndicator(
-                color: DefaultTheme.GREEN,
+                color: AppColor.GREEN,
               ),
             ),
           );
@@ -383,11 +383,9 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   VietQRWidget(
-                    width: width,
                     horizontalInfoWidth: horizontalInfoWidth,
                     horizontalInfo: horizontalInfo,
                     qrGeneratedDTO: qrGeneratedDTO,
-                    hasBgNapas: true,
                     showBankAccount:
                         Provider.of<BankTypeProvider>(context, listen: false)
                             .showBankAccount,
@@ -484,8 +482,8 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
                                     toastLength: Toast.LENGTH_SHORT,
                                     gravity: ToastGravity.CENTER,
                                     timeInSecForIosWeb: 1,
-                                    backgroundColor: DefaultTheme.WHITE,
-                                    textColor: DefaultTheme.BLACK,
+                                    backgroundColor: AppColor.WHITE,
+                                    textColor: AppColor.BLACK,
                                     fontSize: 15,
                                     webBgColor: 'rgba(255, 255, 255)',
                                     webPosition: 'center',
@@ -557,7 +555,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: DefaultTheme.GREY_TOP_TAB_BAR, width: 0.5),
+        border: Border.all(color: AppColor.GREY_TOP_TAB_BAR, width: 0.5),
       ),
       child: Row(
         children: [
@@ -595,7 +593,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
         child: BoxLayout(
           width: 270,
           height: 270,
-          bgColor: DefaultTheme.WHITE,
+          bgColor: AppColor.WHITE,
           enableShadow: true,
           padding: const EdgeInsets.all(20),
           child: Opacity(
@@ -603,7 +601,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
             child: QrImage(
               data: 'https://vietqr.vn',
               size: 250,
-              foregroundColor: DefaultTheme.BLACK,
+              foregroundColor: AppColor.BLACK,
               embeddedImage:
                   const AssetImage('assets/images/ic-viet-qr-small.png'),
               embeddedImageStyle: QrEmbeddedImageStyle(

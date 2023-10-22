@@ -13,7 +13,6 @@ import 'package:VietQR/features/bank/views/link_card_view.dart';
 import 'package:VietQR/features/bank/widgets/confirm_opt_widget.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_remove_dto.dart';
-import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/add_bank_provider.dart';
@@ -177,7 +176,7 @@ class BankDetailWidget extends StatelessWidget {
                           'Liên kết TK ngân hàng để nhận thông báo biến động số dư',
                           style: TextStyle(
                             // fontSize: 12,
-                            color: DefaultTheme.GREY_TEXT,
+                            color: AppColor.GREY_TEXT,
                           ),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
@@ -220,7 +219,7 @@ class BankDetailWidget extends StatelessWidget {
                                 child: ButtonIconWidget(
                                   width: 150,
                                   height: 40,
-                                  textColor: DefaultTheme.RED_TEXT,
+                                  textColor: AppColor.RED_TEXT,
                                   icon: Icons.delete_rounded,
                                   title: 'Xoá tài khoản',
                                   bgColor: Theme.of(context).canvasColor,
@@ -260,7 +259,7 @@ class BankDetailWidget extends StatelessWidget {
                                   child: ButtonIconWidget(
                                     width: 150,
                                     height: 40,
-                                    textColor: DefaultTheme.RED_TEXT,
+                                    textColor: AppColor.RED_TEXT,
                                     icon: Icons.remove_circle_rounded,
                                     title: 'Huỷ liên kết',
                                     bgColor: Theme.of(context).canvasColor,
@@ -295,8 +294,8 @@ class BankDetailWidget extends StatelessWidget {
                                   child: ButtonWidget(
                                     width: 150,
                                     height: 40,
-                                    textColor: DefaultTheme.WHITE,
-                                    bgColor: DefaultTheme.GREEN,
+                                    textColor: AppColor.WHITE,
+                                    bgColor: AppColor.GREEN,
                                     borderRadius: 5,
                                     function: () {
                                       BankTypeDTO bankTypeDTO = BankTypeDTO(
@@ -350,7 +349,6 @@ class BankDetailWidget extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.only(left: 30)),
                 VietQRWidget(
-                  width: 350,
                   qrGeneratedDTO: qrGeneratedDTO,
                   showQROnly: true,
                 ),
@@ -391,9 +389,7 @@ class BankDetailWidget extends StatelessWidget {
                   ? Icons.check_rounded
                   : Icons.pending_actions_rounded,
               size: 15,
-              color: (isAuthenticated)
-                  ? DefaultTheme.BLUE_TEXT
-                  : DefaultTheme.ORANGE,
+              color: (isAuthenticated) ? AppColor.BLUE_TEXT : AppColor.ORANGE,
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
           ],
@@ -403,7 +399,7 @@ class BankDetailWidget extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 image: DecorationImage(
                   fit: BoxFit.contain,
                   image: ImageUtils.instance.getImageNetWork(imgId),
@@ -420,9 +416,9 @@ class BankDetailWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               color: (isAuthenticated != null && isAuthenticated)
-                  ? DefaultTheme.BLUE_TEXT
+                  ? AppColor.BLUE_TEXT
                   : (isAuthenticated != null && !isAuthenticated)
-                      ? DefaultTheme.ORANGE
+                      ? AppColor.ORANGE
                       : Theme.of(context).hintColor,
             ),
           ),
