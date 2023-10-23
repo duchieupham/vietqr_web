@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
@@ -306,8 +307,7 @@ class BusinessInformationView extends StatelessWidget {
                                                   //       .BUSINESS_TRANSACTION,
                                                   // );
                                                 },
-                                                bgColor:
-                                                    AppColor.TRANSPARENT,
+                                                bgColor: AppColor.TRANSPARENT,
                                                 textColor: AppColor.GREEN,
                                               ),
                                             )
@@ -775,7 +775,9 @@ class BusinessInformationView extends StatelessWidget {
                   child: SizedBox(
                     width: 35,
                     height: 35,
-                    child: Image.asset('assets/images/ic-avatar.png'),
+                    child: Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation)),
                   ),
                 ),
           const Padding(padding: EdgeInsets.only(left: 10)),

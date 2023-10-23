@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -148,11 +150,11 @@ class _Login extends State<Login> {
         const SizedBox(
           height: 10,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           width: 200,
-          fit: BoxFit.fitWidth,
         ),
+
         const SizedBox(
           height: 20,
         ),
@@ -251,7 +253,7 @@ class _Login extends State<Login> {
               children: [
                 Expanded(
                   child: _buildButtonSignIn(
-                    assetImage: 'assets/images/logo-google.png',
+                    urlIcon: AppImages.logoGoogle,
                     text: 'Đăng nhập với Google',
                     function: () {
                       DialogWidget.instance.openMsgDialog(
@@ -265,7 +267,7 @@ class _Login extends State<Login> {
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 Expanded(
                   child: _buildButtonSignIn(
-                    assetImage: 'assets/images/ic-card.png',
+                    assetsIcon: AppImages.icCard,
                     text: 'VietQR ID Card',
                     bgColor: AppColor.PURPLE_NEON,
                     textColor: AppColor.WHITE,
@@ -319,7 +321,8 @@ class _Login extends State<Login> {
   }
 
   Widget _buildButtonSignIn({
-    required String assetImage,
+    String urlIcon = '',
+    String assetsIcon = '',
     required String text,
     required VoidCallback function,
     Color? bgColor,
@@ -336,11 +339,18 @@ class _Login extends State<Login> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
-              width: 30,
-              height: 30,
-            ),
+            if (assetsIcon.isNotEmpty)
+              Image(
+                image: ImageUtils.instance.getImageNetWork(assetsIcon),
+                width: 30,
+                height: 30,
+              )
+            else
+              Image(
+                image: ImageUtils.instance.getImageNetWork(urlIcon),
+                width: 30,
+                height: 30,
+              ),
             const Padding(padding: EdgeInsets.only(left: 5)),
             Expanded(
               child: Text(
@@ -378,8 +388,8 @@ class _Login extends State<Login> {
               child: QrImage(
                 data: code,
                 size: 200,
-                embeddedImage:
-                    const AssetImage('assets/images/ic-viet-qr-login.png'),
+                embeddedImage: ImageUtils.instance
+                    .getImageNetWork(AppImages.icVietQrLogin),
                 embeddedImageStyle: QrEmbeddedImageStyle(
                   size: const Size(30, 30),
                 ),

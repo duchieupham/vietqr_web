@@ -1,4 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
 class CheckBoxWidget extends StatelessWidget {
@@ -16,16 +18,14 @@ class CheckBoxWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: function,
-      child: Image.asset(
-        (check)
-            ? 'assets/images/ic-checked.png'
-            : 'assets/images/ic-uncheck.png',
-        color: AppColor.BLUE_TEXT,
-        width: size,
-        height: size,
-        fit: BoxFit.contain,
-      ),
-    );
+        onTap: function,
+        child: Image(
+          image: ImageUtils.instance.getImageNetWork(
+              (check) ? AppImages.icChecked : AppImages.icUncheck),
+          color: AppColor.BLUE_TEXT,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+        ));
   }
 }

@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/user_information_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -129,8 +131,9 @@ class RegisterView extends StatelessWidget {
                                   ),
                                 ),
                                 const Spacer(),
-                                Image.asset(
-                                  'assets/images/logo-vietqr-vn.png',
+                                Image(
+                                  image: ImageUtils.instance
+                                      .getImageNetWork(AppImages.logoVietqrVn),
                                   width: 100,
                                   height: 50,
                                 ),

@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/textfield_type.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/ambient_avatar_widget.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -10,7 +12,6 @@ import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/events/information_user_event.dart';
-
 import 'package:VietQR/features/information_user/frame/user_information_frame.dart';
 import 'package:VietQR/features/information_user/states/information_user_state.dart';
 import 'package:VietQR/features/information_user/views/popup_change_pass.dart';
@@ -139,7 +140,10 @@ class UserInformationView extends StatelessWidget {
                       child: SizedBox(
                         width: size,
                         height: size,
-                        child: Image.asset('assets/images/ic-avatar.png'),
+                        child: Image(
+                          image: ImageUtils.instance
+                              .getImageNetWork(AppImages.personalRelation),
+                        ),
                       ),
                     )
                   : AmbientAvatarWidget(imgId: imgId, size: size);
@@ -214,7 +218,7 @@ class UserInformationView extends StatelessWidget {
             DialogWidget.instance.openBoxWebConfirm(
               title: 'Xác nhận xoá tài khoản',
               confirmText: 'Đồng ý',
-              imageAsset: 'assets/images/ic-warning.png',
+              urlIcon: AppImages.icWarning,
               description:
                   'Tài khoản của bạn sẽ bị vô hiệu hoá và không thể đăng nhập lại vào hệ thống',
               confirmFunction: () {

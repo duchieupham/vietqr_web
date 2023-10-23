@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -103,7 +104,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                         Expanded(
                           child: ButtonIconWidget(
                             height: 40,
-                            pathIcon: 'assets/images/ic-print-blue.png',
+                            pathIcon: AppImages.icPrintBlue,
                             title: '',
                             function: () async {
                               String paramData =
@@ -113,7 +114,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                               );
                               html.window.open(
                                   Uri.base.toString().replaceFirst(
-                                      '/home', '/qr_generate/print$paramData'),
+                                      '/home', '/qr-generate/print$paramData'),
                                   'new tab');
                             },
                             textColor: AppColor.BLUE_TEXT,
@@ -126,8 +127,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                         Expanded(
                           child: ButtonIconWidget(
                             height: 40,
-                            pathIcon:
-                                'assets/images/ic-edit-avatar-setting.png',
+                            pathIcon: AppImages.icEditAvatarSetting,
                             title: '',
                             function: () {
                               String paramData =
@@ -150,7 +150,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                         Expanded(
                           child: ButtonIconWidget(
                             height: 40,
-                            pathIcon: 'assets/images/ic-copy-blue.png',
+                            pathIcon: AppImages.icCopyBlue,
                             title: '',
                             function: () async {
                               await FlutterClipboard.copy(ShareUtils.instance

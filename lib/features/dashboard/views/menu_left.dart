@@ -108,7 +108,7 @@ class MenuLeft extends StatelessWidget {
               ),
               ItemMenuHome(
                 title: 'Tạo mã VietQR',
-                pathIcon: AppImages.icCreateQR,
+                pathIcon: AppImages.icVietQrSmall,
                 isSelect: currentType == MenuHomeType.CREATE_QR,
                 onTap: () {
                   context.go('/create-qr');
@@ -171,80 +171,6 @@ class MenuLeft extends StatelessWidget {
               child: const PopupConfirmLogout(),
             );
           },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildListICon(MenuProvider provider, Function closeListCard) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ItemMenuHome(
-          title: 'Home',
-          pathIcon: AppImages.icMenuHome,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.HOME,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'Giao dịch',
-          pathIcon: AppImages.icMenuBank,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.TRANSACTION,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'TK ngân hàng',
-          pathIcon: AppImages.icMenuContact,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'Tạo mã VietQr',
-          pathIcon: AppImages.icCreateQR,
-          paddingIcon: const EdgeInsets.all(8),
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.CREATE_QR,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'Ví QR',
-          pathIcon: AppImages.icMenuBusiness,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.WALLET_QR,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'Chia sẻ BĐSD',
-          pathIcon: AppImages.icMenuBusiness,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.BUSINESS,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'Giới thiệu VietQR VN',
-          pathImage: AppImages.icMenuIntroVietQrVN,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
-          onTap: () {},
-        ),
-        const Spacer(),
-        ItemMenuHome(
-          title: 'Cài đặt',
-          pathIcon: AppImages.icMenuSetting,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.SETTING,
-          onTap: () {},
-        ),
-        ItemMenuHome(
-          title: 'Đăng xuất',
-          isLogout: true,
-          isOnlyIcon: true,
-          isSelect: currentType == MenuHomeType.LOGOUT,
-          pathIcon: AppImages.icMenuLogout,
-          onTap: () {},
         ),
       ],
     );

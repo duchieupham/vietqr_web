@@ -1,17 +1,19 @@
-import 'dart:ui';
 import 'dart:async';
-import 'package:VietQR/main.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:VietQR/layouts/box_layout.dart';
-import 'package:VietQR/commons/widgets/pin_widget.dart';
+import 'dart:ui';
+
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/commons/constants/configurations/numeral.dart';
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/commons/widgets/pin_widget.dart';
+import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/main.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/constants/configurations/numeral.dart';
-
 
 class DialogWidget {
   //
@@ -236,7 +238,7 @@ class DialogWidget {
   openBoxWebConfirm({
     required String title,
     required String confirmText,
-    required String imageAsset,
+    required String urlIcon,
     required String description,
     required VoidCallback confirmFunction,
     VoidCallback? cancelFunction,
@@ -263,8 +265,8 @@ class DialogWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      imageAsset,
+                    Image(
+                      image: ImageUtils.instance.getImageNetWork(urlIcon),
                       width: 80,
                       height: 80,
                     ),
@@ -552,11 +554,13 @@ class DialogWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/ic-warning.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icWarning),
                     width: 80,
                     height: 80,
                   ),
+
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   Text(
                     title,
@@ -951,8 +955,9 @@ class DialogWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/ic-warning.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icWarning),
                     width: 80,
                     height: 80,
                   ),

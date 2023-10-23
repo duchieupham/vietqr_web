@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
@@ -69,7 +70,6 @@ class _QrGenerateState extends State<QrGenerate> {
       WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
         setState(() {
           isSuccess = true;
-          print('--------------------------------$isSuccess');
         });
       });
     });
@@ -225,8 +225,8 @@ class _QrGenerateState extends State<QrGenerate> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           height: 50,
           fit: BoxFit.fitHeight,
         ),
@@ -297,7 +297,7 @@ class _QrGenerateState extends State<QrGenerate> {
                     Expanded(
                       child: ButtonIconWidget(
                         height: 40,
-                        pathIcon: 'assets/images/ic-print-blue.png',
+                        pathIcon: AppImages.icPrintBlue,
                         title: '',
                         function: () async {
                           String paramData = Session.instance
@@ -305,7 +305,7 @@ class _QrGenerateState extends State<QrGenerate> {
                                   showBankAccount: 1);
                           html.window.open(
                               Uri.base.toString().replaceFirst('/qr_generate',
-                                  '/qr_generate/print$paramData'),
+                                  '/qr-generate/print$paramData'),
                               'new tab');
                         },
                         bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
@@ -318,7 +318,7 @@ class _QrGenerateState extends State<QrGenerate> {
                     Expanded(
                       child: ButtonIconWidget(
                         height: 40,
-                        pathIcon: 'assets/images/ic-edit-avatar-setting.png',
+                        pathIcon: AppImages.icEditAvatarSetting,
                         title: '',
                         function: () {
                           saveImage();
@@ -333,7 +333,7 @@ class _QrGenerateState extends State<QrGenerate> {
                     Expanded(
                       child: ButtonIconWidget(
                         height: 40,
-                        pathIcon: 'assets/images/ic-copy-blue.png',
+                        pathIcon: AppImages.icCopyBlue,
                         title: '',
                         function: () async {
                           await FlutterClipboard.copy(ShareUtils.instance
@@ -530,8 +530,8 @@ class _QrGenerateState extends State<QrGenerate> {
                   data: 'https://vietqr.vn',
                   size: 250,
                   foregroundColor: AppColor.BLACK,
-                  embeddedImage:
-                      const AssetImage('assets/images/ic-viet-qr-small.png'),
+                  embeddedImage: ImageUtils.instance
+                      .getImageNetWork(AppImages.icVietQrSmall),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: const Size(30, 30),
                   ),
@@ -672,7 +672,7 @@ class _QrGenerateState extends State<QrGenerate> {
               height: 300,
               child: Image(
                   image: ImageUtils.instance
-                      .getImageNetWork('a8a40f57-c23a-4f6f-aeba-4af1c0734d9d')),
+                      .getImageNetWork(AppImages.iconTransactionSuccess)),
             ),
           ),
         ),
@@ -686,8 +686,8 @@ class _QrGenerateState extends State<QrGenerate> {
         const SizedBox(
           height: 8,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           height: 60,
           fit: BoxFit.fitHeight,
         ),
@@ -695,10 +695,10 @@ class _QrGenerateState extends State<QrGenerate> {
           width: double.infinity,
         ),
         const Spacer(),
-        Image.asset(
-          'assets/images/ic-warning.png',
-          height: 60,
-          fit: BoxFit.fitHeight,
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.icWarning),
+          width: 80,
+          height: 80,
         ),
         const Text(
           'Thông báo',

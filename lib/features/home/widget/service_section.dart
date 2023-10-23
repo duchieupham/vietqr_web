@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -56,13 +58,11 @@ class _ServiceSectionState extends State<ServiceSection> {
     return Wrap(
       runSpacing: 20,
       children: [
-        _buildItemService(
-            context, 'assets/images/logo-telegram-dash.png', 'Telegram',
+        _buildItemService(context, AppImages.logoTelegramDash, 'Telegram',
             () async {
           // Navigator.pushNamed(context, Routes.CONNECT_TELEGRAM);
         }),
-        _buildItemService(context, 'assets/images/logo-lark-dash.png', 'Lark',
-            () async {
+        _buildItemService(context, AppImages.logoLarkDash, 'Lark', () async {
           // Navigator.pushNamed(context, Routes.CONNECT_LARK);
         }),
       ],
@@ -73,25 +73,23 @@ class _ServiceSectionState extends State<ServiceSection> {
     return Wrap(
       runSpacing: 20,
       children: [
-        _buildItemService(context, 'assets/images/ic-vqr-3D-unit.png',
-            'Nạp tiền dịch vụ VietQR', () {
+        _buildItemService(
+            context, AppImages.icVqr3DUnit, 'Nạp tiền dịch vụ VietQR', () {
           DialogWidget.instance.openMsgDialog(
             title: 'Tính năng đang bảo trì',
             msg: 'Vui lòng thử lại sau',
           );
         }, isFirst: true),
-        _buildItemService(context, 'assets/images/logo-mobile-money-3D.png',
-            'Nạp tiền\nđiện thoại', () {
+        _buildItemService(
+            context, AppImages.logoMobileMoney3D, 'Nạp tiền\nđiện thoại', () {
           // Navigator.pushNamed(context, Routes.MOBILE_RECHARGE);
         }),
-        _buildItemService(context, 'assets/images/ic-mb.png', 'Mở TK\nMB Bank',
-            () {
+        _buildItemService(context, AppImages.icMb, 'Mở TK\nMB Bank', () {
           _launchUrl();
         }),
         _buildItemService(
-            context,
-            'assets/images/logo-vietqr-kiot-dashboard.png',
-            'VietQR Kiot\n', () async {
+            context, AppImages.logoVietqrKiotDashboard, 'VietQR Kiot\n',
+            () async {
           if (PlatformUtils.instance.isAndroidApp()) {
             // final intent = AndroidIntent(
             //     action: 'action_view',
@@ -112,7 +110,7 @@ class _ServiceSectionState extends State<ServiceSection> {
         }),
         _buildItemService(
           context,
-          'assets/images/ic-business-3D.png',
+          AppImages.icBusiness3D,
           'Đăng ký Merchant',
           () async {
             // Navigator.pushNamed(context, Routes.BUSINESS);
@@ -154,8 +152,12 @@ class _ServiceSectionState extends State<ServiceSection> {
                     decoration: BoxDecoration(
                         color: AppColor.WHITE,
                         borderRadius: BorderRadius.circular(8)),
-                    child: Image.asset(pathIcon, height: 44))
-                : Image.asset(pathIcon, height: 45),
+                    child: Image(
+                        image: ImageUtils.instance.getImageNetWork(pathIcon),
+                        height: 44))
+                : Image(
+                    image: ImageUtils.instance.getImageNetWork(pathIcon),
+                    height: 45),
             const SizedBox(height: 8),
             Text(
               title,

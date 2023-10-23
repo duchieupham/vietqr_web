@@ -40,10 +40,14 @@ class OverViewFrame extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: Image.asset('assets/images/bg-home-web.png').image,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColor.WHITE,
+            AppColor.BLUE_LIGHT,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
         ),
       ),
       child: Stack(
@@ -106,8 +110,8 @@ class OverViewFrame extends StatelessWidget {
                                           color: Theme.of(context).cardColor,
                                           border: const Border(
                                               left: BorderSide(
-                                                  color: AppColor
-                                                      .GREY_BUTTON))),
+                                                  color:
+                                                      AppColor.GREY_BUTTON))),
                                       padding: EdgeInsets.zero,
                                       child: menuCard,
                                     ),

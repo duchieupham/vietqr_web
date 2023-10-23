@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/user_information_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -11,10 +13,8 @@ import 'package:VietQR/ecom/register/events/ecom_register_event.dart';
 import 'package:VietQR/ecom/register/provider/ecom_register_provider.dart';
 import 'package:VietQR/ecom/register/states/ecom_register_state.dart';
 import 'package:VietQR/features/register/frame/register_frame.dart';
-import 'package:VietQR/features/register/states/register_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/services/shared_references/session.dart';
-import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -93,8 +93,9 @@ class ECOMRegisterView extends StatelessWidget {
                             ),
                           ),
                           const Spacer(),
-                          Image.asset(
-                            'assets/images/logo-vietqr-vn.png',
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(AppImages.logoVietqrVn),
                             width: 100,
                             height: 50,
                           ),
@@ -126,8 +127,8 @@ class ECOMRegisterView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10, top: 5, right: 30),
                         child: Text(
                           'Số điện thoại không đúng định dạng.',
-                          style: TextStyle(
-                              color: AppColor.RED_TEXT, fontSize: 13),
+                          style:
+                              TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -156,8 +157,8 @@ class ECOMRegisterView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10, top: 5, right: 30),
                         child: Text(
                           'Mật khẩu bao gồm 6 số.',
-                          style: TextStyle(
-                              color: AppColor.RED_TEXT, fontSize: 13),
+                          style:
+                              TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -186,8 +187,8 @@ class ECOMRegisterView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10, top: 5, right: 30),
                         child: Text(
                           'Xác nhận Mật khẩu không trùng khớp.',
-                          style: TextStyle(
-                              color: AppColor.RED_TEXT, fontSize: 13),
+                          style:
+                              TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),
@@ -214,8 +215,8 @@ class ECOMRegisterView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10, top: 5, right: 30),
                         child: Text(
                           'Domain không được trống',
-                          style: TextStyle(
-                              color: AppColor.RED_TEXT, fontSize: 13),
+                          style:
+                              TextStyle(color: AppColor.RED_TEXT, fontSize: 13),
                         ),
                       ),
                     ),

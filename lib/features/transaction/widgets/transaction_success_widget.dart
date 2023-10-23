@@ -1,9 +1,10 @@
 // import 'dart:convert';
 // import 'dart:typed_data';
 
-import 'package:VietQR/commons/constants/configurations/stringify.dart';
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 // import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
@@ -13,7 +14,6 @@ import 'package:VietQR/models/notification_transaction_success_dto.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rive/rive.dart' as rive;
 // import 'package:audioplayers/audioplayers.dart';
 
 class TransactionSuccessWidget extends StatefulWidget {
@@ -31,9 +31,6 @@ class TransactionSuccessWidget extends StatefulWidget {
 class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
   //animation
   // final AudioPlayer audioPlayer = AudioPlayer();
-  late final rive.StateMachineController _riveController;
-  late rive.SMITrigger _action;
-  bool _isRiveInit = false;
 
   @override
   void initState() {
@@ -50,15 +47,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
     //   });
     // }
   }
-
-  @override
-  void dispose() {
-    if (_isRiveInit) {
-      _riveController.dispose();
-    }
-    super.dispose();
-  }
-
   // Future<void> playMusicFromUrl(String url) async {
   //   try {
   //     await audioPlayer.play(UrlSource(url));
@@ -164,7 +152,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     title: 'Trang chủ',
                     function: () {
                       if (widget.dto.transType == 'C') {
-                        _doEndAnimation();
                         Future.delayed(const Duration(milliseconds: 500), () {
                           Navigator.pop(context);
                           context.go('/');
@@ -199,12 +186,16 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
         Container(
           width: 340,
           height: 600,
-          decoration: BoxDecoration(
+          decoration:const BoxDecoration(
             borderRadius:
-                const BorderRadius.horizontal(right: Radius.circular(15)),
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: Image.asset('assets/images/bg-home-web.png').image,
+                 BorderRadius.horizontal(right: Radius.circular(15)),
+            gradient: LinearGradient(
+              colors: [
+                AppColor.WHITE,
+                AppColor.BLUE_LIGHT,
+              ],
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
             ),
           ),
           child: Column(
@@ -219,7 +210,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     child: InkWell(
                       onTap: () {
                         if (widget.dto.transType == 'C') {
-                          _doEndAnimation();
                           Future.delayed(const Duration(milliseconds: 500), () {
                             Navigator.pop(context);
                           });
@@ -251,15 +241,9 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
                     ? SizedBox(
                         width: 300,
                         height: 150,
-                        child: rive.RiveAnimation.asset(
-                          'assets/rives/success_ani.riv',
-                          fit: BoxFit.fitWidth,
-                          antialiasing: false,
-                          animations: const [
-                            Stringify.SUCCESS_ANI_INITIAL_STATE
-                          ],
-                          onInit: _onRiveInit,
-                        ),
+                        child: Image(
+                            image: ImageUtils.instance.getImageNetWork(
+                                AppImages.iconTransactionSuccess)),
                       )
                     : const SizedBox(),
               )
@@ -268,29 +252,6 @@ class _TransactionSuccessWidget extends State<TransactionSuccessWidget> {
         ),
       ],
     );
-  }
-
-  //initial of animation
-  _onRiveInit(rive.Artboard artboard) {
-    _riveController = rive.StateMachineController.fromArtboard(
-        artboard, Stringify.SUCCESS_ANI_STATE_MACHINE)!;
-    artboard.addController(_riveController);
-    _isRiveInit = true;
-    _doInitAnimation();
-  }
-
-  void _doInitAnimation() {
-    _action =
-        _riveController.findInput<bool>(Stringify.SUCCESS_ANI_ACTION_DO_INIT)
-            as rive.SMITrigger;
-    _action.fire();
-  }
-
-  void _doEndAnimation() {
-    _action =
-        _riveController.findInput<bool>(Stringify.SUCCESS_ANI_ACTION_DO_END)
-            as rive.SMITrigger;
-    _action.fire();
   }
 
   Widget _buildElement({

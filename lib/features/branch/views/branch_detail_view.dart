@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -227,8 +228,10 @@ class BranchDetailView extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.asset(
-                                          'assets/images/ic-card.png',
+                                        Image(
+                                          image: ImageUtils.instance
+                                              .getImageNetWork(
+                                                  AppImages.icCard),
                                         ),
                                         const Text(
                                           'Chưa có tài khoản ngân hàng được kết nối.',
@@ -262,8 +265,7 @@ class BranchDetailView extends StatelessWidget {
                                                       );
                                                     },
                                                     bgColor: AppColor.GREEN,
-                                                    textColor:
-                                                        AppColor.WHITE,
+                                                    textColor: AppColor.WHITE,
                                                   )
                                                 : const SizedBox();
                                           },
@@ -373,8 +375,7 @@ class BranchDetailView extends StatelessWidget {
                                                             ),
                                                           );
                                                         },
-                                                        bgColor:
-                                                            AppColor.GREEN,
+                                                        bgColor: AppColor.GREEN,
                                                         textColor:
                                                             AppColor.WHITE,
                                                       )
@@ -472,7 +473,9 @@ class BranchDetailView extends StatelessWidget {
                   child: SizedBox(
                     width: 35,
                     height: 35,
-                    child: Image.asset('assets/images/ic-avatar.png'),
+                    child: Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation)),
                   ),
                 ),
           const Padding(padding: EdgeInsets.only(left: 10)),

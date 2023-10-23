@@ -1,7 +1,9 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -145,8 +147,9 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  Image.asset(
-                                    'assets/images/logo-vietqr-vn.png',
+                                  Image(
+                                    image: ImageUtils.instance.getImageNetWork(
+                                        AppImages.logoVietqrVn),
                                     height: 50,
                                     fit: BoxFit.fitHeight,
                                   ),
@@ -223,7 +226,7 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
                     Expanded(
                       child: ButtonIconWidget(
                         height: 40,
-                        pathIcon: 'assets/images/ic-print-blue.png',
+                        pathIcon: AppImages.icPrintBlue,
                         title: '',
                         function: () async {
                           String paramData = Session.instance
@@ -231,7 +234,7 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
                                   showBankAccount: 1);
                           html.window.open(
                               Uri.base.toString().replaceFirst('/qr_generate',
-                                  '/qr_generate/print$paramData'),
+                                  '/qr-generate/print$paramData'),
                               'new tab');
                         },
                         bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
@@ -244,7 +247,7 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
                     Expanded(
                       child: ButtonIconWidget(
                         height: 40,
-                        pathIcon: 'assets/images/ic-edit-avatar-setting.png',
+                        pathIcon: AppImages.icEditAvatarSetting,
                         title: '',
                         function: () {
                           saveImage();
@@ -259,7 +262,7 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
                     Expanded(
                       child: ButtonIconWidget(
                         height: 40,
-                        pathIcon: 'assets/images/ic-copy-blue.png',
+                        pathIcon: AppImages.icCopyBlue,
                         title: '',
                         function: () async {
                           await FlutterClipboard.copy(ShareUtils.instance
@@ -398,8 +401,8 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
                   data: 'https://vietqr.vn',
                   size: 250,
                   foregroundColor: AppColor.BLACK,
-                  embeddedImage:
-                      const AssetImage('assets/images/ic-viet-qr-small.png'),
+                  embeddedImage: ImageUtils.instance
+                      .getImageNetWork(AppImages.icVietQrSmall),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: const Size(30, 30),
                   ),

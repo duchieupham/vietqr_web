@@ -1,4 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/information_user/blocs/wallet_bloc.dart';
 import 'package:VietQR/features/information_user/events/wallet_event.dart';
@@ -123,8 +125,7 @@ class PopupShareCode extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-          color: AppColor.CARD_CODE_BG,
-          borderRadius: BorderRadius.circular(3)),
+          color: AppColor.CARD_CODE_BG, borderRadius: BorderRadius.circular(3)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -149,8 +150,8 @@ class PopupShareCode extends StatelessWidget {
                   ),
                 );
               },
-              child: Image.asset(
-                'assets/images/ic-copy.png',
+              child: Image(
+                image: ImageUtils.instance.getImageNetWork(AppImages.icCopy),
                 width: 28,
               )),
         ],

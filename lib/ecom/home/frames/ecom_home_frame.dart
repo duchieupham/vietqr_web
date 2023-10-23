@@ -42,10 +42,14 @@ class ECOMHomeFrame extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: Image.asset('assets/images/bg-home-web.png').image,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColor.WHITE,
+            AppColor.BLUE_LIGHT,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
         ),
       ),
       child: (PlatformUtils.instance.resizeWhen(width, 600))

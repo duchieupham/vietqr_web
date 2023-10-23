@@ -1,6 +1,8 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
@@ -8,6 +10,7 @@ import 'package:VietQR/features/home/blocs/home_bloc.dart';
 import 'package:VietQR/features/home/blocs/home_provider.dart';
 import 'package:VietQR/features/home/event/home_event.dart';
 import 'package:VietQR/features/home/frames/home_frame.dart';
+import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/home/states/home_state.dart';
 import 'package:VietQR/features/home/views/info_account_view.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
@@ -140,7 +143,8 @@ class _HomeScreenState extends State<_HomeScreen> {
           menu: const MenuLeft(
             currentType: MenuHomeType.HOME,
           ),
-          widget1: _buildHome(),
+          widget1: ChangeNotifierProvider<WalletHomeProvider>(
+              create: (context) => WalletHomeProvider(), child: _buildHome()),
           widget2: _buildListBank(state.listBanks, state.colors),
           widget3: _buildInfoAccount(dto, qrGeneratedDTO),
         );
@@ -149,67 +153,82 @@ class _HomeScreenState extends State<_HomeScreen> {
   }
 
   Widget _buildHome() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Trang chủ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              decoration: TextDecoration.underline,
-              fontSize: 15,
+    return Consumer<WalletHomeProvider>(builder: (context, provider, child) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Trang chủ',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.underline,
+                fontSize: 15,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            height: 45,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
-            ),
-            child: Row(
-              children: [
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Số dư: ',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      TextSpan(
-                        text: '20,000 VQR',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
+            const SizedBox(height: 16),
+            Container(
+              height: 45,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.white,
+              ),
+              child: Row(
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'Số dư: ',
+                          style: TextStyle(fontSize: 13),
                         ),
-                      ),
-                    ],
+                        TextSpan(
+                          text: provider.showAmount
+                              ? '${CurrencyUtils.instance.getCurrencyFormatted(Session.instance.wallet.amount)} VQR'
+                              : '********',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 6),
-                const Icon(
-                  Icons.visibility,
-                  size: 20,
-                ),
-                const Spacer(),
-                const Text(
-                  '110',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                Image.asset(
-                  'assets/images/ic-point.png',
-                  height: 20,
-                )
-              ],
+                  const SizedBox(width: 6),
+                  InkWell(
+                    onTap: () {
+                      provider.changeShowAmount();
+                    },
+                    child: provider.showAmount
+                        ? const Icon(
+                            Icons.visibility,
+                            size: 20,
+                          )
+                        : const Icon(
+                            Icons.visibility_off,
+                            size: 20,
+                          ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    Session.instance.wallet.point,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  Image(
+                    image:
+                        ImageUtils.instance.getImageNetWork(AppImages.icPoint),
+                    width: 20,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-          const ServiceSection(),
-        ],
-      ),
-    );
+            const SizedBox(height: 30),
+            const ServiceSection(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildListBank(List<BankAccountDTO> list, List<Color> colors) {
@@ -249,8 +268,9 @@ class _HomeScreenState extends State<_HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            'assets/images/ic-card-blue.png',
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(AppImages.icCardBlue),
                             height: 28,
                           ),
                           const Padding(padding: EdgeInsets.only(left: 5)),

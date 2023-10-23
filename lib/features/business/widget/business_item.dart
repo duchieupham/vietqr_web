@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -113,11 +114,12 @@ class BusinessItem extends StatelessWidget {
                               image: (dto.imgId.isNotEmpty)
                                   ? ImageUtils.instance
                                       .getImageNetWork(dto.imgId)
-                                  : Image.asset(
-                                      'assets/images/ic-avatar-business.png',
-                                      fit: BoxFit.cover,
-                                      width: 50,
+                                  : Image(
+                                      image: ImageUtils.instance
+                                          .getImageNetWork(
+                                              AppImages.icBusiness3D),
                                       height: 50,
+                                      width: 50,
                                     ).image,
                             ),
                           ),

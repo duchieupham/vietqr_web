@@ -1,5 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/widgets/bottom_web.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
@@ -45,8 +46,9 @@ class WebMobileBlankWidget extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'assets/images/logo-vietqr-vn.png',
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(AppImages.logoVietqrVn),
                             width: 150,
                           ),
                           const Spacer(),
@@ -104,8 +106,8 @@ class WebMobileBlankWidget extends StatelessWidget {
                         child: QrImage(
                           data: 'https://onelink.to/q7zwpe',
                           size: width * 0.4,
-                          embeddedImage: const AssetImage(
-                              'assets/images/ic-viet-qr-small.png'),
+                          embeddedImage: ImageUtils.instance
+                              .getImageNetWork(AppImages.icVietQrSmall),
                           embeddedImageStyle: QrEmbeddedImageStyle(
                             size: const Size(30, 30),
                           ),
@@ -129,7 +131,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                           _buildButton(
                             width: width,
                             text: 'App Store',
-                            assetImage: 'assets/images/logo-app-store.png',
+                            assetImage: AppImages.logoAppStore,
                             onTap: () async {
                               await launchUrl(Uri.parse(
                                   'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -139,7 +141,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                           _buildButton(
                             width: width,
                             text: 'Google Play',
-                            assetImage: 'assets/images/logo-google-play.png',
+                            assetImage: AppImages.logoGooglePlay,
                             onTap: () async {
                               await launchUrl(Uri.parse(
                                   'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -187,8 +189,8 @@ class WebMobileBlankWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
+            Image(
+              image: ImageUtils.instance.getImageNetWork(assetImage),
               width: 30,
               height: 30,
             ),
@@ -205,8 +207,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                 ),
                 Text(
                   text,
-                  style:
-                      const TextStyle(color: AppColor.WHITE, fontSize: 18),
+                  style: const TextStyle(color: AppColor.WHITE, fontSize: 18),
                 ),
               ],
             )

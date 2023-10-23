@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/layouts/box_layout.dart';
@@ -100,8 +101,8 @@ class _QrGenerateState extends State<QrCardGenerate> {
         const SizedBox(
           height: 12,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           height: 50,
           fit: BoxFit.fitHeight,
         ),
@@ -365,8 +366,8 @@ class _QrGenerateState extends State<QrCardGenerate> {
                   data: 'https://vietqr.vn',
                   size: 250,
                   foregroundColor: AppColor.BLACK,
-                  embeddedImage:
-                      const AssetImage('assets/images/ic-viet-qr-small.png'),
+                  embeddedImage: ImageUtils.instance
+                      .getImageNetWork(AppImages.icVietQrSmall),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: const Size(30, 30),
                   ),
@@ -394,12 +395,12 @@ class _QrGenerateState extends State<QrCardGenerate> {
           fit: type == 2 ? BoxFit.contain : BoxFit.cover);
     } else {
       if (type != 1) {
-        return const DecorationImage(
-            image: AssetImage('assets/images/ic-tb-qr.png'),
+        return DecorationImage(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icTbQr),
             fit: BoxFit.contain);
       } else {
-        return const DecorationImage(
-            image: AssetImage('assets/images/ic-viet-qr-small.png'),
+        return DecorationImage(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             fit: BoxFit.contain);
       }
     }

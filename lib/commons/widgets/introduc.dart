@@ -119,19 +119,4 @@ class Introduction extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildLogo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          Expanded(child: Image.asset('assets/images/logo-mb.png')),
-          const Spacer(
-            flex: 3,
-          ),
-          Expanded(child: Image.asset('assets/images/logo-vietqr-vn.png'))
-        ],
-      ),
-    );
-  }
 }

@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
@@ -603,7 +604,7 @@ class _CreateQRUnAuthenState extends State<CreateQRUnAuthen> {
               size: 250,
               foregroundColor: AppColor.BLACK,
               embeddedImage:
-                  const AssetImage('assets/images/ic-viet-qr-small.png'),
+                  ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
               embeddedImageStyle: QrEmbeddedImageStyle(
                 size: const Size(30, 30),
               ),

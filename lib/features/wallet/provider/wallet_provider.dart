@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/models/contact_dto.dart';
 import 'package:flutter/material.dart';
 
@@ -5,37 +6,37 @@ class WalletProvider extends ChangeNotifier {
   final List<CategoryModel> _listCategories = [
     CategoryModel(
       title: 'Cộng đồng',
-      url: 'assets/images/gl-white.png',
+      url: AppImages.glWhite,
       type: 8,
     ),
     CategoryModel(
       title: 'Cá nhân',
-      url: 'assets/images/ic-personal-white.png',
+      url: AppImages.icPersonalWhite,
       type: 9,
     ),
     CategoryModel(
       title: 'VCard',
-      url: 'assets/images/ic-contact-bank-white.png',
+      url: AppImages.icContactBankWhite,
       type: 4,
     ),
     CategoryModel(
       title: 'Ngân hàng',
-      url: 'assets/images/ic-contact-all-white.png',
+      url: AppImages.icContactAllWhite,
       type: 2,
     ),
     CategoryModel(
       title: 'VietQR ID',
-      url: 'assets/images/ic-contact-vietqr-id-white.png',
+      url: AppImages.icContactVietqrIdWhite,
       type: 1,
     ),
     CategoryModel(
       title: 'Khác',
-      url: 'assets/images/qr-contact-other-white.png',
+      url: AppImages.qrContactOtherWhite,
       type: 3,
     ),
     CategoryModel(
       title: 'Gợi ý',
-      url: 'assets/images/ic-contact-suggest-white.png',
+      url: AppImages.icContactSuggestWhite,
       type: 0,
     ),
   ];
@@ -43,7 +44,7 @@ class WalletProvider extends ChangeNotifier {
 
   CategoryModel _categoryModel = CategoryModel(
     title: 'Cộng đồng',
-    url: 'assets/images/gl-white.png',
+    url: AppImages.glWhite,
     type: 8,
   );
   CategoryModel get categoryModel => _categoryModel;

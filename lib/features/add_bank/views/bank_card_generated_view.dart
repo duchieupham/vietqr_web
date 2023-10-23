@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, constant_identifier_names
 
-import 'package:VietQR/commons/constants/configurations/stringify.dart';
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -10,7 +11,6 @@ import 'package:VietQR/services/providers/add_bank_provider.dart';
 import 'package:VietQR/services/providers/bank_card_position_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rive/rive.dart' as rive;
 
 class BankCardGeneratedView extends StatefulWidget {
   final BankAccountDTO dto;
@@ -24,24 +24,12 @@ class BankCardGeneratedView extends StatefulWidget {
 }
 
 class _BankCardGeneratedView extends State<BankCardGeneratedView> {
-  //animation
-  late final rive.StateMachineController _riveController;
-  late rive.SMITrigger _action;
-  bool _isRiveInit = false;
   final BankCardPositionProvider _bankCardPositionProvider =
       BankCardPositionProvider(false);
 
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    if (_isRiveInit) {
-      _riveController.dispose();
-    }
-    super.dispose();
   }
 
   @override
@@ -99,13 +87,9 @@ class _BankCardGeneratedView extends State<BankCardGeneratedView> {
           ),
           SizedBox(
             height: 150,
-            child: rive.RiveAnimation.asset(
-              'assets/rives/success_ani.riv',
-              fit: BoxFit.fitWidth,
-              antialiasing: false,
-              animations: [Stringify.SUCCESS_ANI_INITIAL_STATE],
-              onInit: _onRiveInit,
-            ),
+            child: Image(
+                image: ImageUtils.instance
+                    .getImageNetWork(AppImages.iconTransactionSuccess)),
           ),
           ValueListenableBuilder(
               valueListenable: _bankCardPositionProvider,
@@ -136,7 +120,6 @@ class _BankCardGeneratedView extends State<BankCardGeneratedView> {
                       textColor: AppColor.GREEN,
                       bgColor: AppColor.WHITE,
                       function: () {
-                        _doEndAnimation();
                         Provider.of<AddBankProvider>(context, listen: false)
                             .reset();
                         Future.delayed(const Duration(milliseconds: 800), () {
@@ -154,7 +137,6 @@ class _BankCardGeneratedView extends State<BankCardGeneratedView> {
                       textColor: AppColor.WHITE,
                       bgColor: AppColor.GREEN,
                       function: () {
-                        _doEndAnimation();
                         Provider.of<AddBankProvider>(context, listen: false)
                             .reset();
                         Future.delayed(const Duration(milliseconds: 800), () {
@@ -175,29 +157,5 @@ class _BankCardGeneratedView extends State<BankCardGeneratedView> {
         ],
       ),
     );
-  }
-
-  //initial of animation
-  _onRiveInit(rive.Artboard artboard) {
-    _riveController = rive.StateMachineController.fromArtboard(
-        artboard, Stringify.SUCCESS_ANI_STATE_MACHINE)!;
-    artboard.addController(_riveController);
-    _isRiveInit = true;
-    _doInitAnimation();
-  }
-
-  void _doInitAnimation() {
-    _action =
-        _riveController.findInput<bool>(Stringify.SUCCESS_ANI_ACTION_DO_INIT)
-            as rive.SMITrigger;
-    _action.fire();
-  }
-
-  void _doEndAnimation() {
-    _bankCardPositionProvider.transform();
-    _action =
-        _riveController.findInput<bool>(Stringify.SUCCESS_ANI_ACTION_DO_END)
-            as rive.SMITrigger;
-    _action.fire();
   }
 }

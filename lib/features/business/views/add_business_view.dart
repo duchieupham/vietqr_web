@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/textfield_type.dart';
-import 'package:VietQR/commons/utils/file_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -160,21 +160,22 @@ class AddBusinessView extends StatelessWidget {
                       Consumer<AddBusinessProvider>(
                         builder: (context, provider, child) {
                           return ClipRRect(
-                            borderRadius: BorderRadius.circular(40),
-                            child: (provider.bytesData != null)
-                                ? Image.memory(
-                                    provider.bytesData!,
-                                    fit: BoxFit.fitHeight,
-                                    width: 80,
-                                    height: 80,
-                                  )
-                                : Image.asset(
-                                    'assets/images/ic-avatar-business.png',
-                                    width: 80,
-                                    fit: BoxFit.fitHeight,
-                                    height: 80,
-                                  ),
-                          );
+                              borderRadius: BorderRadius.circular(40),
+                              child: (provider.bytesData != null)
+                                  ? Image.memory(
+                                      provider.bytesData!,
+                                      fit: BoxFit.fitHeight,
+                                      width: 80,
+                                      height: 80,
+                                    )
+                                  : Image(
+                                      image: ImageUtils.instance
+                                          .getImageNetWork(
+                                              AppImages.icBusiness3D),
+                                      width: 80,
+                                      fit: BoxFit.fitHeight,
+                                      height: 80,
+                                    ));
                         },
                       ),
                     ],
@@ -493,7 +494,9 @@ class AddBusinessView extends StatelessWidget {
                   child: SizedBox(
                     width: 40,
                     height: 40,
-                    child: Image.asset('assets/images/ic-avatar.png'),
+                    child: Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation)),
                   ),
                 ),
           const Padding(padding: EdgeInsets.only(left: 10)),

@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
@@ -223,7 +224,9 @@ class AddBusinessMemberWidget extends StatelessWidget {
                   child: SizedBox(
                     width: 40,
                     height: 40,
-                    child: Image.asset('assets/images/ic-avatar.png'),
+                    child: Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation)),
                   ),
                 ),
           const Padding(padding: EdgeInsets.only(left: 10)),

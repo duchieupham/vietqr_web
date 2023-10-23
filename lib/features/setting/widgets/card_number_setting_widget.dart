@@ -1,11 +1,12 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/setting/events/card_num_event.dart';
 import 'package:VietQR/features/setting/states/card_num_state.dart';
 import 'package:VietQR/models/account_card_num_dto.dart';
-import 'package:VietQR/services/providers/card_number_login_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -180,8 +181,8 @@ class CardNumberSettingWidget extends StatelessWidget {
               ),
             ),
             const Padding(padding: EdgeInsets.only(bottom: 50)),
-            Image.asset(
-              'assets/images/ic-card-nfc.png',
+            Image(
+              image: ImageUtils.instance.getImageNetWork(AppImages.icCardNfc),
               width: 200,
               height: 200,
             ),

@@ -1,4 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -108,8 +110,9 @@ class FooterWeb extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  Image.asset(
-                    'assets/images/logo-vietqr-vn.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.logoVietqrVn),
                     width: 80,
                   ),
                 ],
@@ -216,7 +219,7 @@ class FooterWeb extends StatelessWidget {
             _buildButton(
               width: 280,
               text: 'App Store',
-              assetImage: 'assets/images/logo-app-store.png',
+              assetImage: AppImages.logoAppStore,
               onTap: () async {
                 await launchUrl(Uri.parse(
                     'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -226,7 +229,7 @@ class FooterWeb extends StatelessWidget {
             _buildButton(
               width: 280,
               text: 'Google Play',
-              assetImage: 'assets/images/logo-google-play.png',
+              assetImage: AppImages.logoGooglePlay,
               onTap: () async {
                 await launchUrl(Uri.parse(
                     'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -262,7 +265,7 @@ class FooterWeb extends StatelessWidget {
               _buildButton(
                 width: 280,
                 text: 'App Store',
-                assetImage: 'assets/images/logo-app-store.png',
+                assetImage: AppImages.logoAppStore,
                 onTap: () async {
                   await launchUrl(Uri.parse(
                       'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -272,7 +275,7 @@ class FooterWeb extends StatelessWidget {
               _buildButton(
                 width: 280,
                 text: 'Google Play',
-                assetImage: 'assets/images/logo-google-play.png',
+                assetImage: AppImages.logoGooglePlay,
                 onTap: () async {
                   await launchUrl(Uri.parse(
                       'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -288,7 +291,7 @@ class FooterWeb extends StatelessWidget {
                 _buildButton(
                   width: 280,
                   text: 'App Store',
-                  assetImage: 'assets/images/logo-app-store.png',
+                  assetImage: AppImages.logoAppStore,
                   onTap: () async {
                     await launchUrl(Uri.parse(
                         'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -298,7 +301,7 @@ class FooterWeb extends StatelessWidget {
                 _buildButton(
                   width: 280,
                   text: 'Google Play',
-                  assetImage: 'assets/images/logo-google-play.png',
+                  assetImage: AppImages.logoGooglePlay,
                   onTap: () async {
                     await launchUrl(Uri.parse(
                         'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -415,8 +418,8 @@ class FooterWeb extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
+            Image(
+              image: ImageUtils.instance.getImageNetWork(assetImage),
               width: 18,
               height: 18,
             ),

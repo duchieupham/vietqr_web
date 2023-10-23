@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -173,8 +174,8 @@ class VietQRWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            'assets/images/logo-vietqr-vn.png',
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
             width: 110,
             fit: BoxFit.fitWidth,
           ),
@@ -183,7 +184,7 @@ class VietQRWidget extends StatelessWidget {
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
             embeddedImage:
-                const AssetImage('assets/images/ic-viet-qr-small.png'),
+                ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             embeddedImageStyle: QrEmbeddedImageStyle(
               size: const Size(30, 30),
             ),
@@ -191,8 +192,11 @@ class VietQRWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset('assets/images/ic-napas247.png',
-                  width: 95, fit: BoxFit.fitWidth),
+              Image(
+                  image:
+                      ImageUtils.instance.getImageNetWork(AppImages.icNapas247),
+                  width: 95,
+                  fit: BoxFit.fitWidth),
               Container(
                 width: 95,
                 height: 30,
@@ -268,16 +272,16 @@ class VietQRWidget extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/images/logo-vietqr-vn.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.logoVietqrVn),
                     width: 110,
-                    fit: BoxFit.fitWidth,
                   ),
                   QrImage(
                     data: qrGeneratedDTO.qrCode,
                     version: QrVersions.auto,
-                    embeddedImage:
-                        const AssetImage('assets/images/ic-viet-qr-small.png'),
+                    embeddedImage: ImageUtils.instance
+                        .getImageNetWork(AppImages.icVietQrSmall),
                     embeddedImageStyle: QrEmbeddedImageStyle(
                       size: const Size(25, 25),
                     ),
@@ -285,8 +289,11 @@ class VietQRWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset('assets/images/ic-napas247.png',
-                          width: 85, fit: BoxFit.fitWidth),
+                      Image(
+                          image: ImageUtils.instance
+                              .getImageNetWork(AppImages.icNapas247),
+                          width: 85,
+                          fit: BoxFit.fitWidth),
                       Container(
                         width: 85,
                         height: 20,

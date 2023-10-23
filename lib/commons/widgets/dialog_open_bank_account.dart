@@ -1,3 +1,5 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -83,19 +85,19 @@ class DialogOpenBankAccount extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(
-          'assets/images/logo-mb.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoMb),
           width: 100,
           fit: BoxFit.contain,
         ),
         const SizedBox(
           width: 10,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           width: 110,
           fit: BoxFit.contain,
-        )
+        ),
       ],
     );
   }
@@ -105,9 +107,7 @@ class DialogOpenBankAccount extends StatelessWidget {
       const Text(
         'Đăng kí xong ngay\nTiền về liền tay',
         style: TextStyle(
-            fontSize: 24,
-            color: AppColor.MB_BLUE,
-            fontWeight: FontWeight.bold),
+            fontSize: 24, color: AppColor.MB_BLUE, fontWeight: FontWeight.bold),
       ),
       const Padding(
         padding: EdgeInsets.only(top: 20),

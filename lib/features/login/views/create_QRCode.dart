@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
@@ -549,7 +550,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
                                                 : 0);
                                 html.window.open(
                                     Uri.base.toString().replaceFirst('/login',
-                                        '/qr_generate/print$paramData'),
+                                        '/qr-generate/print$paramData'),
                                     'new tab');
                               },
                               bgColor:
@@ -653,7 +654,7 @@ class _CreateQRCodeState extends State<CreateQRCode> {
               size: 250,
               foregroundColor: AppColor.BLACK,
               embeddedImage:
-                  const AssetImage('assets/images/ic-viet-qr-small.png'),
+                  ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
               embeddedImageStyle: QrEmbeddedImageStyle(
                 size: const Size(30, 30),
               ),

@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
 class ButtonIconWidget extends StatelessWidget {
@@ -21,25 +22,25 @@ class ButtonIconWidget extends StatelessWidget {
 
   const ButtonIconWidget(
       {super.key,
-        this.width,
-        this.icon = Icons.add,
-        required this.title,
-        required this.function,
-        required this.bgColor,
-        required this.textColor,
-        this.height,
-        this.textSize,
-        this.autoFocus,
-        this.borderRadius,
-        this.focusNode,
-        this.alignment,
-        this.iconSize,
-        this.pathIcon = '',
-        this.contentPadding =
-        const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        this.enableShadow = false,
-        this.iconPathColor,
-        this.customPaddingIcon = const EdgeInsets.only(left: 6)});
+      this.width,
+      this.icon = Icons.add,
+      required this.title,
+      required this.function,
+      required this.bgColor,
+      required this.textColor,
+      this.height,
+      this.textSize,
+      this.autoFocus,
+      this.borderRadius,
+      this.focusNode,
+      this.alignment,
+      this.iconSize,
+      this.pathIcon = '',
+      this.contentPadding =
+          const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      this.enableShadow = false,
+      this.iconPathColor,
+      this.customPaddingIcon = const EdgeInsets.only(left: 6)});
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +57,16 @@ class ButtonIconWidget extends StatelessWidget {
           color: bgColor,
           boxShadow: enableShadow
               ? [
-            BoxShadow(
-              color: Theme.of(context).shadowColor.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 4,
-              offset: const Offset(1, 2),
-            ),
-          ]
+                  BoxShadow(
+                    color: Theme.of(context).shadowColor.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(1, 2),
+                  ),
+                ]
               : null,
           borderRadius:
-          BorderRadius.circular((borderRadius != null) ? borderRadius! : 5),
+              BorderRadius.circular((borderRadius != null) ? borderRadius! : 5),
         ),
         child: Row(
           mainAxisAlignment: (alignment == Alignment.centerLeft)
@@ -73,8 +74,8 @@ class ButtonIconWidget extends StatelessWidget {
               : MainAxisAlignment.center,
           children: [
             if (pathIcon.isNotEmpty)
-              Image.asset(
-                pathIcon,
+              Image(
+                image: ImageUtils.instance.getImageNetWork(pathIcon),
                 width: iconSize,
                 color: iconPathColor,
               )

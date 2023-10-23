@@ -233,8 +233,9 @@ class _OverViewPageState extends State<OverViewPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  'assets/images/ic-card.png',
+                                Image(
+                                  image: ImageUtils.instance
+                                      .getImageNetWork(AppImages.icCard),
                                   width: width * 0.4,
                                   height: 150,
                                 ),

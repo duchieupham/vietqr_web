@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -35,8 +36,9 @@ class HeaderHalfWidget extends StatelessWidget {
                   context.go('/ecom');
                 }
               },
-              child: Image.asset(
-                'assets/images/logo-vietqr-vn.png',
+              child: Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
                 height: 50,
                 fit: BoxFit.fitHeight,
               ),
@@ -65,7 +67,8 @@ class HeaderHalfWidget extends StatelessWidget {
             fit: BoxFit.cover,
             image: (imgId.trim().isNotEmpty)
                 ? ImageUtils.instance.getImageNetWork(imgId)
-                : Image.asset('assets/images/ic-avatar.png').image,
+                : ImageUtils.instance
+                    .getImageNetWork(AppImages.personalRelation),
           ),
         ),
       ),

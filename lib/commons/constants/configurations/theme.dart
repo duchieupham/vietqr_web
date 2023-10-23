@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // ignore_for_file: constant_identifier_names, deprecated_member_use
 
-
 class AppColor {
   //COLOR
   static const Color BLACK = Color(0xFF000000);
@@ -66,8 +65,6 @@ class AppColor {
 
   //THEME NAME
   static const String THEME_LIGHT = 'LIGHT';
-  static const String THEME_DARK = 'DARK';
-  static const String THEME_SYSTEM = 'SYSTEM';
 
   static BoxDecoration cardDecoration(BuildContext context) {
     return BoxDecoration(
@@ -82,39 +79,8 @@ class DefaultThemeData {
 
   const DefaultThemeData({required this.context});
 
-  ThemeData get darkTheme {
-    return ThemeData(
-      fontFamily: 'SF-Pro',
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColor.BLACK,
-      colorScheme: const ColorScheme.dark(primary: AppColor.BLUE_TEXT),
-      canvasColor: AppColor.GREY_HIGHLIGHT,
-      buttonColor: AppColor.BLACK_BUTTON,
-      primaryColor: AppColor.BLACK,
-      accentColor: AppColor.GREY_LIGHT,
-      hoverColor: AppColor.TRANSPARENT,
-      toggleableActiveColor: AppColor.BLACK_LIGHT,
-      //  focusColor: DefaultTheme.BLUE_TEXT,
-      cardColor: AppColor.BLACK_BUTTON,
-      shadowColor: AppColor.BLACK_LIGHT,
-      hintColor: AppColor.WHITE,
-      indicatorColor: AppColor.LIGHT_PINK,
-      splashColor: AppColor.TRANSPARENT,
-      highlightColor: AppColor.TRANSPARENT,
-      textTheme: Theme.of(context).textTheme.apply(
-            bodyColor: AppColor.WHITE,
-          ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColor.TRANSPARENT,
-        systemOverlayStyle: SystemUiOverlayStyle.light,
-        elevation: 0,
-      ),
-    );
-  }
-
   ThemeData get lightTheme {
     return ThemeData(
-      fontFamily: 'SF-Pro',
       brightness: Brightness.light,
       scaffoldBackgroundColor: AppColor.GREY_BG,
       colorScheme: const ColorScheme.light(primary: AppColor.BLUE_TEXT),

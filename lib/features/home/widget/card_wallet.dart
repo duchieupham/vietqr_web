@@ -109,11 +109,10 @@ class WalletCard extends StatelessWidget {
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                         color: AppColor.WHITE)),
-                Image.asset(
-                  'assets/images/ic-point.png',
-                  color: AppColor.WHITE,
+                Image(
+                  image: ImageUtils.instance.getImageNetWork(AppImages.icPoint),
                   width: 25,
-                )
+                ),
               ],
             ),
           ],

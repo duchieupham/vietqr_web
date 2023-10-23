@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -90,7 +91,7 @@ class _WalletScreenState extends State<WalletScreen> {
             ButtonIconWidget(
               width: 120,
               height: 36,
-              pathIcon: 'assets/images/ic-contact-bank-white.png',
+              pathIcon: AppImages.icContactBankWhite,
               textSize: 12,
               title: 'Tạo QR Vcard',
               function: () {},
@@ -104,7 +105,7 @@ class _WalletScreenState extends State<WalletScreen> {
             ButtonIconWidget(
               width: 120,
               height: 36,
-              pathIcon: 'assets/images/ic-hook-blue.png',
+              pathIcon: AppImages.icHookBlue,
               textSize: 12,
               title: 'Tạo QR Link',
               function: () {},
@@ -367,8 +368,8 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
           child: Row(
             children: [
-              Image.asset(
-                pathIcon,
+              Image(
+                image: ImageUtils.instance.getImageNetWork(pathIcon),
                 color: isSelected ? AppColor.WHITE : AppColor.BLUE_TEXT,
                 height: index == 0 ? 14 : 26,
               ),
@@ -446,10 +447,11 @@ class _WalletScreenState extends State<WalletScreen> {
                           child: Padding(
                             padding:
                                 const EdgeInsets.only(bottom: 2.5, left: 8),
-                            child: Image.asset(
-                              dto.relation == 1
-                                  ? 'assets/images/gl-white.png'
-                                  : 'assets/images/personal-relation.png',
+                            child: Image(
+                              image: ImageUtils.instance.getImageNetWork(
+                                  dto.relation == 1
+                                      ? AppImages.glWhite
+                                      : AppImages.personalRelation),
                               color: AppColor.BLACK.withOpacity(0.7),
                               width: 10,
                             ),
@@ -669,7 +671,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Expanded(
             child: ButtonIconWidget(
               height: 40,
-              pathIcon: 'assets/images/ic-print-blue.png',
+              pathIcon: AppImages.icPrintBlue,
               title: '',
               bgColor: AppColor.WHITE.withOpacity(0.4),
               textColor: AppColor.ORANGE,
@@ -680,7 +682,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 );
                 html.window.open(
                     Uri.base.toString().replaceFirst(
-                        '/qr-wallet', '/qr_generate/print$paramData'),
+                        '/qr-wallet', '/qr-generate/print$paramData'),
                     'new tab');
               },
             ),
@@ -691,7 +693,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Expanded(
             child: ButtonIconWidget(
               height: 40,
-              pathIcon: 'assets/images/ic-edit-avatar-setting.png',
+              pathIcon: AppImages.icEditAvatarSetting,
               title: '',
               function: () {
                 String paramData = Session.instance.formatDataParamUrl(
@@ -714,7 +716,7 @@ class _WalletScreenState extends State<WalletScreen> {
           Expanded(
             child: ButtonIconWidget(
               height: 40,
-              pathIcon: 'assets/images/ic-copy-blue.png',
+              pathIcon: AppImages.icCopyBlue,
               title: '',
               function: () async {
                 if (isVietQRCard) {
@@ -805,12 +807,12 @@ class _WalletScreenState extends State<WalletScreen> {
           fit: type == 2 ? BoxFit.contain : BoxFit.cover);
     } else {
       if (type != 1) {
-        return const DecorationImage(
-            image: AssetImage('assets/images/ic-tb-qr.png'),
+        return DecorationImage(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icTbQr),
             fit: BoxFit.contain);
       } else {
-        return const DecorationImage(
-            image: AssetImage('assets/images/ic-viet-qr-small.png'),
+        return DecorationImage(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             fit: BoxFit.contain);
       }
     }

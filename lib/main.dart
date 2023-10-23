@@ -53,7 +53,6 @@ import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/providers/register_provider.dart';
 import 'package:VietQR/services/providers/search_clear_provider.dart';
-import 'package:VietQR/services/providers/theme_provider.dart';
 import 'package:VietQR/services/providers/transaction_list_provider.dart';
 import 'package:VietQR/services/providers/user_information_provider.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
@@ -244,7 +243,7 @@ final GoRouter _router = GoRouter(
           UserInformationView(),
     ),
     GoRoute(
-      path: '/qr_generate',
+      path: '/qr-generate',
       // redirect: (context, state) {
       //   Map<String, String> params = state.queryParams;
       //   return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
@@ -268,11 +267,11 @@ final GoRouter _router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/qr_generate/print',
+      path: '/qr-generate/print',
       redirect: (context, state) {
         Map<String, String> params = state.queryParams;
 
-        return '/qr_generate/print?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+        return '/qr-generate/print?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
       },
       builder: (BuildContext context, GoRouterState state) {
         Map<String, String> params = state.queryParams;
@@ -555,7 +554,6 @@ class _VietQRApp extends State<VietQRApp> {
         ],
         child: MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (context) => ThemeProvider()),
             ChangeNotifierProvider(create: (context) => PinProvider()),
             ChangeNotifierProvider(create: (context) => MenuProvider()),
             ChangeNotifierProvider(create: (context) => MenuCardProvider()),
@@ -580,32 +578,23 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => SettingProvider()),
             ChangeNotifierProvider(create: (context) => MerchantProvider()),
           ],
-          child: Consumer<ThemeProvider>(
-            builder: (context, themeSelect, child) {
-              return MaterialApp.router(
-                onGenerateTitle: (context) =>
-                    'VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam',
-                routerConfig: _router,
-                debugShowCheckedModeBanner: false,
-                themeMode: (themeSelect.themeSystem == AppColor.THEME_SYSTEM)
-                    ? ThemeMode.system
-                    : (themeSelect.themeSystem == AppColor.THEME_LIGHT)
-                        ? ThemeMode.light
-                        : ThemeMode.dark,
-                darkTheme: DefaultThemeData(context: context).darkTheme,
-                theme: DefaultThemeData(context: context).lightTheme,
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  MonthYearPickerLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  //  Locale('en'), // English
-                  Locale('vi'), // Vietnamese
-                ],
-              );
-            },
+          child: MaterialApp.router(
+            onGenerateTitle: (context) =>
+                'VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam',
+            routerConfig: _router,
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.light,
+            theme: DefaultThemeData(context: context).lightTheme,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              MonthYearPickerLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              //  Locale('en'), // English
+              Locale('vi'), // Vietnamese
+            ],
           ),
         ),
       ),

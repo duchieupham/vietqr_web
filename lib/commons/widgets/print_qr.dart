@@ -1,6 +1,8 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/events/qrcode_un_authen_event.dart';
@@ -69,9 +71,9 @@ class _QrGenerateState extends State<QrPrint> {
             listener: (context, state) {
           if (state is CreateSuccessfulState) {
             qrGeneratedDTO = state.dto;
-     Future.delayed(const Duration(seconds: 2), (){
-       html.window.print();
-     });
+            Future.delayed(const Duration(seconds: 2), () {
+              html.window.print();
+            });
           }
         }, builder: (context, state) {
           return _buildWidgetQr(state);
@@ -145,8 +147,8 @@ class _QrGenerateState extends State<QrPrint> {
                   data: 'https://vietqr.vn',
                   size: 250,
                   foregroundColor: AppColor.BLACK,
-                  embeddedImage:
-                      const AssetImage('assets/images/ic-viet-qr-small.png'),
+                  embeddedImage: ImageUtils.instance
+                      .getImageNetWork(AppImages.icVietQrSmall),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: const Size(30, 30),
                   ),

@@ -14,12 +14,6 @@ class AppImages {
   static String icMenuScanBank = 'assets/icons_menu/ic-menu-scan-bank.png';
   static String icMenuScanCCCD = 'assets/icons_menu/ic-menu-scan-cccd.png';
   static String icMenuSetting = 'assets/icons_menu/ic-menu-setting.png';
-  static String icCreateQR = 'assets/images/ic-viet-qr-small.png';
-
-  // Setting
-  static String icHookBlue = 'assets/images/ic-hook-blue.png';
-  static String icKeyBlue = 'assets/images/ic-key-blue.png';
-  static String icThemeBlue = 'assets/images/ic-theme-blue.png';
 
   static String avtVietqr = 'fdb25744-a258-4892-9c0d-3e63f9b02a0d';
   static String icBusiness3D = 'b569de96-c37b-4f1f-a195-b3bc11358fa7';
@@ -56,4 +50,34 @@ class AppImages {
   static String logoGoogle = '6ce99cd8-f557-4e2d-8803-ec42b7dd4769';
   static String logoYoutube = 'cf9c166d-bbda-4555-b813-f69718500f0b';
   static String logoZalo = '2c521c64-6c7c-4c1a-8fb6-f6031dc2bb33';
+
+  static String iconTransactionSuccess = 'a8a40f57-c23a-4f6f-aeba-4af1c0734d9d';
+
+  static String logoVietqrVn = '115a2a25-994b-4e53-bac9-64e6fc57651b';
+  static String icCardNfc = '8f6a8e92-4f40-4965-8c0f-37ff21167b32';
+  static String icPoint = 'e6e81638-183c-4154-9872-f7b98d7f6b56';
+  static String icCardBlue = 'c9a0b773-f495-458d-8340-d2220728a96d';
+  static String icContactAllWhite = '81e94e98-bad2-4dfe-a61a-88f194249f7a';
+  static String icContactBankWhite = '85f938a7-ad1b-4649-b3a6-7a7522fd58d4';
+  static String icContactSuggestWhite = '60c4cfa3-bf71-440c-8f5e-aa5ef5294a88';
+  static String icContactVietqrIdWhite = '9939664d-843d-4bca-9287-b690954f8b90';
+  static String icCopy = '96aecca2-80f4-4b03-a79d-0d73c1513e1f';
+  static String icCopyBlue = '73fab709-ce1a-4c84-8a77-b6f04c45bd04';
+  static String icEditAvatarSetting = '395ee1c3-f31f-4716-9433-85800a0eeb4c';
+  static String icDropdown = '7a68fc4d-73d3-4032-841f-4d67e4079de9';
+  static String icChecked = 'fd402202-3d81-4f88-a501-5c95a8cd334c';
+  static String glWhite = 'f59947d6-be8e-4389-b4c0-d33fa4267f7f';
+  static String icPersonalWhite = '9a633542-5a5c-4818-b668-ab8d89e44068';
+  static String icPrintBlue = '4004a9c0-de60-4862-a2f7-0177110b2f78';
+  static String icShareBlue = '7b68e735-6cca-4b40-a968-10784c2e780c';
+  static String icShareCode = '46aad9e5-d347-44af-ad80-1efc621b6558';
+  static String icHookBlue = 'c0e9fe9c-a729-4b86-b00e-51ea5a0e8245';
+  static String icKeyBlue = '3ede51b9-19e3-448b-b5e7-e655b8fc3bd5';
+  static String icTbQr = '0040b32a-0135-4c72-9275-b9f36f29d3f7';
+  static String icUncheck = 'a0519565-1065-4f3a-97fc-903a05a02a37';
+  static String icCard = '614c1189-fb1b-4b07-8931-43a78d0fe664';
+  static String logoGooglePlay = '19dbafd7-861c-48d5-ade5-523f76d842fc';
+  static String logoAppStore = '2a52f63d-3810-42bb-8d4f-a201e446b6b1';
+  static String qrContactOtherWhite = '189635ff-d4ab-41ba-bbfd-c68a1bf69953';
+  static String personalRelation = '78d3c977-25c8-452c-8022-0bdc2e4aa54c';
 }
