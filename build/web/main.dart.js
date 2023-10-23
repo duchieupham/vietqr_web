@@ -61010,7 +61010,7 @@ s.y=b.a
 s.a.toString}if(b instanceof A.NK){s=b.a
 r=a.C(t.b).x.d
 r===$&&A.b()
-r.sm(0,new A.cp("/qr-generate?token="+s.z,!0))}},
+r.sm(0,new A.cp("/qr-generated?token="+s.z,!0))}},
 $S:574}
 A.aWo.prototype={
 $2(a,b){var s=this.a
@@ -141362,7 +141362,7 @@ s($,"bMm","bdX",()=>A.bQ(null))
 s($,"bMp","bdZ",()=>A.bQ(null))
 r($,"bLW","ir",()=>A.bfk(null,t.uK))
 s($,"bP9","bte",()=>{var q=null
-return A.bxm($.ir(),A.a([A.eb(q,q,"/ecom",new A.baZ()),A.eb(new A.bb_(),q,"/ecom/login",new A.bb0()),A.eb(new A.bbb(),q,"/ecom/home",new A.bbm()),A.eb(new A.bbx(),q,"/ecom/register",new A.bbI()),A.eb(new A.bbT(),q,"/ecom/bank/create/:id",new A.bbZ()),A.eb(q,q,"/",new A.bc_()),A.eb(new A.bc0(),q,"/login",new A.bb1()),A.eb(new A.bb2(),new A.bb3(),"/register",new A.bb4()),A.eb(new A.bb5(),q,"/home",new A.bb6()),A.eb(new A.bb7(),q,"/dashboard",new A.bb8()),A.eb(new A.bb9(),q,"/qr/create/:id",new A.bba()),A.eb(new A.bbc(),q,"/user_information",new A.bbd()),A.eb(new A.bbe(),q,"/qr-generate",q),A.eb(new A.bbf(),q,"/qr-generate/print",new A.bbg()),A.eb(new A.bbh(),q,"/naptk",new A.bbi()),A.eb(new A.bbj(),q,"/create-vietqr",new A.bbk()),A.eb(new A.bbl(),new A.bbn(),"/mbbank-dkdv",new A.bbo()),A.eb(new A.bbp(),new A.bbq(),"/contact/introducing",new A.bbr()),A.eb(new A.bbs(),new A.bbt(),"/business",new A.bbu()),A.eb(new A.bbv(),new A.bbw(),"/merchant",new A.bby()),A.eb(new A.bbz(),new A.bbA(),"/transaction",new A.bbB()),A.eb(new A.bbC(),new A.bbD(),"/create-qr/:id",new A.bbE()),A.eb(new A.bbF(),new A.bbG(),"/create-qr",new A.bbH()),A.eb(new A.bbJ(),new A.bbK(),"/qr-wallet",new A.bbL()),A.eb(new A.bbM(),new A.bbN(),"/qr-wallet/detail",new A.bbO()),A.eb(new A.bbP(),new A.bbQ(),"/add-bank/step1",new A.bbR()),A.eb(new A.bbS(),new A.bbU(),"/add-bank/step2",new A.bbV()),A.eb(new A.bbW(),new A.bbX(),"/add-bank/step3",new A.bbY())],t.yo))})
+return A.bxm($.ir(),A.a([A.eb(q,q,"/ecom",new A.baZ()),A.eb(new A.bb_(),q,"/ecom/login",new A.bb0()),A.eb(new A.bbb(),q,"/ecom/home",new A.bbm()),A.eb(new A.bbx(),q,"/ecom/register",new A.bbI()),A.eb(new A.bbT(),q,"/ecom/bank/create/:id",new A.bbZ()),A.eb(q,q,"/",new A.bc_()),A.eb(new A.bc0(),q,"/login",new A.bb1()),A.eb(new A.bb2(),new A.bb3(),"/register",new A.bb4()),A.eb(new A.bb5(),q,"/home",new A.bb6()),A.eb(new A.bb7(),q,"/dashboard",new A.bb8()),A.eb(new A.bb9(),q,"/qr/create/:id",new A.bba()),A.eb(new A.bbc(),q,"/user_information",new A.bbd()),A.eb(new A.bbe(),q,"/qr-generated",q),A.eb(new A.bbf(),q,"/qr-generate/print",new A.bbg()),A.eb(new A.bbh(),q,"/naptk",new A.bbi()),A.eb(new A.bbj(),q,"/create-vietqr",new A.bbk()),A.eb(new A.bbl(),new A.bbn(),"/mbbank-dkdv",new A.bbo()),A.eb(new A.bbp(),new A.bbq(),"/contact/introducing",new A.bbr()),A.eb(new A.bbs(),new A.bbt(),"/business",new A.bbu()),A.eb(new A.bbv(),new A.bbw(),"/merchant",new A.bby()),A.eb(new A.bbz(),new A.bbA(),"/transaction",new A.bbB()),A.eb(new A.bbC(),new A.bbD(),"/create-qr/:id",new A.bbE()),A.eb(new A.bbF(),new A.bbG(),"/create-qr",new A.bbH()),A.eb(new A.bbJ(),new A.bbK(),"/qr-wallet",new A.bbL()),A.eb(new A.bbM(),new A.bbN(),"/qr-wallet/detail",new A.bbO()),A.eb(new A.bbP(),new A.bbQ(),"/add-bank/step1",new A.bbR()),A.eb(new A.bbS(),new A.bbU(),"/add-bank/step2",new A.bbV()),A.eb(new A.bbW(),new A.bbX(),"/add-bank/step3",new A.bbY())],t.yo))})
 r($,"bLT","brq",()=>new A.aEt(A.buv()))
 s($,"bMH","ce",()=>{var q,p,o,n=null
 A.bhK()
