@@ -75,7 +75,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {}
           }
           if (state is QRGenerateSuccessState) {
-            context.go('/qr-generate?token=${state.dto.transactionRefId}',
+            context.go('/qr-generated?token=${state.dto.transactionRefId}',
                 extra: true);
           }
         }, builder: (context, state) {

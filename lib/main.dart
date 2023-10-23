@@ -243,7 +243,7 @@ final GoRouter _router = GoRouter(
           UserInformationView(),
     ),
     GoRoute(
-      path: '/qr-generate',
+      path: '/qr-generated',
       // redirect: (context, state) {
       //   Map<String, String> params = state.queryParams;
       //   return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
