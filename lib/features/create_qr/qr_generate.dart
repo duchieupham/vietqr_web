@@ -264,99 +264,105 @@ class _QrGenerateState extends State<QrGenerate> {
     return (qrGeneratedDTO.qrCode.isEmpty)
         ? _buildQRCodeBlank(
             'Không thể tạo mã VietQR \n mã ngân hàng không hợp lệ')
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        : ListView(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 32, bottom: 20),
-                child: Text(
-                  'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              const Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 32, bottom: 20),
+                  child: Text(
+                    'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                 ),
               ),
-              SizedBox(
-                width: 360,
-                child: RepaintBoundaryWidget(
-                    globalKey: globalKey,
-                    builder: (key) {
-                      return VietQRWidget(
-                        qrGeneratedDTO: qrGeneratedDTO,
-                      );
-                    }),
+              UnconstrainedBox(
+                child: SizedBox(
+                  width: 360,
+                  child: RepaintBoundaryWidget(
+                      globalKey: globalKey,
+                      builder: (key) {
+                        return VietQRWidget(
+                          qrGeneratedDTO: qrGeneratedDTO,
+                        );
+                      }),
+                ),
               ),
               const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: 360,
-                height: 40,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: ButtonIconWidget(
-                        height: 40,
-                        pathIcon: AppImages.icPrintBlue,
-                        title: '',
-                        function: () async {
-                          String paramData = Session.instance
-                              .formatDataParamUrl(qrGeneratedDTO,
-                                  showBankAccount: 1);
-                          html.window.open(
-                              Uri.base.toString().replaceFirst('/qr_generate',
-                                  '/qr-generate/print$paramData'),
-                              'new tab');
-                        },
-                        bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
-                        textColor: AppColor.ORANGE,
+              UnconstrainedBox(
+                child: SizedBox(
+                  width: 360,
+                  height: 40,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ButtonIconWidget(
+                          height: 40,
+                          pathIcon: AppImages.icPrintBlue,
+                          title: '',
+                          function: () async {
+                            String paramData = Session.instance
+                                .formatDataParamUrl(qrGeneratedDTO,
+                                    showBankAccount: 1);
+                            html.window.open(
+                                Uri.base.toString().replaceFirst('/qr_generate',
+                                    '/qr-generate/print$paramData'),
+                                'new tab');
+                          },
+                          bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+                          textColor: AppColor.ORANGE,
+                        ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10),
-                    ),
-                    Expanded(
-                      child: ButtonIconWidget(
-                        height: 40,
-                        pathIcon: AppImages.icEditAvatarSetting,
-                        title: '',
-                        function: () {
-                          saveImage();
-                        },
-                        bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
-                        textColor: AppColor.RED_CALENDAR,
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10),
-                    ),
-                    Expanded(
-                      child: ButtonIconWidget(
-                        height: 40,
-                        pathIcon: AppImages.icCopyBlue,
-                        title: '',
-                        function: () async {
-                          await FlutterClipboard.copy(ShareUtils.instance
-                                  .getTextSharing(qrGeneratedDTO))
-                              .then(
-                            (value) => Fluttertoast.showToast(
-                              msg: 'Đã sao chép',
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Theme.of(context).cardColor,
-                              textColor: Theme.of(context).hintColor,
-                              fontSize: 15,
-                              webBgColor: 'rgba(255, 255, 255)',
-                              webPosition: 'center',
-                            ),
-                          );
-                        },
-                        bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
-                        textColor: AppColor.BLUE_TEXT,
+                      Expanded(
+                        child: ButtonIconWidget(
+                          height: 40,
+                          pathIcon: AppImages.icEditAvatarSetting,
+                          title: '',
+                          function: () {
+                            saveImage();
+                          },
+                          bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+                          textColor: AppColor.RED_CALENDAR,
+                        ),
                       ),
-                    ),
-                  ],
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
+                      ),
+                      Expanded(
+                        child: ButtonIconWidget(
+                          height: 40,
+                          pathIcon: AppImages.icCopyBlue,
+                          title: '',
+                          function: () async {
+                            await FlutterClipboard.copy(ShareUtils.instance
+                                    .getTextSharing(qrGeneratedDTO))
+                                .then(
+                              (value) => Fluttertoast.showToast(
+                                msg: 'Đã sao chép',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Theme.of(context).cardColor,
+                                textColor: Theme.of(context).hintColor,
+                                fontSize: 15,
+                                webBgColor: 'rgba(255, 255, 255)',
+                                webPosition: 'center',
+                              ),
+                            );
+                          },
+                          bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+                          textColor: AppColor.BLUE_TEXT,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
