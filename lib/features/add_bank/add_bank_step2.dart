@@ -776,30 +776,32 @@ class _AddBankView extends State<AddBankStep2> {
             const SizedBox(
               width: 20,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Padding(padding: EdgeInsets.only(top: 10)),
-                Text(
-                  dto.bankCode,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(top: 2)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Text(
-                    dto.bankName,
-                    textAlign: TextAlign.center,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  Text(
+                    dto.bankCode,
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
+                  const Padding(padding: EdgeInsets.only(top: 2)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      dto.bankName,
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
