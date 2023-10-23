@@ -30,6 +30,16 @@ class StringUtils {
     return text.trim() == confirmText.trim();
   }
 
+  static String formatMoney(String money) {
+    if (money.length > 2) {
+      var value = money;
+      value = value.replaceAll(RegExp(r'\D'), '');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.');
+      return value;
+    }
+    return money;
+  }
+
   bool isValidFullName(String text) {
     bool result = false;
     final RegExp regExp = RegExp(_fullNamePattern);
@@ -90,7 +100,7 @@ class StringUtils {
     if (value == null) {
       return '0';
     }
-    var numberFormat = NumberFormat.decimalPattern('vi-VI');
+    var numberFormat = NumberFormat.decimalPattern('en');
     return numberFormat.format(value);
   }
 }

@@ -8,6 +8,7 @@ class ButtonWidget extends StatelessWidget {
   final Color bgColor;
   final VoidCallback function;
   final double? height;
+  final double textSize;
   final double? borderRadius;
 
   const ButtonWidget({
@@ -18,6 +19,7 @@ class ButtonWidget extends StatelessWidget {
     required this.bgColor,
     required this.function,
     this.height,
+    this.textSize = 14,
     this.borderRadius,
   }) : super(key: key);
 
@@ -37,9 +39,7 @@ class ButtonWidget extends StatelessWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: textColor,
-          ),
+          style: TextStyle(color: textColor, fontSize: textSize),
         ),
       ),
     );

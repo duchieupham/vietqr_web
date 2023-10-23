@@ -1,11 +1,12 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/setting/events/card_num_event.dart';
 import 'package:VietQR/features/setting/states/card_num_state.dart';
 import 'package:VietQR/models/account_card_num_dto.dart';
-import 'package:VietQR/services/providers/card_number_login_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -122,8 +123,8 @@ class CardNumberSettingWidget extends StatelessWidget {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
-            backgroundColor: DefaultTheme.WHITE,
-            textColor: DefaultTheme.BLACK,
+            backgroundColor: AppColor.WHITE,
+            textColor: AppColor.BLACK,
             fontSize: 15,
             webBgColor: 'rgba(255, 255, 255)',
             webPosition: 'center',
@@ -180,8 +181,8 @@ class CardNumberSettingWidget extends StatelessWidget {
               ),
             ),
             const Padding(padding: EdgeInsets.only(bottom: 50)),
-            Image.asset(
-              'assets/images/ic-card-nfc.png',
+            Image(
+              image: ImageUtils.instance.getImageNetWork(AppImages.icCardNfc),
               width: 200,
               height: 200,
             ),
@@ -206,7 +207,7 @@ class CardNumberSettingWidget extends StatelessWidget {
                                       horizontal: 2.5),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: DefaultTheme.GREY_TEXT,
+                                    color: AppColor.GREY_TEXT,
                                   ),
                                 ),
                               ),
@@ -228,7 +229,7 @@ class CardNumberSettingWidget extends StatelessWidget {
                                           horizontal: 2.5),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: DefaultTheme.GREY_TEXT,
+                                        color: AppColor.GREY_TEXT,
                                       ),
                                     ),
                                   ),
@@ -250,7 +251,7 @@ class CardNumberSettingWidget extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 2.5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: DefaultTheme.GREY_TEXT,
+                          color: AppColor.GREY_TEXT,
                         ),
                       ),
                     ),
@@ -287,7 +288,7 @@ class CardNumberSettingWidget extends StatelessWidget {
                         );
                       },
                       bgColor: Theme.of(context).canvasColor,
-                      textColor: DefaultTheme.RED_TEXT,
+                      textColor: AppColor.RED_TEXT,
                     ),
                   )
                 : const Text(

@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/user_information_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -129,8 +131,9 @@ class RegisterView extends StatelessWidget {
                                   ),
                                 ),
                                 const Spacer(),
-                                Image.asset(
-                                  'assets/images/logo-vietqr-vn.png',
+                                Image(
+                                  image: ImageUtils.instance
+                                      .getImageNetWork(AppImages.logoVietqrVn),
                                   width: 100,
                                   height: 50,
                                 ),
@@ -168,7 +171,7 @@ class RegisterView extends StatelessWidget {
                               child: Text(
                                 'Số điện thoại không đúng định dạng.',
                                 style: TextStyle(
-                                    color: DefaultTheme.RED_TEXT, fontSize: 13),
+                                    color: AppColor.RED_TEXT, fontSize: 13),
                               ),
                             ),
                           ),
@@ -203,7 +206,7 @@ class RegisterView extends StatelessWidget {
                               child: Text(
                                 'Mật khẩu bao gồm 6 số.',
                                 style: TextStyle(
-                                    color: DefaultTheme.RED_TEXT, fontSize: 13),
+                                    color: AppColor.RED_TEXT, fontSize: 13),
                               ),
                             ),
                           ),
@@ -238,7 +241,7 @@ class RegisterView extends StatelessWidget {
                               child: Text(
                                 'Xác nhận Mật khẩu không trùng khớp.',
                                 style: TextStyle(
-                                    color: DefaultTheme.RED_TEXT, fontSize: 13),
+                                    color: AppColor.RED_TEXT, fontSize: 13),
                               ),
                             ),
                           ),
@@ -308,7 +311,7 @@ class RegisterView extends StatelessWidget {
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
       decoration: BoxDecoration(
-        color: DefaultTheme.GREY_BUTTON,
+        color: AppColor.GREY_BUTTON,
         borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
@@ -330,7 +333,7 @@ class RegisterView extends StatelessWidget {
               height: 40,
               text: 'Trang chủ',
               borderRadius: 5,
-              textColor: DefaultTheme.GREEN,
+              textColor: AppColor.GREEN,
               bgColor: Theme.of(context).canvasColor,
               function: () {
                 backToPreviousPage(context);
@@ -345,8 +348,8 @@ class RegisterView extends StatelessWidget {
                 height: 40,
                 text: 'Đăng ký',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.GREEN,
                 function: () async {
                   Provider.of<RegisterProvider>(context, listen: false)
                       .updateErrs(
@@ -427,7 +430,7 @@ class RegisterView extends StatelessWidget {
           ),
           const Text(
             '*',
-            style: TextStyle(fontSize: 16, color: DefaultTheme.RED_TEXT),
+            style: TextStyle(fontSize: 16, color: AppColor.RED_TEXT),
           )
         ],
       ),

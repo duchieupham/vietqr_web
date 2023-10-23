@@ -1,9 +1,9 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/features/setting/views/add_hook_view.dart';
 import 'package:VietQR/features/setting/views/get_key_view.dart';
 import 'package:VietQR/features/setting/views/setting_bdsd_screen.dart';
-import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,18 +25,11 @@ class _PopupSettingState extends State<PopupSetting> {
     });
   }
 
-  List<Widget> pages = [
-    const ThemeSettingWidget(),
-    const SettingBDSD(),
-    GetKeyView(),
-    AddHookView()
-  ];
+  List<Widget> pages = [const SettingBDSD(), GetKeyView(), AddHookView()];
   String getTitle() {
     if (indexPage == 0) {
-      return 'Giao diện';
-    } else if (indexPage == 1) {
       return 'Cài đặt nhận biến động số dư';
-    } else if (indexPage == 2) {
+    } else if (indexPage == 1) {
       return 'Get key';
     }
     return 'Thêm hook';
@@ -123,18 +116,15 @@ class _PopupSettingState extends State<PopupSetting> {
         const SizedBox(
           height: 4,
         ),
-        _buildItemTitle(AppImages.icThemeBlue, 'Giao diện', () {
+        _buildItemTitle(AppImages.icKeyBlue, 'Setting BĐSD', () {
           changePage(0);
         }, isSelected: indexPage == 0),
-        _buildItemTitle(AppImages.icKeyBlue, 'Setting BĐSD', () {
+        _buildItemTitle(AppImages.icKeyBlue, 'Get key', () {
           changePage(1);
         }, isSelected: indexPage == 1),
-        _buildItemTitle(AppImages.icKeyBlue, 'Get key', () {
+        _buildItemTitle(AppImages.icHookBlue, 'Thêm hook', () {
           changePage(2);
         }, isSelected: indexPage == 2),
-        _buildItemTitle(AppImages.icHookBlue, 'Thêm hook', () {
-          changePage(3);
-        }, isSelected: indexPage == 3),
       ],
     );
   }
@@ -145,13 +135,12 @@ class _PopupSettingState extends State<PopupSetting> {
       onTap: onTab,
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-          color:
-              isSelected ? DefaultTheme.ITEM_MENU_SELECTED : Colors.transparent,
+          color: isSelected ? AppColor.ITEM_MENU_SELECTED : Colors.transparent,
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              Image.asset(
-                pathIcon,
+              Image(
+                image: ImageUtils.instance.getImageNetWork(pathIcon),
                 height: 30,
                 width: 45,
               ),

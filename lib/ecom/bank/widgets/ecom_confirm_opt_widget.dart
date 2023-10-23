@@ -151,7 +151,7 @@ class _ConfirmOTPWidget extends State<ECOMConfirmOTPWidget> {
                         const TextSpan(text: 'Mã OTP có hiệu lực trong vòng '),
                         TextSpan(
                           text: value.toString(),
-                          style: const TextStyle(color: DefaultTheme.GREEN),
+                          style: const TextStyle(color: AppColor.GREEN),
                         ),
                         const TextSpan(text: 's.'),
                       ],
@@ -170,7 +170,7 @@ class _ConfirmOTPWidget extends State<ECOMConfirmOTPWidget> {
                           text: 'Gửi lại',
                           style: const TextStyle(
                             decoration: TextDecoration.underline,
-                            color: DefaultTheme.GREEN,
+                            color: AppColor.GREEN,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -193,8 +193,8 @@ class _ConfirmOTPWidget extends State<ECOMConfirmOTPWidget> {
             height: 40,
             borderRadius: 5,
             text: 'Xác thực',
-            textColor: DefaultTheme.WHITE,
-            bgColor: DefaultTheme.GREEN,
+            textColor: AppColor.WHITE,
+            bgColor: AppColor.GREEN,
             function: () {
               if (otpController.text.isNotEmpty) {
                 Navigator.pop(context);

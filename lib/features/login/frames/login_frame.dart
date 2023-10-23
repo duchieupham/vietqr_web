@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,13 @@ class LoginFrame extends StatelessWidget {
       height: height,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/bg-qr.png'),
-          fit: BoxFit.cover,
+        gradient: LinearGradient(
+          colors: [
+            AppColor.WHITE,
+            AppColor.BLUE_LIGHT,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
         ),
       ),
       child: SingleChildScrollView(

@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 
 class SettingProvider with ChangeNotifier {
   bool _validateHosting = false;
+
   bool get validateHosting => _validateHosting;
 
   bool _validateEndpoint = false;
+
   bool get validateEndpoint => _validateEndpoint;
 
   bool _enableVoice =
       UserInformationHelper.instance.getAccountSetting().voiceMobile;
+
   bool get enableVoice => _enableVoice;
 
-  List<String> _bankIds = [];
+  final List<String> _bankIds = [];
+
   List<String> get bankIds => _bankIds;
 
-  BankAccountDTO _bankAccountSelected = const BankAccountDTO(
+  BankAccountDTO _bankAccountSelected = BankAccountDTO(
       bankAccount: '',
       id: '',
       userBankName: '',
@@ -29,6 +33,7 @@ class SettingProvider with ChangeNotifier {
       branchName: '',
       businessName: '',
       isAuthenticated: false);
+
   BankAccountDTO get bankAccountSelected => _bankAccountSelected;
 
   void updateBankAccountSelected(BankAccountDTO value) {

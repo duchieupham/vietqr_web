@@ -36,7 +36,7 @@ class ItemMenuHome extends StatefulWidget {
 }
 
 class _ItemMenuHomeState extends State<ItemMenuHome> {
-  double heightItem = 40;
+  double heightItem = 45;
   bool openListDropDown = false;
   bool amIHovering = false;
   bool openMenuCard = true;
@@ -63,9 +63,9 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   getBgItem() {
     if (widget.isSelect) {
-      return DefaultTheme.ITEM_MENU_SELECTED;
+      return AppColor.BLUE_TEXT.withOpacity(0.30);
     } else if (amIHovering) {
-      return DefaultTheme.GREY_BUTTON;
+      return AppColor.GREY_BUTTON;
     }
     return Colors.transparent;
   }
@@ -79,7 +79,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
             color: widget.isSelect
-                ? DefaultTheme.ITEM_MENU_SELECTED
+                ? AppColor.BLUE_TEXT.withOpacity(0.3)
                 : Colors.transparent,
             width: 40,
             height: 40,
@@ -99,7 +99,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
             margin: const EdgeInsets.only(bottom: 12),
             padding: widget.paddingIcon,
             color: widget.isSelect
-                ? DefaultTheme.ITEM_MENU_SELECTED
+                ? AppColor.ITEM_MENU_SELECTED
                 : Colors.transparent,
             width: 40,
             height: 40,
@@ -144,13 +144,16 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                          fontSize: widget.titleSize,
-                          color: DefaultTheme.RED_TEXT),
+                          fontSize: widget.titleSize, color: AppColor.RED_TEXT),
                     )
                   else
                     Text(
                       widget.title,
-                      style: TextStyle(fontSize: widget.titleSize),
+                      style: TextStyle(
+                          fontSize: widget.titleSize,
+                          color: widget.isSelect
+                              ? AppColor.BLUE_TEXT
+                              : AppColor.BLACK),
                     ),
                   const Spacer(),
                   if (widget.enableMenuCard)
@@ -159,7 +162,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                       width: 20,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: DefaultTheme.CARD_CODE_BG,
+                          color: AppColor.CARD_CODE_BG,
                           borderRadius: BorderRadius.circular(15)),
                       child: Transform.rotate(
                         angle: !openMenuCard ? -math.pi / 2 : math.pi / 2,
@@ -174,7 +177,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                       height: 20,
                       width: 20,
                       decoration: BoxDecoration(
-                          color: DefaultTheme.CARD_CODE_BG,
+                          color: AppColor.CARD_CODE_BG,
                           borderRadius: BorderRadius.circular(15)),
                       child: Transform.rotate(
                         angle: openListDropDown ? math.pi : 0,

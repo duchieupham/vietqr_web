@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
@@ -181,7 +182,7 @@ class BusinessInformationView extends StatelessWidget {
                                   title: 'Mã số thuế',
                                   descriptionColor:
                                       (businessDetailDTO.taxCode.isEmpty)
-                                          ? DefaultTheme.GREY_TEXT
+                                          ? AppColor.GREY_TEXT
                                           : null,
                                   description:
                                       (businessDetailDTO.taxCode.isEmpty)
@@ -199,7 +200,7 @@ class BusinessInformationView extends StatelessWidget {
                           title: 'Quản trị viên',
                           label:
                               '${businessDetailDTO.managers.length} quản trị viên',
-                          color: DefaultTheme.BLUE_TEXT,
+                          color: AppColor.BLUE_TEXT,
                           icon: Icons.people_alt_rounded,
                           // function: () {},
                           // functionName: 'Cập nhật',
@@ -236,7 +237,7 @@ class BusinessInformationView extends StatelessWidget {
                           title: 'Chi nhánh',
                           label:
                               '${businessDetailDTO.branchs.length} chi nhánh',
-                          color: DefaultTheme.GREEN,
+                          color: AppColor.GREEN,
                           icon: Icons.business_rounded,
                         ),
                         SizedBox(
@@ -306,9 +307,8 @@ class BusinessInformationView extends StatelessWidget {
                                                   //       .BUSINESS_TRANSACTION,
                                                   // );
                                                 },
-                                                bgColor:
-                                                    DefaultTheme.TRANSPARENT,
-                                                textColor: DefaultTheme.GREEN,
+                                                bgColor: AppColor.TRANSPARENT,
+                                                textColor: AppColor.GREEN,
                                               ),
                                             )
                                           : _buildTransactionItem(
@@ -427,7 +427,7 @@ class BusinessInformationView extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                 ],
@@ -507,7 +507,7 @@ class BusinessInformationView extends StatelessWidget {
               },
               child: const Icon(
                 Icons.copy_rounded,
-                color: DefaultTheme.GREY_TEXT,
+                color: AppColor.GREY_TEXT,
                 size: 15,
               ),
             ),
@@ -609,8 +609,8 @@ class BusinessInformationView extends StatelessWidget {
             context: context,
             title: 'Thành viên',
             descriptionColor: (dto.totalMember == 0)
-                ? DefaultTheme.GREY_TEXT
-                : DefaultTheme.BLUE_TEXT,
+                ? AppColor.GREY_TEXT
+                : AppColor.BLUE_TEXT,
             description: (dto.totalMember == 0)
                 ? 'Chưa có thành viên'
                 : '${dto.totalMember} thành viên',
@@ -653,10 +653,10 @@ class BusinessInformationView extends StatelessWidget {
                                     width: 30,
                                     height: 30,
                                     decoration: BoxDecoration(
-                                      color: DefaultTheme.WHITE,
+                                      color: AppColor.WHITE,
                                       borderRadius: BorderRadius.circular(30),
                                       border: Border.all(
-                                        color: DefaultTheme.GREY_TOP_TAB_BAR,
+                                        color: AppColor.GREY_TOP_TAB_BAR,
                                         width: 0.5,
                                       ),
                                       image: DecorationImage(
@@ -697,7 +697,7 @@ class BusinessInformationView extends StatelessWidget {
                                     },
                                     child: const Icon(
                                       Icons.copy_rounded,
-                                      color: DefaultTheme.GREY_TEXT,
+                                      color: AppColor.GREY_TEXT,
                                       size: 15,
                                     ),
                                   ),
@@ -719,7 +719,7 @@ class BusinessInformationView extends StatelessWidget {
               : _buildElementInformation(
                   context: context,
                   title: 'TK đối soát',
-                  descriptionColor: DefaultTheme.GREY_TEXT,
+                  descriptionColor: AppColor.GREY_TEXT,
                   description: 'Chưa liên kết',
                 ),
           const Padding(padding: EdgeInsets.only(top: 10)),
@@ -740,8 +740,8 @@ class BusinessInformationView extends StatelessWidget {
                 height: 800,
               );
             },
-            bgColor: DefaultTheme.TRANSPARENT,
-            textColor: DefaultTheme.BLUE_TEXT,
+            bgColor: AppColor.TRANSPARENT,
+            textColor: AppColor.BLUE_TEXT,
           ),
         ],
       ),
@@ -775,7 +775,9 @@ class BusinessInformationView extends StatelessWidget {
                   child: SizedBox(
                     width: 35,
                     height: 35,
-                    child: Image.asset('assets/images/ic-avatar.png'),
+                    child: Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation)),
                   ),
                 ),
           const Padding(padding: EdgeInsets.only(left: 10)),
@@ -835,7 +837,7 @@ class MyPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: DefaultTheme.TRANSPARENT,
+      color: AppColor.TRANSPARENT,
       alignment: Alignment.center,
       child: child, // Widget được pin
     );

@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -11,10 +13,10 @@ import 'package:VietQR/ecom/login/frames/ecom_login_frame.dart';
 import 'package:VietQR/ecom/login/model/account_login_dto.dart';
 import 'package:VietQR/ecom/login/states/ecom_login_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
-import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 import '../blocs/ecom_login_bloc.dart';
 
@@ -138,11 +140,12 @@ class _Login extends State<ECOMLogin> {
         const SizedBox(
           height: 10,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           width: 200,
           fit: BoxFit.fitWidth,
         ),
+
         const SizedBox(
           height: 30,
         ),
@@ -211,8 +214,8 @@ class _Login extends State<ECOMLogin> {
                 height: 40,
                 text: 'Đăng nhập',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.GREEN,
                 function: () {
                   login(context);
                 },
@@ -235,7 +238,7 @@ class _Login extends State<ECOMLogin> {
                   'hoặc',
                   style: TextStyle(
                     fontSize: 13,
-                    color: DefaultTheme.GREY_TEXT,
+                    color: AppColor.GREY_TEXT,
                   ),
                 ),
               ),
@@ -251,8 +254,8 @@ class _Login extends State<ECOMLogin> {
           height: 40,
           text: 'Đăng ký',
           borderRadius: 5,
-          textColor: DefaultTheme.WHITE,
-          bgColor: DefaultTheme.BLUE_TEXT,
+          textColor: AppColor.WHITE,
+          bgColor: AppColor.BLUE_TEXT,
           function: () {
             context.go('/ecom/register');
           },

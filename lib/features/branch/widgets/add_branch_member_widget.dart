@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -80,7 +81,7 @@ class AddBranchMemberWidget extends StatelessWidget {
                     child: const Text(
                       'Xong',
                       style: TextStyle(
-                        color: DefaultTheme.GREEN,
+                        color: AppColor.GREEN,
                       ),
                     ),
                   ),
@@ -253,7 +254,10 @@ class AddBranchMemberWidget extends StatelessWidget {
                   child: SizedBox(
                     width: 40,
                     height: 40,
-                    child: Image.asset('assets/images/ic-avatar.png'),
+                    child: Image(
+                      image: ImageUtils.instance
+                          .getImageNetWork(AppImages.personalRelation),
+                    ),
                   ),
                 ),
           const Padding(padding: EdgeInsets.only(left: 10)),
@@ -272,30 +276,30 @@ class AddBranchMemberWidget extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: DefaultTheme.GREY_VIEW,
+                    color: AppColor.GREY_VIEW,
                   ),
                   child: Row(children: const [
                     Icon(
                       Icons.check_rounded,
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                       size: 13,
                     ),
                     Padding(padding: EdgeInsets.only(left: 5)),
                     Text(
                       'Đã thêm',
-                      style: TextStyle(color: DefaultTheme.GREEN),
+                      style: TextStyle(color: AppColor.GREEN),
                     )
                   ]),
                 )
               : (existed == TypeAddMember.AWAIT)
                   ? Container(
-                      color: DefaultTheme.TRANSPARENT,
+                      color: AppColor.TRANSPARENT,
                       margin: const EdgeInsets.only(right: 8),
                       width: 24,
                       height: 24,
                       child: const Center(
                         child: CircularProgressIndicator(
-                          color: DefaultTheme.GREEN,
+                          color: AppColor.GREEN,
                         ),
                       ),
                     )
@@ -317,20 +321,20 @@ class AddBranchMemberWidget extends StatelessWidget {
                             vertical: 5, horizontal: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: DefaultTheme.GREEN,
+                          color: AppColor.GREEN,
                         ),
                         child: Row(
                           children: const [
                             Icon(
                               Icons.add_rounded,
-                              color: DefaultTheme.WHITE,
+                              color: AppColor.WHITE,
                               size: 13,
                             ),
                             Padding(padding: EdgeInsets.only(left: 5)),
                             Text(
                               'Thêm',
                               style: TextStyle(
-                                color: DefaultTheme.WHITE,
+                                color: AppColor.WHITE,
                               ),
                             )
                           ],

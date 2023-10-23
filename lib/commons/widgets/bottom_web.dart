@@ -1,4 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -41,7 +43,7 @@ class BottomWeb extends StatelessWidget {
                             width: 60,
                             child: Text(
                               'Email: ',
-                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                              style: TextStyle(color: AppColor.GREY_TEXT),
                             ),
                           ),
                           InkWell(
@@ -55,7 +57,7 @@ class BottomWeb extends StatelessWidget {
                             child: const Text(
                               'sales@vietqr.vn',
                               style: TextStyle(
-                                color: DefaultTheme.BLUE_TEXT,
+                                color: AppColor.BLUE_TEXT,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
@@ -70,7 +72,7 @@ class BottomWeb extends StatelessWidget {
                             width: 60,
                             child: Text(
                               'Hotline: ',
-                              style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                              style: TextStyle(color: AppColor.GREY_TEXT),
                             ),
                           ),
                           InkWell(
@@ -109,10 +111,11 @@ class BottomWeb extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
-                  Image.asset(
-                    'assets/images/logo-vietqr-vn.png',
-                    width: 120,
-                  ),
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.logoVietqrVn),
+                    width: 80,
+                  )
                 ],
               ),
               const SizedBox(
@@ -122,7 +125,7 @@ class BottomWeb extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              _buildUrlSystem(isVertical: constraints.maxWidth < 880),
+              _buildUrlSystem(isVertical: constraints.maxWidth < 980),
             ],
           ),
         );
@@ -153,7 +156,7 @@ class BottomWeb extends StatelessWidget {
                       width: 60,
                       child: Text(
                         'Email: ',
-                        style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                        style: TextStyle(color: AppColor.GREY_TEXT),
                       ),
                     ),
                     InkWell(
@@ -167,7 +170,7 @@ class BottomWeb extends StatelessWidget {
                       child: const Text(
                         'sales@vietqr.vn',
                         style: TextStyle(
-                          color: DefaultTheme.BLUE_TEXT,
+                          color: AppColor.BLUE_TEXT,
                           decoration: TextDecoration.underline,
                         ),
                       ),
@@ -182,7 +185,7 @@ class BottomWeb extends StatelessWidget {
                       width: 60,
                       child: Text(
                         'Hotline: ',
-                        style: TextStyle(color: DefaultTheme.GREY_TEXT),
+                        style: TextStyle(color: AppColor.GREY_TEXT),
                       ),
                     ),
                     InkWell(
@@ -229,10 +232,11 @@ class BottomWeb extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: _buildUrlSystem(isVertical: true)),
             const Spacer(),
-            Image.asset(
-              'assets/images/logo-vietqr-vn.png',
-              width: 120,
-            ),
+            Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+              width: 80,
+            )
           ],
         ),
       );
@@ -260,7 +264,7 @@ class BottomWeb extends StatelessWidget {
               _buildButton(
                 width: 280,
                 text: 'App Store',
-                assetImage: 'assets/images/logo-app-store.png',
+                assetImage: AppImages.logoAppStore,
                 onTap: () async {
                   await launchUrl(Uri.parse(
                       'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -270,7 +274,7 @@ class BottomWeb extends StatelessWidget {
               _buildButton(
                 width: 280,
                 text: 'Google Play',
-                assetImage: 'assets/images/logo-google-play.png',
+                assetImage: AppImages.logoGooglePlay,
                 onTap: () async {
                   await launchUrl(Uri.parse(
                       'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -286,7 +290,7 @@ class BottomWeb extends StatelessWidget {
                 _buildButton(
                   width: 280,
                   text: 'App Store',
-                  assetImage: 'assets/images/logo-app-store.png',
+                  assetImage: AppImages.logoAppStore,
                   onTap: () async {
                     await launchUrl(Uri.parse(
                         'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -296,7 +300,7 @@ class BottomWeb extends StatelessWidget {
                 _buildButton(
                   width: 280,
                   text: 'Google Play',
-                  assetImage: 'assets/images/logo-google-play.png',
+                  assetImage: AppImages.logoGooglePlay,
                   onTap: () async {
                     await launchUrl(Uri.parse(
                         'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -310,7 +314,7 @@ class BottomWeb extends StatelessWidget {
   }
 
   Widget _buildUrlSystem({bool isVertical = false}) {
-    if (isVertical) {
+    if (!isVertical) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -321,7 +325,9 @@ class BottomWeb extends StatelessWidget {
                 ),
           ),
           const Padding(padding: EdgeInsets.only(top: 25)),
-          const SizedBox(width: 16,),
+          const SizedBox(
+            width: 16,
+          ),
           SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -330,13 +336,13 @@ class BottomWeb extends StatelessWidget {
                 const SizedBox(
                     height: 12,
                     child: VerticalDivider(
-                      color: DefaultTheme.GREY_LIGHT,
+                      color: AppColor.GREY_LIGHT,
                     )),
                 _buildItemTitle('vietqr.com'),
                 const SizedBox(
                     height: 12,
                     child: VerticalDivider(
-                      color: DefaultTheme.GREY_LIGHT,
+                      color: AppColor.GREY_LIGHT,
                     )),
                 _buildItemTitle('vietqr.org'),
               ],
@@ -364,13 +370,13 @@ class BottomWeb extends StatelessWidget {
               const SizedBox(
                   height: 12,
                   child: VerticalDivider(
-                    color: DefaultTheme.GREY_LIGHT,
+                    color: AppColor.GREY_LIGHT,
                   )),
               _buildItemTitle('vietqr.com'),
               const SizedBox(
                   height: 12,
                   child: VerticalDivider(
-                    color: DefaultTheme.GREY_LIGHT,
+                    color: AppColor.GREY_LIGHT,
                   )),
               _buildItemTitle('vietqr.org'),
             ],
@@ -388,8 +394,7 @@ class BottomWeb extends StatelessWidget {
       child: Text(
         text,
         style: const TextStyle(
-            decoration: TextDecoration.underline,
-            color: DefaultTheme.BLUE_TEXT),
+            decoration: TextDecoration.underline, color: AppColor.BLUE_TEXT),
       ),
     );
   }
@@ -406,14 +411,14 @@ class BottomWeb extends StatelessWidget {
         width: width * 0.4,
         height: 28,
         padding: const EdgeInsets.all(0),
-        bgColor: DefaultTheme.BLACK,
+        bgColor: AppColor.BLACK,
         borderRadius: 5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
+            Image(
+              image: ImageUtils.instance.getImageNetWork(assetImage),
               width: 18,
               height: 18,
             ),
@@ -426,12 +431,11 @@ class BottomWeb extends StatelessWidget {
               children: [
                 const Text(
                   'Tải ứng dụng trên',
-                  style: TextStyle(color: DefaultTheme.WHITE, fontSize: 6),
+                  style: TextStyle(color: AppColor.WHITE, fontSize: 6),
                 ),
                 Text(
                   text,
-                  style:
-                      const TextStyle(color: DefaultTheme.WHITE, fontSize: 12),
+                  style: const TextStyle(color: AppColor.WHITE, fontSize: 12),
                 ),
               ],
             )

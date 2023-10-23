@@ -59,8 +59,8 @@ class PopupConfirmLogout extends StatelessWidget {
                   child: ButtonWidget(
                     height: 40,
                     text: 'Đóng',
-                    textColor: DefaultTheme.GREEN,
-                    bgColor: DefaultTheme.WHITE,
+                    textColor: AppColor.GREEN,
+                    bgColor: AppColor.WHITE,
                     borderRadius: 5,
                     function: () {
                       Navigator.pop(context);
@@ -74,8 +74,8 @@ class PopupConfirmLogout extends StatelessWidget {
                   child: ButtonWidget(
                     height: 40,
                     text: 'Xác nhận',
-                    textColor: DefaultTheme.WHITE,
-                    bgColor: DefaultTheme.GREEN,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.GREEN,
                     borderRadius: 5,
                     function: () {
                       logoutBloc.add(const LogoutEventSubmit());

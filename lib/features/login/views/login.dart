@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -16,12 +18,11 @@ import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/account_login_method_dto.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -128,6 +129,12 @@ class _Login extends State<Login> {
               fcmToken: '',
               platform: '',
             );
+
+            print(
+                '--------------------------------------- ${EncryptUtils.instance.encrypted(
+              '0966516688',
+              '000000',
+            )}');
             _loginBloc.add(
               LoginEventByPhone(dto: dto),
             );
@@ -143,11 +150,11 @@ class _Login extends State<Login> {
         const SizedBox(
           height: 10,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           width: 200,
-          fit: BoxFit.fitWidth,
         ),
+
         const SizedBox(
           height: 20,
         ),
@@ -203,8 +210,8 @@ class _Login extends State<Login> {
                 height: 40,
                 text: 'Đăng nhập',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.BLUE_TEXT,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.BLUE_TEXT,
                 function: () {
                   openPinDialog(context);
                 },
@@ -227,7 +234,7 @@ class _Login extends State<Login> {
                   'hoặc',
                   style: TextStyle(
                     fontSize: 13,
-                    color: DefaultTheme.GREY_TEXT,
+                    color: AppColor.GREY_TEXT,
                   ),
                 ),
               ),
@@ -246,7 +253,7 @@ class _Login extends State<Login> {
               children: [
                 Expanded(
                   child: _buildButtonSignIn(
-                    assetImage: 'assets/images/logo-google.png',
+                    urlIcon: AppImages.logoGoogle,
                     text: 'Đăng nhập với Google',
                     function: () {
                       DialogWidget.instance.openMsgDialog(
@@ -260,10 +267,10 @@ class _Login extends State<Login> {
                 const Padding(padding: EdgeInsets.only(left: 10)),
                 Expanded(
                   child: _buildButtonSignIn(
-                    assetImage: 'assets/images/ic-card.png',
+                    assetsIcon: AppImages.icCard,
                     text: 'VietQR ID Card',
-                    bgColor: DefaultTheme.PURPLE_NEON,
-                    textColor: DefaultTheme.WHITE,
+                    bgColor: AppColor.PURPLE_NEON,
+                    textColor: AppColor.WHITE,
                     function: () async {
                       await DialogWidget.instance
                           .openPopup(
@@ -298,8 +305,8 @@ class _Login extends State<Login> {
           height: 40,
           text: 'Đăng ký',
           borderRadius: 5,
-          textColor: DefaultTheme.BLUE_TEXT,
-          bgColor: DefaultTheme.WHITE,
+          textColor: AppColor.BLUE_TEXT,
+          bgColor: AppColor.WHITE,
           function: () {
             context.go('/register');
           },
@@ -314,7 +321,8 @@ class _Login extends State<Login> {
   }
 
   Widget _buildButtonSignIn({
-    required String assetImage,
+    String urlIcon = '',
+    String assetsIcon = '',
     required String text,
     required VoidCallback function,
     Color? bgColor,
@@ -331,11 +339,18 @@ class _Login extends State<Login> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
-              width: 30,
-              height: 30,
-            ),
+            if (assetsIcon.isNotEmpty)
+              Image(
+                image: ImageUtils.instance.getImageNetWork(assetsIcon),
+                width: 30,
+                height: 30,
+              )
+            else
+              Image(
+                image: ImageUtils.instance.getImageNetWork(urlIcon),
+                width: 30,
+                height: 30,
+              ),
             const Padding(padding: EdgeInsets.only(left: 5)),
             Expanded(
               child: Text(
@@ -368,13 +383,13 @@ class _Login extends State<Login> {
               borderRadius: 5,
               enableShadow: true,
               alignment: Alignment.center,
-              bgColor: DefaultTheme.WHITE,
+              bgColor: AppColor.WHITE,
               padding: const EdgeInsets.all(0),
               child: QrImage(
                 data: code,
                 size: 200,
-                embeddedImage:
-                    const AssetImage('assets/images/ic-viet-qr-login.png'),
+                embeddedImage: ImageUtils.instance
+                    .getImageNetWork(AppImages.icVietQrLogin),
                 embeddedImageStyle: QrEmbeddedImageStyle(
                   size: const Size(30, 30),
                 ),

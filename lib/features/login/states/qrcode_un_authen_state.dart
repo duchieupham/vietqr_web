@@ -1,4 +1,5 @@
 import 'package:VietQR/models/qr_generated_dto.dart';
+import 'package:VietQR/models/transaction_qr_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class QRCodeUnUTState extends Equatable {
@@ -22,3 +23,12 @@ class CreateSuccessfulState extends QRCodeUnUTState {
 }
 
 class CreateFailedState extends QRCodeUnUTState {}
+
+class CreateTransactionQRSuccessfulState extends QRCodeUnUTState {
+  final TransactionQRDTO dto;
+
+  const CreateTransactionQRSuccessfulState({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}

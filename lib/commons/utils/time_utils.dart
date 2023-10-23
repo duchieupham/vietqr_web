@@ -352,4 +352,5 @@ class TimeUtils {
       return formattedTime;
     }
   }
+
 }

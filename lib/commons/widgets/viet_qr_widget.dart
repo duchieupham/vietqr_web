@@ -1,14 +1,14 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
-import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class VietQRWidget extends StatelessWidget {
-  final double width, horizontalInfoWidth;
+  final double horizontalInfoWidth;
   final double? height;
   final QRGeneratedDTO qrGeneratedDTO;
   final bool? isStatistic;
@@ -16,11 +16,9 @@ class VietQRWidget extends StatelessWidget {
   final double? qrSize;
   final bool showQROnly;
   final bool horizontalInfo;
-  final bool hasBgNapas;
   final bool showBankAccount;
   const VietQRWidget(
       {super.key,
-      required this.width,
       required this.qrGeneratedDTO,
       this.height,
       this.isStatistic,
@@ -29,7 +27,6 @@ class VietQRWidget extends StatelessWidget {
       this.showQROnly = false,
       this.horizontalInfo = false,
       this.horizontalInfoWidth = 500,
-      this.hasBgNapas = false,
       this.showBankAccount = true});
 
   @override
@@ -37,30 +34,8 @@ class VietQRWidget extends StatelessWidget {
     if (horizontalInfo) {
       return _buildHorizontalInfo(context);
     }
-    if (hasBgNapas) {
-      return _buildQRInforWidthBg(context);
-    }
-    return (showQROnly)
-        ? _buildQR(context)
-        : BoxLayout(
-            width: width - 40,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 15,
-                ),
-                _buildQR(context),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(28, 0, 28, 15),
-                      child: _buildInfo(),
-                    ))
-              ],
-            ),
-          );
+
+    return _buildQRInforWidthBg(context);
   }
 
   Widget _buildHorizontalInfo(BuildContext context) {
@@ -111,14 +86,14 @@ class VietQRWidget extends StatelessWidget {
           Text(
             '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
             style: const TextStyle(
-              color: DefaultTheme.ORANGE,
+              color: AppColor.ORANGE,
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
         const Padding(padding: EdgeInsets.only(bottom: 10)),
-        DividerWidget(width: width),
+        const DividerWidget(width: double.infinity),
         SelectableText(
           qrGeneratedDTO.userBankName.toUpperCase(),
           style: const TextStyle(
@@ -135,7 +110,7 @@ class VietQRWidget extends StatelessWidget {
         ),
         const Padding(padding: EdgeInsets.only(bottom: 10)),
         if (qrGeneratedDTO.content.isNotEmpty) ...[
-          DividerWidget(width: width),
+          const DividerWidget(width: double.infinity),
           const Padding(padding: EdgeInsets.only(bottom: 10)),
           _buildSection(
             description: qrGeneratedDTO.content,
@@ -156,7 +131,7 @@ class VietQRWidget extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             image: (qrGeneratedDTO.imgId.isEmpty)
                 ? null
                 : DecorationImage(
@@ -183,11 +158,10 @@ class VietQRWidget extends StatelessWidget {
 
   Widget _buildQR(BuildContext context) {
     return Container(
-      width: width * 0.7,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
-        color: DefaultTheme.WHITE,
+        color: AppColor.WHITE,
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).shadowColor.withOpacity(0.3),
@@ -200,17 +174,17 @@ class VietQRWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            'assets/images/logo-vietqr-vn.png',
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
             width: 110,
             fit: BoxFit.fitWidth,
           ),
           QrImage(
+            size: 140,
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
-            size: width * 0.6,
             embeddedImage:
-                const AssetImage('assets/images/ic-viet-qr-small.png'),
+                ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             embeddedImageStyle: QrEmbeddedImageStyle(
               size: const Size(30, 30),
             ),
@@ -218,14 +192,17 @@ class VietQRWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset('assets/images/ic-napas247.png',
-                  width: 95, fit: BoxFit.fitWidth),
+              Image(
+                  image:
+                      ImageUtils.instance.getImageNetWork(AppImages.icNapas247),
+                  width: 95,
+                  fit: BoxFit.fitWidth),
               Container(
                 width: 95,
                 height: 30,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: DefaultTheme.WHITE,
+                  color: AppColor.WHITE,
                   image: (qrGeneratedDTO.imgId.isEmpty)
                       ? null
                       : DecorationImage(
@@ -265,32 +242,25 @@ class VietQRWidget extends StatelessWidget {
   }
 
   Widget _buildQRInforWidthBg(BuildContext context) {
-    return BoxLayout(
-      width: 320,
-      height: _getHeightCardQR(),
-      bgImage: _getPathBGCardQR(),
-      bgColor: Colors.transparent,
-      padding: const EdgeInsets.fromLTRB(30, 5, 35, 0),
-      borderRadius: 22,
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/bg_napas_qr.png'),
+          fit: BoxFit.fill,
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(36, 40, 36, 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0')
-            const SizedBox(
-              height: 50,
-            )
-          else
-            const SizedBox(
-              height: 30,
-            ),
           Align(
             alignment: Alignment.center,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 boxShadow: [
                   BoxShadow(
                     color: Theme.of(context).shadowColor.withOpacity(0.3),
@@ -302,16 +272,16 @@ class VietQRWidget extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/images/logo-vietqr-vn.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.logoVietqrVn),
                     width: 110,
-                    fit: BoxFit.fitWidth,
                   ),
                   QrImage(
                     data: qrGeneratedDTO.qrCode,
                     version: QrVersions.auto,
-                    embeddedImage:
-                        const AssetImage('assets/images/ic-viet-qr-small.png'),
+                    embeddedImage: ImageUtils.instance
+                        .getImageNetWork(AppImages.icVietQrSmall),
                     embeddedImageStyle: QrEmbeddedImageStyle(
                       size: const Size(25, 25),
                     ),
@@ -319,14 +289,17 @@ class VietQRWidget extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset('assets/images/ic-napas247.png',
-                          width: 85, fit: BoxFit.fitWidth),
+                      Image(
+                          image: ImageUtils.instance
+                              .getImageNetWork(AppImages.icNapas247),
+                          width: 85,
+                          fit: BoxFit.fitWidth),
                       Container(
                         width: 85,
                         height: 20,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                           image: (qrGeneratedDTO.imgId.isEmpty)
                               ? null
                               : DecorationImage(
@@ -361,7 +334,7 @@ class VietQRWidget extends StatelessWidget {
               child: Text(
                 '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
                 style: const TextStyle(
-                  color: DefaultTheme.ORANGE_Dark,
+                  color: AppColor.ORANGE_Dark,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
@@ -371,17 +344,13 @@ class VietQRWidget extends StatelessWidget {
         SelectableText(
           qrGeneratedDTO.userBankName.toUpperCase(),
           style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: DefaultTheme.BLACK),
+              fontSize: 14, fontWeight: FontWeight.w500, color: AppColor.BLACK),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 5)),
         SelectableText(
           qrGeneratedDTO.bankAccount,
           style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              color: DefaultTheme.BLACK),
+              fontSize: 12, fontWeight: FontWeight.w900, color: AppColor.BLACK),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 5)),
         Text(
@@ -389,9 +358,7 @@ class VietQRWidget extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: DefaultTheme.BLACK),
+              fontSize: 12, fontWeight: FontWeight.w500, color: AppColor.BLACK),
         ),
         if (qrGeneratedDTO.content.isNotEmpty) ...[
           const Padding(padding: EdgeInsets.only(bottom: 10)),
@@ -400,34 +367,10 @@ class VietQRWidget extends StatelessWidget {
             maxLines: 2,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12, color: DefaultTheme.BLACK),
+            style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
           ),
         ],
       ],
     );
-  }
-
-  double _getHeightCardQR() {
-    if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0' &&
-        qrGeneratedDTO.content.isNotEmpty) {
-      return 580;
-    } else if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0') {
-      return 540;
-    }
-    return 500;
-  }
-
-  String _getPathBGCardQR() {
-    if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0' &&
-        qrGeneratedDTO.content.isNotEmpty) {
-      return 'assets/images/bg_napas_qr_has_amout_content.png';
-    } else if (qrGeneratedDTO.amount.isNotEmpty &&
-        qrGeneratedDTO.amount != '0') {
-      return 'assets/images/bg_napas_qr_has_amout.png';
-    }
-    return 'assets/images/bg_napas_qr.png';
   }
 }

@@ -41,11 +41,11 @@ class SettingBDSD extends StatelessWidget {
                   Text(
                     provider.enableVoice ? 'Bật' : 'Tắt',
                     style: const TextStyle(
-                        fontSize: 12, color: DefaultTheme.GREY_TEXT),
+                        fontSize: 12, color: AppColor.GREY_TEXT),
                   ),
                   Switch(
                     value: provider.enableVoice,
-                    activeColor: DefaultTheme.BLUE_TEXT,
+                    activeColor: AppColor.BLUE_TEXT,
                     onChanged: (bool value) {
                       provider.updateOpenVoice(value);
                       Map<String, dynamic> param = {};
@@ -202,7 +202,7 @@ class SettingBDSD extends StatelessWidget {
       margin: const EdgeInsets.only(top: 12),
       padding: customPadding ?? const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8), color: DefaultTheme.WHITE),
+          borderRadius: BorderRadius.circular(8), color: AppColor.WHITE),
       child: child,
     );
   }
@@ -214,7 +214,7 @@ class SettingBDSD extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: DefaultTheme.BLUE_TEXT.withOpacity(0.2)),
+          color: AppColor.BLUE_TEXT.withOpacity(0.2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -223,7 +223,7 @@ class SettingBDSD extends StatelessWidget {
             children: const [
               Icon(
                 Icons.info_outline,
-                color: DefaultTheme.BLUE_TEXT,
+                color: AppColor.BLUE_TEXT,
                 size: 16,
               ),
               SizedBox(width: 4),
@@ -232,7 +232,7 @@ class SettingBDSD extends StatelessWidget {
                   'Lưu ý:',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: DefaultTheme.BLUE_TEXT,
+                    color: AppColor.BLUE_TEXT,
                   ),
                 ),
               )

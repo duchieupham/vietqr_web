@@ -40,7 +40,6 @@ class _ListTransactionState extends State<ListTransaction> {
             scrollControllerList.position.maxScrollExtent) {
           offset = offset + 20;
           Map<String, dynamic> param = {};
-
           param['type'] = provider.valueFilter.id;
           if (provider.valueTimeFilter.id == 0 ||
               (provider.valueFilter.id != 0 && provider.valueFilter.id != 9)) {
@@ -154,15 +153,15 @@ class _ListTransactionState extends State<ListTransaction> {
 
   Widget _buildItem(TransactionMerchantDTO dto, int index) {
     return Container(
-      color: index % 2 == 0 ? DefaultTheme.GREY_BG : DefaultTheme.WHITE,
+      color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
       alignment: Alignment.center,
       child: Row(
         children: [
           Container(
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             width: 50,
             height: 50,
             alignment: Alignment.center,
@@ -175,8 +174,8 @@ class _ListTransactionState extends State<ListTransaction> {
           Container(
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             padding: const EdgeInsets.only(left: 12),
             alignment: Alignment.centerLeft,
             height: 50,
@@ -194,8 +193,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.centerLeft,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.orderId.isNotEmpty ? dto.orderId : '-',
               textAlign: TextAlign.left,
@@ -209,8 +208,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.referenceNumber.isNotEmpty ? dto.referenceNumber : '-',
               textAlign: TextAlign.left,
@@ -226,8 +225,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.transType == 'D'
                   ? '- ${StringUtils.formatNumber(dto.amount)} VND'
@@ -243,8 +242,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.getStatus(),
               textAlign: TextAlign.center,
@@ -255,16 +254,16 @@ class _ListTransactionState extends State<ListTransaction> {
             width: 120,
             height: 50,
             padding: const EdgeInsets.only(left: 12),
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.timeCreated == 0
                   ? '-'
                   : TimeUtils.instance.formatTimeDateFromInt(dto.timeCreated),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -272,16 +271,16 @@ class _ListTransactionState extends State<ListTransaction> {
             width: 140,
             height: 50,
             padding: const EdgeInsets.only(left: 12),
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.timePaid == 0
                   ? '-'
                   : TimeUtils.instance.formatTimeDateFromInt(dto.timePaid),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -292,8 +291,8 @@ class _ListTransactionState extends State<ListTransaction> {
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                   border: Border(
-                      bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                      right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                      bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                      right: BorderSide(color: AppColor.GREY_BUTTON))),
               child: Text(
                 dto.content,
                 textAlign: TextAlign.center,
@@ -310,8 +309,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.type == 0 ? 'Mã VietQR' : 'Khác',
               textAlign: TextAlign.center,
@@ -328,7 +327,7 @@ class _ListTransactionState extends State<ListTransaction> {
   Widget _buildTitleItem() {
     return Container(
       alignment: Alignment.center,
-      decoration: const BoxDecoration(color: DefaultTheme.BLUE_DARK),
+      decoration: const BoxDecoration(color: AppColor.BLUE_DARK),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -389,7 +388,7 @@ class _ListTransactionState extends State<ListTransaction> {
     return Container(
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: DefaultTheme.BLUE_TEXT.withOpacity(0.2)),
+      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
       alignment: Alignment.centerLeft,
       child: const Text(
         'Danh sách giao dịch',
@@ -414,16 +413,15 @@ class _ListTransactionState extends State<ListTransaction> {
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: DefaultTheme.GREY_BG,
-                border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                color: AppColor.GREY_BG,
+                border: Border.all(color: AppColor.GREY_LIGHT),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Row(
                 children: [
                   const Text(
                     'Lọc theo',
-                    style:
-                        TextStyle(fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                    style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                   ),
                   const SizedBox(
                     width: 20,
@@ -467,16 +465,15 @@ class _ListTransactionState extends State<ListTransaction> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DefaultTheme.GREY_BG,
-                  border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                  color: AppColor.GREY_BG,
+                  border: Border.all(color: AppColor.GREY_LIGHT),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Row(
                   children: [
                     const Text(
                       'Thời gian',
-                      style: TextStyle(
-                          fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                      style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                     ),
                     const SizedBox(
                       width: 20,
@@ -529,8 +526,8 @@ class _ListTransactionState extends State<ListTransaction> {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: DefaultTheme.GREY_BG,
-                      border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                      color: AppColor.GREY_BG,
+                      border: Border.all(color: AppColor.GREY_LIGHT),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
@@ -538,7 +535,7 @@ class _ListTransactionState extends State<ListTransaction> {
                         const Text(
                           'Từ ngày',
                           style: TextStyle(
-                              fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                              fontSize: 11, color: AppColor.GREY_TEXT),
                         ),
                         const SizedBox(
                           width: 20,
@@ -575,8 +572,8 @@ class _ListTransactionState extends State<ListTransaction> {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: DefaultTheme.GREY_BG,
-                      border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                      color: AppColor.GREY_BG,
+                      border: Border.all(color: AppColor.GREY_LIGHT),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
@@ -584,7 +581,7 @@ class _ListTransactionState extends State<ListTransaction> {
                         const Text(
                           'Đến ngày',
                           style: TextStyle(
-                              fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                              fontSize: 11, color: AppColor.GREY_TEXT),
                         ),
                         const SizedBox(
                           width: 20,
@@ -613,16 +610,16 @@ class _ListTransactionState extends State<ListTransaction> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: DefaultTheme.GREY_BG,
-                    border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                    color: AppColor.GREY_BG,
+                    border: Border.all(color: AppColor.GREY_LIGHT),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Row(
                     children: [
                       const Text(
                         'Số tài khoản',
-                        style: TextStyle(
-                            fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                        style:
+                            TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                       ),
                       const SizedBox(
                         width: 20,
@@ -668,8 +665,8 @@ class _ListTransactionState extends State<ListTransaction> {
                 width: 180,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DefaultTheme.GREY_BG,
-                  border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                  color: AppColor.GREY_BG,
+                  border: Border.all(color: AppColor.GREY_LIGHT),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: TextField(
@@ -683,7 +680,7 @@ class _ListTransactionState extends State<ListTransaction> {
                       hintText:
                           'Tìm kiếm bằng ${provider.valueFilter.title.toLowerCase()}',
                       hintStyle: const TextStyle(
-                          fontSize: 12, color: DefaultTheme.GREY_TEXT)),
+                          fontSize: 12, color: AppColor.GREY_TEXT)),
                 ),
               ),
             InkWell(
@@ -724,12 +721,12 @@ class _ListTransactionState extends State<ListTransaction> {
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DefaultTheme.BLUE_TEXT,
+                  color: AppColor.BLUE_TEXT,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: const Text(
                   'Tìm kiếm',
-                  style: TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+                  style: TextStyle(fontSize: 12, color: AppColor.WHITE),
                 ),
               ),
             ),
@@ -746,12 +743,12 @@ class _ListTransactionState extends State<ListTransaction> {
                   height: 40,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: DefaultTheme.GREEN,
+                    color: AppColor.GREEN,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: const Text(
                     'Xuất Excel',
-                    style: TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+                    style: TextStyle(fontSize: 12, color: AppColor.WHITE),
                   ),
                 ),
               ),
@@ -773,12 +770,11 @@ class _ListTransactionState extends State<ListTransaction> {
       padding: padding,
       alignment: alignment,
       decoration: const BoxDecoration(
-          border:
-              Border(left: BorderSide(color: DefaultTheme.WHITE, width: 0.5))),
+          border: Border(left: BorderSide(color: AppColor.WHITE, width: 0.5))),
       child: Text(
         title,
         textAlign: textAlign,
-        style: const TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+        style: const TextStyle(fontSize: 12, color: AppColor.WHITE),
       ),
     );
   }

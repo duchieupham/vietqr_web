@@ -1,13 +1,13 @@
 import 'dart:convert';
-
+import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/models/active_fee_dto.dart';
+import 'package:VietQR/commons/utils/base_api.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/account_is_merchant.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
-import 'package:VietQR/commons/utils/base_api.dart';
-import 'package:VietQR/commons/utils/log.dart';
-import 'package:VietQR/models/account_is_merchant.dart';
-import 'package:VietQR/models/active_fee_dto.dart';
-import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/transaction_merchant_dto.dart';
+
 
 class MerchantRepository {
   const MerchantRepository();
@@ -31,6 +31,7 @@ class MerchantRepository {
       }
     } catch (e) {
       LOG.error(e.toString());
+      return result;
     }
     return result;
   }

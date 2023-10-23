@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +42,8 @@ class SliverHeader extends StatelessWidget {
             topLeft: Radius.circular(8), topRight: Radius.circular(8)),
         gradient: LinearGradient(
           colors: [
-            DefaultTheme.BLACK.withOpacity(0.2),
-            DefaultTheme.BLACK.withOpacity(0.7),
+            AppColor.BLACK.withOpacity(0.2),
+            AppColor.BLACK.withOpacity(0.7),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -67,11 +68,11 @@ class SliverHeader extends StatelessWidget {
                 fit: BoxFit.cover,
                 image: (imgId.isNotEmpty)
                     ? ImageUtils.instance.getImageNetWork(imgId)
-                    : Image.asset(
-                        'assets/images/ic-avatar-business.png',
-                        fit: BoxFit.cover,
-                        width: 50,
+                    : Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.icBusiness3D),
                         height: 50,
+                        width: 50,
                       ).image,
               ),
             ),
@@ -83,7 +84,7 @@ class SliverHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             style: const TextStyle(
-              color: DefaultTheme.WHITE,
+              color: AppColor.WHITE,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -103,7 +104,7 @@ class SliverHeader extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-          color: DefaultTheme.GREY_TEXT,
+          color: AppColor.GREY_TEXT,
           image: (coverImgId.isNotEmpty)
               ? DecorationImage(
                   image: ImageUtils.instance.getImageNetWork(coverImgId),

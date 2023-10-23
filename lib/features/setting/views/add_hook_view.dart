@@ -69,7 +69,7 @@ class AddHookView extends StatelessWidget {
                           child: Text(
                             'Endpoint không được để trống',
                             style: TextStyle(
-                                color: DefaultTheme.RED_TEXT, fontSize: 13),
+                                color: AppColor.RED_TEXT, fontSize: 13),
                           ),
                         );
                       }
@@ -161,8 +161,8 @@ class AddHookView extends StatelessWidget {
                       ButtonWidget(
                         height: 40,
                         width: 120,
-                        textColor: DefaultTheme.BLUE_TEXT,
-                        bgColor: DefaultTheme.ITEM_MENU_SELECTED,
+                        textColor: AppColor.BLUE_TEXT,
+                        bgColor: AppColor.ITEM_MENU_SELECTED,
                         borderRadius: 5,
                         function: () {
                           DialogWidget.instance.openMsgDialog(
@@ -188,8 +188,8 @@ class AddHookView extends StatelessWidget {
               message: 'Thêm Hook',
               child: ButtonWidget(
                 height: 40,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.BLUE_CARD,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.BLUE_CARD,
                 borderRadius: 5,
                 function: () {
                   DialogWidget.instance.openMsgDialog(
@@ -243,7 +243,7 @@ class AddHookView extends StatelessWidget {
                         height: 500,
                       );
                     },
-                    child: provider.bankAccountSelected.userId.isEmpty
+                    child: provider.bankAccountSelected.userId!.isEmpty
                         ? BorderLayout(
                             height: 40,
                             isError: false,
@@ -279,7 +279,7 @@ class AddHookView extends StatelessWidget {
           width: 60,
           height: 60,
           decoration: BoxDecoration(
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             image: DecorationImage(
               image: ImageUtils.instance.getImageNetWork(
                 dto.imgId,
@@ -298,7 +298,7 @@ class AddHookView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: DefaultTheme.BLACK,
+                    color: AppColor.BLACK,
                     fontSize: 13),
               ),
               const SizedBox(
@@ -307,7 +307,7 @@ class AddHookView extends StatelessWidget {
               Text(
                 dto.userBankName.toUpperCase(),
                 style: const TextStyle(
-                  color: DefaultTheme.BLACK,
+                  color: AppColor.BLACK,
                   fontSize: 10,
                 ),
               ),
