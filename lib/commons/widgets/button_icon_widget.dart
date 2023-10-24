@@ -85,6 +85,9 @@ class ButtonIconWidget extends StatelessWidget {
                 color: textColor,
                 size: iconSize ?? 15,
               ),
+            const SizedBox(
+              width: 8,
+            ),
             if (title.isNotEmpty) ...[
               if (pathIcon.isEmpty) Padding(padding: customPaddingIcon),
               Text(

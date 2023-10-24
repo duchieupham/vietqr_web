@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -244,20 +245,23 @@ class _WalletScreenState extends State<WalletScreen> {
                   width: 12,
                 ),
                 Expanded(
-                    child: ListView(
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.horizontal,
-                        children: provider.listCategories.map((e) {
-                          int index = provider.listCategories.indexOf(e);
-                          return _buildItemCategory(e.title, onTap: () {
-                            provider.onChangeCategory(e);
-                            bloc.add(ContactEventGetList(
-                                isLoading: true, type: e.type, offset: 0));
-                          },
-                              pathIcon: e.url,
-                              isSelected: e.type == provider.categoryModel.type,
-                              index: index);
-                        }).toList())),
+                    child: ScrollConfiguration(
+                  behavior: MyCustomScrollBehavior(),
+                  child: ListView(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      children: provider.listCategories.map((e) {
+                        int index = provider.listCategories.indexOf(e);
+                        return _buildItemCategory(e.title, onTap: () {
+                          provider.onChangeCategory(e);
+                          bloc.add(ContactEventGetList(
+                              isLoading: true, type: e.type, offset: 0));
+                        },
+                            pathIcon: e.url,
+                            isSelected: e.type == provider.categoryModel.type,
+                            index: index);
+                      }).toList()),
+                )),
               ],
             ),
           ),

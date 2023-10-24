@@ -49,6 +49,14 @@ class BankTypeProvider with ChangeNotifier {
   bool get isAmountErr => _isAmountErr;
   bool get isValidCreate => _isValidCreate;
 
+  bool _showMoreOption = false;
+  bool get showMoreOption => _showMoreOption;
+
+  updateShowMoreOption(bool value) async {
+    _showMoreOption = value;
+    notifyListeners();
+  }
+
   void updateBankCardRequestOTP(BankCardRequestOTP dto) {
     bankCardRequestOTP = dto;
   }

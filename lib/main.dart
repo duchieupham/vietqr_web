@@ -26,15 +26,16 @@ import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
+import 'package:VietQR/features/login/views/create_QR_login.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/merchant/provider/merchant_provider.dart';
 import 'package:VietQR/features/merchant/views/merchant.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
-import 'package:VietQR/features/qr/views/create_qr.dart';
 import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
+import 'package:VietQR/features/register/views/service.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
@@ -72,6 +73,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'features/create_qr/provider/create_qr_provider.dart';
+import 'features/login/provider/menu_login_provider.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
 
@@ -180,13 +182,30 @@ final GoRouter _router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/login',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/home'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) => const Login(),
-    ),
+        path: '/login',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/home'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) => const Login(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const Login(),
+          );
+        }),
+    GoRoute(
+        path: '/service',
+        builder: (BuildContext context, GoRouterState state) =>
+            const ServiceView(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const ServiceView(),
+          );
+        }),
     GoRoute(
         path: '/register',
         redirect: (context, state) {
@@ -222,16 +241,6 @@ final GoRouter _router = GoRouter(
               : '/login',
       builder: (BuildContext context, GoRouterState state) =>
           const DashboardScreen(),
-    ),
-    GoRoute(
-      path: '/qr/create/:id',
-      redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/qr/create/${state.params['id'] ?? ''}'
-              : '/login',
-      builder: (BuildContext context, GoRouterState state) => CreateQR(
-        bankId: state.params['id'] ?? '',
-      ),
     ),
     GoRoute(
       path: '/user_information',
@@ -382,18 +391,21 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/create-qr',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/create-qr'
-                : '/login',
-        builder: (BuildContext context, GoRouterState state) =>
-            const CreateQrScreen(),
+        builder: (BuildContext context, GoRouterState state) {
+          if (UserInformationHelper.instance.getUserId().trim().isNotEmpty) {
+            return const CreateQrScreen();
+          } else {
+            return const CreateQRLogin();
+          }
+        },
         pageBuilder: (BuildContext context, GoRouterState state) {
           Map<String, String> params = state.queryParams;
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const CreateQrScreen(),
+            child: UserInformationHelper.instance.getUserId().trim().isNotEmpty
+                ? const CreateQrScreen()
+                : const CreateQRLogin(),
           );
         }),
     GoRoute(
@@ -577,6 +589,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => ActionShareProvider()),
             ChangeNotifierProvider(create: (context) => SettingProvider()),
             ChangeNotifierProvider(create: (context) => MerchantProvider()),
+            ChangeNotifierProvider(create: (context) => MenuLoginProvider()),
           ],
           child: MaterialApp.router(
             onGenerateTitle: (context) =>

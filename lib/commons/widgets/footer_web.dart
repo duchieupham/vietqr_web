@@ -1,22 +1,47 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class FooterWeb extends StatelessWidget {
+import '../../features/bank/events/bank_type_event.dart';
+import '../../features/bank/states/bank_type_state.dart';
+
+class FooterWeb extends StatefulWidget {
   final Color? bgColor;
-  const FooterWeb({super.key, this.bgColor});
+  final bool showListBank;
+  const FooterWeb({super.key, this.bgColor, this.showListBank = false});
+
+  @override
+  State<FooterWeb> createState() => _FooterWebState();
+}
+
+class _FooterWebState extends State<FooterWeb> {
+  late BankTypeBloc bankTypeBloc;
+  @override
+  void initState() {
+    super.initState();
+    bankTypeBloc = BlocProvider.of(context);
+
+    bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    if (widget.showListBank) {
+      return _buildFooterWidthListBank(width);
+    }
+
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth < 580) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-          color: bgColor,
+          color: widget.bgColor ?? AppColor.BLUE_TEXT.withOpacity(0.2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -124,7 +149,6 @@ class FooterWeb extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              _buildUrlSystem(isVertical: constraints.maxWidth < 980),
             ],
           ),
         );
@@ -249,18 +273,16 @@ class FooterWeb extends StatelessWidget {
       crossAxisAlignment:
           isVertical ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
-        if (!isVertical) ...[
-          const Text(
-            'Tải ứng dụng trên cửa hàng',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
-                // fontWeight: FontWeight.bold,
-                ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-        ],
-        if (isVertical)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        const Text(
+          'Tải ứng dụng trên cửa hàng',
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
+              // fontWeight: FontWeight.bold,
+              ),
+        ),
+        const Padding(padding: EdgeInsets.only(top: 10)),
+        SizedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _buildButton(
                 width: 280,
@@ -271,7 +293,7 @@ class FooterWeb extends StatelessWidget {
                       'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
                 },
               ),
-              const Padding(padding: EdgeInsets.only(top: 8)),
+              const Padding(padding: EdgeInsets.only(left: 10)),
               _buildButton(
                 width: 280,
                 text: 'Google Play',
@@ -282,34 +304,8 @@ class FooterWeb extends StatelessWidget {
                 },
               ),
             ],
-          )
-        else
-          SizedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildButton(
-                  width: 280,
-                  text: 'App Store',
-                  assetImage: AppImages.logoAppStore,
-                  onTap: () async {
-                    await launchUrl(Uri.parse(
-                        'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
-                  },
-                ),
-                const Padding(padding: EdgeInsets.only(left: 10)),
-                _buildButton(
-                  width: 280,
-                  text: 'Google Play',
-                  assetImage: AppImages.logoGooglePlay,
-                  onTap: () async {
-                    await launchUrl(Uri.parse(
-                        'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
-                  },
-                ),
-              ],
-            ),
           ),
+        ),
       ],
     );
   }
@@ -442,6 +438,162 @@ class FooterWeb extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFooterWidthListBank(double width) {
+    return Container(
+      color: AppColor.WHITE,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 16,
+          ),
+          BlocBuilder<BankTypeBloc, BankTypeState>(builder: (context, state) {
+            if (state is BankTypeGetListSuccessfulState) {
+              return SizedBox(
+                height: 50,
+                width: width,
+                child: CarouselSlider(
+                  items: state.list.map(
+                    (e) {
+                      return Image(
+                        image: ImageUtils.instance.getImageNetWork(e.imageId),
+                        height: 50,
+                      );
+                    },
+                  ).toList(),
+                  options: CarouselOptions(
+                      autoPlay: true,
+                      viewportFraction: 0.1,
+                      pageSnapping: false,
+                      autoPlayCurve: Curves.linear,
+                      autoPlayInterval: const Duration(seconds: 2),
+                      autoPlayAnimationDuration: const Duration(seconds: 2)),
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          }),
+          const SizedBox(
+            height: 8,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              height: 50,
+              child: Row(
+                children: [
+                  const Text(
+                    'Thông tin liên hệ: ',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(left: 10)),
+                  const Text(
+                    'Email:   ',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      final Uri launchUri = Uri(
+                        scheme: 'mailto',
+                        path: 'sales@vietqr.vn',
+                      );
+                      await launchUrl(launchUri);
+                    },
+                    child: const Text(
+                      'sales@vietqr.vn',
+                      style: TextStyle(
+                        color: AppColor.BLUE_TEXT,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(left: 12)),
+                  const Text(
+                    'Hotline:   ',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      final Uri launchUri = Uri(
+                        scheme: 'tel',
+                        path: '19006234',
+                      );
+                      await launchUrl(launchUri);
+                    },
+                    child: const Text(
+                      '1900.6234',
+                      style: TextStyle(
+                        color: AppColor.BLUE_TEXT,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  const Text('  -  '),
+                  InkWell(
+                    onTap: () async {
+                      final Uri launchUri = Uri(
+                        scheme: 'tel',
+                        path: '0922333636',
+                      );
+                      await launchUrl(launchUri);
+                    },
+                    child: const Text(
+                      '09.2233.3636',
+                      style: TextStyle(
+                        color: AppColor.BLUE_TEXT,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Text(
+                    'Tải ứng dụng trên cửa hàng:',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600
+                        // fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const Padding(padding: EdgeInsets.only(left: 10)),
+                  _buildButton(
+                    width: 280,
+                    text: 'App Store',
+                    assetImage: AppImages.logoAppStore,
+                    onTap: () async {
+                      await launchUrl(Uri.parse(
+                          'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+                    },
+                  ),
+                  const Padding(padding: EdgeInsets.only(left: 8)),
+                  _buildButton(
+                    width: 280,
+                    text: 'Google Play',
+                    assetImage: AppImages.logoGooglePlay,
+                    onTap: () async {
+                      await launchUrl(Uri.parse(
+                          'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+                    },
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

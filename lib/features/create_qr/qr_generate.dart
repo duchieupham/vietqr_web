@@ -105,6 +105,7 @@ class _QrGenerateState extends State<QrGenerate> {
 
   @override
   Widget build(BuildContext context) {
+    double widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColor.GREY_BG,
       body: ChangeNotifierProvider<TransactionQRProvider>(
@@ -155,6 +156,18 @@ class _QrGenerateState extends State<QrGenerate> {
                               .updateTimeCountDown(timeCountDown);
                         }
                       }, builder: (context, state) {
+                        if (state is CreateQRLoadingState) {
+                          return const UnconstrainedBox(
+                            child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                color: AppColor.BLUE_TEXT,
+                              ),
+                            ),
+                          );
+                        }
+
                         if (state is CreateTransactionQRSuccessfulState &&
                             transactionQRdto.bankAccount.isEmpty) {
                           return _buildWidgetTimeExpires();
@@ -187,21 +200,15 @@ class _QrGenerateState extends State<QrGenerate> {
                               child: ListView(
                                 padding: EdgeInsets.zero,
                                 children: [
-                                  SizedBox(
-                                    height: isSuccess ? 440 : 780,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        _buildCountDown(),
-                                        Expanded(
-                                            child: _buildWidgetQr(state, true)),
-                                      ],
-                                    ),
+                                  const SizedBox(
+                                    height: 20,
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: _buildCountDown(),
+                                  ),
+                                  _buildWidgetQr(state, true,
+                                      width: widthScreen * 0.7),
                                   SizedBox(
                                       height: 650, child: _buildInfo(true)),
                                 ],
@@ -246,25 +253,16 @@ class _QrGenerateState extends State<QrGenerate> {
     );
   }
 
-  Widget _buildWidgetQr(QRCodeUnUTState state, bool isVertical) {
+  Widget _buildWidgetQr(QRCodeUnUTState state, bool isVertical,
+      {double width = 360}) {
     if (isSuccess) {
       return _buildTransactionSuccess(isVertical);
     }
-    if (state is CreateQRLoadingState) {
-      return const UnconstrainedBox(
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: CircularProgressIndicator(
-            color: AppColor.BLUE_TEXT,
-          ),
-        ),
-      );
-    }
+
     return (qrGeneratedDTO.qrCode.isEmpty)
         ? _buildQRCodeBlank(
             'Không thể tạo mã VietQR \n mã ngân hàng không hợp lệ')
-        : ListView(
+        : Column(
             children: [
               const Align(
                 alignment: Alignment.topCenter,
@@ -278,7 +276,7 @@ class _QrGenerateState extends State<QrGenerate> {
               ),
               UnconstrainedBox(
                 child: SizedBox(
-                  width: 360,
+                  width: width,
                   child: RepaintBoundaryWidget(
                       globalKey: globalKey,
                       builder: (key) {
@@ -293,7 +291,7 @@ class _QrGenerateState extends State<QrGenerate> {
               ),
               UnconstrainedBox(
                 child: SizedBox(
-                  width: 360,
+                  width: width,
                   height: 40,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -668,11 +666,23 @@ class _QrGenerateState extends State<QrGenerate> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: isVertical
-                ? EdgeInsets.zero
-                : const EdgeInsets.only(bottom: 80),
+        if (!isVertical)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 60),
+              child: SizedBox(
+                width: 300,
+                height: 300,
+                child: Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.iconTransactionSuccess)),
+              ),
+            ),
+          )
+        else
+          Padding(
+            padding:
+                isVertical ? EdgeInsets.zero : const EdgeInsets.only(top: 160),
             child: SizedBox(
               width: 300,
               height: 300,
@@ -681,7 +691,6 @@ class _QrGenerateState extends State<QrGenerate> {
                       .getImageNetWork(AppImages.iconTransactionSuccess)),
             ),
           ),
-        ),
       ],
     );
   }

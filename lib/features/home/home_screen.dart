@@ -182,15 +182,15 @@ class _HomeScreenState extends State<_HomeScreen> {
                       children: [
                         const TextSpan(
                           text: 'Số dư: ',
-                          style: TextStyle(fontSize: 13),
+                          style: TextStyle(fontSize: 13, color: AppColor.BLACK),
                         ),
                         TextSpan(
                           text: provider.showAmount
                               ? '${CurrencyUtils.instance.getCurrencyFormatted(Session.instance.wallet.amount)} VQR'
                               : '********',
                           style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
+                              fontWeight: FontWeight.w600,
+                              color: AppColor.BLACK),
                         ),
                       ],
                     ),

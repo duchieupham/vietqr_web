@@ -80,7 +80,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   math_expressions: ^2.4.0
 
-
+  carousel_slider: ^4.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

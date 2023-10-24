@@ -33,6 +33,7 @@ class TextFieldWidget extends StatefulWidget {
   final TextStyle? textStyle;
   final List<TextInputFormatter>? inputFormatter;
   final Color? fillColor;
+  final double height;
   const TextFieldWidget(
       {Key? key,
       this.width,
@@ -61,6 +62,7 @@ class TextFieldWidget extends StatefulWidget {
       this.required = false,
       this.value,
       this.inputFormatter,
+      this.height = 50,
       this.fillColor})
       : super(key: key);
 
@@ -108,7 +110,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             widget.textfieldType == TextfieldType.LABEL)
         ? Container(
             width: widget.width,
-            height: 50,
+            height: widget.height,
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
@@ -177,7 +179,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             ))
         : Container(
             width: widget.width,
-            height: 60,
+            height: widget.height,
             alignment: Alignment.center,
             child: TextField(
               obscureText: widget.isObscureText,

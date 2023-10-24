@@ -11,6 +11,7 @@ class StringUtils {
       r'^[a-zA-Z0-9.,!@#$&*/? ]+$';
   final String _transactionContentPattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9.,!@#$&*/? ]+$';
   final String _fullNamePattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9 ]+$';
+  final String _phonePattern = r'^(?:[+0]9)?[0-9]{10}$';
 
   bool isNumeric(String text) {
     return int.tryParse(text) != null;
@@ -102,5 +103,15 @@ class StringUtils {
     }
     var numberFormat = NumberFormat.decimalPattern('en');
     return numberFormat.format(value);
+  }
+
+  String? validatePhone(String value) {
+    RegExp regExp = RegExp(_phonePattern);
+    if (value.isEmpty) {
+      return null;
+    } else if (!regExp.hasMatch(value)) {
+      return 'Số điện thoại không đúng định dạng.';
+    }
+    return null;
   }
 }
