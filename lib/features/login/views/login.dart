@@ -161,6 +161,12 @@ class _Login extends State<Login> {
   }
 
   void openPinDialog(BuildContext context) {
+    print(
+        '-------------------------------------${EncryptUtils.instance.encrypted(
+      'vietqradmin',
+      'systemadmin123',
+    )}');
+
     if (phoneNoController.text.isEmpty) {
       DialogWidget.instance.openMsgDialog(
           title: 'Đăng nhập không thành công',
@@ -257,7 +263,7 @@ class _Login extends State<Login> {
                   ),
                   BorderLayout(
                     width: width,
-                    borderColor: AppColor.BLACK_BUTTON,
+                    borderColor: AppColor.BLACK_BUTTON.withOpacity(0.5),
                     isError: false,
                     child: TextFieldWidget(
                       height: 46,

@@ -6,6 +6,6 @@ class MenuLoginProvider with ChangeNotifier {
 
   changePage(int value) async {
     _page = value;
-    notifyListeners();
+    // notifyListeners();
   }
 }

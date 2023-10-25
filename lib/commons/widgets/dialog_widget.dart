@@ -89,7 +89,7 @@ class DialogWidget {
                           height: 30,
                           text: 'Đóng',
                           textColor: AppColor.WHITE,
-                          bgColor: AppColor.GREEN,
+                          bgColor: AppColor.BLUE_TEXT,
                           borderRadius: 5,
                           function: () {
                             focusNode.dispose();
@@ -494,7 +494,7 @@ class DialogWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
                             CircularProgressIndicator(
-                              color: AppColor.GREEN,
+                              color: AppColor.BLUE_TEXT,
                             ),
                             Padding(padding: EdgeInsets.only(top: 30)),
                             Text(
@@ -517,7 +517,7 @@ class DialogWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const CircularProgressIndicator(
-                          color: AppColor.GREEN,
+                          color: AppColor.BLUE_TEXT,
                         ),
                       ),
               ),

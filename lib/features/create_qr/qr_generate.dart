@@ -168,9 +168,10 @@ class _QrGenerateState extends State<QrGenerate> {
                           );
                         }
 
-                        if (state is CreateTransactionQRSuccessfulState &&
-                            transactionQRdto.bankAccount.isEmpty) {
-                          return _buildWidgetTimeExpires();
+                        if (state is CreateTransactionQRSuccessfulState) {
+                          if (state.dto.qr.isEmpty) {
+                            return _buildWidgetTimeExpires();
+                          }
                         }
 
                         return Consumer<TransactionQRProvider>(
@@ -210,7 +211,7 @@ class _QrGenerateState extends State<QrGenerate> {
                                   _buildWidgetQr(state, true,
                                       width: widthScreen * 0.7),
                                   SizedBox(
-                                      height: 650, child: _buildInfo(true)),
+                                      height: 450, child: _buildInfo(true)),
                                 ],
                               ),
                             );
@@ -696,54 +697,58 @@ class _QrGenerateState extends State<QrGenerate> {
   }
 
   Widget _buildWidgetTimeExpires() {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 8,
-        ),
-        Image(
-          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
-          height: 60,
-          fit: BoxFit.fitHeight,
-        ),
-        const DividerWidget(
-          width: double.infinity,
-        ),
-        const Spacer(),
-        Image(
-          image: ImageUtils.instance.getImageNetWork(AppImages.icWarning),
-          width: 80,
-          height: 80,
-        ),
-        const Text(
-          'Thông báo',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const Text(
-            'Không tìm thấy giao dịch này hoặc giao dịch đã hết hạn thanh toán',
-            style: TextStyle(
-              fontSize: 16,
-            )),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(40),
-          child: ButtonIconWidget(
-            width: 400,
-            height: 40,
-            icon: Icons.home_rounded,
-            title: 'Trang chủ',
-            textColor: AppColor.WHITE,
-            bgColor: AppColor.BLUE_TEXT,
-            function: () {
-              context.go('/');
-            },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 8,
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        const BottomWeb()
-      ],
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+            height: 60,
+            fit: BoxFit.fitHeight,
+          ),
+          const DividerWidget(
+            width: double.infinity,
+          ),
+          const Spacer(),
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icWarning),
+            width: 80,
+            height: 80,
+          ),
+          const Text(
+            'Thông báo',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const Text(
+              'Không tìm thấy giao dịch này hoặc giao dịch đã hết hạn thanh toán',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+              )),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(40),
+            child: ButtonIconWidget(
+              width: 400,
+              height: 40,
+              icon: Icons.home_rounded,
+              title: 'Trang chủ',
+              textColor: AppColor.WHITE,
+              bgColor: AppColor.BLUE_TEXT,
+              function: () {
+                context.go('/');
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const BottomWeb()
+        ],
+      ),
     );
   }
 }
