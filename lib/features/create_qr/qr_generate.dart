@@ -586,7 +586,7 @@ class _QrGenerateState extends State<QrGenerate> {
         return Row(
           children: [
             const Text(
-              'Giao dịch hết hạn sau',
+              'Hết hạn sau',
               style: TextStyle(fontSize: 12),
             ),
             const SizedBox(
