@@ -22,48 +22,48 @@ class MenuLogin extends StatelessWidget {
             image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
             height: 32,
           ),
-          const SizedBox(
-            width: 100,
-          ),
-          Expanded(
-              child: ScrollConfiguration(
-            behavior: MyCustomScrollBehavior(),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              children: [
-                Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+          const Spacer(),
+          LayoutBuilder(builder: (context, constraints) {
+            return Expanded(
+                flex: 4,
+                child: ScrollConfiguration(
+                  behavior: MyCustomScrollBehavior(),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
                     children: [
-                      _buildItemMenu('Tạo mã QR',
-                          isSelected: provider.page == 0, onTap: () {
-                        context.go('/create-qr');
-                      }),
-                      _buildItemMenu('Tài liệu kết nối',
-                          isSelected: provider.page == 1, onTap: () {
-                        context.go('/service');
-                      }),
-                      _buildItemMenu('Tin tức',
-                          isSelected: provider.page == 2, onTap: () {}),
-                      _buildItemMenu('Giới thiệu',
-                          isSelected: provider.page == 3, onTap: () {}),
-                      _buildItemMenu('Liên hệ',
-                          isSelected: provider.page == 4, onTap: () {}),
-                      _buildItemMenu('Đăng nhập',
-                          isSelected: provider.page == 5, onTap: () {
-                        context.go('/login');
-                      }),
-                      _buildItemMenu('Đăng ký', isSelected: provider.page == 6,
-                          onTap: () {
-                        context.go('/register');
-                      }),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildItemMenu('Tạo mã QR',
+                              isSelected: provider.page == 0, onTap: () {
+                            context.go('/create-qr');
+                          }),
+                          _buildItemMenu('Tài liệu kết nối',
+                              isSelected: provider.page == 1, onTap: () {
+                            context.go('/service');
+                          }),
+                          _buildItemMenu('Tin tức',
+                              isSelected: provider.page == 2, onTap: () {}),
+                          _buildItemMenu('Giới thiệu',
+                              isSelected: provider.page == 3, onTap: () {}),
+                          _buildItemMenu('Liên hệ',
+                              isSelected: provider.page == 4, onTap: () {}),
+                          _buildItemMenu('Đăng nhập',
+                              isSelected: provider.page == 5, onTap: () {
+                            context.go('/login');
+                          }),
+                          _buildItemMenu('Đăng ký',
+                              isSelected: provider.page == 6, onTap: () {
+                            context.go('/register');
+                          }),
+                        ],
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ))
+                ));
+          }),
+          const Spacer(),
         ],
       );
     });

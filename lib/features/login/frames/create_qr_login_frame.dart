@@ -59,8 +59,8 @@ class CreateQRLoginFrame extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 2,
+                          SizedBox(
+                            width: 640,
                             child: widget1,
                           ),
                           Expanded(

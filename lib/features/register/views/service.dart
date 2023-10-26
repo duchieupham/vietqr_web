@@ -51,7 +51,7 @@ class ServiceView extends StatelessWidget {
                     height: 20,
                   ),
                   SizedBox(
-                    width: 650,
+                    width: 700,
                     child: Column(
                       children: [
                         SizedBox(
@@ -64,7 +64,7 @@ class ServiceView extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 350,
+                                      width: 400,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                           border: Border.all(
@@ -112,7 +112,7 @@ class ServiceView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 650,
+                    width: 700,
                     child: Column(
                       children: [
                         SizedBox(
@@ -122,7 +122,7 @@ class ServiceView extends StatelessWidget {
                               Row(
                                 children: [
                                   Container(
-                                    width: 350,
+                                    width: 400,
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
                                         border: Border.all(
@@ -137,7 +137,6 @@ class ServiceView extends StatelessWidget {
                                       child: const Text(
                                         'Tài liệu kết nối API VietQR VN - Nhận biến động số dư',
                                         style: TextStyle(
-                                            fontSize: 12,
                                             color: AppColor.BLUE_TEXT,
                                             decoration:
                                                 TextDecoration.underline),
@@ -153,9 +152,6 @@ class ServiceView extends StatelessWidget {
                                                 .withOpacity(0.2))),
                                     child: const Text(
                                       '24/10/2023',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                      ),
                                     ),
                                   ),
                                   Container(
@@ -174,7 +170,6 @@ class ServiceView extends StatelessWidget {
                                       child: const Text(
                                         'Truy cập',
                                         style: TextStyle(
-                                            fontSize: 12,
                                             color: AppColor.BLUE_TEXT,
                                             decoration:
                                                 TextDecoration.underline),

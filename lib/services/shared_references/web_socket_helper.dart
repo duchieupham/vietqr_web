@@ -21,6 +21,9 @@ class WebSocketHelper {
   static late WebSocketChannel _channelQRLink;
   WebSocketChannel get channelQRLink => _channelQRLink;
 
+  static late WebSocketChannel _channelLoginLink;
+  WebSocketChannel get channelLoginLink => _channelLoginLink;
+
   static final WebSocketHelper _instance =
       WebSocketHelper._privateConstructor();
   static WebSocketHelper get instance => _instance;
@@ -96,6 +99,26 @@ class WebSocketHelper {
                   Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
             transactionSuccess();
           }
+        });
+      } else {
+        setListenTransactionQRWS(false);
+      }
+    } catch (e) {
+      LOG.error('WS: $e');
+    }
+  }
+
+  void listenLoginSocket(String loginID, Function(String) login) {
+    try {
+      setListenTransactionQRWS(true);
+      final wsUrl =
+          Uri.parse(' wss://api.vietqr.org/vqr/socket?loginId=$loginID');
+      _channelLoginLink = WebSocketChannel.connect(wsUrl);
+      if (_channelLoginLink.closeCode == null) {
+        _channelLoginLink.stream.listen((event) {
+          var data = jsonDecode(event);
+          print('-------------------------------------- $data');
+          login('');
         });
       } else {
         setListenTransactionQRWS(false);

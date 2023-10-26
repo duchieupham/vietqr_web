@@ -257,58 +257,30 @@ class BottomWeb extends StatelessWidget {
           ),
           const Padding(padding: EdgeInsets.only(top: 10)),
         ],
-        if (isVertical)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildButton(
-                width: 280,
-                text: 'App Store',
-                assetImage: AppImages.logoAppStore,
-                onTap: () async {
-                  await launchUrl(Uri.parse(
-                      'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(top: 8)),
-              _buildButton(
-                width: 280,
-                text: 'Google Play',
-                assetImage: AppImages.logoGooglePlay,
-                onTap: () async {
-                  await launchUrl(Uri.parse(
-                      'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
-                },
-              ),
-            ],
-          )
-        else
-          SizedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildButton(
-                  width: 280,
-                  text: 'App Store',
-                  assetImage: AppImages.logoAppStore,
-                  onTap: () async {
-                    await launchUrl(Uri.parse(
-                        'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
-                  },
-                ),
-                const Padding(padding: EdgeInsets.only(left: 10)),
-                _buildButton(
-                  width: 280,
-                  text: 'Google Play',
-                  assetImage: AppImages.logoGooglePlay,
-                  onTap: () async {
-                    await launchUrl(Uri.parse(
-                        'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
-                  },
-                ),
-              ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildButton(
+              width: 280,
+              text: 'App Store',
+              assetImage: AppImages.logoAppStore,
+              onTap: () async {
+                await launchUrl(Uri.parse(
+                    'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+              },
             ),
-          ),
+            const Padding(padding: EdgeInsets.only(left: 10)),
+            _buildButton(
+              width: 280,
+              text: 'Google Play',
+              assetImage: AppImages.logoGooglePlay,
+              onTap: () async {
+                await launchUrl(Uri.parse(
+                    'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+              },
+            ),
+          ],
+        ),
       ],
     );
   }

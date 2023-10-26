@@ -3,12 +3,16 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
-import 'package:VietQR/features/home/widget/popup_confirm_logout.dart';
 import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
+import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
+import 'package:VietQR/features/logout/events/log_out_event.dart';
+import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -20,49 +24,73 @@ class MenuLeft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LogoutBloc logoutBloc = BlocProvider.of(context);
     Provider.of<MenuProvider>(context, listen: false).checkAccountIsMerchant();
-    return Consumer<MenuProvider>(
-      builder: (context, provider, child) {
-        double width = 0;
-        if (provider.showMenu) {
-          width = 220;
-        } else {
-          width = 0;
+    return BlocListener<LogoutBloc, LogoutState>(
+      listener: (context, state) {
+        if (state is LogoutLoadingState) {
+          DialogWidget.instance.openLoadingDialog();
         }
-        return Container(
-          width: width,
-          color: AppColor.BLUE_TEXT.withOpacity(0.2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (provider.showMenu)
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
+        if (state is LogoutSuccessfulState) {
+          Navigator.pop(context);
+          if (Session.instance.userECOMId.trim().isNotEmpty) {
+            Session.instance.updateUserECOMId('');
+            context.push('/ecom');
+          } else {
+            context.push('/login');
+          }
+        }
+        if (state is LogoutFailedState) {
+          Navigator.pop(context);
+          DialogWidget.instance.openMsgDialog(
+            title: 'Không thể đăng xuất',
+            msg: 'Vui lòng thử lại sau.',
+          );
+        }
+      },
+      child: Consumer<MenuProvider>(
+        builder: (context, provider, child) {
+          double width = 0;
+          if (provider.showMenu) {
+            width = 220;
+          } else {
+            width = 0;
+          }
+          return Container(
+            width: width,
+            color: AppColor.BLUE_TEXT.withOpacity(0.2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (provider.showMenu)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: Text(
+                      'Menu',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
-                ),
-              if (provider.showMenu)
-                Expanded(
-                  child: _buildListItem(provider, () {
-                    Provider.of<MenuCardProvider>(context, listen: false)
-                        .updateShowMenu(false);
-                  }, context),
-                )
-            ],
-          ),
-        );
-      },
+                if (provider.showMenu)
+                  Expanded(
+                    child: _buildListItem(provider, () {
+                      Provider.of<MenuCardProvider>(context, listen: false)
+                          .updateShowMenu(false);
+                    }, context, logoutBloc),
+                  )
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildListItem(
-      MenuProvider provider, Function closeListCard, BuildContext context) {
+  Widget _buildListItem(MenuProvider provider, Function closeListCard,
+      BuildContext context, LogoutBloc logoutBloc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -165,11 +193,7 @@ class MenuLeft extends StatelessWidget {
           isSelect: currentType == MenuHomeType.LOGOUT,
           pathIcon: AppImages.icMenuLogout,
           onTap: () {
-            DialogWidget.instance.openPopup(
-              width: 300,
-              height: 200,
-              child: const PopupConfirmLogout(),
-            );
+            logoutBloc.add(const LogoutEventSubmit());
           },
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/descede.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
@@ -13,7 +14,6 @@ import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/frames/login_frame.dart';
 import 'package:VietQR/features/login/provider/login_provider.dart';
-import 'package:VietQR/features/login/provider/menu_login_provider.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
 import 'package:VietQR/features/login/widgets/login_by_card_widget.dart';
 import 'package:VietQR/layouts/border_layout.dart';
@@ -27,7 +27,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -42,14 +41,15 @@ class _Login extends State<Login> {
 
   final LoginBloc _loginBloc = LoginBloc();
   static String code = '';
-  static const Uuid uuid = Uuid();
+  AESConvert des = AESConvert();
   InfoUserDTO _userDTO = InfoUserDTO();
-
+  String qrValue = '';
   @override
   void initState() {
     super.initState();
-    code = uuid.v1();
-    context.read<MenuLoginProvider>().changePage(5);
+    String loginID = des.getLoginID();
+    String encrypted = des.getEncryptedString(loginID);
+    qrValue = des.encrypt(encrypted);
     // _loginBloc.add(LoginEventInsertCode(code: code, loginBloc: _loginBloc));
   }
 
@@ -506,7 +506,7 @@ class _Login extends State<Login> {
             bgColor: AppColor.WHITE,
             padding: const EdgeInsets.all(8),
             child: QrImage(
-              data: code,
+              data: qrValue,
               size: 305,
               embeddedImage:
                   ImageUtils.instance.getImageNetWork(AppImages.icVietQrLogin),
