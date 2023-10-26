@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:VietQR/models/active_fee_dto.dart';
-import 'package:VietQR/commons/utils/time_utils.dart';
-import 'package:VietQR/commons/utils/string_utils.dart';
-import 'package:VietQR/commons/utils/custom_scroll.dart';
-import 'package:month_year_picker/month_year_picker.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'package:VietQR/services/shared_references/session.dart';
-import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/custom_scroll.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/commons/utils/time_utils.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
-import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/features/merchant/provider/active_fee_provider.dart';
+import 'package:VietQR/features/merchant/states/merchant_state.dart';
+import 'package:VietQR/models/active_fee_dto.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:month_year_picker/month_year_picker.dart';
+import 'package:provider/provider.dart';
 
 class SaleReport extends StatefulWidget {
   final MerchantBloc merchantBloc;
@@ -57,21 +57,28 @@ class _SaleReportState extends State<SaleReport> {
                   child: Center(child: Text('Không có dữ liệu')),
                 );
               } else {
+                double paddingLeft = 0;
+                if (MediaQuery.of(context).size.width >= 1110) {
+                  paddingLeft = (MediaQuery.of(context).size.width - 1110) / 2;
+                }
                 return SingleChildScrollView(
                   child: ScrollConfiguration(
                     behavior: MyCustomScrollBehavior(),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: 1110,
-                        child: Column(
-                          children: [
-                            _buildTitleItem(),
-                            ...listActiveFee.map((e) {
-                              int i = listActiveFee.indexOf(e);
-                              return _buildItem(i, e);
-                            }).toList()
-                          ],
+                      child: Padding(
+                        padding: EdgeInsets.only(left: paddingLeft, top: 20),
+                        child: SizedBox(
+                          width: 1110,
+                          child: Column(
+                            children: [
+                              _buildTitleItem(),
+                              ...listActiveFee.map((e) {
+                                int i = listActiveFee.indexOf(e);
+                                return _buildItem(i, e);
+                              }).toList()
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -11,7 +11,7 @@ import 'package:VietQR/commons/widgets/pin_code_input.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/dashboard/views/menu_top.dart';
 import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/confirm_otp_bank_dto.dart';
@@ -66,287 +66,268 @@ class _AddBankView extends State<AddBankStep3> {
         child: Column(
           children: [
             const HeaderWidget(),
+            const MenuTop(
+              currentType: MenuHomeType.OTHER,
+            ),
             Expanded(
-              child: Row(
+              child: Column(
                 children: [
-                  const MenuLeft(
-                    currentType: MenuHomeType.OTHER,
-                  ),
+                  _buildTitle(),
+                  _buildStep(),
                   Expanded(
-                    child: Column(
-                      children: [
-                        _buildTitle(),
-                        _buildStep(),
-                        Expanded(
-                          child: BlocConsumer<BankBloc, BankState>(
-                            listener: (context, state) {
-                              if (state is BankLoadingInsertState) {
-                                DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is BankReuqestOTPLoadingState) {
-                                DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is BankRequestOTPSuccessState) {
-                                Navigator.pop(context);
-                              }
-                              if (state
-                                  is BankInsertUnauthenticatedSuccessState) {
-                                //navigate
-                                Fluttertoast.showToast(
-                                  msg: 'Thêm tài khoản ngân hàng thành công',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: AppColor.WHITE,
-                                  textColor: AppColor.BLACK,
-                                  fontSize: 15,
-                                  webBgColor: 'rgba(255, 255, 255)',
-                                  webPosition: 'center',
-                                );
-                                context.go('/');
-                              }
+                    child: BlocConsumer<BankBloc, BankState>(
+                      listener: (context, state) {
+                        if (state is BankLoadingInsertState) {
+                          DialogWidget.instance.openLoadingDialog();
+                        }
+                        if (state is BankReuqestOTPLoadingState) {
+                          DialogWidget.instance.openLoadingDialog();
+                        }
+                        if (state is BankRequestOTPSuccessState) {
+                          Navigator.pop(context);
+                        }
+                        if (state is BankInsertUnauthenticatedSuccessState) {
+                          //navigate
+                          Fluttertoast.showToast(
+                            msg: 'Thêm tài khoản ngân hàng thành công',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: AppColor.WHITE,
+                            textColor: AppColor.BLACK,
+                            fontSize: 15,
+                            webBgColor: 'rgba(255, 255, 255)',
+                            webPosition: 'center',
+                          );
+                          context.go('/');
+                        }
 
-                              if (state is BankConfirmOTPLoadingState) {
-                                DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is BankConfirmOTPSuccessState) {
-                                BankTypeDTO bankTypeDTO =
-                                    Provider.of<BankTypeProvider>(context,
-                                            listen: false)
-                                        .bankType;
-                                String userId =
-                                    UserInformationHelper.instance.getUserId();
-                                String name = Provider.of<BankTypeProvider>(
-                                        context,
-                                        listen: false)
-                                    .name;
-                                String formattedName = StringUtils.instance
-                                    .removeDiacritic(StringUtils.instance
-                                        .capitalFirstCharacter(name));
-                                BankCardInsertDTO dto = BankCardInsertDTO(
-                                  bankTypeId: bankTypeDTO.id,
-                                  userId: userId,
-                                  userBankName: formattedName,
-                                  bankAccount: Provider.of<BankTypeProvider>(
-                                          context,
-                                          listen: false)
-                                      .bankAccount,
-                                  type: 0,
-                                  branchId: '',
-                                  nationalId: Provider.of<BankTypeProvider>(
-                                          context,
-                                          listen: false)
-                                      .nationalId,
-                                  phoneAuthenticated:
-                                      Provider.of<BankTypeProvider>(context,
-                                              listen: false)
-                                          .phone,
-                                );
-                                bankBloc.add(BankEventInsert(dto: dto));
-                              }
-                              if (state is BankConfirmOTPFailedState) {
-                                Navigator.pop(context);
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Lỗi',
-                                  msg: state.message,
-                                );
-                              }
-                              if (state is BankInsertSuccessfulState) {
-                                //pop loading
-                                Navigator.pop(context);
-                                Fluttertoast.showToast(
-                                  msg:
-                                      'Liên kết tài khoản ngân hàng thành công',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: AppColor.WHITE,
-                                  textColor: AppColor.BLACK,
-                                  fontSize: 15,
-                                  webBgColor: 'rgba(255, 255, 255)',
-                                  webPosition: 'center',
-                                );
-                                context.go('/');
-                              }
-                              if (state is BankInsertFailedState) {
-                                DialogWidget.instance.openMsgDialog(
-                                    title: 'Không thể thêm tài khoản',
-                                    msg: state.message);
-                              }
-                            },
-                            builder: (context, state) {
-                              return Consumer<BankTypeProvider>(
-                                builder: (context, provider, child) {
-                                  return SizedBox(
-                                    width: double.infinity,
-                                    child: Column(
+                        if (state is BankConfirmOTPLoadingState) {
+                          DialogWidget.instance.openLoadingDialog();
+                        }
+                        if (state is BankConfirmOTPSuccessState) {
+                          BankTypeDTO bankTypeDTO =
+                              Provider.of<BankTypeProvider>(context,
+                                      listen: false)
+                                  .bankType;
+                          String userId =
+                              UserInformationHelper.instance.getUserId();
+                          String name = Provider.of<BankTypeProvider>(context,
+                                  listen: false)
+                              .name;
+                          String formattedName = StringUtils.instance
+                              .removeDiacritic(StringUtils.instance
+                                  .capitalFirstCharacter(name));
+                          BankCardInsertDTO dto = BankCardInsertDTO(
+                            bankTypeId: bankTypeDTO.id,
+                            userId: userId,
+                            userBankName: formattedName,
+                            bankAccount: Provider.of<BankTypeProvider>(context,
+                                    listen: false)
+                                .bankAccount,
+                            type: 0,
+                            branchId: '',
+                            nationalId: Provider.of<BankTypeProvider>(context,
+                                    listen: false)
+                                .nationalId,
+                            phoneAuthenticated: Provider.of<BankTypeProvider>(
+                                    context,
+                                    listen: false)
+                                .phone,
+                          );
+                          bankBloc.add(BankEventInsert(dto: dto));
+                        }
+                        if (state is BankConfirmOTPFailedState) {
+                          Navigator.pop(context);
+                          DialogWidget.instance.openMsgDialog(
+                            title: 'Lỗi',
+                            msg: state.message,
+                          );
+                        }
+                        if (state is BankInsertSuccessfulState) {
+                          //pop loading
+                          Navigator.pop(context);
+                          Fluttertoast.showToast(
+                            msg: 'Liên kết tài khoản ngân hàng thành công',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: AppColor.WHITE,
+                            textColor: AppColor.BLACK,
+                            fontSize: 15,
+                            webBgColor: 'rgba(255, 255, 255)',
+                            webPosition: 'center',
+                          );
+                          context.go('/');
+                        }
+                        if (state is BankInsertFailedState) {
+                          DialogWidget.instance.openMsgDialog(
+                              title: 'Không thể thêm tài khoản',
+                              msg: state.message);
+                        }
+                      },
+                      builder: (context, state) {
+                        return Consumer<BankTypeProvider>(
+                          builder: (context, provider, child) {
+                            return SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 44,
+                                  ),
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 20)),
+                                  const Text(
+                                    'Nhập mã OTP xác thực',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 10)),
+                                  RichText(
+                                    textAlign: TextAlign.left,
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: Theme.of(context).hintColor,
+                                        fontSize: 13,
+                                      ),
                                       children: [
-                                        const SizedBox(
-                                          height: 44,
-                                        ),
-                                        const Padding(
-                                            padding: EdgeInsets.only(top: 20)),
-                                        const Text(
-                                          'Nhập mã OTP xác thực',
-                                          style: TextStyle(
-                                            fontSize: 15,
+                                        const TextSpan(
+                                            text:
+                                                'Nhập mã OTP từ MB Bank gửi về số điện thoại '),
+                                        TextSpan(
+                                          text: provider
+                                              .bankCardRequestOTP.phoneNumber,
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        const Padding(
-                                            padding: EdgeInsets.only(top: 10)),
-                                        RichText(
-                                          textAlign: TextAlign.left,
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(context).hintColor,
-                                              fontSize: 13,
-                                            ),
-                                            children: [
-                                              const TextSpan(
-                                                  text:
-                                                      'Nhập mã OTP từ MB Bank gửi về số điện thoại '),
-                                              TextSpan(
-                                                text: provider
-                                                    .bankCardRequestOTP
-                                                    .phoneNumber,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        //
-                                        const Padding(
-                                            padding: EdgeInsets.only(top: 30)),
-                                        SizedBox(
-                                          height: 50,
-                                          width: 560,
-                                          child: PinCodeInput(
-                                            obscureText: false,
-                                            autoFocus: true,
-                                            controller: otpController,
-                                            size: 48,
-                                            length: 8,
-                                            textStyle: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColor.BLUE_TEXT,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        ValueListenableBuilder(
-                                          valueListenable: countdownProvider,
-                                          builder: (_, value, child) {
-                                            return (value != 0)
-                                                ? RichText(
-                                                    textAlign: TextAlign.center,
-                                                    text: TextSpan(
-                                                      style: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .hintColor,
-                                                        fontSize: 13,
-                                                      ),
-                                                      children: [
-                                                        const TextSpan(
-                                                            text:
-                                                                'Mã OTP có hiệu lực trong vòng '),
-                                                        TextSpan(
-                                                          text:
-                                                              value.toString(),
-                                                          style: const TextStyle(
-                                                              color: AppColor
-                                                                  .BLUE_TEXT),
-                                                        ),
-                                                        const TextSpan(
-                                                            text: 's.'),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : RichText(
-                                                    textAlign: TextAlign.center,
-                                                    text: TextSpan(
-                                                      style: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .hintColor,
-                                                        fontSize: 13,
-                                                      ),
-                                                      children: [
-                                                        const TextSpan(
-                                                            text:
-                                                                'Không nhận được mã OTP? '),
-                                                        TextSpan(
-                                                          text: 'Gửi lại',
-                                                          style:
-                                                              const TextStyle(
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            color: AppColor
-                                                                .BLUE_TEXT,
-                                                          ),
-                                                          recognizer:
-                                                              TapGestureRecognizer()
-                                                                ..onTap = () {
-                                                                  countdownProvider =
-                                                                      CountdownProvider(
-                                                                          120);
-                                                                  bankBloc.add(
-                                                                    BankEventRequestOTP(
-                                                                        dto: provider
-                                                                            .bankCardRequestOTP),
-                                                                  );
-                                                                },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                          },
-                                        ),
-                                        const Spacer(),
-                                        ButtonWidget(
-                                          width: 360,
-                                          height: 40,
-                                          text: 'Xác thực',
-                                          borderRadius: 5,
-                                          textColor: AppColor.WHITE,
-                                          bgColor: AppColor.BLUE_TEXT,
-                                          function: () {
-                                            if (otpController.text.isNotEmpty) {
-                                              ConfirmOTPBankDTO confirmDTO =
-                                                  ConfirmOTPBankDTO(
-                                                bankAccount:
-                                                    provider.bankAccount,
-                                                requestId: provider.requestId,
-                                                otpValue: otpController.text,
-                                                applicationType: 'WEB_APP',
-                                              );
-                                              bankBloc.add(BankEventConfirmOTP(
-                                                  dto: confirmDTO));
-                                              otpController.clear();
-                                            }
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 40,
-                                        ),
                                       ],
                                     ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        const FooterWeb(),
-                      ],
+                                  ),
+                                  //
+                                  const Padding(
+                                      padding: EdgeInsets.only(top: 30)),
+                                  SizedBox(
+                                    height: 50,
+                                    width: 560,
+                                    child: PinCodeInput(
+                                      obscureText: false,
+                                      autoFocus: true,
+                                      controller: otpController,
+                                      size: 48,
+                                      length: 8,
+                                      textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColor.BLUE_TEXT,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  ValueListenableBuilder(
+                                    valueListenable: countdownProvider,
+                                    builder: (_, value, child) {
+                                      return (value != 0)
+                                          ? RichText(
+                                              textAlign: TextAlign.center,
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .hintColor,
+                                                  fontSize: 13,
+                                                ),
+                                                children: [
+                                                  const TextSpan(
+                                                      text:
+                                                          'Mã OTP có hiệu lực trong vòng '),
+                                                  TextSpan(
+                                                    text: value.toString(),
+                                                    style: const TextStyle(
+                                                        color:
+                                                            AppColor.BLUE_TEXT),
+                                                  ),
+                                                  const TextSpan(text: 's.'),
+                                                ],
+                                              ),
+                                            )
+                                          : RichText(
+                                              textAlign: TextAlign.center,
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .hintColor,
+                                                  fontSize: 13,
+                                                ),
+                                                children: [
+                                                  const TextSpan(
+                                                      text:
+                                                          'Không nhận được mã OTP? '),
+                                                  TextSpan(
+                                                    text: 'Gửi lại',
+                                                    style: const TextStyle(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      color: AppColor.BLUE_TEXT,
+                                                    ),
+                                                    recognizer:
+                                                        TapGestureRecognizer()
+                                                          ..onTap = () {
+                                                            countdownProvider =
+                                                                CountdownProvider(
+                                                                    120);
+                                                            bankBloc.add(
+                                                              BankEventRequestOTP(
+                                                                  dto: provider
+                                                                      .bankCardRequestOTP),
+                                                            );
+                                                          },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                    },
+                                  ),
+                                  const Spacer(),
+                                  ButtonWidget(
+                                    width: 360,
+                                    height: 40,
+                                    text: 'Xác thực',
+                                    borderRadius: 5,
+                                    textColor: AppColor.WHITE,
+                                    bgColor: AppColor.BLUE_TEXT,
+                                    function: () {
+                                      if (otpController.text.isNotEmpty) {
+                                        ConfirmOTPBankDTO confirmDTO =
+                                            ConfirmOTPBankDTO(
+                                          bankAccount: provider.bankAccount,
+                                          requestId: provider.requestId,
+                                          otpValue: otpController.text,
+                                          applicationType: 'WEB_APP',
+                                        );
+                                        bankBloc.add(BankEventConfirmOTP(
+                                            dto: confirmDTO));
+                                        otpController.clear();
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ),
+                  const FooterWeb(),
                 ],
               ),
             ),

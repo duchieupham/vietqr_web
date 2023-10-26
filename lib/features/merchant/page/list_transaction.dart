@@ -1,21 +1,21 @@
 import 'dart:html' as html;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../commons/utils/time_utils.dart';
-import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/commons/utils/string_utils.dart';
+
 import 'package:VietQR/commons/utils/custom_scroll.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'package:VietQR/models/transaction_merchant_dto.dart';
-import '../../../commons/constants/configurations/theme.dart';
-import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
-import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/features/merchant/provider/merchant_provider.dart';
+import 'package:VietQR/features/merchant/states/merchant_state.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-
+import '../../../commons/constants/configurations/theme.dart';
+import '../../../commons/utils/time_utils.dart';
 
 class ListTransaction extends StatefulWidget {
   final MerchantBloc merchantBloc;
@@ -388,7 +388,6 @@ class _ListTransactionState extends State<ListTransaction> {
     return Container(
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
       alignment: Alignment.centerLeft,
       child: const Text(
         'Danh sách giao dịch',

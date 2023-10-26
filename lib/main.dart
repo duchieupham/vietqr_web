@@ -23,6 +23,7 @@ import 'package:VietQR/features/dashboard/dashboard_screen.dart';
 import 'package:VietQR/features/dashboard/qr_generate_un_authen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
 import 'package:VietQR/features/home/home_screen.dart';
+import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
@@ -590,6 +591,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => SettingProvider()),
             ChangeNotifierProvider(create: (context) => MerchantProvider()),
             ChangeNotifierProvider(create: (context) => MenuLoginProvider()),
+            ChangeNotifierProvider(create: (context) => WalletHomeProvider()),
           ],
           child: MaterialApp.router(
             onGenerateTitle: (context) =>

@@ -363,7 +363,7 @@ class ListTransactionUser extends StatelessWidget {
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
+      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.1)),
       alignment: Alignment.centerLeft,
       child: const Text(
         'Danh sách giao dịch',

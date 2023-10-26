@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:flutter/material.dart';
@@ -36,19 +37,14 @@ class MerchantFrame extends StatelessWidget {
             ? Column(
                 children: [
                   const HeaderWidget(),
+                  menu,
                   Expanded(
-                    child: Row(
-                      children: [
-                        menu,
-                        Expanded(
-                          child: SizedBox(
-                            height: height - 60,
-                            child: table,
-                          ),
-                        ),
-                      ],
+                    child: SizedBox(
+                      height: height - 60,
+                      child: table,
                     ),
                   ),
+                  const FooterWeb(),
                 ],
               )
             : const WebMobileBlankWidget(),

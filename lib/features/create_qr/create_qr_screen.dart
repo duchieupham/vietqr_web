@@ -9,7 +9,6 @@ import 'package:VietQR/features/create_qr/frame/create_qr_frame.dart';
 import 'package:VietQR/features/create_qr/provider/create_qr_provider.dart';
 import 'package:VietQR/features/create_qr/states/create_qr_state.dart';
 import 'package:VietQR/features/create_qr/widget/calculator_view.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -21,7 +20,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../commons/enums/type_menu_home.dart';
 import '../../commons/utils/image_utils.dart';
 import 'event/create_qr_event.dart';
 
@@ -80,9 +78,6 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
           }
         }, builder: (context, state) {
           return CreateQRFrame(
-            menu: const MenuLeft(
-              currentType: MenuHomeType.CREATE_QR,
-            ),
             widget1: _buildListBank(),
             widget2: _formCreate(),
             // widget3: _buildQRcode(state),

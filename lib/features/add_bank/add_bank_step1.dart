@@ -6,7 +6,7 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/features/add_bank/states/list_bank_state.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/dashboard/views/menu_top.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:flutter/material.dart';
@@ -54,87 +54,78 @@ class _AddBankScreenState extends State<AddBankStep1> {
           child: Column(
             children: [
               const HeaderWidget(),
+              const MenuTop(
+                currentType: MenuHomeType.OTHER,
+              ),
               Expanded(
-                child: Row(
+                child: Column(
                   children: [
-                    const MenuLeft(
-                      currentType: MenuHomeType.OTHER,
-                    ),
+                    _buildTitle(),
+                    _buildStep(),
+                    _buildFiledSearch(),
                     Expanded(
-                        child: Column(
-                      children: [
-                        _buildTitle(),
-                        _buildStep(),
-                        _buildFiledSearch(),
-                        Expanded(
-                          child: BlocConsumer<ListBankBloc, ListBankState>(
-                            listener: (context, state) {
-                              if (state is BankTypeGetListSuccessfulState) {
-                                if (state.list.isNotEmpty) {
-                                  bankTypesResult = state.list;
-                                  bankTypes = state.list;
-                                }
-                              }
-                              if (state is BankTypeSearchState) {
-                                bankTypesResult = state.list;
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is BankTypeLoadingState) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(top: 40),
-                                  child: Center(
-                                      child: CircularProgressIndicator()),
-                                );
-                              }
-                              if (bankTypesResult.isEmpty) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(top: 40),
-                                  child:
-                                      Center(child: Text('Không có dữ liệu')),
-                                );
-                              }
+                      child: BlocConsumer<ListBankBloc, ListBankState>(
+                        listener: (context, state) {
+                          if (state is BankTypeGetListSuccessfulState) {
+                            if (state.list.isNotEmpty) {
+                              bankTypesResult = state.list;
+                              bankTypes = state.list;
+                            }
+                          }
+                          if (state is BankTypeSearchState) {
+                            bankTypesResult = state.list;
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state is BankTypeLoadingState) {
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+                          if (bankTypesResult.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 40),
+                              child: Center(child: Text('Không có dữ liệu')),
+                            );
+                          }
 
-                              return Consumer<BankTypeProvider>(
-                                  builder: (context, provider, child) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Spacer(),
-                                      Expanded(
-                                        flex: 12,
-                                        child: SingleChildScrollView(
-                                          child: Wrap(
-                                            spacing: 60,
-                                            runSpacing: 40,
-                                            children: bankTypesResult.map((e) {
-                                              return _buildItemBank(e, () {
-                                                provider.updateBankType(e);
-                                                context.go(
-                                                    '/add-bank/step2?bankId=${e.id}');
-                                              },
-                                                  isSelected:
-                                                      provider.bankType.id ==
-                                                          e.id);
-                                            }).toList(),
-                                          ),
-                                        ),
+                          return Consumer<BankTypeProvider>(
+                              builder: (context, provider, child) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Spacer(),
+                                  Expanded(
+                                    flex: 12,
+                                    child: SingleChildScrollView(
+                                      child: Wrap(
+                                        spacing: 60,
+                                        runSpacing: 40,
+                                        children: bankTypesResult.map((e) {
+                                          return _buildItemBank(e, () {
+                                            provider.updateBankType(e);
+                                            context.go(
+                                                '/add-bank/step2?bankId=${e.id}');
+                                          },
+                                              isSelected:
+                                                  provider.bankType.id == e.id);
+                                        }).toList(),
                                       ),
-                                      const Spacer(),
-                                    ],
+                                    ),
                                   ),
-                                );
-                              });
-                            },
-                          ),
-                        ),
-                        const FooterWeb(),
-                      ],
-                    )),
+                                  const Spacer(),
+                                ],
+                              ),
+                            );
+                          });
+                        },
+                      ),
+                    ),
+                    const FooterWeb(),
                   ],
                 ),
               ),
@@ -206,7 +197,7 @@ class _AddBankScreenState extends State<AddBankStep1> {
     return Container(
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
+      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.1)),
       alignment: Alignment.centerLeft,
       child: Row(
         children: [

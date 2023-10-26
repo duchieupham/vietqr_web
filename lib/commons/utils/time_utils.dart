@@ -1,6 +1,6 @@
-import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimeUtils {
   const TimeUtils._privateConsrtructor();
@@ -141,7 +141,6 @@ class TimeUtils {
   }
 
   String formatDateToString(DateTime? now, {bool isExport = false}) {
-
     now ??= DateTime.now();
     DateFormat format;
     if (isExport) {
@@ -228,17 +227,17 @@ class TimeUtils {
   String formatDateOfWeek(String value) {
     String result = '';
     if (value == 'Monday') {
-      result = 'Thứ hai';
+      result = 'Thứ 2';
     } else if (value == 'Tuesday') {
-      result = 'Thứ ba';
+      result = 'Thứ 3';
     } else if (value == 'Wednesday') {
-      result = 'Thứ tư';
+      result = 'Thứ 4';
     } else if (value == 'Thursday') {
-      result = 'Thứ năm';
+      result = 'Thứ 5';
     } else if (value == 'Friday') {
-      result = 'Thứ sáu';
+      result = 'Thứ 6';
     } else if (value.contains('Saturday')) {
-      result = 'Thứ bảy';
+      result = 'Thứ 7';
     } else if (value == 'Sunday') {
       result = 'Chủ nhật';
     }
@@ -352,5 +351,4 @@ class TimeUtils {
       return formattedTime;
     }
   }
-
 }
