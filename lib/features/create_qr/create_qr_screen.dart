@@ -1,4 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -73,8 +75,14 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {}
           }
           if (state is QRGenerateSuccessState) {
-            context.go('/qr-generated?token=${state.dto.transactionRefId}',
-                extra: true);
+            if (EnvConfig.getEnv() == EnvType.PROD) {
+              context.go('/qr-generated?token=${state.dto.transactionRefId}',
+                  extra: true);
+            } else {
+              context.go(
+                  '/test/qr-generated?token=${state.dto.transactionRefId}',
+                  extra: true);
+            }
           }
         }, builder: (context, state) {
           return CreateQRFrame(

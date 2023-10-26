@@ -37,9 +37,11 @@ class ListTransactionUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    init();
     return ChangeNotifierProvider<TransUserProvider>(
-      create: (context) => TransUserProvider()..init(transactionUserBloc),
+      create: (context) =>
+          TransUserProvider()..init(transactionUserBloc, (){
+            init();
+          }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -112,8 +114,11 @@ class ListTransactionUser extends StatelessWidget {
                       ),
                       if (state is GetListTransactionLoadMoreListState)
                         const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: CircularProgressIndicator(),
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator()),
                         )
                     ],
                   );

@@ -49,41 +49,44 @@ class _WalletFrameState extends State<WalletFrame> {
                 child: Column(
                   children: [
                     const HeaderWidget(),
-                    widget.menu,
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Expanded(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: Text(
-                            'Ví QR',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.underline,
-                              fontSize: 16,
-                            ),
+                        widget.menu,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: Text(
+                                  'Ví QR',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Expanded(
+                                  child: Row(
+                                children: [
+                                  const SizedBox(width: 16),
+                                  Expanded(flex: 3, child: widget.widget1),
+                                  const SizedBox(width: 30),
+                                  LayoutBuilder(
+                                      builder: (context, constraints) {
+                                    return widget.widget2;
+                                  }),
+                                  const SizedBox(width: 30),
+                                ],
+                              )),
+                            ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        Expanded(
-                            child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(flex: 3, child: widget.widget1),
-                            const SizedBox(width: 30),
-                            LayoutBuilder(builder: (context, constraints) {
-                              return widget.widget2;
-                            }),
-                            const SizedBox(width: 30),
-                          ],
-                        )),
-                        const FooterWeb(),
                       ],
                     )),
                     const FooterWeb(),

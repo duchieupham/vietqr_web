@@ -37,11 +37,17 @@ class MerchantFrame extends StatelessWidget {
             ? Column(
                 children: [
                   const HeaderWidget(),
-                  menu,
                   Expanded(
-                    child: SizedBox(
-                      height: height - 60,
-                      child: table,
+                    child: Row(
+                      children: [
+                        menu,
+                        Expanded(
+                          child: SizedBox(
+                            height: height - 60,
+                            child: table,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const FooterWeb(),

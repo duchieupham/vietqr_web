@@ -51,24 +51,30 @@ class _HomeFrameState extends State<HomeFrame> {
                 child: Column(
                   children: [
                     const HeaderWidget(),
-                    widget.menu,
                     Expanded(
-                        child: Column(
+                        child: Row(
                       children: [
+                        widget.menu,
                         Expanded(
-                          child: Row(
+                          child: Column(
                             children: [
-                              const SizedBox(width: 20),
-                              Expanded(child: widget.widget1),
-                              const SizedBox(width: 30),
-                              Expanded(child: widget.widget2),
-                              const SizedBox(width: 30),
-                              Expanded(child: widget.widget3),
-                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 20),
+                                    Expanded(child: widget.widget1),
+                                    const SizedBox(width: 30),
+                                    Expanded(child: widget.widget2),
+                                    const SizedBox(width: 30),
+                                    Expanded(child: widget.widget3),
+                                    const SizedBox(width: 16),
+                                  ],
+                                ),
+                              ),
+                              const FooterWeb(),
                             ],
                           ),
                         ),
-                        const FooterWeb(),
                       ],
                     )),
                   ],

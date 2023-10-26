@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
+import 'package:VietQR/commons/utils/clocker_widget.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -11,14 +12,14 @@ import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
 import 'package:VietQR/features/notification/views/notification_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/services/providers/menu_card_provider.dart';
+import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-import '../../utils/clocker_widget.dart';
 
 class HeaderFullWidget extends StatefulWidget {
   final bool? isSubHeader;
@@ -63,39 +64,39 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
       height: 60,
       child: Row(
         children: [
-          // (widget.isSubHeader != null && widget.isSubHeader!)
-          //     ? const SizedBox()
-          //     : Tooltip(
-          //         message: 'Menu',
-          //         child: Consumer<MenuProvider>(
-          //           builder: (context, provider, child) {
-          //             return InkWell(
-          //               onTap: () {
-          //                 Session.instance.fetchWallet();
-          //                 provider.updateShowMenu(!provider.showMenu);
-          //                 Provider.of<MenuCardProvider>(context, listen: false)
-          //                     .updateShowMenu(false);
-          //               },
-          //               child: BoxLayout(
-          //                 width: 35,
-          //                 height: 35,
-          //                 borderRadius: 35,
-          //                 alignment: Alignment.center,
-          //                 padding: const EdgeInsets.all(0),
-          //                 bgColor: Theme.of(context).cardColor.withOpacity(0.3),
-          //                 child: Icon(
-          //                   (provider.showMenu)
-          //                       ? Icons.close_rounded
-          //                       : Icons.menu_rounded,
-          //                   size: 20,
-          //                   color: Theme.of(context).hintColor,
-          //                 ),
-          //               ),
-          //             );
-          //           },
-          //         ),
-          //       ),
-          const Padding(padding: EdgeInsets.only(right: 30)),
+          (widget.isSubHeader != null && widget.isSubHeader!)
+              ? const SizedBox()
+              : Tooltip(
+                  message: 'Menu',
+                  child: Consumer<MenuProvider>(
+                    builder: (context, provider, child) {
+                      return InkWell(
+                        onTap: () {
+                          Session.instance.fetchWallet();
+                          provider.updateShowMenu(!provider.showMenu);
+                          Provider.of<MenuCardProvider>(context, listen: false)
+                              .updateShowMenu(false);
+                        },
+                        child: BoxLayout(
+                          width: 35,
+                          height: 35,
+                          borderRadius: 35,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(0),
+                          bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+                          child: Icon(
+                            (provider.showMenu)
+                                ? Icons.close_rounded
+                                : Icons.menu_rounded,
+                            size: 20,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+          const Padding(padding: EdgeInsets.only(right: 12)),
           //logo
           Tooltip(
             message: 'Trang chủ',
@@ -112,10 +113,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           ),
           // _buildTitle('Trang chủ'),
           //time
-          const SizedBox(
-            width: 12,
-          ),
-          ClockWidget(),
+
           // ButtonIconWidget(
           //   title: 'Thêm TK ngân hàng',
           //   function: () {
@@ -138,6 +136,16 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           //   textColor: AppColor.BLUE_TEXT,
           // ),
           _buildWallet(),
+          const SizedBox(
+            width: 12,
+          ),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColor.WHITE.withOpacity(0.5)),
+              child: const ClockWidget()),
           const SizedBox(
             width: 12,
           ),

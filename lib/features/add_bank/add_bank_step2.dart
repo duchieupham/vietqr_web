@@ -13,7 +13,7 @@ import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/features/bank/widgets/policy_bank_widget.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
-import 'package:VietQR/features/dashboard/views/menu_top.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/models/bank_card_insert_unauthenticated.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_name_search_dto.dart';
@@ -71,329 +71,365 @@ class _AddBankView extends State<AddBankStep2> {
         child: Column(
           children: [
             const HeaderWidget(),
-            const MenuTop(
-              currentType: MenuHomeType.OTHER,
-            ),
             Expanded(
-              child: Column(
+              child: Row(
                 children: [
-                  _buildTitle(),
-                  _buildStep(),
+                  const MenuLeft(
+                    currentType: MenuHomeType.OTHER,
+                  ),
                   Expanded(
-                    child: BlocConsumer<BankBloc, BankState>(
-                      listener: (context, state) {
-                        if (state is BankSearchingNameState) {
-                          DialogWidget.instance.openLoadingDialog();
-                        }
-                        if (state is BankSearchNameSuccessState ||
-                            state is BankSearchNameFailedState) {
-                          Navigator.pop(context);
-                          _focusNode.unfocus();
-                        }
-                        if (state is BankLoadingInsertState) {
-                          DialogWidget.instance.openLoadingDialog();
-                        }
-                        if (state is BankCheckNotExistedState) {
-                          if (state.isAuthenticated) {
-                            String formattedName = StringUtils.instance
-                                .removeDiacritic(StringUtils.instance
-                                    .capitalFirstCharacter(
-                                        nameController.text));
-                            bankBloc.add(
-                              BankEventRequestOTP(
-                                dto: BankCardRequestOTP(
-                                  nationalId: nationalController.text,
-                                  accountNumber: bankAccountController.text,
-                                  accountName: formattedName,
-                                  applicationType: 'WEB_APP',
-                                  phoneNumber: phoneController.text,
-                                ),
-                              ),
-                            );
-                          } else {
-                            //insert bank unauthenticated
-                            String bankTypeId = Provider.of<BankTypeProvider>(
-                                    context,
-                                    listen: false)
-                                .bankType
-                                .id;
-                            String userId =
-                                UserInformationHelper.instance.getUserId();
-                            String formattedName = StringUtils.instance
-                                .removeDiacritic(StringUtils.instance
-                                    .capitalFirstCharacter(
-                                        nameController.text));
-                            BankCardInsertUnauthenticatedDTO dto =
-                                BankCardInsertUnauthenticatedDTO(
-                              bankTypeId: bankTypeId,
-                              userId: userId,
-                              userBankName: formattedName,
-                              bankAccount: bankAccountController.text,
-                            );
-                            bankBloc
-                                .add(BankEventInsertUnauthenticated(dto: dto));
-                          }
-                        }
-                        if (state is BankCheckFailedState) {
-                          //pop loading
-                          Navigator.pop(context);
-                          DialogWidget.instance.openMsgDialog(
-                              title: 'Lỗi', msg: 'Vui lòng thử lại sau');
-                        }
-                        if (state is BankCheckExistedState) {
-                          //pop loading
-                          Navigator.pop(context);
-                          DialogWidget.instance.openMsgDialog(
-                              title: 'Không thể thêm/liên kết TK',
-                              msg: state.msg);
-                        }
-                        if (state is BankInsertUnauthenticatedSuccessState) {
-                          //pop loading
-                          phoneController.clear();
-                          nameController.clear();
-                          nationalController.clear();
-                          bankAccountController.clear();
-                          //navigate
-                          Fluttertoast.showToast(
-                            msg: 'Thêm tài khoản ngân hàng thành công',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: AppColor.WHITE,
-                            textColor: AppColor.BLACK,
-                            fontSize: 15,
-                            webBgColor: 'rgba(255, 255, 255)',
-                            webPosition: 'center',
-                          );
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .reset();
-                          context.go('/');
-                        }
-                        if (state is BankInsertUnauthenticatedFailedState) {
-                          //pop loading
-                          Navigator.pop(context);
-                          DialogWidget.instance.openMsgDialog(
-                              title: 'Không thể thêm TK', msg: state.msg);
-                        }
-                        if (state is BankReuqestOTPLoadingState) {
-                          DialogWidget.instance.openLoadingDialog();
-                        }
-                        if (state is BankRequestOTPSuccessState) {
-                          Navigator.pop(context);
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .updateRequestId(state.requestId);
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .updateBankCardRequestOTP(state.dto);
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .updateBankAccount(bankAccountController.text);
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .updateName(nameController.text);
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .updateNationalId(nationalController.text);
-                          Provider.of<BankTypeProvider>(context, listen: false)
-                              .updatePhone(phoneController.text);
-                          context.go('/add-bank/step3');
-                        }
-                        if (state is BankRequestOTPFailedState) {
-                          Navigator.pop(context);
-                          DialogWidget.instance.openMsgDialog(
-                            title: 'Xác thực thất bại',
-                            msg: state.message,
-                            function: () {
-                              Navigator.pop(context);
+                    child: Column(
+                      children: [
+                        _buildTitle(),
+                        _buildStep(),
+                        Expanded(
+                          child: BlocConsumer<BankBloc, BankState>(
+                            listener: (context, state) {
+                              if (state is BankSearchingNameState) {
+                                DialogWidget.instance.openLoadingDialog();
+                              }
+                              if (state is BankSearchNameSuccessState ||
+                                  state is BankSearchNameFailedState) {
+                                Navigator.pop(context);
+                                _focusNode.unfocus();
+                              }
+                              if (state is BankLoadingInsertState) {
+                                DialogWidget.instance.openLoadingDialog();
+                              }
+                              if (state is BankCheckNotExistedState) {
+                                if (state.isAuthenticated) {
+                                  String formattedName = StringUtils.instance
+                                      .removeDiacritic(StringUtils.instance
+                                          .capitalFirstCharacter(
+                                              nameController.text));
+                                  bankBloc.add(
+                                    BankEventRequestOTP(
+                                      dto: BankCardRequestOTP(
+                                        nationalId: nationalController.text,
+                                        accountNumber:
+                                            bankAccountController.text,
+                                        accountName: formattedName,
+                                        applicationType: 'WEB_APP',
+                                        phoneNumber: phoneController.text,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  //insert bank unauthenticated
+                                  String bankTypeId =
+                                      Provider.of<BankTypeProvider>(context,
+                                              listen: false)
+                                          .bankType
+                                          .id;
+                                  String userId = UserInformationHelper.instance
+                                      .getUserId();
+                                  String formattedName = StringUtils.instance
+                                      .removeDiacritic(StringUtils.instance
+                                          .capitalFirstCharacter(
+                                              nameController.text));
+                                  BankCardInsertUnauthenticatedDTO dto =
+                                      BankCardInsertUnauthenticatedDTO(
+                                    bankTypeId: bankTypeId,
+                                    userId: userId,
+                                    userBankName: formattedName,
+                                    bankAccount: bankAccountController.text,
+                                  );
+                                  bankBloc.add(
+                                      BankEventInsertUnauthenticated(dto: dto));
+                                }
+                              }
+                              if (state is BankCheckFailedState) {
+                                //pop loading
+                                Navigator.pop(context);
+                                DialogWidget.instance.openMsgDialog(
+                                    title: 'Lỗi', msg: 'Vui lòng thử lại sau');
+                              }
+                              if (state is BankCheckExistedState) {
+                                //pop loading
+                                Navigator.pop(context);
+                                DialogWidget.instance.openMsgDialog(
+                                    title: 'Không thể thêm/liên kết TK',
+                                    msg: state.msg);
+                              }
+                              if (state
+                                  is BankInsertUnauthenticatedSuccessState) {
+                                //pop loading
+                                phoneController.clear();
+                                nameController.clear();
+                                nationalController.clear();
+                                bankAccountController.clear();
+                                //navigate
+                                Fluttertoast.showToast(
+                                  msg: 'Thêm tài khoản ngân hàng thành công',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: AppColor.WHITE,
+                                  textColor: AppColor.BLACK,
+                                  fontSize: 15,
+                                  webBgColor: 'rgba(255, 255, 255)',
+                                  webPosition: 'center',
+                                );
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .reset();
+                                context.go('/');
+                              }
+                              if (state
+                                  is BankInsertUnauthenticatedFailedState) {
+                                //pop loading
+                                Navigator.pop(context);
+                                DialogWidget.instance.openMsgDialog(
+                                    title: 'Không thể thêm TK', msg: state.msg);
+                              }
+                              if (state is BankReuqestOTPLoadingState) {
+                                DialogWidget.instance.openLoadingDialog();
+                              }
+                              if (state is BankRequestOTPSuccessState) {
+                                Navigator.pop(context);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateRequestId(state.requestId);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateBankCardRequestOTP(state.dto);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateBankAccount(
+                                        bankAccountController.text);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateName(nameController.text);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updateNationalId(nationalController.text);
+                                Provider.of<BankTypeProvider>(context,
+                                        listen: false)
+                                    .updatePhone(phoneController.text);
+                                context.go('/add-bank/step3');
+                              }
+                              if (state is BankRequestOTPFailedState) {
+                                Navigator.pop(context);
+                                DialogWidget.instance.openMsgDialog(
+                                  title: 'Xác thực thất bại',
+                                  msg: state.message,
+                                  function: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              }
+                              if (state is BankConfirmOTPLoadingState) {
+                                DialogWidget.instance.openLoadingDialog();
+                              }
+                              if (state is BankInsertFailedState) {
+                                DialogWidget.instance.openMsgDialog(
+                                    title: 'Không thể thêm tài khoản',
+                                    msg: state.message);
+                              }
                             },
-                          );
-                        }
-                        if (state is BankConfirmOTPLoadingState) {
-                          DialogWidget.instance.openLoadingDialog();
-                        }
-                        if (state is BankInsertFailedState) {
-                          DialogWidget.instance.openMsgDialog(
-                              title: 'Không thể thêm tài khoản',
-                              msg: state.message);
-                        }
-                      },
-                      builder: (context, state) {
-                        if (state is BankSearchNameSuccessState) {
-                          nameController.clear();
-                          nameController.value = nameController.value.copyWith(
-                            text: state.dto.accountName,
-                          );
-                          _focusNode.unfocus();
-                        }
-                        return Consumer<BankTypeProvider>(
-                          builder: (context, provider, child) {
-                            return SizedBox(
-                              width: double.infinity,
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  const SizedBox(
-                                    height: 44,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildInputInfo(provider),
-                                      if (provider.bankType.status == 1)
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 50),
-                                          child:
-                                              _buildInputInfoConnect(provider),
-                                        )
-                                    ],
-                                  ),
-                                  const Padding(
-                                      padding: EdgeInsets.only(top: 70)),
-                                  SizedBox(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
+                            builder: (context, state) {
+                              if (state is BankSearchNameSuccessState) {
+                                nameController.clear();
+                                nameController.value =
+                                    nameController.value.copyWith(
+                                  text: state.dto.accountName,
+                                );
+                                _focusNode.unfocus();
+                              }
+                              return Consumer<BankTypeProvider>(
+                                builder: (context, provider, child) {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    child: ListView(
+                                      shrinkWrap: true,
                                       children: [
-                                        ButtonWidget(
-                                          width: 440,
-                                          height: 40,
-                                          text: 'Lưu tài khoản',
-                                          borderRadius: 5,
-                                          textColor:
-                                              provider.bankType.status == 1
-                                                  ? AppColor.BLUE_TEXT
-                                                  : AppColor.WHITE,
-                                          bgColor: provider.bankType.status == 1
-                                              ? AppColor.BLUE_TEXT
-                                                  .withOpacity(0.2)
-                                              : AppColor.BLUE_TEXT,
-                                          function: () {
-                                            if (provider
-                                                .bankType.id.isNotEmpty) {
-                                              provider.updateBankAccountErr(
-                                                (bankAccountController
-                                                        .text.isEmpty ||
-                                                    !StringUtils.instance
-                                                        .isNumeric(
-                                                            bankAccountController
-                                                                .text)),
-                                              );
-                                              provider.updateNameErr(
-                                                nameController.text.isEmpty,
-                                              );
-                                              if (provider
-                                                  .isValidUnauthenticateForm()) {
-                                                String bankTypeId = Provider.of<
-                                                            BankTypeProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .bankType
-                                                    .id;
-                                                bankBloc.add(
-                                                  BankCheckExistedEvent(
-                                                      isAuthenticated: false,
-                                                      bankAccount:
-                                                          bankAccountController
-                                                              .text,
-                                                      bankTypeId: bankTypeId),
-                                                );
-                                              }
-                                            } else {
-                                              DialogWidget.instance
-                                                  .openMsgDialog(
-                                                title: 'Không thể tạo',
-                                                msg:
-                                                    'Vui lòng chọn ngân hàng thụ hưởng',
-                                              );
-                                            }
-                                          },
+                                        const SizedBox(
+                                          height: 44,
                                         ),
-                                        if (provider.bankType.status == 1) ...[
-                                          const Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 12)),
-                                          ButtonWidget(
-                                            width: 440,
-                                            height: 40,
-                                            text: 'Liên kết',
-                                            borderRadius: 5,
-                                            textColor: AppColor.WHITE,
-                                            bgColor: AppColor.BLUE_TEXT,
-                                            function: () async {
-                                              provider.updateBankAccountErr(
-                                                (bankAccountController
-                                                        .text.isEmpty ||
-                                                    !StringUtils.instance
-                                                        .isNumeric(
-                                                            bankAccountController
-                                                                .text)),
-                                              );
-                                              provider.updateNameErr(
-                                                nameController.text.isEmpty,
-                                              );
-                                              provider.updateNationalErr(
-                                                  !(nationalController
-                                                              .text.length >=
-                                                          9 &&
-                                                      nationalController
-                                                              .text.length <=
-                                                          12));
-                                              provider.updatePhoneErr(
-                                                !(phoneController
-                                                        .text.isNotEmpty &&
-                                                    StringUtils.instance
-                                                        .isNumeric(
-                                                            phoneController
-                                                                .text)),
-                                              );
-                                              if (provider
-                                                  .isValidUnauthenticateForm()) {
-                                                await DialogWidget.instance
-                                                    .openPopup(
-                                                  child: PolicyBankWidget(
-                                                    bankAccount:
-                                                        bankAccountController
-                                                            .text,
-                                                  ),
-                                                  width: 600,
-                                                  height: 400,
-                                                )
-                                                    .then((value) {
-                                                  provider
-                                                      .updateAgreePolicy(false);
-                                                  bool check = value ?? false;
-                                                  if (check) {
-                                                    String bankTypeId = Provider
-                                                            .of<BankTypeProvider>(
-                                                                context,
-                                                                listen: false)
-                                                        .bankType
-                                                        .id;
-                                                    bankBloc.add(
-                                                      BankCheckExistedEvent(
-                                                          isAuthenticated: true,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            _buildInputInfo(provider),
+                                            if (provider.bankType.status == 1)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 50),
+                                                child: _buildInputInfoConnect(
+                                                    provider),
+                                              )
+                                          ],
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 70)),
+                                        SizedBox(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              ButtonWidget(
+                                                width: 440,
+                                                height: 40,
+                                                text: 'Lưu tài khoản',
+                                                borderRadius: 5,
+                                                textColor:
+                                                    provider.bankType.status ==
+                                                            1
+                                                        ? AppColor.BLUE_TEXT
+                                                        : AppColor.WHITE,
+                                                bgColor:
+                                                    provider.bankType.status ==
+                                                            1
+                                                        ? AppColor.BLUE_TEXT
+                                                            .withOpacity(0.2)
+                                                        : AppColor.BLUE_TEXT,
+                                                function: () {
+                                                  if (provider
+                                                      .bankType.id.isNotEmpty) {
+                                                    provider
+                                                        .updateBankAccountErr(
+                                                      (bankAccountController
+                                                              .text.isEmpty ||
+                                                          !StringUtils.instance
+                                                              .isNumeric(
+                                                                  bankAccountController
+                                                                      .text)),
+                                                    );
+                                                    provider.updateNameErr(
+                                                      nameController
+                                                          .text.isEmpty,
+                                                    );
+                                                    if (provider
+                                                        .isValidUnauthenticateForm()) {
+                                                      String bankTypeId = Provider
+                                                              .of<BankTypeProvider>(
+                                                                  context,
+                                                                  listen: false)
+                                                          .bankType
+                                                          .id;
+                                                      bankBloc.add(
+                                                        BankCheckExistedEvent(
+                                                            isAuthenticated:
+                                                                false,
+                                                            bankAccount:
+                                                                bankAccountController
+                                                                    .text,
+                                                            bankTypeId:
+                                                                bankTypeId),
+                                                      );
+                                                    }
+                                                  } else {
+                                                    DialogWidget.instance
+                                                        .openMsgDialog(
+                                                      title: 'Không thể tạo',
+                                                      msg:
+                                                          'Vui lòng chọn ngân hàng thụ hưởng',
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                              if (provider.bankType.status ==
+                                                  1) ...[
+                                                const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 12)),
+                                                ButtonWidget(
+                                                  width: 440,
+                                                  height: 40,
+                                                  text: 'Liên kết',
+                                                  borderRadius: 5,
+                                                  textColor: AppColor.WHITE,
+                                                  bgColor: AppColor.BLUE_TEXT,
+                                                  function: () async {
+                                                    provider
+                                                        .updateBankAccountErr(
+                                                      (bankAccountController
+                                                              .text.isEmpty ||
+                                                          !StringUtils.instance
+                                                              .isNumeric(
+                                                                  bankAccountController
+                                                                      .text)),
+                                                    );
+                                                    provider.updateNameErr(
+                                                      nameController
+                                                          .text.isEmpty,
+                                                    );
+                                                    provider.updateNationalErr(
+                                                        !(nationalController
+                                                                    .text
+                                                                    .length >=
+                                                                9 &&
+                                                            nationalController
+                                                                    .text
+                                                                    .length <=
+                                                                12));
+                                                    provider.updatePhoneErr(
+                                                      !(phoneController.text
+                                                              .isNotEmpty &&
+                                                          StringUtils.instance
+                                                              .isNumeric(
+                                                                  phoneController
+                                                                      .text)),
+                                                    );
+                                                    if (provider
+                                                        .isValidUnauthenticateForm()) {
+                                                      await DialogWidget
+                                                          .instance
+                                                          .openPopup(
+                                                        child: PolicyBankWidget(
                                                           bankAccount:
                                                               bankAccountController
                                                                   .text,
-                                                          bankTypeId:
-                                                              bankTypeId),
-                                                    );
-                                                  }
-                                                });
-                                              }
-                                            },
+                                                        ),
+                                                        width: 600,
+                                                        height: 400,
+                                                      )
+                                                          .then((value) {
+                                                        provider
+                                                            .updateAgreePolicy(
+                                                                false);
+                                                        bool check =
+                                                            value ?? false;
+                                                        if (check) {
+                                                          String bankTypeId =
+                                                              Provider.of<BankTypeProvider>(
+                                                                      context,
+                                                                      listen:
+                                                                          false)
+                                                                  .bankType
+                                                                  .id;
+                                                          bankBloc.add(
+                                                            BankCheckExistedEvent(
+                                                                isAuthenticated:
+                                                                    true,
+                                                                bankAccount:
+                                                                    bankAccountController
+                                                                        .text,
+                                                                bankTypeId:
+                                                                    bankTypeId),
+                                                          );
+                                                        }
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ],
                                           ),
-                                        ],
+                                        )
                                       ],
                                     ),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const FooterWeb(),
+                      ],
                     ),
                   ),
-                  const FooterWeb(),
                 ],
               ),
             ),
@@ -793,7 +829,7 @@ class _AddBankView extends State<AddBankStep2> {
     return Container(
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.1)),
+      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
       alignment: Alignment.centerLeft,
       child: Row(
         children: [

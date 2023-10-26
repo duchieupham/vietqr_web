@@ -41,6 +41,7 @@ class RegisterView extends StatelessWidget {
 
   RegisterView({super.key});
 
+  final focus = FocusNode();
   void initialServices(BuildContext context) {
     context.read<MenuLoginProvider>().changePage(6);
     if (!_isChangePass) {
@@ -205,9 +206,11 @@ class RegisterView extends StatelessWidget {
                                 SizedBox(
                                   height: 40,
                                   child: PinCodeInput(
-                                    autoFocus: false,
                                     obscureText: true,
                                     fillWidth: 60,
+                                    onCompleted: (data) {
+                                      value.focusNodeConfirmPass(context);
+                                    },
                                     onChanged: (value) {
                                       _passwordController.text = value;
                                     },
@@ -233,8 +236,8 @@ class RegisterView extends StatelessWidget {
                                 SizedBox(
                                   height: 40,
                                   child: PinCodeInput(
-                                    autoFocus: false,
                                     obscureText: true,
+                                    focusNode: value.confirmPassFocus,
                                     fillWidth: 60,
                                     onChanged: (value) {
                                       _confirmPassController.text = value;
@@ -275,7 +278,8 @@ class RegisterView extends StatelessWidget {
                                           bottom: 8, left: 10),
                                       maxLines: 1,
                                       fontSize: 14,
-                                      hintText: 'Nhập mã giới thiệu (tùy chọn)',
+                                      hintText:
+                                          'Nhập mã giới thiệu (không bắt buộc)',
                                       controller: _shareCodeController,
                                       inputType: TextInputType.text,
                                       keyboardAction: TextInputAction.next,

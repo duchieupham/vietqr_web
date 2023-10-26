@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
@@ -84,9 +86,15 @@ class WebSocketHelper {
   }
 
   void listenTransactionQRSocket(String id, Function transactionSuccess) {
+    late Uri wsUrl;
     try {
       setListenTransactionQRWS(true);
-      final wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
+      if (EnvConfig.getEnv() == EnvType.PROD) {
+        wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
+      } else {
+        wsUrl = Uri.parse(' wss://dev.vietqr.org/vqr/socket?refId=$id');
+      }
+
       _channelQRLink = WebSocketChannel.connect(wsUrl);
       if (_channelQRLink.closeCode == null) {
         _channelQRLink.stream.listen((event) {

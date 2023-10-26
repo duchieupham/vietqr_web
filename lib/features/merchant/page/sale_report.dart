@@ -57,28 +57,21 @@ class _SaleReportState extends State<SaleReport> {
                   child: Center(child: Text('Không có dữ liệu')),
                 );
               } else {
-                double paddingLeft = 0;
-                if (MediaQuery.of(context).size.width >= 1110) {
-                  paddingLeft = (MediaQuery.of(context).size.width - 1110) / 2;
-                }
                 return SingleChildScrollView(
                   child: ScrollConfiguration(
                     behavior: MyCustomScrollBehavior(),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: paddingLeft, top: 20),
-                        child: SizedBox(
-                          width: 1110,
-                          child: Column(
-                            children: [
-                              _buildTitleItem(),
-                              ...listActiveFee.map((e) {
-                                int i = listActiveFee.indexOf(e);
-                                return _buildItem(i, e);
-                              }).toList()
-                            ],
-                          ),
+                      child: SizedBox(
+                        width: 1110,
+                        child: Column(
+                          children: [
+                            _buildTitleItem(),
+                            ...listActiveFee.map((e) {
+                              int i = listActiveFee.indexOf(e);
+                              return _buildItem(i, e);
+                            }).toList()
+                          ],
                         ),
                       ),
                     ),

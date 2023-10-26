@@ -9,7 +9,7 @@ import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
-import 'package:VietQR/features/dashboard/views/menu_top.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/wallet/blocs/wallet_qr_bloc.dart';
 import 'package:VietQR/features/wallet/events/wallet_event.dart';
 import 'package:VietQR/features/wallet/frame/wallet_frame.dart';
@@ -72,7 +72,7 @@ class _WalletScreenState extends State<WalletScreen> {
         child: WalletFrame(
           widget1: _buildWidget1(),
           widget2: _buildWidget2(),
-          menu: const MenuTop(
+          menu: const MenuLeft(
             currentType: MenuHomeType.WALLET_QR,
           ),
         ),

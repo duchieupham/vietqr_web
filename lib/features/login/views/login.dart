@@ -149,7 +149,7 @@ class _Login extends State<Login> {
                 widget1: _buildWidget1(
                     width: width,
                     isResized: PlatformUtils.instance.resizeWhen(width, 750),
-                    height: height - 230,
+                    height: 664,
                     provider: provider),
                 widget2: _buildQrLogin(),
               ),
@@ -213,185 +213,178 @@ class _Login extends State<Login> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Column(
           children: [
-            Expanded(
-              child: ListView(
+            if (provider.listInfoUsers.isNotEmpty)
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (provider.listInfoUsers.isNotEmpty)
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                          'Đăng nhập gần đây',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        const Text(
-                          'Chọn ảnh đại diện để đăng nhập lại',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: provider.listInfoUsers.map((e) {
-                              int index = provider.listInfoUsers.indexOf(e);
-                              return Expanded(child: _buildItemUser(e, index));
-                            }).toList(),
-                          ),
-                        ),
-                        DividerWidget(
-                          width: width,
-                          color: AppColor.BLACK_BUTTON.withOpacity(0.3),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    )
-                  else
-                    const SizedBox(),
                   const Text(
-                    'Đăng nhập',
-                    textAlign: TextAlign.center,
+                    'Đăng nhập gần đây',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    height: provider.listInfoUsers.isNotEmpty ? 20 : 60,
+                  const SizedBox(
+                    height: 4,
                   ),
-                  BorderLayout(
-                    width: width,
-                    borderColor: AppColor.BLACK_BUTTON.withOpacity(0.5),
-                    isError: false,
-                    child: TextFieldWidget(
-                      height: 46,
-                      width: width,
-                      isObscureText: false,
-                      autoFocus: true,
-                      hintText: 'Số điện thoại hoặc email',
-                      fontSize: 14,
-                      controller: phoneNoController,
-                      inputType: TextInputType.text,
-                      keyboardAction: TextInputAction.done,
-                      onSubmitted: (value) {
-                        _loginBloc.add(
-                            CheckExistPhone(phone: phoneNoController.text));
-                      },
-                      onChange: (vavlue) {},
-                    ),
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 24)),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ButtonWidget(
-                          width: width,
-                          height: 40,
-                          text: 'Tiếp tục',
-                          borderRadius: 5,
-                          textColor: AppColor.WHITE,
-                          bgColor: AppColor.BLUE_TEXT,
-                          function: () {
-                            _loginBloc.add(
-                                CheckExistPhone(phone: phoneNoController.text));
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 28)),
-                  SizedBox(
-                    width: width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: DividerWidget(
-                            width: width,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Text(
-                            'hoặc',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColor.GREY_TEXT,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: DividerWidget(
-                            width: width,
-                          ),
-                        ),
-                      ],
-                    ),
+                  const Text(
+                    'Chọn ảnh đại diện để đăng nhập lại',
+                    style: TextStyle(fontSize: 14),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: SizedBox(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: provider.listInfoUsers.map((e) {
+                        int index = provider.listInfoUsers.indexOf(e);
+                        return Expanded(child: _buildItemUser(e, index));
+                      }).toList(),
+                    ),
+                  ),
+                  DividerWidget(
+                    width: width,
+                    color: AppColor.BLACK_BUTTON.withOpacity(0.3),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              )
+            else
+              const SizedBox(),
+            const Text(
+              'Đăng nhập',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: provider.listInfoUsers.isNotEmpty ? 20 : 60,
+            ),
+            BorderLayout(
+              width: width,
+              borderColor: AppColor.BLACK_BUTTON.withOpacity(0.5),
+              isError: false,
+              child: TextFieldWidget(
+                height: 46,
+                width: width,
+                isObscureText: false,
+                autoFocus: true,
+                hintText: 'Số điện thoại hoặc email',
+                fontSize: 14,
+                controller: phoneNoController,
+                inputType: TextInputType.text,
+                keyboardAction: TextInputAction.done,
+                onSubmitted: (value) {
+                  _loginBloc
+                      .add(CheckExistPhone(phone: phoneNoController.text));
+                },
+                onChange: (vavlue) {},
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 24)),
+            Row(
+              children: [
+                Expanded(
+                  child: ButtonWidget(
+                    width: width,
+                    height: 40,
+                    text: 'Tiếp tục',
+                    borderRadius: 5,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
+                    function: () {
+                      _loginBloc
+                          .add(CheckExistPhone(phone: phoneNoController.text));
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const Padding(padding: EdgeInsets.only(top: 28)),
+            SizedBox(
+              width: width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: DividerWidget(
                       width: width,
-                      height: 40,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildButtonSignIn(
-                              urlIcon: AppImages.logoGoogle,
-                              text: 'Đăng nhập với Google',
-                              bgColor: AppColor.WHITE,
-                              textColor: AppColor.BLACK,
-                              function: () {
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Tính năng bảo trì',
-                                  msg:
-                                      'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
-                                );
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(left: 10)),
-                          Expanded(
-                            child: _buildButtonSignIn(
-                              assetsIcon: AppImages.icCard,
-                              text: 'VietQR ID Card',
-                              bgColor: AppColor.BLUE_TEXT,
-                              textColor: AppColor.WHITE,
-                              function: () async {
-                                await DialogWidget.instance
-                                    .openPopup(
-                                  child: LoginByCardWidget(),
-                                  width: 500,
-                                  height: 500,
-                                )
-                                    .then((value) {
-                                  if (value != null) {
-                                    AccountLoginMethodDTO
-                                        accountLoginMethodDTO =
-                                        AccountLoginMethodDTO(
-                                      method: 'CARD',
-                                      cardNumber: value,
-                                      userId: '',
-                                      platform: '',
-                                      device: '',
-                                      fcmToken: '',
-                                    );
-                                    _loginBloc.add(LoginEventByCardNumber(
-                                        dto: accountLoginMethodDTO));
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                        ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(
+                      'hoặc',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColor.GREY_TEXT,
                       ),
+                    ),
+                  ),
+                  Expanded(
+                    child: DividerWidget(
+                      width: width,
                     ),
                   ),
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: SizedBox(
+                width: width,
+                height: 40,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildButtonSignIn(
+                        urlIcon: AppImages.logoGoogle,
+                        text: 'Đăng nhập với Google',
+                        bgColor: AppColor.WHITE,
+                        textColor: AppColor.BLACK,
+                        function: () {
+                          DialogWidget.instance.openMsgDialog(
+                            title: 'Tính năng bảo trì',
+                            msg:
+                                'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
+                          );
+                        },
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(left: 10)),
+                    Expanded(
+                      child: _buildButtonSignIn(
+                        assetsIcon: AppImages.icCard,
+                        text: 'VietQR ID Card',
+                        bgColor: AppColor.BLUE_TEXT,
+                        textColor: AppColor.WHITE,
+                        function: () async {
+                          await DialogWidget.instance
+                              .openPopup(
+                            child: LoginByCardWidget(),
+                            width: 500,
+                            height: 500,
+                          )
+                              .then((value) {
+                            if (value != null) {
+                              AccountLoginMethodDTO accountLoginMethodDTO =
+                                  AccountLoginMethodDTO(
+                                method: 'CARD',
+                                cardNumber: value,
+                                userId: '',
+                                platform: '',
+                                device: '',
+                                fcmToken: '',
+                              );
+                              _loginBloc.add(LoginEventByCardNumber(
+                                  dto: accountLoginMethodDTO));
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(

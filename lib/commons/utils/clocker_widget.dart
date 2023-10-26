@@ -17,18 +17,22 @@ class ClockWidget extends StatelessWidget {
           children: [
             Text(
               DateFormat('hh:mm:ss').format(DateTime.now()),
+              style: const TextStyle(fontSize: 12),
+            ),
+            const SizedBox(
+              height: 2,
             ),
             Row(
               children: [
                 Text(
                   '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())}, ',
                   style:
-                      const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+                      const TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
                 ),
                 Text(
                   DateFormat('MM/dd/yyyy').format(DateTime.now()),
                   style:
-                      const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+                      const TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
                 ),
               ],
             ),

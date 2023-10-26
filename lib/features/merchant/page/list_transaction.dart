@@ -17,137 +17,114 @@ import 'package:provider/provider.dart';
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/time_utils.dart';
 
-class ListTransaction extends StatefulWidget {
+class ListTransaction extends StatelessWidget {
   final MerchantBloc merchantBloc;
-  const ListTransaction({super.key, required this.merchantBloc});
+  ListTransaction({super.key, required this.merchantBloc});
 
-  @override
-  State<ListTransaction> createState() => _ListTransactionState();
-}
-
-class _ListTransactionState extends State<ListTransaction> {
   List<TransactionMerchantDTO> listTransaction = [];
-  int offset = 0;
-  bool isCalling = true;
-  ScrollController scrollControllerList = ScrollController();
-
-  @override
-  void initState() {
-    var provider = Provider.of<MerchantProvider>(context, listen: false);
-    scrollControllerList.addListener(() {
-      if (isCalling) {
-        if (scrollControllerList.offset ==
-            scrollControllerList.position.maxScrollExtent) {
-          offset = offset + 20;
-          Map<String, dynamic> param = {};
-          param['type'] = provider.valueFilter.id;
-          if (provider.valueTimeFilter.id == 0 ||
-              (provider.valueFilter.id != 0 && provider.valueFilter.id != 9)) {
-            param['from'] = '0';
-            param['to'] = '0';
-          } else {
-            param['from'] =
-                TimeUtils.instance.getCurrentDate(provider.fromDate);
-            param['to'] = TimeUtils.instance.getCurrentDate(provider.toDate);
-          }
-          param['value'] = provider.keywordSearch;
-
-          param['offset'] = offset;
-          param['merchantId'] =
-              Session.instance.accountIsMerchantDTO.customerSyncId;
-
-          widget.merchantBloc.add(GetListTransactionByMerchantEvent(
-            param: param,
-            isLoadMore: true,
-          ));
-          isCalling = false;
-        }
-      }
-    });
-    super.initState();
+  init() {
+    Map<String, dynamic> param = {};
+    param['merchantId'] = Session.instance.accountIsMerchantDTO.customerSyncId;
+    param['type'] = 9;
+    param['value'] = '';
+    param['from'] = '0';
+    param['to'] = '0';
+    param['offset'] = 0;
+    merchantBloc.add(
+        GetListTransactionByMerchantEvent(param: param, isLoadingPage: true));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTitle(),
-        _buildFilter(),
-        Expanded(child: LayoutBuilder(builder: (context, constraints) {
-          return BlocConsumer<MerchantBloc, MerchantState>(
-              listener: (context, state) {
-            if (state is MerchantLoadingListState) {
-              DialogWidget.instance.openLoadingDialog();
-            }
-            if (state is MerchantGetListByMerchantSuccessfulState) {
-              if (state.isLoadMore) {
-                listTransaction.addAll(state.list);
-                isCalling = true;
-              } else {
-                if (!state.isLoadingPage) {
-                  Navigator.pop(context);
-                }
-                listTransaction = state.list;
+    init();
+    return ChangeNotifierProvider<MerchantProvider>(
+      create: (context) => MerchantProvider()..init(merchantBloc),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitle(),
+          _buildFilter(),
+          Expanded(child: LayoutBuilder(builder: (context, constraints) {
+            return BlocConsumer<MerchantBloc, MerchantState>(
+                listener: (context, state) {
+              if (state is MerchantLoadingListState) {
+                DialogWidget.instance.openLoadingDialog();
               }
-            }
-          }, builder: (context, state) {
-            if (state is MerchantLoadingInitState) {
-              return const Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            } else {
-              if (listTransaction.isEmpty) {
+              if (state is MerchantGetListByMerchantSuccessfulState) {
+                if (state.isLoadMore) {
+                  listTransaction.addAll(state.list);
+                  Provider.of<MerchantProvider>(context, listen: false)
+                      .updateCallLoadMore(true);
+                } else {
+                  if (!state.isLoadingPage) {
+                    Navigator.pop(context);
+                  }
+                  listTransaction = state.list;
+                }
+              }
+            }, builder: (context, state) {
+              if (state is MerchantLoadingInitState) {
                 return const Padding(
                   padding: EdgeInsets.only(top: 40),
-                  child: Center(child: Text('Không có dữ liệu')),
+                  child: Center(child: CircularProgressIndicator()),
                 );
               } else {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        controller: scrollControllerList,
-                        child: ScrollConfiguration(
-                          behavior: MyCustomScrollBehavior(),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: SizedBox(
-                              width: constraints.maxWidth > 1360
-                                  ? constraints.maxWidth
-                                  : 1360,
-                              child: SelectionArea(
-                                child: Column(
-                                  children: [
-                                    _buildTitleItem(),
-                                    ...listTransaction.map((e) {
-                                      int index =
-                                          listTransaction.indexOf(e) + 1;
+                if (listTransaction.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: Center(child: Text('Không có dữ liệu')),
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: Provider.of<MerchantProvider>(context,
+                                  listen: false)
+                              .scrollControllerList,
+                          child: ScrollConfiguration(
+                            behavior: MyCustomScrollBehavior(),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SizedBox(
+                                width: constraints.maxWidth > 1360
+                                    ? constraints.maxWidth
+                                    : 1360,
+                                child: SelectionArea(
+                                  child: Column(
+                                    children: [
+                                      _buildTitleItem(),
+                                      ...listTransaction.map((e) {
+                                        int index =
+                                            listTransaction.indexOf(e) + 1;
 
-                                      return _buildItem(e, index);
-                                    }).toList(),
-                                    const SizedBox(width: 12),
-                                  ],
+                                        return _buildItem(e, index);
+                                      }).toList(),
+                                      const SizedBox(width: 12),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    if (state is MerchantLoadMoreListState)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: CircularProgressIndicator(),
-                      )
-                  ],
-                );
+                      if (state is MerchantLoadMoreListState)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator()),
+                        )
+                    ],
+                  );
+                }
               }
-            }
-          });
-        }))
-      ],
+            });
+          }))
+        ],
+      ),
     );
   }
 
@@ -687,7 +664,6 @@ class _ListTransactionState extends State<ListTransaction> {
                 if (provider.fromDate.millisecondsSinceEpoch <=
                     provider.toDate.millisecondsSinceEpoch) {
                   Map<String, dynamic> param = {};
-                  offset = 0;
                   param['type'] = provider.valueFilter.id;
                   if (provider.valueTimeFilter.id == 0 ||
                       (provider.valueFilter.id != 0 &&
@@ -702,11 +678,11 @@ class _ListTransactionState extends State<ListTransaction> {
                   }
                   param['value'] = provider.keywordSearch;
 
-                  param['offset'] = offset;
+                  param['offset'] = 0;
                   param['merchantId'] =
                       Session.instance.accountIsMerchantDTO.customerSyncId;
 
-                  widget.merchantBloc
+                  merchantBloc
                       .add(GetListTransactionByMerchantEvent(param: param));
                 } else {
                   DialogWidget.instance.openMsgDialog(
