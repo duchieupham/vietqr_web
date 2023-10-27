@@ -61,80 +61,82 @@ class _AddBankScreenState extends State<AddBankStep1> {
                       currentType: MenuHomeType.OTHER,
                     ),
                     Expanded(
-                        child: Column(
-                      children: [
-                        _buildTitle(),
-                        _buildStep(),
-                        _buildFiledSearch(),
-                        Expanded(
-                          child: BlocConsumer<ListBankBloc, ListBankState>(
-                            listener: (context, state) {
-                              if (state is BankTypeGetListSuccessfulState) {
-                                if (state.list.isNotEmpty) {
-                                  bankTypesResult = state.list;
-                                  bankTypes = state.list;
+                      child: Column(
+                        children: [
+                          _buildTitle(),
+                          _buildStep(),
+                          _buildFiledSearch(),
+                          Expanded(
+                            child: BlocConsumer<ListBankBloc, ListBankState>(
+                              listener: (context, state) {
+                                if (state is BankTypeGetListSuccessfulState) {
+                                  if (state.list.isNotEmpty) {
+                                    bankTypesResult = state.list;
+                                    bankTypes = state.list;
+                                  }
                                 }
-                              }
-                              if (state is BankTypeSearchState) {
-                                bankTypesResult = state.list;
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is BankTypeLoadingState) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(top: 40),
-                                  child: Center(
-                                      child: CircularProgressIndicator()),
-                                );
-                              }
-                              if (bankTypesResult.isEmpty) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(top: 40),
-                                  child:
-                                      Center(child: Text('Không có dữ liệu')),
-                                );
-                              }
+                                if (state is BankTypeSearchState) {
+                                  bankTypesResult = state.list;
+                                }
+                              },
+                              builder: (context, state) {
+                                if (state is BankTypeLoadingState) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(top: 40),
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
+                                  );
+                                }
+                                if (bankTypesResult.isEmpty) {
+                                  return const Padding(
+                                    padding: EdgeInsets.only(top: 40),
+                                    child:
+                                        Center(child: Text('Không có dữ liệu')),
+                                  );
+                                }
 
-                              return Consumer<BankTypeProvider>(
-                                  builder: (context, provider, child) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Spacer(),
-                                      Expanded(
-                                        flex: 12,
-                                        child: SingleChildScrollView(
-                                          child: Wrap(
-                                            spacing: 60,
-                                            runSpacing: 40,
-                                            children: bankTypesResult.map((e) {
-                                              return _buildItemBank(e, () {
-                                                provider.updateBankType(e);
-                                                context.go(
-                                                    '/add-bank/step2?bankId=${e.id}');
-                                              },
-                                                  isSelected:
-                                                      provider.bankType.id ==
-                                                          e.id);
-                                            }).toList(),
+                                return Consumer<BankTypeProvider>(
+                                    builder: (context, provider, child) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Spacer(),
+                                        Expanded(
+                                          flex: 12,
+                                          child: SingleChildScrollView(
+                                            child: Wrap(
+                                              spacing: 60,
+                                              runSpacing: 40,
+                                              children:
+                                                  bankTypesResult.map((e) {
+                                                return _buildItemBank(e, () {
+                                                  provider.updateBankType(e);
+                                                  context.go(
+                                                      '/add-bank/step2?bankId=${e.id}');
+                                                },
+                                                    isSelected:
+                                                        provider.bankType.id ==
+                                                            e.id);
+                                              }).toList(),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      const Spacer(),
-                                    ],
-                                  ),
-                                );
-                              });
-                            },
+                                        const Spacer(),
+                                      ],
+                                    ),
+                                  );
+                                });
+                              },
+                            ),
                           ),
-                        ),
-                        const FooterWeb(),
-                      ],
-                    )),
+                          const FooterWeb(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

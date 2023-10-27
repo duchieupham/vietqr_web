@@ -37,9 +37,11 @@ class ListTransactionUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    init();
     return ChangeNotifierProvider<TransUserProvider>(
-      create: (context) => TransUserProvider()..init(transactionUserBloc),
+      create: (context) =>
+          TransUserProvider()..init(transactionUserBloc, (){
+            init();
+          }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -112,8 +114,11 @@ class ListTransactionUser extends StatelessWidget {
                       ),
                       if (state is GetListTransactionLoadMoreListState)
                         const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: CircularProgressIndicator(),
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator()),
                         )
                     ],
                   );
@@ -363,7 +368,7 @@ class ListTransactionUser extends StatelessWidget {
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
+      decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.1)),
       alignment: Alignment.centerLeft,
       child: const Text(
         'Danh sách giao dịch',

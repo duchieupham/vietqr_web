@@ -1,4 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -9,7 +11,6 @@ import 'package:VietQR/features/create_qr/frame/create_qr_frame.dart';
 import 'package:VietQR/features/create_qr/provider/create_qr_provider.dart';
 import 'package:VietQR/features/create_qr/states/create_qr_state.dart';
 import 'package:VietQR/features/create_qr/widget/calculator_view.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -21,7 +22,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../commons/enums/type_menu_home.dart';
 import '../../commons/utils/image_utils.dart';
 import 'event/create_qr_event.dart';
 
@@ -75,14 +75,17 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {}
           }
           if (state is QRGenerateSuccessState) {
-            context.go('/qr-generated?token=${state.dto.transactionRefId}',
-                extra: true);
+            if (EnvConfig.getEnv() == EnvType.PROD) {
+              context.go('/qr-generated?token=${state.dto.transactionRefId}',
+                  extra: true);
+            } else {
+              context.go(
+                  '/test/qr-generated?token=${state.dto.transactionRefId}',
+                  extra: true);
+            }
           }
         }, builder: (context, state) {
           return CreateQRFrame(
-            menu: const MenuLeft(
-              currentType: MenuHomeType.CREATE_QR,
-            ),
             widget1: _buildListBank(),
             widget2: _formCreate(),
             // widget3: _buildQRcode(state),

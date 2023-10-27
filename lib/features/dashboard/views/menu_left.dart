@@ -8,7 +8,6 @@ import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
-import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +53,14 @@ class MenuLeft extends StatelessWidget {
           if (provider.showMenu) {
             width = 220;
           } else {
+<<<<<<< HEAD
             width = 0;
           }
+=======
+            width = 50;
+          }
+          print('------------------- $width');
+>>>>>>> 25e1863f1f6c378bab15d6ea28b731773e986ef7
           return Container(
             width: width,
             color: AppColor.BLUE_TEXT.withOpacity(0.2),
@@ -76,11 +81,19 @@ class MenuLeft extends StatelessWidget {
                   ),
                 if (provider.showMenu)
                   Expanded(
+<<<<<<< HEAD
                     child: _buildListItem(provider, () {
                       Provider.of<MenuCardProvider>(context, listen: false)
                           .updateShowMenu(false);
                     }, context, logoutBloc),
                   )
+=======
+                    child: _buildListItem(provider, logoutBloc, context),
+                  )
+                else
+                  Expanded(
+                      child: _buildListIconItem(provider, logoutBloc, context))
+>>>>>>> 25e1863f1f6c378bab15d6ea28b731773e986ef7
               ],
             ),
           );
@@ -89,8 +102,13 @@ class MenuLeft extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   Widget _buildListItem(MenuProvider provider, Function closeListCard,
       BuildContext context, LogoutBloc logoutBloc) {
+=======
+  Widget _buildListItem(
+      MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
+>>>>>>> 25e1863f1f6c378bab15d6ea28b731773e986ef7
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -100,32 +118,32 @@ class MenuLeft extends StatelessWidget {
             children: [
               ItemMenuHome(
                 title: 'Trang chủ',
-                pathIcon: AppImages.icMenuHome,
+                iconId: AppImages.icMenuHome,
                 isSelect: currentType == MenuHomeType.HOME,
                 onTap: () {
                   context.go('/home');
                 },
               ),
+              ItemMenuHome(
+                title: 'Giao dịch',
+                iconId: AppImages.icMenuTransaction,
+                isSelect: currentType == MenuHomeType.TRANSACTION,
+                onTap: () {
+                  context.go('/transaction');
+                },
+              ),
               if (provider.isAccountIsMerchant)
                 ItemMenuHome(
                   title: 'Đại lý',
-                  pathIcon: AppImages.icMenuHome,
+                  iconId: AppImages.icMenuBank,
                   isSelect: currentType == MenuHomeType.MERCHANT,
                   onTap: () {
                     context.go('/merchant');
                   },
                 ),
               ItemMenuHome(
-                title: 'Giao dịch',
-                pathIcon: AppImages.icMenuBank,
-                isSelect: currentType == MenuHomeType.TRANSACTION,
-                onTap: () {
-                  context.go('/transaction');
-                },
-              ),
-              ItemMenuHome(
                 title: 'TK ngân hàng',
-                pathIcon: AppImages.icMenuContact,
+                iconId: AppImages.icMenuContact,
                 isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
                 onTap: () {
                   DialogWidget.instance.openMsgDialog(
@@ -136,7 +154,7 @@ class MenuLeft extends StatelessWidget {
               ),
               ItemMenuHome(
                 title: 'Tạo mã VietQR',
-                pathIcon: AppImages.icVietQrSmall,
+                iconId: AppImages.icVietQrSmall,
                 isSelect: currentType == MenuHomeType.CREATE_QR,
                 onTap: () {
                   context.go('/create-qr');
@@ -144,7 +162,6 @@ class MenuLeft extends StatelessWidget {
               ),
               ItemMenuHome(
                 title: 'Ví QR',
-                pathIcon: AppImages.icMenuBusiness,
                 isSelect: currentType == MenuHomeType.WALLET_QR,
                 onTap: () {
                   context.go('/qr-wallet');
@@ -152,7 +169,6 @@ class MenuLeft extends StatelessWidget {
               ),
               ItemMenuHome(
                 title: 'Chia sẻ BĐSD',
-                pathIcon: AppImages.icMenuBusiness,
                 isSelect: currentType == MenuHomeType.BUSINESS,
                 onTap: () {
                   // onTab(MenuHomeType.BUSINESS);
@@ -177,7 +193,7 @@ class MenuLeft extends StatelessWidget {
         ),
         ItemMenuHome(
           title: 'Cài đặt',
-          pathIcon: AppImages.icMenuSetting,
+          iconId: AppImages.icMenuSetting,
           isSelect: currentType == MenuHomeType.SETTING,
           onTap: () {
             DialogWidget.instance.openPopup(
@@ -189,14 +205,129 @@ class MenuLeft extends StatelessWidget {
         ),
         ItemMenuHome(
           title: 'Đăng xuất',
-          isLogout: true,
           isSelect: currentType == MenuHomeType.LOGOUT,
-          pathIcon: AppImages.icMenuLogout,
+          iconId: AppImages.icMenuLogout,
           onTap: () {
             logoutBloc.add(const LogoutEventSubmit());
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildListIconItem(
+      MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
+    return SizedBox(
+      width: 50,
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                ItemMenuHome(
+                  title: 'Trang chủ',
+                  isOnlyIcon: true,
+                  paddingIcon: const EdgeInsets.all(4),
+                  iconId: AppImages.icMenuHome,
+                  isSelect: currentType == MenuHomeType.HOME,
+                  onTap: () {
+                    context.go('/home');
+                    provider.updateShowMenu(true);
+                  },
+                ),
+                ItemMenuHome(
+                  title: 'Giao dịch',
+                  paddingIcon: const EdgeInsets.all(4),
+                  iconId: AppImages.icMenuTransaction,
+                  isOnlyIcon: true,
+                  isSelect: currentType == MenuHomeType.TRANSACTION,
+                  onTap: () {
+                    context.go('/transaction');
+                    provider.updateShowMenu(true);
+                  },
+                ),
+                if (provider.isAccountIsMerchant)
+                  ItemMenuHome(
+                    title: 'Đại lý',
+                    paddingIcon: const EdgeInsets.all(4),
+                    iconId: AppImages.icMenuBank,
+                    isOnlyIcon: true,
+                    isSelect: currentType == MenuHomeType.MERCHANT,
+                    onTap: () {
+                      context.go('/merchant');
+                      provider.updateShowMenu(true);
+                    },
+                  ),
+                ItemMenuHome(
+                  title: 'TK ngân hàng',
+                  paddingIcon: const EdgeInsets.all(4),
+                  iconId: AppImages.icMenuContact,
+                  isOnlyIcon: true,
+                  isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
+                  onTap: () {
+                    provider.updateShowMenu(true);
+                    DialogWidget.instance.openMsgDialog(
+                      title: 'Tính năng đang bảo trì',
+                      msg: 'Vui lòng thử lại sau',
+                    );
+                  },
+                ),
+                ItemMenuHome(
+                  title: 'Tạo mã VietQR',
+                  paddingIcon: const EdgeInsets.all(4),
+                  iconId: AppImages.icMenuQR,
+                  isOnlyIcon: true,
+                  isSelect: currentType == MenuHomeType.CREATE_QR,
+                  onTap: () {
+                    provider.updateShowMenu(true);
+                    context.go('/create-qr');
+                  },
+                ),
+                ItemMenuHome(
+                  title: 'Ví QR',
+                  iconId: AppImages.icMenuWallet,
+                  paddingIcon: const EdgeInsets.all(4),
+                  isOnlyIcon: true,
+                  isSelect: currentType == MenuHomeType.WALLET_QR,
+                  onTap: () {
+                    provider.updateShowMenu(true);
+                    context.go('/qr-wallet');
+                  },
+                ),
+                ItemMenuHome(
+                  title: 'Chia sẻ BĐSD',
+                  paddingIcon: const EdgeInsets.all(4),
+                  iconId: AppImages.icMenuShareBDSD,
+                  isOnlyIcon: true,
+                  isSelect: currentType == MenuHomeType.BUSINESS,
+                  onTap: () {
+                    // onTab(MenuHomeType.BUSINESS);
+                    provider.updateShowMenu(true);
+                    context.go('/business');
+                  },
+                ),
+                ItemMenuHome(
+                  title: 'Giới thiệu VietQR VN',
+                  iconId: AppImages.icVietQrSmall,
+                  paddingIcon: const EdgeInsets.all(4),
+                  isOnlyIcon: true,
+                  isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
+                  onTap: () {
+                    provider.updateShowMenu(true);
+                    DialogWidget.instance.openPopup(
+                      width: 500,
+                      height: 300,
+                      child: const PopupShareCode(),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
     );
   }
 }

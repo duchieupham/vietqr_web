@@ -47,7 +47,8 @@ class TransUserProvider with ChangeNotifier {
 
   List<BankAccountDTO> bankAccounts = [];
 
-  init(TransactionUserBloc transactionUserBloc) {
+  init(TransactionUserBloc transactionUserBloc, Function initData) {
+    initData();
     getListBankAccount();
     scrollControllerList.addListener(() {
       if (isCalling) {

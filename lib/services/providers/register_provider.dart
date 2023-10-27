@@ -12,6 +12,8 @@ class RegisterProvider with ChangeNotifier {
   get passwordErr => _isPasswordErr;
   get confirmPassErr => _isConfirmPassErr;
 
+  final confirmPassFocus = FocusNode();
+
   void updateErrs({
     required bool phoneErr,
     required bool passErr,
@@ -26,6 +28,10 @@ class RegisterProvider with ChangeNotifier {
 
   bool isValidValidation() {
     return !_isPhoneErr && !_isPasswordErr && !_isConfirmPassErr;
+  }
+
+  focusNodeConfirmPass(BuildContext context) {
+    FocusScope.of(context).requestFocus(confirmPassFocus);
   }
 
   void reset() {

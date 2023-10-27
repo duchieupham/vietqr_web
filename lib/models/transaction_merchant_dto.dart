@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:flutter/material.dart';
 
 class TransactionMerchantDTO {
   final String bankId;
@@ -56,6 +56,10 @@ class TransactionMerchantDTO {
     //   return DefaultTheme.ORANGE;
     // } else
     if (transType == 'C') {
+      if (type == 0) {
+        return AppColor.GREEN;
+      }
+
       return AppColor.BLUE_TEXT;
     } else {
       return AppColor.RED_TEXT;

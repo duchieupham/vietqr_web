@@ -194,6 +194,24 @@ class _QrGenerateState extends State<QrGenerate> {
                                       ],
                                     ),
                                   ),
+                                  ButtonIconWidget(
+                                    height: 40,
+                                    width: 400,
+                                    icon: Icons.home_rounded,
+                                    title: 'Trang chủ',
+                                    textColor: AppColor.WHITE,
+                                    bgColor: AppColor.BLUE_TEXT,
+                                    function: () {
+                                      Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                        context.go('/');
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 80,
+                                  )
                                 ],
                               );
                             }
@@ -369,6 +387,17 @@ class _QrGenerateState extends State<QrGenerate> {
   }
 
   Widget _buildInfo(bool isVertical) {
+    Color colorAmount = Colors.white;
+    if (isSuccess) {
+      if (qrGeneratedDTO.type == 0) {
+        colorAmount = AppColor.GREEN;
+      } else {
+        colorAmount = AppColor.BLUE_TEXT;
+      }
+    } else {
+      colorAmount = AppColor.ORANGE_Dark;
+    }
+
     return Padding(
       padding: isVertical
           ? const EdgeInsets.only(bottom: 20)
@@ -402,9 +431,7 @@ class _QrGenerateState extends State<QrGenerate> {
                     Text(
                       '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
                       style: TextStyle(
-                        color: isSuccess
-                            ? AppColor.BLUE_TEXT
-                            : AppColor.ORANGE_Dark,
+                        color: colorAmount,
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -471,9 +498,7 @@ class _QrGenerateState extends State<QrGenerate> {
                       textColor: AppColor.BLUE_TEXT,
                       bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
                       function: () {
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          context.go('/');
-                        });
+                        context.go('/');
                       },
                     ),
                     const SizedBox(
@@ -491,7 +516,8 @@ class _QrGenerateState extends State<QrGenerate> {
                         });
                       },
                     ),
-                  ] else ...[
+                  ],
+                  if (isVertical && isSuccess) ...[
                     const Spacer(),
                     ButtonIconWidget(
                       height: 40,
@@ -500,9 +526,7 @@ class _QrGenerateState extends State<QrGenerate> {
                       textColor: AppColor.WHITE,
                       bgColor: AppColor.BLUE_TEXT,
                       function: () {
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          context.go('/');
-                        });
+                        context.go('/');
                       },
                     ),
                   ]
@@ -667,31 +691,18 @@ class _QrGenerateState extends State<QrGenerate> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
         ),
-        if (!isVertical)
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 60),
-              child: SizedBox(
-                width: 300,
-                height: 300,
-                child: Image(
-                    image: ImageUtils.instance
-                        .getImageNetWork(AppImages.iconTransactionSuccess)),
-              ),
-            ),
-          )
-        else
-          Padding(
-            padding:
-                isVertical ? EdgeInsets.zero : const EdgeInsets.only(top: 160),
-            child: SizedBox(
-              width: 300,
-              height: 300,
-              child: Image(
-                  image: ImageUtils.instance
-                      .getImageNetWork(AppImages.iconTransactionSuccess)),
-            ),
+        Padding(
+          padding: isVertical
+              ? EdgeInsets.zero
+              : const EdgeInsets.symmetric(vertical: 60),
+          child: SizedBox(
+            width: 300,
+            height: 300,
+            child: Image(
+                image: ImageUtils.instance
+                    .getImageNetWork(AppImages.iconTransactionSuccess)),
           ),
+        ),
       ],
     );
   }
