@@ -22,6 +22,7 @@ import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/account_login_method_dto.dart';
 import 'package:VietQR/models/info_user_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -48,9 +49,14 @@ class _Login extends State<Login> {
   void initState() {
     super.initState();
     String loginID = des.getLoginID();
-    String encrypted = des.getEncryptedString(loginID);
+    String randomKey = des.getRandomKey();
+    String encrypted = des.getEncryptedString(loginID, randomKey);
     qrValue = des.encrypt(encrypted);
-    // _loginBloc.add(LoginEventInsertCode(code: code, loginBloc: _loginBloc));
+    WebSocketHelper.instance.listenLoginSocket(loginID, (data) {
+      if (data['loginId'] == loginID && data['randomKey'] == randomKey) {
+        _loginBloc.add(LoginQREvent(userId: data['userId']));
+      }
+    });
   }
 
   @override

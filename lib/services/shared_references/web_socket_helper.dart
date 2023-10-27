@@ -108,17 +108,17 @@ class WebSocketHelper {
     }
   }
 
-  void listenLoginSocket(String loginID, Function(String) login) {
+  void listenLoginSocket(String loginID, Function(Map<String, dynamic>) login) {
     try {
       setListenTransactionQRWS(true);
       final wsUrl =
-          Uri.parse(' wss://api.vietqr.org/vqr/socket?loginId=$loginID');
+          Uri.parse('wss://api.vietqr.org/vqr/socket?loginId=$loginID');
       _channelLoginLink = WebSocketChannel.connect(wsUrl);
       if (_channelLoginLink.closeCode == null) {
         _channelLoginLink.stream.listen((event) {
           var data = jsonDecode(event);
           print('-------------------------------------- $data');
-          login('');
+          login(data);
         });
       } else {
         setListenTransactionQRWS(false);

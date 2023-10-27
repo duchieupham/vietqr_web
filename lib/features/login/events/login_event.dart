@@ -84,3 +84,11 @@ class CheckExistPhone extends LoginEvent {
   @override
   List<Object?> get props => [phone];
 }
+class LoginQREvent extends LoginEvent {
+  final String userId;
+
+  const LoginQREvent({required this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}

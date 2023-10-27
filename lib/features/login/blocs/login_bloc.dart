@@ -15,7 +15,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEventByPhone>(_login);
     on<LoginEventByCardNumber>(_loginByCardNumber);
     on<CheckExistPhone>(_checkExitsPhone);
-
+    on<LoginQREvent>(_loginQR);
     // on<LoginEventGetUserInformation>(_getUserInformation);
     // on<LoginEventListen>(_listenCodeLogin);
     // on<LoginEventReceived>(_receivedCodeLogin);
@@ -33,6 +33,24 @@ void _login(LoginEvent event, Emitter emit) async {
       emit(LoginLoadingState());
       bool check = await loginRepository.login(event.dto);
       // await userSettingRepository.getGuideWeb(userId)
+      if (check) {
+        emit(LoginSuccessfulState());
+        WebSocketHelper.instance.listenTransactionSocket();
+      } else {
+        emit(LoginFailedState());
+      }
+    }
+  } catch (e) {
+    print('Error at login - LoginBloc: $e');
+    emit(LoginFailedState());
+  }
+}
+
+void _loginQR(LoginEvent event, Emitter emit) async {
+  try {
+    if (event is LoginQREvent) {
+      emit(LoginLoadingState());
+      bool check = await loginRepository.loginQR(event.userId);
       if (check) {
         emit(LoginSuccessfulState());
         WebSocketHelper.instance.listenTransactionSocket();

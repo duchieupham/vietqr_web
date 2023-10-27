@@ -24,11 +24,9 @@ class AESConvert {
     print('Decrypted: $decrypted');
   }
 
-  String getEncryptedString(String loginID) {
+  String getEncryptedString(String loginID, String randomKey) {
     Uuid uuid = const Uuid();
     String accessKey = 'VIETQRVNBNSAccessKeyForLoginWEB';
-    String randomKey = uuid.v4();
-
     return 'LOGIN$randomKey$accessKey$loginID';
   }
 
@@ -36,5 +34,11 @@ class AESConvert {
     Uuid uuid = const Uuid();
     String loginId = uuid.v4();
     return loginId;
+  }
+
+  String getRandomKey() {
+    Uuid uuid = const Uuid();
+    String randomKey = uuid.v4();
+    return randomKey;
   }
 }
