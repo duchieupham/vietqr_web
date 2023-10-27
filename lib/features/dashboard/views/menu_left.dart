@@ -1,19 +1,19 @@
-import 'package:VietQR/commons/constants/configurations/app_image.dart';
-import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'package:VietQR/features/home/widget/item_menu_home.dart';
-import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
+import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
+import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
-import 'package:VietQR/services/providers/menu_provider.dart';
-import 'package:VietQR/services/shared_references/session.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 
 class MenuLeft extends StatelessWidget {
   final MenuHomeType currentType;
@@ -53,14 +53,9 @@ class MenuLeft extends StatelessWidget {
           if (provider.showMenu) {
             width = 220;
           } else {
-<<<<<<< HEAD
-            width = 0;
-          }
-=======
             width = 50;
           }
           print('------------------- $width');
->>>>>>> 25e1863f1f6c378bab15d6ea28b731773e986ef7
           return Container(
             width: width,
             color: AppColor.BLUE_TEXT.withOpacity(0.2),
@@ -81,19 +76,11 @@ class MenuLeft extends StatelessWidget {
                   ),
                 if (provider.showMenu)
                   Expanded(
-<<<<<<< HEAD
-                    child: _buildListItem(provider, () {
-                      Provider.of<MenuCardProvider>(context, listen: false)
-                          .updateShowMenu(false);
-                    }, context, logoutBloc),
-                  )
-=======
                     child: _buildListItem(provider, logoutBloc, context),
                   )
                 else
                   Expanded(
                       child: _buildListIconItem(provider, logoutBloc, context))
->>>>>>> 25e1863f1f6c378bab15d6ea28b731773e986ef7
               ],
             ),
           );
@@ -102,13 +89,8 @@ class MenuLeft extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-  Widget _buildListItem(MenuProvider provider, Function closeListCard,
-      BuildContext context, LogoutBloc logoutBloc) {
-=======
   Widget _buildListItem(
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
->>>>>>> 25e1863f1f6c378bab15d6ea28b731773e986ef7
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
