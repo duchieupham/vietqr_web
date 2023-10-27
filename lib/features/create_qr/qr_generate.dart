@@ -49,7 +49,7 @@ class _QrGenerateState extends State<QrGenerate> {
   final WaterMarkProvider _waterMarkProvider = WaterMarkProvider(false);
   bool showBgNapas = true;
   int timeCountDown = 0;
-  bool isSuccess = true;
+  bool isSuccess = false;
 
   @override
   void initState() {
