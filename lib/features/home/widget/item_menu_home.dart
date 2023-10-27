@@ -95,7 +95,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
       if (widget.iconId.isNotEmpty) {
         return InkWell(
-          onTap: (){
+          onTap: () {
             widget.onTap();
           },
           child: Tooltip(
@@ -110,6 +110,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               height: 40,
               child: Image(
                 image: ImageUtils.instance.getImageNetWork(widget.iconId),
+                color: widget.isSelect ? AppColor.BLUE_TEXT : AppColor.BLACK,
                 height: 40,
               ),
             ),
