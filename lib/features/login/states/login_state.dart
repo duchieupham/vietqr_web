@@ -15,6 +15,8 @@ class LoginLoadingState extends LoginState {}
 
 class LoginSuccessfulState extends LoginState {}
 
+class LoginQRSuccessfulState extends LoginState {}
+
 class LoginFailedState extends LoginState {}
 
 class ExistPhoneState extends LoginState {

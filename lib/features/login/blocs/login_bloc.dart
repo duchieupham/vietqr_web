@@ -52,7 +52,7 @@ void _loginQR(LoginEvent event, Emitter emit) async {
       emit(LoginLoadingState());
       bool check = await loginRepository.loginQR(event.userId);
       if (check) {
-        emit(LoginSuccessfulState());
+        emit(LoginQRSuccessfulState());
         WebSocketHelper.instance.listenTransactionSocket();
       } else {
         emit(LoginFailedState());
