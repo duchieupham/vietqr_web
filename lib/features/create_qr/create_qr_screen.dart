@@ -277,8 +277,9 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: _buildTemplateSubButton(
-                'Tải tệp đính kèm', () {}, Icons.file_open),
+            child: _buildTemplateSubButton('Tải tệp đính kèm', () {
+              DialogWidget.instance.openMsgQRInstallApp();
+            }, Icons.file_open),
           ),
           const Padding(padding: EdgeInsets.only(top: 24)),
           const Text(
@@ -308,8 +309,9 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     ),
                   );
                 }, Icons.calculate_outlined),
-                _buildTemplateSubButton(
-                    'Quét QR/Barcode nội dung', () {}, Icons.qr_code_outlined),
+                _buildTemplateSubButton('Quét QR/Barcode nội dung', () {
+                  DialogWidget.instance.openMsgQRInstallApp();
+                }, Icons.qr_code_outlined),
               ],
             ),
           ),

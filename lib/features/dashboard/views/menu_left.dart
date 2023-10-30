@@ -128,10 +128,7 @@ class MenuLeft extends StatelessWidget {
                 iconId: AppImages.icMenuContact,
                 isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
                 onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Tính năng đang bảo trì',
-                    msg: 'Vui lòng thử lại sau',
-                  );
+                  DialogWidget.instance.openMsgQRInstallApp();
                 },
               ),
               ItemMenuHome(
@@ -296,6 +293,7 @@ class MenuLeft extends StatelessWidget {
                   paddingIcon: const EdgeInsets.all(4),
                   isOnlyIcon: true,
                   isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
+                  isDefaultColor: true,
                   onTap: () {
                     provider.updateShowMenu(true);
                     DialogWidget.instance.openPopup(

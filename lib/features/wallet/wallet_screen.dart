@@ -8,6 +8,7 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/wallet/blocs/wallet_qr_bloc.dart';
@@ -95,7 +96,9 @@ class _WalletScreenState extends State<WalletScreen> {
               pathIcon: AppImages.icContactBankWhite,
               textSize: 12,
               title: 'Tạo QR Vcard',
-              function: () {},
+              function: () {
+                DialogWidget.instance.openMsgQRInstallApp();
+              },
               textColor: AppColor.BLUE_TEXT,
               iconPathColor: AppColor.BLUE_TEXT,
               bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
@@ -109,7 +112,9 @@ class _WalletScreenState extends State<WalletScreen> {
               pathIcon: AppImages.icHookBlue,
               textSize: 12,
               title: 'Tạo QR Link',
-              function: () {},
+              function: () {
+                DialogWidget.instance.openMsgQRInstallApp();
+              },
               textColor: AppColor.BLUE_TEXT,
               bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
             ),

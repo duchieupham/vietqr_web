@@ -200,7 +200,9 @@ class InfoDetailBankAccount extends StatelessWidget {
                     icon: Icons.info_outline,
                     textSize: 12,
                     title: 'Chi tiết TK ngân hàng',
-                    function: () {},
+                    function: () {
+                      DialogWidget.instance.openMsgQRInstallApp();
+                    },
                     textColor: AppColor.BLUE_TEXT,
                     bgColor: AppColor.WHITE.withOpacity(0.4),
                   ),

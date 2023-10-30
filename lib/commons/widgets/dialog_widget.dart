@@ -13,7 +13,9 @@ import 'package:VietQR/main.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DialogWidget {
   //
@@ -640,6 +642,153 @@ class DialogWidget {
                 //     ),
                 //   ),
                 ),
+          );
+        });
+  }
+
+  openMsgQRInstallApp({VoidCallback? function, BuildContext? context}) {
+    Widget _buildButton({
+      required double width,
+      required String text,
+      required String assetImage,
+      required VoidCallback onTap,
+    }) {
+      return InkWell(
+        onTap: onTap,
+        child: BoxLayout(
+          width: width * 0.4,
+          height: 28,
+          padding: const EdgeInsets.all(0),
+          bgColor: AppColor.BLACK,
+          borderRadius: 5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image(
+                image: ImageUtils.instance.getImageNetWork(assetImage),
+                width: 18,
+                height: 18,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 5),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Tải ứng dụng trên',
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 6),
+                  ),
+                  Text(
+                    text,
+                    style: const TextStyle(color: AppColor.WHITE, fontSize: 12),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
+    return showDialog(
+        barrierDismissible: false,
+        context: context ?? NavigationService.navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return Material(
+            color: AppColor.TRANSPARENT,
+            child: Center(
+                child:
+                    // (PlatformUtils.instance.isWeb())
+                    //     ?
+                    Container(
+              width: 400,
+              height: 460,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4, right: 4),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColor.BLACK_BUTTON,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  QrImage(
+                    data: 'https://onelink.to/q7zwpe',
+                    size: 260,
+                    embeddedImage: ImageUtils.instance
+                        .getImageNetWork(AppImages.icVietQrLogin),
+                    embeddedImageStyle: QrEmbeddedImageStyle(
+                      size: const Size(30, 30),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8, bottom: 12),
+                    child: Text(
+                      'Quét mã QR để tải ứng dụng',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
+                    ),
+                  ),
+                  const Text(
+                    'Tải ứng dụng để trải nghiệm đủ tính nắng',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 30)),
+                  SizedBox(
+                    width: 260,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _buildButton(
+                          width: 300,
+                          text: 'App Store',
+                          assetImage: AppImages.logoAppStore,
+                          onTap: () async {
+                            await launchUrl(Uri.parse(
+                                'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+                          },
+                        ),
+                        const Padding(padding: EdgeInsets.only(left: 14)),
+                        _buildButton(
+                          width: 300,
+                          text: 'Google Play',
+                          assetImage: AppImages.logoGooglePlay,
+                          onTap: () async {
+                            await launchUrl(Uri.parse(
+                                'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer()
+                ],
+              ),
+            )),
           );
         });
   }
