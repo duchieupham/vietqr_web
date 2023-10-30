@@ -224,7 +224,7 @@ class ListTransaction extends StatelessWidget {
             child: Text(
               dto.getStatus(),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: dto.getStatusColor()),
+              style: TextStyle(fontSize: 12, color: dto.getAmountColor()),
             ),
           ),
           Container(

@@ -119,7 +119,7 @@ class _MerchantViewState extends State<MerchantView> {
                 ListTransaction(
                   merchantBloc: merchantBloc,
                 ),
-              ][currentType == SubMenuType.LIST_TRANSACTION ? 0 : 1])
+              ][currentType == SubMenuType.LIST_TRANSACTION ? 1 : 0])
             ],
           ),
         ),
