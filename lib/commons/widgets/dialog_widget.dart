@@ -753,7 +753,7 @@ class DialogWidget {
                     ),
                   ),
                   const Text(
-                    'Tải ứng dụng để trải nghiệm đủ tính nắng',
+                    'Tải ứng dụng để trải nghiệm đủ tính năng',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
