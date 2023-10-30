@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/env_type.dart';
@@ -19,7 +21,6 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/utils/image_utils.dart';
@@ -76,12 +77,21 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
           }
           if (state is QRGenerateSuccessState) {
             if (EnvConfig.getEnv() == EnvType.PROD) {
-              context.go('/qr-generated?token=${state.dto.transactionRefId}',
-                  extra: true);
+              html.window.open(
+                  Uri.base.toString().replaceFirst('/create-qr',
+                      '/qr-generated?token=${state.dto.transactionRefId}'),
+                  'new tab');
+
+              // context.go('/qr-generated?token=${state.dto.transactionRefId}',
+              //     extra: true);
             } else {
-              context.go(
-                  '/test/qr-generated?token=${state.dto.transactionRefId}',
-                  extra: true);
+              html.window.open(
+                  Uri.base.toString().replaceFirst('/create-qr',
+                      '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                  'new tab');
+              // context.go(
+              //     '/test/qr-generated?token=${state.dto.transactionRefId}',
+              //     extra: true);
             }
           }
         }, builder: (context, state) {

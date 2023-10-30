@@ -266,8 +266,12 @@ final GoRouter _router = GoRouter(
       builder: (context, GoRouterState state) {
         Map<String, String> params = state.queryParams;
         bool isAuthen = false;
+        bool isAuth = false;
         if (state.extra != null) {
           isAuthen = state.extra as bool;
+        }
+        if (params['auth'] != null) {
+          isAuth = params['auth'] == '1';
         }
         if (params['token'] == null) {
           return QrGenerateUnAuthen(
@@ -277,7 +281,7 @@ final GoRouter _router = GoRouter(
         }
         return QrGenerate(
           params: params,
-          isAuthen: isAuthen,
+          isAuthen: true,
         );
       },
     ),
@@ -286,8 +290,12 @@ final GoRouter _router = GoRouter(
       builder: (context, GoRouterState state) {
         Map<String, String> params = state.queryParams;
         bool isAuthen = false;
+        bool isAuth = false;
         if (state.extra != null) {
           isAuthen = state.extra as bool;
+        }
+        if (params['auth'] != null) {
+          isAuth = params['auth'] == '1';
         }
         if (params['token'] == null) {
           return QrGenerateUnAuthen(
@@ -297,7 +305,7 @@ final GoRouter _router = GoRouter(
         }
         return QrGenerate(
           params: params,
-          isAuthen: isAuthen,
+          isAuthen: true,
         );
       },
     ),

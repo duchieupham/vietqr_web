@@ -194,23 +194,28 @@ class _QrGenerateState extends State<QrGenerate> {
                                       ],
                                     ),
                                   ),
-                                  ButtonIconWidget(
-                                    height: 40,
-                                    width: 400,
-                                    icon: Icons.home_rounded,
-                                    title: 'Trang chủ',
-                                    textColor: AppColor.WHITE,
-                                    bgColor: AppColor.BLUE_TEXT,
-                                    function: () {
-                                      Future.delayed(
-                                          const Duration(milliseconds: 500),
-                                          () {
-                                        context.go('/');
-                                      });
-                                    },
-                                  ),
+                                  if (isSuccess) ...[
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    ButtonIconWidget(
+                                      height: 40,
+                                      width: 400,
+                                      icon: Icons.home_rounded,
+                                      title: 'Trang chủ',
+                                      textColor: AppColor.WHITE,
+                                      bgColor: AppColor.BLUE_TEXT,
+                                      function: () {
+                                        Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                            () {
+                                          context.go('/');
+                                        });
+                                      },
+                                    ),
+                                  ],
                                   const SizedBox(
-                                    height: 80,
+                                    height: 60,
                                   )
                                 ],
                               );
@@ -511,9 +516,10 @@ class _QrGenerateState extends State<QrGenerate> {
                       textColor: AppColor.WHITE,
                       bgColor: AppColor.BLUE_TEXT,
                       function: () {
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          html.window.history.back();
-                        });
+                        context.go('/create-qr');
+                        // Future.delayed(const Duration(milliseconds: 500), () {
+                        //   html.window.history.back();
+                        // });
                       },
                     ),
                   ],
@@ -700,7 +706,7 @@ class _QrGenerateState extends State<QrGenerate> {
             height: 300,
             child: Image(
                 image: ImageUtils.instance
-                    .getImageNetWork(AppImages.iconTransactionSuccess)),
+                    .getImageNetWork(AppImages.icSuccessGreen)),
           ),
         ),
       ],
