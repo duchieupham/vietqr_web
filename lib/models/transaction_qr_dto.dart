@@ -6,6 +6,7 @@ class TransactionQRDTO {
   final String transType;
   final String terminalCode;
   final String orderId;
+  final String merchant;
   final String sign;
   final int type;
   final int status;
@@ -36,7 +37,7 @@ class TransactionQRDTO {
       this.sign = '',
       this.terminalCode = '',
       this.transactionId = '',
-      this.userBankName = ''});
+      this.userBankName = '', this.merchant = ''});
   factory TransactionQRDTO.fromJson(Map<String, dynamic> json) {
     return TransactionQRDTO(
       type: json['type'] ?? 0,
@@ -54,6 +55,7 @@ class TransactionQRDTO {
       imgId: json['imgId'] ?? '',
       qr: json['qr'] ?? '',
       sign: json['sign'] ?? '',
+      merchant: json['merchant'] ?? '',
       terminalCode: json['terminalCode'] ?? '',
       transactionId: json['transactionId'] ?? '',
       userBankName: json['userBankName'] ?? '',

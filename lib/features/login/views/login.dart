@@ -159,7 +159,7 @@ class _Login extends State<Login> {
                 widget1: _buildWidget1(
                     width: width,
                     isResized: PlatformUtils.instance.resizeWhen(width, 750),
-                    height: 664,
+                    height: 604,
                     provider: provider),
                 widget2: _buildQrLogin(),
               ),
@@ -496,10 +496,10 @@ class _Login extends State<Login> {
           ),
           Image(
             image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
-            width: 180,
+            width: 170,
           ),
           const SizedBox(
-            height: 48,
+            height: 40,
           ),
           BoxLayout(
             width: 340,

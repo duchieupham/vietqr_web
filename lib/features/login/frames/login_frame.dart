@@ -56,7 +56,7 @@ class LoginFrame extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
                             child: widget2,

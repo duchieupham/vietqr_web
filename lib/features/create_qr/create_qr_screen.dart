@@ -66,9 +66,11 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {
               createQRBloc
                   .add(BankEventGetDetail(bankId: widget.bankAccountId));
-              context
-                  .read<CreateQRProvider>()
-                  .voidChooseBank(widget.bankAccountId);
+              for (var bank in bankAccounts) {
+                if (bank.id == widget.bankAccountId) {
+                  context.read<CreateQRProvider>().updateBankAccountDto(bank);
+                }
+              }
             }
           }
           if (state is BankDetailSuccessState) {
@@ -77,18 +79,35 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
           }
           if (state is QRGenerateSuccessState) {
             if (EnvConfig.getEnv() == EnvType.PROD) {
-              html.window.open(
-                  Uri.base.toString().replaceFirst('/create-qr',
-                      '/qr-generated?token=${state.dto.transactionRefId}'),
-                  'new tab');
+              if (widget.bankAccountId.isNotEmpty) {
+                html.window.open(
+                    Uri.base.toString().replaceFirst(
+                        '/create-qr/${widget.bankAccountId}',
+                        '/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              } else {
+                html.window.open(
+                    Uri.base.toString().replaceFirst('/create-qr',
+                        '/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              }
 
               // context.go('/qr-generated?token=${state.dto.transactionRefId}',
               //     extra: true);
             } else {
-              html.window.open(
-                  Uri.base.toString().replaceFirst('/create-qr',
-                      '/test/qr-generated?token=${state.dto.transactionRefId}'),
-                  'new tab');
+              if (widget.bankAccountId.isNotEmpty) {
+                html.window.open(
+                    Uri.base.toString().replaceFirst(
+                        '/create-qr/${widget.bankAccountId}',
+                        '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              } else {
+                html.window.open(
+                    Uri.base.toString().replaceFirst('/create-qr',
+                        '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              }
+
               // context.go(
               //     '/test/qr-generated?token=${state.dto.transactionRefId}',
               //     extra: true);
@@ -356,12 +375,14 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                             ? bankDetailDTO.businessDetails.first.branchDetails
                                 .first.branchId
                             : '',
-                        businessId:
-                            (bankDetailDTO.businessDetails.isNotEmpty ?? false)
-                                ? bankDetailDTO.businessDetails.first.businessId
-                                : '',
+                        businessId: (bankDetailDTO.businessDetails.isNotEmpty)
+                            ? bankDetailDTO.businessDetails.first.businessId
+                            : '',
                         userId: UserInformationHelper.instance.getUserId(),
                       );
+
+                      print(
+                          '------------------------------------${qrCreateDTO.toJson()}');
                       createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
                     }
                   }

@@ -145,7 +145,7 @@ class _HomeScreenState extends State<_HomeScreen> {
           ),
           widget1: _buildHome(),
           widget2: _buildListBank(state.listBanks, state.colors),
-          widget3: _buildInfoAccount(dto, qrGeneratedDTO),
+          widget3: _buildInfoAccount(dto, qrGeneratedDTO, state),
         );
       },
     );
@@ -417,8 +417,18 @@ class _HomeScreenState extends State<_HomeScreen> {
     );
   }
 
-  Widget _buildInfoAccount(AccountBankDetailDTO dto, QRGeneratedDTO qrDTO) {
+  Widget _buildInfoAccount(
+      AccountBankDetailDTO dto, QRGeneratedDTO qrDTO, HomeState state) {
     String bankId = Provider.of<HomeProvider>(context, listen: false).bankId;
+    if (state.status == BlocStatus.LOADING) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: UnconstrainedBox(
+            child: SizedBox(
+                height: 32, width: 32, child: CircularProgressIndicator())),
+      );
+    }
+
     return InfoDetailBankAccount(
       refresh: () async {},
       dto: dto,

@@ -26,8 +26,9 @@ class _FooterWebState extends State<FooterWeb> {
   void initState() {
     super.initState();
     bankTypeBloc = BlocProvider.of(context);
-
-    bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
+    if (widget.showListBank) {
+      bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
+    }
   }
 
   @override
@@ -135,19 +136,9 @@ class _FooterWebState extends State<FooterWeb> {
                     ],
                   ),
                   const Spacer(),
-                  Image(
-                    image: ImageUtils.instance
-                        .getImageNetWork(AppImages.logoVietqrVn),
-                    width: 80,
-                  ),
+                  _buildButtonInstallApp(
+                      isVertical: constraints.maxWidth < 880),
                 ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              _buildButtonInstallApp(isVertical: constraints.maxWidth < 880),
-              const SizedBox(
-                height: 20,
               ),
             ],
           ),
@@ -156,7 +147,7 @@ class _FooterWebState extends State<FooterWeb> {
       return Container(
         height: 50,
         padding: const EdgeInsets.all(8),
-        color: AppColor.BLUE_TEXT.withOpacity(0.2),
+        color: widget.bgColor ?? AppColor.BLUE_TEXT.withOpacity(0.2),
         child: Row(
           children: [
             const Text(
@@ -241,7 +232,7 @@ class _FooterWebState extends State<FooterWeb> {
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
             _buildButton(
-              width: 280,
+              width: 260,
               text: 'App Store',
               assetImage: AppImages.logoAppStore,
               onTap: () async {
@@ -251,7 +242,7 @@ class _FooterWebState extends State<FooterWeb> {
             ),
             const Padding(padding: EdgeInsets.only(left: 8)),
             _buildButton(
-              width: 280,
+              width: 260,
               text: 'Google Play',
               assetImage: AppImages.logoGooglePlay,
               onTap: () async {
@@ -270,41 +261,25 @@ class _FooterWebState extends State<FooterWeb> {
 
   Widget _buildButtonInstallApp({bool isVertical = false}) {
     return Column(
-      crossAxisAlignment:
-          isVertical ? CrossAxisAlignment.start : CrossAxisAlignment.center,
       children: [
-        const Text(
-          'Tải ứng dụng trên cửa hàng',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
-              // fontWeight: FontWeight.bold,
-              ),
+        _buildButton(
+          width: 280,
+          text: 'App Store',
+          assetImage: AppImages.logoAppStore,
+          onTap: () async {
+            await launchUrl(Uri.parse(
+                'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+          },
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
-        SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildButton(
-                width: 280,
-                text: 'App Store',
-                assetImage: AppImages.logoAppStore,
-                onTap: () async {
-                  await launchUrl(Uri.parse(
-                      'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
-                },
-              ),
-              const Padding(padding: EdgeInsets.only(left: 10)),
-              _buildButton(
-                width: 280,
-                text: 'Google Play',
-                assetImage: AppImages.logoGooglePlay,
-                onTap: () async {
-                  await launchUrl(Uri.parse(
-                      'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
-                },
-              ),
-            ],
-          ),
+        _buildButton(
+          width: 280,
+          text: 'Google Play',
+          assetImage: AppImages.logoGooglePlay,
+          onTap: () async {
+            await launchUrl(Uri.parse(
+                'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+          },
         ),
       ],
     );
@@ -453,14 +428,14 @@ class _FooterWebState extends State<FooterWeb> {
           BlocBuilder<BankTypeBloc, BankTypeState>(builder: (context, state) {
             if (state is BankTypeGetListSuccessfulState) {
               return SizedBox(
-                height: 50,
+                height: 44,
                 width: width,
                 child: CarouselSlider(
                   items: state.list.map(
                     (e) {
                       return Image(
                         image: ImageUtils.instance.getImageNetWork(e.imageId),
-                        height: 50,
+                        height: 44,
                       );
                     },
                   ).toList(),

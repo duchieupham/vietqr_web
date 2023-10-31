@@ -46,6 +46,14 @@ class _MerchantViewState extends State<MerchantView> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
+    if (currentType == SubMenuType.SALE_REPORT) {
+      nowMonth = TimeUtils.instance.getFormatMonth(DateTime.now());
+      merchantBloc.add(GetMerchantFeeEvent(
+          customerSyncId: Session.instance.accountIsMerchantDTO.customerSyncId,
+          month: nowMonth,
+          isLoadingPage: true));
+    }
+
     return MerchantFrame(
       menu: const MenuLeft(
         currentType: MenuHomeType.MERCHANT,
@@ -72,13 +80,6 @@ class _MerchantViewState extends State<MerchantView> {
                       isSelect: currentType == SubMenuType.SALE_REPORT,
                       onTap: () {
                         changePage(SubMenuType.SALE_REPORT);
-                        nowMonth =
-                            TimeUtils.instance.getFormatMonth(DateTime.now());
-                        merchantBloc.add(GetMerchantFeeEvent(
-                            customerSyncId: Session
-                                .instance.accountIsMerchantDTO.customerSyncId,
-                            month: nowMonth,
-                            isLoadingPage: true));
                       },
                     ),
                     ItemMenuTop(
