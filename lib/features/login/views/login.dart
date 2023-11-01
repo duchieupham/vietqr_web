@@ -46,6 +46,7 @@ class _Login extends State<Login> {
   AESConvert des = AESConvert();
   InfoUserDTO _userDTO = InfoUserDTO();
   String qrValue = '';
+
   @override
   void initState() {
     super.initState();

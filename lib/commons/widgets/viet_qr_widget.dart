@@ -17,6 +17,7 @@ class VietQRWidget extends StatelessWidget {
   final bool showQROnly;
   final bool horizontalInfo;
   final bool showBankAccount;
+
   const VietQRWidget(
       {super.key,
       required this.qrGeneratedDTO,
@@ -180,7 +181,6 @@ class VietQRWidget extends StatelessWidget {
             fit: BoxFit.fitWidth,
           ),
           QrImage(
-            size: 140,
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
             embeddedImage:
@@ -254,64 +254,61 @@ class VietQRWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: AppColor.WHITE,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 2,
-                    offset: const Offset(0, 3),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: AppColor.WHITE,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 2,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Image(
+                  image: ImageUtils.instance
+                      .getImageNetWork(AppImages.logoVietqrVn),
+                  width: 110,
+                ),
+                QrImage(
+                  data: qrGeneratedDTO.qrCode,
+                  version: QrVersions.auto,
+                  embeddedImage: ImageUtils.instance
+                      .getImageNetWork(AppImages.icVietQrSmall),
+                  embeddedImageStyle: QrEmbeddedImageStyle(
+                    size: const Size(25, 25),
                   ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Image(
-                    image: ImageUtils.instance
-                        .getImageNetWork(AppImages.logoVietqrVn),
-                    width: 110,
-                  ),
-                  QrImage(
-                    data: qrGeneratedDTO.qrCode,
-                    version: QrVersions.auto,
-                    embeddedImage: ImageUtils.instance
-                        .getImageNetWork(AppImages.icVietQrSmall),
-                    embeddedImageStyle: QrEmbeddedImageStyle(
-                      size: const Size(25, 25),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image(
-                          image: ImageUtils.instance
-                              .getImageNetWork(AppImages.icNapas247),
-                          width: 85,
-                          fit: BoxFit.fitWidth),
-                      Container(
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.icNapas247),
                         width: 85,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: AppColor.WHITE,
-                          image: (qrGeneratedDTO.imgId.isEmpty)
-                              ? null
-                              : DecorationImage(
-                                  image: ImageUtils.instance
-                                      .getImageNetWork(qrGeneratedDTO.imgId),
-                                  fit: BoxFit.fitWidth),
-                        ),
+                        fit: BoxFit.fitWidth),
+                    Container(
+                      width: 85,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: AppColor.WHITE,
+                        image: (qrGeneratedDTO.imgId.isEmpty)
+                            ? null
+                            : DecorationImage(
+                                image: ImageUtils.instance
+                                    .getImageNetWork(qrGeneratedDTO.imgId),
+                                fit: BoxFit.fitWidth),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           _buildInfo()
@@ -333,6 +330,7 @@ class VietQRWidget extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 10),
               child: Text(
                 '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: AppColor.ORANGE_Dark,
                   fontSize: 25,
