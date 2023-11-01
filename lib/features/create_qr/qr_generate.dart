@@ -3,7 +3,6 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
-import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -344,97 +343,101 @@ class _QrGenerateState extends State<QrGenerate> {
             )
           else
             const SizedBox(height: 20),
-          SizedBox(
-            width: width,
-            child: RepaintBoundaryWidget(
-              globalKey: globalKey,
-              builder: (key) {
-                return VietQRWidget(
-                  qrGeneratedDTO: qrGeneratedDTO,
-                );
-              },
+          UnconstrainedBox(
+            child: SizedBox(
+              width: width,
+              child: RepaintBoundaryWidget(
+                globalKey: globalKey,
+                builder: (key) {
+                  return VietQRWidget(
+                    qrGeneratedDTO: qrGeneratedDTO,
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            width: width,
-            height: 40,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: ButtonIconWidget(
-                    height: 36,
-                    pathIcon: AppImages.icPrintBlue,
-                    border: Border.all(
-                        width: 0.5,
-                        color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-                    title: '',
-                    function: () async {
-                      String paramData = Session.instance.formatDataParamUrl(
-                          qrGeneratedDTO,
-                          showBankAccount: 1);
-                      html.window.open(
-                          Uri.base.toString().replaceFirst(
-                              '/qr_generate', '/qr-generate/print$paramData'),
-                          'new tab');
-                    },
-                    bgColor: AppColor.WHITE,
-                    textColor: AppColor.ORANGE,
+          UnconstrainedBox(
+            child: SizedBox(
+              width: width,
+              height: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ButtonIconWidget(
+                      height: 36,
+                      pathIcon: AppImages.icPrintBlue,
+                      border: Border.all(
+                          width: 0.5,
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
+                      title: '',
+                      function: () async {
+                        String paramData = Session.instance.formatDataParamUrl(
+                            qrGeneratedDTO,
+                            showBankAccount: 1);
+                        html.window.open(
+                            Uri.base.toString().replaceFirst(
+                                '/qr_generate', '/qr-generate/print$paramData'),
+                            'new tab');
+                      },
+                      bgColor: AppColor.WHITE,
+                      textColor: AppColor.ORANGE,
+                    ),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 10),
-                ),
-                Expanded(
-                  child: ButtonIconWidget(
-                    border: Border.all(
-                        width: 0.5,
-                        color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-                    height: 36,
-                    pathIcon: AppImages.icEditAvatarSetting,
-                    title: '',
-                    function: () {
-                      saveImage();
-                    },
-                    bgColor: AppColor.WHITE,
-                    textColor: AppColor.RED_CALENDAR,
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 10),
-                ),
-                Expanded(
-                  child: ButtonIconWidget(
-                    border: Border.all(
-                        width: 0.5,
-                        color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-                    height: 36,
-                    pathIcon: AppImages.icCopyBlue,
-                    title: '',
-                    function: () async {
-                      await FlutterClipboard.copy(ShareUtils.instance
-                              .getTextSharing(qrGeneratedDTO))
-                          .then(
-                        (value) => Fluttertoast.showToast(
-                          msg: 'Đã sao chép',
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Theme.of(context).cardColor,
-                          textColor: Theme.of(context).hintColor,
-                          fontSize: 15,
-                          webBgColor: 'rgba(255, 255, 255)',
-                          webPosition: 'center',
-                        ),
-                      );
-                    },
-                    bgColor: AppColor.WHITE,
-                    textColor: AppColor.BLUE_TEXT,
+                  Expanded(
+                    child: ButtonIconWidget(
+                      border: Border.all(
+                          width: 0.5,
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
+                      height: 36,
+                      pathIcon: AppImages.icEditAvatarSetting,
+                      title: '',
+                      function: () {
+                        saveImage();
+                      },
+                      bgColor: AppColor.WHITE,
+                      textColor: AppColor.RED_CALENDAR,
+                    ),
                   ),
-                ),
-              ],
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                  ),
+                  Expanded(
+                    child: ButtonIconWidget(
+                      border: Border.all(
+                          width: 0.5,
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
+                      height: 36,
+                      pathIcon: AppImages.icCopyBlue,
+                      title: '',
+                      function: () async {
+                        await FlutterClipboard.copy(ShareUtils.instance
+                                .getTextSharing(qrGeneratedDTO))
+                            .then(
+                          (value) => Fluttertoast.showToast(
+                            msg: 'Đã sao chép',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Theme.of(context).cardColor,
+                            textColor: Theme.of(context).hintColor,
+                            fontSize: 15,
+                            webBgColor: 'rgba(255, 255, 255)',
+                            webPosition: 'center',
+                          ),
+                        );
+                      },
+                      bgColor: AppColor.WHITE,
+                      textColor: AppColor.BLUE_TEXT,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(
