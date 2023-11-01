@@ -3,7 +3,6 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
-import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -16,12 +15,14 @@ import 'package:VietQR/features/create_qr/provider/transaction_qr_provider.dart'
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/events/qrcode_un_authen_event.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/models/transaction_qr_dto.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
 import 'package:VietQR/services/providers/water_mark_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,7 @@ import '../login/states/qrcode_un_authen_state.dart';
 class QrGenerate extends StatefulWidget {
   final Map<String, String> params;
   final bool isAuthen;
+
   const QrGenerate({super.key, required this.params, this.isAuthen = false});
 
   @override
@@ -203,11 +205,13 @@ class _QrGenerateState extends State<QrGenerate> {
                             color: AppColor.GREY_BUTTON.withOpacity(0.8),
                           ),
                           Expanded(
-                            child: ListView(
-                              children: [
-                                SizedBox(
-                                  height: 690,
-                                  child: Row(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
                                         child: _buildWidgetQr(state, false,
@@ -216,22 +220,22 @@ class _QrGenerateState extends State<QrGenerate> {
                                       Expanded(child: _buildInfo(false)),
                                     ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                _buildListBank(),
-                                DividerWidget(
-                                  width: double.infinity,
-                                  color: AppColor.GREY_BUTTON.withOpacity(0.8),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
-                                  child: FooterWeb(
-                                    bgColor: AppColor.WHITE,
+                                  const SizedBox(height: 20),
+                                  _buildListBank(),
+                                  DividerWidget(
+                                    width: double.infinity,
+                                    color:
+                                        AppColor.GREY_BUTTON.withOpacity(0.8),
                                   ),
-                                ),
-                              ],
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 12),
+                                    child: FooterWeb(
+                                      bgColor: AppColor.WHITE,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -318,140 +322,140 @@ class _QrGenerateState extends State<QrGenerate> {
       return _buildTransactionSuccess(isVertical);
     }
 
-    return (qrGeneratedDTO.qrCode.isEmpty)
-        ? _buildQRCodeBlank(
-            'Không thể tạo mã VietQR \n mã ngân hàng không hợp lệ')
-        : Column(
-            children: [
-              if (!isVertical)
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 32, bottom: 20),
-                    child: Text(
-                      'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+    if ((qrGeneratedDTO.qrCode.isEmpty)) {
+      return _buildQRCodeBlank(
+          'Không thể tạo mã VietQR \n mã ngân hàng không hợp lệ');
+    } else {
+      return Column(
+        children: [
+          if (!isVertical)
+            const Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 32, bottom: 20),
+                child: Text(
+                  'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
+          else
+            const SizedBox(height: 20),
+          UnconstrainedBox(
+            child: SizedBox(
+              width: width,
+              child: RepaintBoundaryWidget(
+                globalKey: globalKey,
+                builder: (key) {
+                  return VietQRWidget(
+                    qrGeneratedDTO: qrGeneratedDTO,
+                  );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          UnconstrainedBox(
+            child: SizedBox(
+              width: width,
+              height: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ButtonIconWidget(
+                      height: 36,
+                      pathIcon: AppImages.icPrintBlue,
+                      border: Border.all(
+                          width: 0.5,
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
+                      title: '',
+                      function: () async {
+                        String paramData = Session.instance.formatDataParamUrl(
+                            qrGeneratedDTO,
+                            showBankAccount: 1);
+                        html.window.open(
+                            Uri.base.toString().replaceFirst(
+                                '/qr-generate', '/qr-generate/print$paramData'),
+                            'new tab');
+                      },
+                      bgColor: AppColor.WHITE,
+                      textColor: AppColor.ORANGE,
                     ),
                   ),
-                )
-              else
-                const SizedBox(
-                  height: 20,
-                ),
-              UnconstrainedBox(
-                child: SizedBox(
-                  width: width,
-                  child: RepaintBoundaryWidget(
-                      globalKey: globalKey,
-                      builder: (key) {
-                        return VietQRWidget(
-                          qrGeneratedDTO: qrGeneratedDTO,
-                        );
-                      }),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              UnconstrainedBox(
-                child: SizedBox(
-                  width: width,
-                  height: 40,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: ButtonIconWidget(
-                          height: 36,
-                          pathIcon: AppImages.icPrintBlue,
-                          border: Border.all(
-                              width: 0.5,
-                              color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-                          title: '',
-                          function: () async {
-                            String paramData = Session.instance
-                                .formatDataParamUrl(qrGeneratedDTO,
-                                    showBankAccount: 1);
-                            html.window.open(
-                                Uri.base.toString().replaceFirst('/qr-generate',
-                                    '/qr-generate/print$paramData'),
-                                'new tab');
-                          },
-                          bgColor: AppColor.WHITE,
-                          textColor: AppColor.ORANGE,
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 10),
-                      ),
-                      Expanded(
-                        child: ButtonIconWidget(
-                          border: Border.all(
-                              width: 0.5,
-                              color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-                          height: 36,
-                          pathIcon: AppImages.icEditAvatarSetting,
-                          title: '',
-                          function: () {
-                            saveImage();
-                          },
-                          bgColor: AppColor.WHITE,
-                          textColor: AppColor.RED_CALENDAR,
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 10),
-                      ),
-                      Expanded(
-                        child: ButtonIconWidget(
-                          border: Border.all(
-                              width: 0.5,
-                              color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-                          height: 36,
-                          pathIcon: AppImages.icCopyBlue,
-                          title: '',
-                          function: () async {
-                            await FlutterClipboard.copy(Uri.base.toString())
-                                .then(
-                              (value) => Fluttertoast.showToast(
-                                msg: 'Đã sao chép',
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Theme.of(context).cardColor,
-                                textColor: Theme.of(context).hintColor,
-                                fontSize: 15,
-                                webBgColor: 'rgba(255, 255, 255)',
-                                webPosition: 'center',
-                              ),
-                            );
-                          },
-                          bgColor: AppColor.WHITE,
-                          textColor: AppColor.BLUE_TEXT,
-                        ),
-                      ),
-                    ],
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
                   ),
-                ),
+                  Expanded(
+                    child: ButtonIconWidget(
+                      border: Border.all(
+                          width: 0.5,
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
+                      height: 36,
+                      pathIcon: AppImages.icEditAvatarSetting,
+                      title: '',
+                      function: () {
+                        saveImage();
+                      },
+                      bgColor: AppColor.WHITE,
+                      textColor: AppColor.RED_CALENDAR,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10),
+                  ),
+                  Expanded(
+                    child: ButtonIconWidget(
+                      border: Border.all(
+                          width: 0.5,
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
+                      height: 36,
+                      pathIcon: AppImages.icCopyBlue,
+                      title: '',
+                      function: () async {
+                        await FlutterClipboard.copy(Uri.base.toString()).then(
+                          (value) => Fluttertoast.showToast(
+                            msg: 'Đã sao chép',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Theme.of(context).cardColor,
+                            textColor: Theme.of(context).hintColor,
+                            fontSize: 15,
+                            webBgColor: 'rgba(255, 255, 255)',
+                            webPosition: 'center',
+                          ),
+                        );
+                      },
+                      bgColor: AppColor.WHITE,
+                      textColor: AppColor.BLUE_TEXT,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                width: width,
-                child: ButtonWidget(
-                  height: 36,
-                  text: 'Hủy thanh toán',
-                  function: () async {},
-                  bgColor: AppColor.GREY_BUTTON.withOpacity(0.5),
-                  borderRadius: 4,
-                  textColor: AppColor.BLACK,
-                  textSize: 12,
-                ),
-              ),
-            ],
-          );
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          SizedBox(
+            width: width,
+            child: ButtonWidget(
+              height: 36,
+              text: 'Hủy thanh toán',
+              function: () async {
+                html.window.close();
+              },
+              bgColor: AppColor.GREY_BUTTON.withOpacity(0.5),
+              borderRadius: 4,
+              textColor: AppColor.BLACK,
+              textSize: 12,
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   Widget _buildInfo(bool isVertical) {
@@ -466,116 +470,104 @@ class _QrGenerateState extends State<QrGenerate> {
       colorAmount = AppColor.ORANGE_Dark;
     }
 
-    return Padding(
+    return Container(
       padding: isVertical
           ? const EdgeInsets.only(bottom: 20)
-          : const EdgeInsets.all(20),
+          : const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+      alignment: Alignment.topCenter,
       child: Column(
-        crossAxisAlignment:
-            isVertical ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const Text(
-                    'Thông tin đơn hàng',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  if (qrGeneratedDTO.amount != '0') ...[
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 8),
-                      child: Text(
-                        'Số tiền thanh toán',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(
-                      '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-                      style: TextStyle(
-                        color: colorAmount,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 8),
-                    child: Text(
-                      'Tài khoản nhận',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    qrGeneratedDTO.bankAccount,
-                  ),
-                  Text(
-                    '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
-                  ),
-                  if (transactionQRdto.orderId.isNotEmpty) ...[
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 8),
-                      child: Text(
-                        'Nhà cung cấp',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(
-                      transactionQRdto.merchant,
-                    ),
-                  ],
-                  if (transactionQRdto.orderId.isNotEmpty) ...[
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 8),
-                      child: Text(
-                        'Mã hóa đơn',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(
-                      transactionQRdto.orderId,
-                    ),
-                  ],
-                  if (transactionQRdto.terminalCode.isNotEmpty) ...[
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 8),
-                      child: Text(
-                        'Mã điểm bán',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(
-                      transactionQRdto.terminalCode,
-                    ),
-                  ],
-                  if (qrGeneratedDTO.content.isNotEmpty) ...[
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 8),
-                      child: Text(
-                        'Nội dung',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(
-                      qrGeneratedDTO.content,
-                    ),
-                  ],
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  _buildRowButton()
-                ],
+          const SizedBox(height: 12),
+          const Text(
+            'Thông tin đơn hàng',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          if (qrGeneratedDTO.amount != '0') ...[
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 8),
+              child: Text(
+                'Số tiền thanh toán',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-          )
+            Text(
+              '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+              style: TextStyle(
+                color: colorAmount,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+          const Padding(
+            padding: EdgeInsets.only(top: 20, bottom: 8),
+            child: Text(
+              'Tài khoản nhận',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          Text(
+            qrGeneratedDTO.bankAccount,
+          ),
+          Text(
+            '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
+          ),
+          if (transactionQRdto.orderId.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 8),
+              child: Text(
+                'Nhà cung cấp',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              transactionQRdto.merchant,
+            ),
+          ],
+          if (transactionQRdto.orderId.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 8),
+              child: Text(
+                'Mã hóa đơn',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              transactionQRdto.orderId,
+            ),
+          ],
+          if (transactionQRdto.terminalCode.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 8),
+              child: Text(
+                'Mã điểm bán',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              transactionQRdto.terminalCode,
+            ),
+          ],
+          if (qrGeneratedDTO.content.isNotEmpty) ...[
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 8),
+              child: Text(
+                'Nội dung',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              qrGeneratedDTO.content,
+            ),
+          ],
+          const SizedBox(
+            height: 28,
+          ),
+          _buildRowButton()
         ],
       ),
     );
@@ -626,8 +618,7 @@ class _QrGenerateState extends State<QrGenerate> {
   Widget _buildTimeCountDown() {
     return Consumer<TransactionQRProvider>(builder: (context, provider, child) {
       if (provider.timeCountDown > 0) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        return Row(
           children: [
             Row(
               children: [
@@ -869,35 +860,7 @@ class _QrGenerateState extends State<QrGenerate> {
                 const SizedBox(
                   height: 24,
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 100,
-                  child: ScrollConfiguration(
-                    behavior: MyCustomScrollBehavior(),
-                    child: GridView(
-                      scrollDirection: Axis.horizontal,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              mainAxisSpacing: 16.0,
-                              crossAxisSpacing: 12.0,
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.36),
-                      physics: const PageScrollPhysics(),
-                      children: state.list.map((e) {
-                        return Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: AppColor.GREY_BUTTON)),
-                          child: Image(
-                            image:
-                                ImageUtils.instance.getImageNetWork(e.imageId),
-                            height: 32,
-                            width: 80,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
+                _buildFooterWidthListBank(double.infinity, state.list),
               ],
             ),
           );
@@ -942,5 +905,40 @@ class _QrGenerateState extends State<QrGenerate> {
         return const SizedBox.shrink();
       }
     });
+  }
+
+  Widget _buildFooterWidthListBank(double width, List<BankTypeDTO> list) {
+    return Container(
+      color: AppColor.WHITE,
+      child: Column(
+        children: [
+          if (list.isNotEmpty)
+            SizedBox(
+              height: 44,
+              width: width,
+              child: CarouselSlider(
+                items: list.map(
+                  (e) {
+                    return Image(
+                      image: ImageUtils.instance.getImageNetWork(e.imageId),
+                      height: 44,
+                    );
+                  },
+                ).toList(),
+                options: CarouselOptions(
+                    autoPlay: true,
+                    viewportFraction: 0.2,
+                    pageSnapping: false,
+                    autoPlayCurve: Curves.linear,
+                    autoPlayInterval: const Duration(seconds: 2),
+                    autoPlayAnimationDuration: const Duration(seconds: 2)),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
   }
 }
