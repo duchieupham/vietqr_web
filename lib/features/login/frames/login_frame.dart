@@ -86,7 +86,6 @@ class LoginFrame extends StatelessWidget {
             )
           : BoxLayout(
               width: width * 0.8,
-              height: 430,
               borderRadius: 5,
               enableShadow: true,
               child: widget1,

@@ -84,8 +84,6 @@ class _QrGenerateState extends State<QrGenerate> {
   }
 
   saveImage() async {
-    String nameFile =
-        'VietQR_${data['bankCode']}_${data['userBankName'].replaceAll(' ', '_')}';
     await Future.delayed(const Duration(milliseconds: 0), () {
       Provider.of<ActionShareProvider>(context, listen: false)
           .updateAction(true);
@@ -376,7 +374,7 @@ class _QrGenerateState extends State<QrGenerate> {
                                 .formatDataParamUrl(qrGeneratedDTO,
                                     showBankAccount: 1);
                             html.window.open(
-                                Uri.base.toString().replaceFirst('/qr_generate',
+                                Uri.base.toString().replaceFirst('/qr-generate',
                                     '/qr-generate/print$paramData'),
                                 'new tab');
                           },
@@ -414,8 +412,7 @@ class _QrGenerateState extends State<QrGenerate> {
                           pathIcon: AppImages.icCopyBlue,
                           title: '',
                           function: () async {
-                            await FlutterClipboard.copy(ShareUtils.instance
-                                    .getTextSharing(qrGeneratedDTO))
+                            await FlutterClipboard.copy(Uri.base.toString())
                                 .then(
                               (value) => Fluttertoast.showToast(
                                 msg: 'Đã sao chép',
@@ -792,7 +789,21 @@ class _QrGenerateState extends State<QrGenerate> {
   Widget _buildRowButton() {
     return Row(
       children: [
-        _buildButtonText(() {}, Alignment.centerLeft, 'Sap chép Link to Pay'),
+        _buildButtonText(() async {
+          await FlutterClipboard.copy(Uri.base.toString()).then(
+            (value) => Fluttertoast.showToast(
+              msg: 'Đã sao chép',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Theme.of(context).cardColor,
+              textColor: Theme.of(context).hintColor,
+              fontSize: 15,
+              webBgColor: 'rgba(255, 255, 255)',
+              webPosition: 'center',
+            ),
+          );
+        }, Alignment.centerLeft, 'Sap chép Link to Pay'),
         const Spacer(),
         _buildButtonText(() {}, Alignment.centerRight, 'Hướng dẫn thanh toán'),
       ],

@@ -15,7 +15,6 @@ import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/frames/login_frame.dart';
 import 'package:VietQR/features/login/provider/login_provider.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
-import 'package:VietQR/features/login/widgets/login_by_card_widget.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
@@ -366,27 +365,38 @@ class _Login extends State<Login> {
                         bgColor: AppColor.BLUE_TEXT,
                         textColor: AppColor.WHITE,
                         function: () async {
-                          await DialogWidget.instance
-                              .openPopup(
-                            child: LoginByCardWidget(),
-                            width: 500,
-                            height: 500,
-                          )
-                              .then((value) {
-                            if (value != null) {
-                              AccountLoginMethodDTO accountLoginMethodDTO =
-                                  AccountLoginMethodDTO(
-                                method: 'CARD',
-                                cardNumber: value,
-                                userId: '',
-                                platform: '',
-                                device: '',
-                                fcmToken: '',
-                              );
-                              _loginBloc.add(LoginEventByCardNumber(
-                                  dto: accountLoginMethodDTO));
-                            }
-                          });
+                          AccountLoginMethodDTO accountLoginMethodDTO =
+                              AccountLoginMethodDTO(
+                            method: 'CARD',
+                            cardNumber: '1234567899',
+                            userId: '',
+                            platform: '',
+                            device: '',
+                            fcmToken: '',
+                          );
+                          _loginBloc.add(LoginEventByCardNumber(
+                              dto: accountLoginMethodDTO));
+                          // await DialogWidget.instance
+                          //     .openPopup(
+                          //   child: LoginByCardWidget(),
+                          //   width: 500,
+                          //   height: 500,
+                          // )
+                          //     .then((value) {
+                          //   if (value != null) {
+                          //     AccountLoginMethodDTO accountLoginMethodDTO =
+                          //         AccountLoginMethodDTO(
+                          //       method: 'CARD',
+                          //       cardNumber: value,
+                          //       userId: '',
+                          //       platform: '',
+                          //       device: '',
+                          //       fcmToken: '',
+                          //     );
+                          //     _loginBloc.add(LoginEventByCardNumber(
+                          //         dto: accountLoginMethodDTO));
+                          //   }
+                          // });
                         },
                       ),
                     ),
