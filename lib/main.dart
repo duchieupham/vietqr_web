@@ -177,7 +177,7 @@ final GoRouter _router = GoRouter(
       path: '/',
       redirect: (context, state) {
         return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-            ? '/transaction'
+            ? '/home'
             : '/login';
       },
     ),
@@ -185,7 +185,7 @@ final GoRouter _router = GoRouter(
         path: '/login',
         redirect: (context, state) =>
             (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/transaction'
+                ? '/home'
                 : '/login',
         builder: (BuildContext context, GoRouterState state) => const Login(),
         pageBuilder: (BuildContext context, GoRouterState state) {

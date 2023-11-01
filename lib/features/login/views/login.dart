@@ -121,11 +121,11 @@ class _Login extends State<Login> {
                   }
 
                   provider.updateListInfoUser(list);
-                  context.push('/transaction');
+                  context.push('/home');
                 }
                 if (state is LoginQRSuccessfulState) {
                   Navigator.of(context).pop();
-                  context.push('/transaction');
+                  context.push('/home');
                 }
                 if (state is ExistPhoneState) {
                   Navigator.of(context).pop();

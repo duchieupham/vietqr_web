@@ -99,19 +99,19 @@ class MenuLeft extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ItemMenuHome(
-                title: 'Giao dịch',
-                iconId: AppImages.icMenuTransaction,
-                isSelect: currentType == MenuHomeType.TRANSACTION,
-                onTap: () {
-                  context.go('/transaction');
-                },
-              ),
-              ItemMenuHome(
                 title: 'Trang chủ',
                 iconId: AppImages.icMenuHome,
                 isSelect: currentType == MenuHomeType.HOME,
                 onTap: () {
                   context.go('/home');
+                },
+              ),
+              ItemMenuHome(
+                title: 'Giao dịch',
+                iconId: AppImages.icMenuTransaction,
+                isSelect: currentType == MenuHomeType.TRANSACTION,
+                onTap: () {
+                  context.go('/transaction');
                 },
               ),
               if (provider.isAccountIsMerchant)

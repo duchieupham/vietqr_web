@@ -69,11 +69,6 @@ class _MerchantViewState extends State<MerchantView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ItemMenuTop(
-                      title: 'Báo cáo tổng hợp',
-                      isSelect: currentType == SubMenuType.SALE_REPORT,
-                      onTap: () {},
-                    ),
-                    ItemMenuTop(
                       title: 'Thống kê giao dịch',
                       isSelect: currentType == SubMenuType.LIST_TRANSACTION,
                       onTap: () {
@@ -89,6 +84,11 @@ class _MerchantViewState extends State<MerchantView> {
                         merchantBloc.add(GetListTransactionByMerchantEvent(
                             param: param, isLoadingPage: true));
                       },
+                    ),
+                    ItemMenuTop(
+                      title: 'Báo cáo tổng hợp',
+                      isSelect: currentType == SubMenuType.SALE_REPORT,
+                      onTap: () {},
                     ),
                     ItemMenuTop(
                       title: 'Phí dịch vụ',
