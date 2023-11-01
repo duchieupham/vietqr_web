@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -26,7 +27,7 @@ class WalletCard extends StatelessWidget {
           height: 12,
         ),
         BoxLayout(
-          bgColor: DefaultTheme.BLUE_CARD,
+          bgColor: AppColor.BLUE_CARD,
           borderRadius: 8,
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -47,8 +48,8 @@ class WalletCard extends StatelessWidget {
   Widget _buildTitle() {
     return Row(
       children: [
-        Image.asset(
-          AppImages.icVietQrSmall,
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
           width: 35,
           height: 35,
         ),
@@ -63,11 +64,11 @@ class WalletCard extends StatelessWidget {
               style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: DefaultTheme.WHITE),
+                  color: AppColor.WHITE),
             ),
             Text(
               UserInformationHelper.instance.getUserFullname(),
-              style: const TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+              style: const TextStyle(fontSize: 12, color: AppColor.WHITE),
             )
           ],
         ),
@@ -86,7 +87,7 @@ class WalletCard extends StatelessWidget {
             RichText(
               text: TextSpan(
                 text: 'Số dư: ',
-                style: const TextStyle(fontSize: 13, color: DefaultTheme.WHITE),
+                style: const TextStyle(fontSize: 13, color: AppColor.WHITE),
                 children: <TextSpan>[
                   TextSpan(
                       text:
@@ -102,17 +103,16 @@ class WalletCard extends StatelessWidget {
             Row(
               children: [
                 const Text('Điểm thưởng:  ',
-                    style: TextStyle(fontSize: 13, color: DefaultTheme.WHITE)),
+                    style: TextStyle(fontSize: 13, color: AppColor.WHITE)),
                 Text(Session.instance.wallet.point,
                     style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                        color: DefaultTheme.WHITE)),
-                Image.asset(
-                  'assets/images/ic-point.png',
-                  color: DefaultTheme.WHITE,
+                        color: AppColor.WHITE)),
+                Image(
+                  image: ImageUtils.instance.getImageNetWork(AppImages.icPoint),
                   width: 25,
-                )
+                ),
               ],
             ),
           ],
@@ -122,18 +122,18 @@ class WalletCard extends StatelessWidget {
           onTap: () {},
           child: BoxLayout(
               borderRadius: 8,
-              bgColor: DefaultTheme.CARD_MY_QR,
+              bgColor: AppColor.CARD_MY_QR,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               child: Row(
                 children: [
                   Image.asset(
                     AppImages.icMenuQR,
                     height: 25,
-                    color: DefaultTheme.WHITE,
+                    color: AppColor.WHITE,
                   ),
                   const Text(
                     'My QR',
-                    style: TextStyle(fontSize: 9, color: DefaultTheme.WHITE),
+                    style: TextStyle(fontSize: 9, color: AppColor.WHITE),
                   ),
                   const SizedBox(
                     width: 2,

@@ -1,3 +1,5 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../commons/constants/configurations/theme.dart';
@@ -247,11 +249,20 @@ class DkDv extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          Expanded(child: Image.asset('assets/images/logo-mb.png')),
+          Expanded(
+            child: Image(
+              image: ImageUtils.instance.getImageNetWork(AppImages.logoMb),
+            ),
+          ),
           const Spacer(
             flex: 3,
           ),
-          Expanded(child: Image.asset('assets/images/logo-vietqr-vn.png'))
+          Expanded(
+            child: Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+            ),
+          )
         ],
       ),
     );

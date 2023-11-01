@@ -1,12 +1,12 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/card_number_setting_widget.dart';
-import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
+import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +40,8 @@ class PopupMenuWebWidget {
                     fit: BoxFit.cover,
                     image: (imgId.trim().isNotEmpty)
                         ? ImageUtils.instance.getImageNetWork(imgId)
-                        : Image.asset('assets/images/ic-avatar.png').image,
+                        : ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation),
                   ),
                 ),
               ),
@@ -123,6 +124,35 @@ class PopupMenuWebWidget {
           ),
         ),
         PopupMenuItem<int>(
+          value: 1,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              DialogWidget.instance.openPopup(
+                width: 800,
+                height: 650,
+                child: const PopupSetting(),
+              );
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.settings,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Cài đặt',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
             value: 2,
             height: 40,
             child: BlocListener<LogoutBloc, LogoutState>(
@@ -155,7 +185,7 @@ class PopupMenuWebWidget {
                   children: const [
                     Icon(
                       Icons.logout_rounded,
-                      color: DefaultTheme.RED_CALENDAR,
+                      color: AppColor.RED_CALENDAR,
                       size: 15,
                     ),
                     Padding(padding: EdgeInsets.only(left: 10)),
@@ -163,7 +193,7 @@ class PopupMenuWebWidget {
                       'Đăng xuất',
                       style: TextStyle(
                         fontSize: 13,
-                        color: DefaultTheme.RED_CALENDAR,
+                        color: AppColor.RED_CALENDAR,
                       ),
                     ),
                   ],
@@ -198,8 +228,8 @@ class PopupMenuWebWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 2),
-          child: Image.asset(
-            'assets/images/ic-point.png',
+          child: Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icPoint),
             width: 20,
           ),
         )

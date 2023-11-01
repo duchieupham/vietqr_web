@@ -1,4 +1,3 @@
-import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class QRCodeUnUTEvent extends Equatable {
@@ -14,4 +13,12 @@ class QRCodeUnUTCreateQR extends QRCodeUnUTEvent {
 
   @override
   List<Object?> get props => [data];
+}
+
+class GetTransactionQRBytToken extends QRCodeUnUTEvent {
+  final String token;
+  const GetTransactionQRBytToken({required this.token});
+
+  @override
+  List<Object?> get props => [token];
 }

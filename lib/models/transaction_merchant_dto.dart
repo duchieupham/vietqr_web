@@ -55,10 +55,21 @@ class TransactionMerchantDTO {
     // if (status == 0) {
     //   return DefaultTheme.ORANGE;
     // } else
+
     if (transType == 'C') {
-      return DefaultTheme.BLUE_TEXT;
+      if (status == 0) {
+        return AppColor.ORANGE;
+      } else if (status == 1) {
+        if (type == 0) {
+          return AppColor.GREEN;
+        }
+
+        return AppColor.BLUE_TEXT;
+      } else {
+        return AppColor.GREY_TEXT;
+      }
     } else {
-      return DefaultTheme.RED_TEXT;
+      return AppColor.RED_TEXT;
     }
   }
 
@@ -74,11 +85,11 @@ class TransactionMerchantDTO {
 
   Color getStatusColor() {
     if (status == 0) {
-      return DefaultTheme.ORANGE;
+      return AppColor.ORANGE;
     } else if (status == 1) {
-      return DefaultTheme.BLUE_TEXT;
+      return AppColor.BLUE_TEXT;
     } else {
-      return DefaultTheme.BLACK;
+      return AppColor.BLACK;
     }
   }
 }

@@ -1,12 +1,14 @@
+import 'dart:math';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/textfield_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class TextFieldWidget extends StatelessWidget {
+class TextFieldWidget extends StatefulWidget {
   final double? width;
   final String hintText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final ValueChanged<Object>? onChange;
   final VoidCallback? onEdittingComplete;
   final ValueChanged<Object>? onSubmitted;
@@ -25,15 +27,18 @@ class TextFieldWidget extends StatelessWidget {
   final bool readOnly;
   final TextAlign? textAlign;
   final bool required;
+  final String? value;
   final Function(PointerDownEvent)? onTapOutside;
   final EdgeInsets contentPadding;
   final TextStyle? textStyle;
   final List<TextInputFormatter>? inputFormatter;
+  final Color? fillColor;
+  final double height;
   const TextFieldWidget(
       {Key? key,
       this.width,
       required this.hintText,
-      required this.controller,
+      this.controller,
       required this.keyboardAction,
       required this.onChange,
       required this.inputType,
@@ -55,68 +60,115 @@ class TextFieldWidget extends StatelessWidget {
       this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
       this.textStyle,
       this.required = false,
-      this.inputFormatter})
+      this.value,
+      this.inputFormatter,
+      this.height = 50,
+      this.fillColor})
       : super(key: key);
 
   @override
+  State<TextFieldWidget> createState() => _TextFieldWidgetState();
+}
+
+class _TextFieldWidgetState extends State<TextFieldWidget> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.controller == null && widget.value != null) {
+      _updateTextValueToController(widget.value!);
+    }
+  }
+
+  _updateTextValueToController(String value) {
+    final diffChar = value.length - _controller.text.length;
+    final currentPointerPosition = max(_controller.selection.start, 0);
+    var newPointerPosition = currentPointerPosition + diffChar;
+    newPointerPosition = newPointerPosition > 0 ? newPointerPosition : 0;
+    _controller.text = widget.value!;
+    _controller.selection = TextSelection.collapsed(offset: newPointerPosition);
+  }
+
+  @override
+  void didUpdateWidget(covariant TextFieldWidget oldWidget) {
+    if (widget.controller == null && widget.value != _controller.text) {
+      if (widget.value != null) {
+        _updateTextValueToController(widget.value!);
+      } else {
+        _controller.clear();
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  TextEditingController get _editingController =>
+      widget.controller ?? _controller;
+  @override
   Widget build(BuildContext context) {
-    return (textfieldType != null && textfieldType == TextfieldType.LABEL)
+    return (widget.textfieldType != null &&
+            widget.textfieldType == TextfieldType.LABEL)
         ? Container(
-            width: width,
-            height: 50,
+            width: widget.width,
+            height: widget.height,
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
                 SizedBox(
-                  width: (titleWidth != null) ? titleWidth : 80,
+                  width: (widget.titleWidth != null) ? widget.titleWidth : 80,
                   child: Row(
                     children: [
                       Text(
-                        title ?? '',
+                        widget.title ?? '',
                         style: TextStyle(
-                          fontSize: (fontSize != null) ? fontSize : 16,
+                          fontSize:
+                              (widget.fontSize != null) ? widget.fontSize : 16,
                         ),
                       ),
-                      if (required)
+                      if (widget.required)
                         const Text(
                           '*',
-                          style: TextStyle(
-                              fontSize: 16, color: DefaultTheme.RED_TEXT),
+                          style:
+                              TextStyle(fontSize: 16, color: AppColor.RED_TEXT),
                         )
                     ],
                   ),
                 ),
                 Flexible(
                   child: TextField(
-                    obscureText: isObscureText,
-                    controller: controller,
-                    onChanged: onChange,
-                    style: textStyle,
-                    textAlign:
-                        (textAlign != null) ? textAlign! : TextAlign.left,
-                    onEditingComplete: onEdittingComplete,
-                    onTapOutside: onTapOutside,
-                    onSubmitted: onSubmitted,
-                    maxLength: maxLength,
-                    autofocus: (autoFocus != null) ? autoFocus! : false,
-                    focusNode: focusNode,
-                    enabled: enable,
-                    readOnly: readOnly,
-                    keyboardType: inputType,
-                    maxLines: (maxLines == null) ? 1 : maxLines,
-                    textInputAction: keyboardAction,
-                    inputFormatters: inputFormatter,
+                    obscureText: widget.isObscureText,
+                    controller: _editingController,
+                    onChanged: widget.onChange,
+                    style: widget.textStyle,
+                    textAlign: (widget.textAlign != null)
+                        ? widget.textAlign!
+                        : TextAlign.left,
+                    onEditingComplete: widget.onEdittingComplete,
+                    onTapOutside: widget.onTapOutside,
+                    onSubmitted: widget.onSubmitted,
+                    maxLength: widget.maxLength,
+                    autofocus:
+                        (widget.autoFocus != null) ? widget.autoFocus! : false,
+                    focusNode: widget.focusNode,
+                    enabled: widget.enable,
+                    readOnly: widget.readOnly,
+                    keyboardType: widget.inputType,
+                    maxLines: (widget.maxLines == null) ? 1 : widget.maxLines,
+                    textInputAction: widget.keyboardAction,
+                    inputFormatters: widget.inputFormatter,
                     decoration: InputDecoration(
-                      hintText: hintText,
+                      fillColor: widget.fillColor,
+                      hintText: widget.hintText,
                       counterText: '',
                       border: InputBorder.none,
                       hintStyle: TextStyle(
-                        fontSize: (fontSize != null) ? fontSize : 16,
-                        color: (title != null)
-                            ? DefaultTheme.GREY_TEXT
+                        fontSize:
+                            (widget.fontSize != null) ? widget.fontSize : 16,
+                        color: (widget.title != null)
+                            ? AppColor.GREY_TEXT
                             : Theme.of(context).hintColor,
                       ),
-                      contentPadding: contentPadding,
+                      contentPadding: widget.contentPadding,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       errorBorder: InputBorder.none,
@@ -126,36 +178,38 @@ class TextFieldWidget extends StatelessWidget {
               ],
             ))
         : Container(
-            width: width,
-            height: 60,
+            width: widget.width,
+            height: widget.height,
             alignment: Alignment.center,
             child: TextField(
-              obscureText: isObscureText,
-              controller: controller,
-              textAlign: (textAlign != null) ? textAlign! : TextAlign.left,
-              onChanged: onChange,
-              onSubmitted: onSubmitted,
-              style: textStyle,
-              onEditingComplete: onEdittingComplete,
-              keyboardType: inputType,
+              obscureText: widget.isObscureText,
+              controller: _editingController,
+              textAlign: (widget.textAlign != null)
+                  ? widget.textAlign!
+                  : TextAlign.left,
+              onChanged: widget.onChange,
+              onSubmitted: widget.onSubmitted,
+              style: widget.textStyle,
+              onEditingComplete: widget.onEdittingComplete,
+              keyboardType: widget.inputType,
               maxLines: 1,
-              maxLength: maxLength,
-              textInputAction: keyboardAction,
-              enabled: enable,
-              readOnly: readOnly,
+              maxLength: widget.maxLength,
+              textInputAction: widget.keyboardAction,
+              enabled: widget.enable,
+              readOnly: widget.readOnly,
               autofocus: false,
-              focusNode: focusNode,
-              onTapOutside: onTapOutside,
-              inputFormatters: inputFormatter,
+              focusNode: widget.focusNode,
+              onTapOutside: widget.onTapOutside,
+              inputFormatters: widget.inputFormatter,
               decoration: InputDecoration(
-                hintText: hintText,
+                hintText: widget.hintText,
                 counterText: '',
                 border: InputBorder.none,
                 hintStyle: TextStyle(
-                  fontSize: (fontSize != null) ? fontSize : 16,
-                  color: DefaultTheme.GREY_TEXT,
+                  fontSize: (widget.fontSize != null) ? widget.fontSize : 16,
+                  color: AppColor.GREY_TEXT,
                 ),
-                contentPadding: contentPadding,
+                contentPadding: widget.contentPadding,
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 errorBorder: InputBorder.none,

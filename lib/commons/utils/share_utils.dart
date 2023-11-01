@@ -1,19 +1,21 @@
 import 'dart:convert';
-
-import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'dart:js' as js;
+import 'dart:ui' as ui;
+import 'dart:html' as html;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
-import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
-import 'dart:js' as js;
-import 'dart:html' as html;
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+
 
 class ShareUtils {
   const ShareUtils._privateConsrtructor();
 
   static const ShareUtils _instance = ShareUtils._privateConsrtructor();
+
   static ShareUtils get instance => _instance;
 
   String getTextSharing(QRGeneratedDTO dto) {
@@ -32,7 +34,7 @@ class ShareUtils {
     return result;
   }
 
-  Future<void> saveImageToGallery(GlobalKey globalKey, String nameFile) async {
+  Future<void> saveImageToGallery(GlobalKey globalKey) async {
     try {
       RenderRepaintBoundary boundary =
           globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
@@ -40,12 +42,10 @@ class ShareUtils {
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      List<int> dataImage = pngBytes;
-      js.context.callMethod("saveAs", [
-        html.Blob([dataImage]),
-        '$nameFile.png'
-      ]);
+      await ImageGallerySaver.saveImage(
+        pngBytes,
+        quality: 100,
+      );
     } catch (e) {
       LOG.error(e.toString());
     }

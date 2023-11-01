@@ -148,7 +148,7 @@ class SelectBankTypeWidget extends StatelessWidget {
                   height: 200,
                   child: const Center(
                     child: CircularProgressIndicator(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                     ),
                   ),
                 );
@@ -199,7 +199,7 @@ class SelectBankTypeWidget extends StatelessWidget {
       child: BoxLayout(
         width: width,
         borderRadius: 0,
-        bgColor: DefaultTheme.TRANSPARENT,
+        bgColor: AppColor.TRANSPARENT,
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
         child: Row(
           children: [
@@ -208,7 +208,7 @@ class SelectBankTypeWidget extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 image: DecorationImage(
                   image: ImageUtils.instance.getImageNetWork(
                     dto.imageId,

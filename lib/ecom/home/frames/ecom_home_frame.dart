@@ -42,10 +42,14 @@ class ECOMHomeFrame extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: Image.asset('assets/images/bg-home-web.png').image,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColor.WHITE,
+            AppColor.BLUE_LIGHT,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
         ),
       ),
       child: (PlatformUtils.instance.resizeWhen(width, 600))
@@ -94,7 +98,7 @@ class ECOMHomeFrame extends StatelessWidget {
                         : Container(
                             width: width,
                             height: height,
-                            color: DefaultTheme.BLACK.withOpacity(0.9),
+                            color: AppColor.BLACK.withOpacity(0.9),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
@@ -136,7 +140,7 @@ class ECOMHomeFrame extends StatelessWidget {
                                             bgColor: Theme.of(context)
                                                 .canvasColor
                                                 .withOpacity(0.3),
-                                            textColor: DefaultTheme.WHITE,
+                                            textColor: AppColor.WHITE,
                                           ),
                                         ),
                                       ),
@@ -170,7 +174,7 @@ class ECOMHomeFrame extends StatelessWidget {
                                             bgColor: Theme.of(context)
                                                 .canvasColor
                                                 .withOpacity(0.3),
-                                            textColor: DefaultTheme.WHITE,
+                                            textColor: AppColor.WHITE,
                                           ),
                                         ),
                                       ),
@@ -199,10 +203,10 @@ class ECOMHomeFrame extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Checkbox(
-              checkColor: DefaultTheme.WHITE, // color of tick Mark
-              activeColor: DefaultTheme.GREY_LIGHT,
+              checkColor: AppColor.WHITE, // color of tick Mark
+              activeColor: AppColor.GREY_LIGHT,
               value: provider.guideWeb,
-              side: const BorderSide(color: DefaultTheme.GREY_LIGHT, width: 2),
+              side: const BorderSide(color: AppColor.GREY_LIGHT, width: 2),
 
               onChanged: (bool? value) {
                 provider.changeGuideWeb(value!);
@@ -210,7 +214,7 @@ class ECOMHomeFrame extends StatelessWidget {
             ),
             const Text(
               'Không hiển thị hướng dẫn cho lần đăng nhập tiếp theo',
-              style: TextStyle(color: DefaultTheme.WHITE),
+              style: TextStyle(color: AppColor.WHITE),
             ),
           ],
         ),

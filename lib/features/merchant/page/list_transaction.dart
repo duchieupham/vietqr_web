@@ -1,168 +1,144 @@
 import 'dart:html' as html;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../commons/utils/time_utils.dart';
-import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/commons/utils/string_utils.dart';
+
 import 'package:VietQR/commons/utils/custom_scroll.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
-import 'package:VietQR/models/transaction_merchant_dto.dart';
-import '../../../commons/constants/configurations/theme.dart';
-import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
-import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/features/merchant/provider/merchant_provider.dart';
+import 'package:VietQR/features/merchant/states/merchant_state.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
+import '../../../commons/constants/configurations/theme.dart';
+import '../../../commons/utils/time_utils.dart';
 
-
-class ListTransaction extends StatefulWidget {
+class ListTransaction extends StatelessWidget {
   final MerchantBloc merchantBloc;
-  const ListTransaction({super.key, required this.merchantBloc});
+  ListTransaction({super.key, required this.merchantBloc});
 
-  @override
-  State<ListTransaction> createState() => _ListTransactionState();
-}
-
-class _ListTransactionState extends State<ListTransaction> {
   List<TransactionMerchantDTO> listTransaction = [];
-  int offset = 0;
-  bool isCalling = true;
-  ScrollController scrollControllerList = ScrollController();
-
-  @override
-  void initState() {
-    var provider = Provider.of<MerchantProvider>(context, listen: false);
-    scrollControllerList.addListener(() {
-      if (isCalling) {
-        if (scrollControllerList.offset ==
-            scrollControllerList.position.maxScrollExtent) {
-          offset = offset + 20;
-          Map<String, dynamic> param = {};
-
-          param['type'] = provider.valueFilter.id;
-          if (provider.valueTimeFilter.id == 0 ||
-              (provider.valueFilter.id != 0 && provider.valueFilter.id != 9)) {
-            param['from'] = '0';
-            param['to'] = '0';
-          } else {
-            param['from'] =
-                TimeUtils.instance.getCurrentDate(provider.fromDate);
-            param['to'] = TimeUtils.instance.getCurrentDate(provider.toDate);
-          }
-          param['value'] = provider.keywordSearch;
-
-          param['offset'] = offset;
-          param['merchantId'] =
-              Session.instance.accountIsMerchantDTO.customerSyncId;
-
-          widget.merchantBloc.add(GetListTransactionByMerchantEvent(
-            param: param,
-            isLoadMore: true,
-          ));
-          isCalling = false;
-        }
-      }
-    });
-    super.initState();
+  init() {
+    Map<String, dynamic> param = {};
+    param['merchantId'] = Session.instance.accountIsMerchantDTO.customerSyncId;
+    param['type'] = 9;
+    param['value'] = '';
+    param['from'] = '0';
+    param['to'] = '0';
+    param['offset'] = 0;
+    merchantBloc.add(
+        GetListTransactionByMerchantEvent(param: param, isLoadingPage: true));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTitle(),
-        _buildFilter(),
-        Expanded(child: LayoutBuilder(builder: (context, constraints) {
-          return BlocConsumer<MerchantBloc, MerchantState>(
-              listener: (context, state) {
-            if (state is MerchantLoadingListState) {
-              DialogWidget.instance.openLoadingDialog();
-            }
-            if (state is MerchantGetListByMerchantSuccessfulState) {
-              if (state.isLoadMore) {
-                listTransaction.addAll(state.list);
-                isCalling = true;
-              } else {
-                if (!state.isLoadingPage) {
-                  Navigator.pop(context);
-                }
-                listTransaction = state.list;
+    init();
+    return ChangeNotifierProvider<MerchantProvider>(
+      create: (context) => MerchantProvider()..init(merchantBloc),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitle(),
+          _buildFilter(),
+          Expanded(child: LayoutBuilder(builder: (context, constraints) {
+            return BlocConsumer<MerchantBloc, MerchantState>(
+                listener: (context, state) {
+              if (state is MerchantLoadingListState) {
+                DialogWidget.instance.openLoadingDialog();
               }
-            }
-          }, builder: (context, state) {
-            if (state is MerchantLoadingInitState) {
-              return const Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            } else {
-              if (listTransaction.isEmpty) {
+              if (state is MerchantGetListByMerchantSuccessfulState) {
+                if (state.isLoadMore) {
+                  listTransaction.addAll(state.list);
+                  Provider.of<MerchantProvider>(context, listen: false)
+                      .updateCallLoadMore(true);
+                } else {
+                  if (!state.isLoadingPage) {
+                    Navigator.pop(context);
+                  }
+                  listTransaction = state.list;
+                }
+              }
+            }, builder: (context, state) {
+              if (state is MerchantLoadingInitState) {
                 return const Padding(
                   padding: EdgeInsets.only(top: 40),
-                  child: Center(child: Text('Không có dữ liệu')),
+                  child: Center(child: CircularProgressIndicator()),
                 );
               } else {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        controller: scrollControllerList,
-                        child: ScrollConfiguration(
-                          behavior: MyCustomScrollBehavior(),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: SizedBox(
-                              width: constraints.maxWidth > 1360
-                                  ? constraints.maxWidth
-                                  : 1360,
-                              child: SelectionArea(
-                                child: Column(
-                                  children: [
-                                    _buildTitleItem(),
-                                    ...listTransaction.map((e) {
-                                      int index =
-                                          listTransaction.indexOf(e) + 1;
+                if (listTransaction.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: Center(child: Text('Không có dữ liệu')),
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: Provider.of<MerchantProvider>(context,
+                                  listen: false)
+                              .scrollControllerList,
+                          child: ScrollConfiguration(
+                            behavior: MyCustomScrollBehavior(),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SizedBox(
+                                width: constraints.maxWidth > 1360
+                                    ? constraints.maxWidth
+                                    : 1360,
+                                child: SelectionArea(
+                                  child: Column(
+                                    children: [
+                                      _buildTitleItem(),
+                                      ...listTransaction.map((e) {
+                                        int index =
+                                            listTransaction.indexOf(e) + 1;
 
-                                      return _buildItem(e, index);
-                                    }).toList(),
-                                    const SizedBox(width: 12),
-                                  ],
+                                        return _buildItem(e, index);
+                                      }).toList(),
+                                      const SizedBox(width: 12),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    if (state is MerchantLoadMoreListState)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: CircularProgressIndicator(),
-                      )
-                  ],
-                );
+                      if (state is MerchantLoadMoreListState)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator()),
+                        )
+                    ],
+                  );
+                }
               }
-            }
-          });
-        }))
-      ],
+            });
+          }))
+        ],
+      ),
     );
   }
 
   Widget _buildItem(TransactionMerchantDTO dto, int index) {
     return Container(
-      color: index % 2 == 0 ? DefaultTheme.GREY_BG : DefaultTheme.WHITE,
+      color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
       alignment: Alignment.center,
       child: Row(
         children: [
           Container(
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             width: 50,
             height: 50,
             alignment: Alignment.center,
@@ -175,8 +151,8 @@ class _ListTransactionState extends State<ListTransaction> {
           Container(
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             padding: const EdgeInsets.only(left: 12),
             alignment: Alignment.centerLeft,
             height: 50,
@@ -194,8 +170,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.centerLeft,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.orderId.isNotEmpty ? dto.orderId : '-',
               textAlign: TextAlign.left,
@@ -209,8 +185,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.referenceNumber.isNotEmpty ? dto.referenceNumber : '-',
               textAlign: TextAlign.left,
@@ -226,8 +202,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.transType == 'D'
                   ? '- ${StringUtils.formatNumber(dto.amount)} VND'
@@ -243,28 +219,28 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.getStatus(),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: dto.getStatusColor()),
+              style: TextStyle(fontSize: 12, color: dto.getAmountColor()),
             ),
           ),
           Container(
             width: 120,
             height: 50,
             padding: const EdgeInsets.only(left: 12),
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.timeCreated == 0
                   ? '-'
                   : TimeUtils.instance.formatTimeDateFromInt(dto.timeCreated),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -272,16 +248,16 @@ class _ListTransactionState extends State<ListTransaction> {
             width: 140,
             height: 50,
             padding: const EdgeInsets.only(left: 12),
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.timePaid == 0
                   ? '-'
                   : TimeUtils.instance.formatTimeDateFromInt(dto.timePaid),
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 12),
             ),
           ),
@@ -292,8 +268,8 @@ class _ListTransactionState extends State<ListTransaction> {
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                   border: Border(
-                      bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                      right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                      bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                      right: BorderSide(color: AppColor.GREY_BUTTON))),
               child: Text(
                 dto.content,
                 textAlign: TextAlign.center,
@@ -310,8 +286,8 @@ class _ListTransactionState extends State<ListTransaction> {
             alignment: Alignment.center,
             decoration: const BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: DefaultTheme.GREY_BUTTON),
-                    right: BorderSide(color: DefaultTheme.GREY_BUTTON))),
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
               dto.type == 0 ? 'Mã VietQR' : 'Khác',
               textAlign: TextAlign.center,
@@ -328,7 +304,7 @@ class _ListTransactionState extends State<ListTransaction> {
   Widget _buildTitleItem() {
     return Container(
       alignment: Alignment.center,
-      decoration: const BoxDecoration(color: DefaultTheme.BLUE_DARK),
+      decoration: const BoxDecoration(color: AppColor.BLUE_DARK),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -389,7 +365,6 @@ class _ListTransactionState extends State<ListTransaction> {
     return Container(
       height: 45,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: DefaultTheme.BLUE_TEXT.withOpacity(0.2)),
       alignment: Alignment.centerLeft,
       child: const Text(
         'Danh sách giao dịch',
@@ -414,16 +389,15 @@ class _ListTransactionState extends State<ListTransaction> {
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: DefaultTheme.GREY_BG,
-                border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                color: AppColor.GREY_BG,
+                border: Border.all(color: AppColor.GREY_LIGHT),
                 borderRadius: BorderRadius.circular(5),
               ),
               child: Row(
                 children: [
                   const Text(
                     'Lọc theo',
-                    style:
-                        TextStyle(fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                    style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                   ),
                   const SizedBox(
                     width: 20,
@@ -467,16 +441,15 @@ class _ListTransactionState extends State<ListTransaction> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DefaultTheme.GREY_BG,
-                  border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                  color: AppColor.GREY_BG,
+                  border: Border.all(color: AppColor.GREY_LIGHT),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Row(
                   children: [
                     const Text(
                       'Thời gian',
-                      style: TextStyle(
-                          fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                      style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                     ),
                     const SizedBox(
                       width: 20,
@@ -529,8 +502,8 @@ class _ListTransactionState extends State<ListTransaction> {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: DefaultTheme.GREY_BG,
-                      border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                      color: AppColor.GREY_BG,
+                      border: Border.all(color: AppColor.GREY_LIGHT),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
@@ -538,7 +511,7 @@ class _ListTransactionState extends State<ListTransaction> {
                         const Text(
                           'Từ ngày',
                           style: TextStyle(
-                              fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                              fontSize: 11, color: AppColor.GREY_TEXT),
                         ),
                         const SizedBox(
                           width: 20,
@@ -575,8 +548,8 @@ class _ListTransactionState extends State<ListTransaction> {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: DefaultTheme.GREY_BG,
-                      border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                      color: AppColor.GREY_BG,
+                      border: Border.all(color: AppColor.GREY_LIGHT),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
@@ -584,7 +557,7 @@ class _ListTransactionState extends State<ListTransaction> {
                         const Text(
                           'Đến ngày',
                           style: TextStyle(
-                              fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                              fontSize: 11, color: AppColor.GREY_TEXT),
                         ),
                         const SizedBox(
                           width: 20,
@@ -613,16 +586,16 @@ class _ListTransactionState extends State<ListTransaction> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: DefaultTheme.GREY_BG,
-                    border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                    color: AppColor.GREY_BG,
+                    border: Border.all(color: AppColor.GREY_LIGHT),
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Row(
                     children: [
                       const Text(
                         'Số tài khoản',
-                        style: TextStyle(
-                            fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                        style:
+                            TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                       ),
                       const SizedBox(
                         width: 20,
@@ -668,8 +641,8 @@ class _ListTransactionState extends State<ListTransaction> {
                 width: 180,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DefaultTheme.GREY_BG,
-                  border: Border.all(color: DefaultTheme.GREY_LIGHT),
+                  color: AppColor.GREY_BG,
+                  border: Border.all(color: AppColor.GREY_LIGHT),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: TextField(
@@ -683,7 +656,7 @@ class _ListTransactionState extends State<ListTransaction> {
                       hintText:
                           'Tìm kiếm bằng ${provider.valueFilter.title.toLowerCase()}',
                       hintStyle: const TextStyle(
-                          fontSize: 12, color: DefaultTheme.GREY_TEXT)),
+                          fontSize: 12, color: AppColor.GREY_TEXT)),
                 ),
               ),
             InkWell(
@@ -691,7 +664,6 @@ class _ListTransactionState extends State<ListTransaction> {
                 if (provider.fromDate.millisecondsSinceEpoch <=
                     provider.toDate.millisecondsSinceEpoch) {
                   Map<String, dynamic> param = {};
-                  offset = 0;
                   param['type'] = provider.valueFilter.id;
                   if (provider.valueTimeFilter.id == 0 ||
                       (provider.valueFilter.id != 0 &&
@@ -706,11 +678,11 @@ class _ListTransactionState extends State<ListTransaction> {
                   }
                   param['value'] = provider.keywordSearch;
 
-                  param['offset'] = offset;
+                  param['offset'] = 0;
                   param['merchantId'] =
                       Session.instance.accountIsMerchantDTO.customerSyncId;
 
-                  widget.merchantBloc
+                  merchantBloc
                       .add(GetListTransactionByMerchantEvent(param: param));
                 } else {
                   DialogWidget.instance.openMsgDialog(
@@ -724,12 +696,12 @@ class _ListTransactionState extends State<ListTransaction> {
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: DefaultTheme.BLUE_TEXT,
+                  color: AppColor.BLUE_TEXT,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: const Text(
                   'Tìm kiếm',
-                  style: TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+                  style: TextStyle(fontSize: 12, color: AppColor.WHITE),
                 ),
               ),
             ),
@@ -746,12 +718,12 @@ class _ListTransactionState extends State<ListTransaction> {
                   height: 40,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: DefaultTheme.GREEN,
+                    color: AppColor.GREEN,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: const Text(
                     'Xuất Excel',
-                    style: TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+                    style: TextStyle(fontSize: 12, color: AppColor.WHITE),
                   ),
                 ),
               ),
@@ -773,12 +745,11 @@ class _ListTransactionState extends State<ListTransaction> {
       padding: padding,
       alignment: alignment,
       decoration: const BoxDecoration(
-          border:
-              Border(left: BorderSide(color: DefaultTheme.WHITE, width: 0.5))),
+          border: Border(left: BorderSide(color: AppColor.WHITE, width: 0.5))),
       child: Text(
         title,
         textAlign: textAlign,
-        style: const TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+        style: const TextStyle(fontSize: 12, color: AppColor.WHITE),
       ),
     );
   }

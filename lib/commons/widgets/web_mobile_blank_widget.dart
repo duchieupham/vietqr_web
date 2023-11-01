@@ -1,5 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/widgets/bottom_web.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
@@ -45,8 +46,9 @@ class WebMobileBlankWidget extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'assets/images/logo-vietqr-vn.png',
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(AppImages.logoVietqrVn),
                             width: 150,
                           ),
                           const Spacer(),
@@ -79,7 +81,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                                   logoutBloc.add(const LogoutEventSubmit());
                                 },
                                 bgColor: Theme.of(context).cardColor,
-                                textColor: DefaultTheme.RED_TEXT,
+                                textColor: AppColor.RED_TEXT,
                               ),
                             ),
                         ],
@@ -98,14 +100,14 @@ class WebMobileBlankWidget extends StatelessWidget {
                       width: width * 0.45,
                       height: width * 0.45,
                       padding: const EdgeInsets.all(0),
-                      bgColor: DefaultTheme.WHITE,
+                      bgColor: AppColor.WHITE,
                       enableShadow: true,
                       child: UnconstrainedBox(
                         child: QrImage(
                           data: 'https://onelink.to/q7zwpe',
                           size: width * 0.4,
-                          embeddedImage: const AssetImage(
-                              'assets/images/ic-viet-qr-small.png'),
+                          embeddedImage: ImageUtils.instance
+                              .getImageNetWork(AppImages.icVietQrSmall),
                           embeddedImageStyle: QrEmbeddedImageStyle(
                             size: const Size(30, 30),
                           ),
@@ -129,7 +131,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                           _buildButton(
                             width: width,
                             text: 'App Store',
-                            assetImage: 'assets/images/logo-app-store.png',
+                            assetImage: AppImages.logoAppStore,
                             onTap: () async {
                               await launchUrl(Uri.parse(
                                   'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
@@ -139,7 +141,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                           _buildButton(
                             width: width,
                             text: 'Google Play',
-                            assetImage: 'assets/images/logo-google-play.png',
+                            assetImage: AppImages.logoGooglePlay,
                             onTap: () async {
                               await launchUrl(Uri.parse(
                                   'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -152,7 +154,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                     const Text(
                       'VietQR chỉ hỗ trợ trình duyệt web cho PC.',
                       style: TextStyle(
-                        color: DefaultTheme.GREY_TEXT,
+                        color: AppColor.GREY_TEXT,
                       ),
                     ),
                   ],
@@ -181,14 +183,14 @@ class WebMobileBlankWidget extends StatelessWidget {
         width: width * 0.4,
         height: 45,
         padding: const EdgeInsets.all(0),
-        bgColor: DefaultTheme.BLACK,
+        bgColor: AppColor.BLACK,
         borderRadius: 5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
+            Image(
+              image: ImageUtils.instance.getImageNetWork(assetImage),
               width: 30,
               height: 30,
             ),
@@ -201,12 +203,11 @@ class WebMobileBlankWidget extends StatelessWidget {
               children: [
                 const Text(
                   'Tải ứng dụng trên',
-                  style: TextStyle(color: DefaultTheme.WHITE, fontSize: 8),
+                  style: TextStyle(color: AppColor.WHITE, fontSize: 8),
                 ),
                 Text(
                   text,
-                  style:
-                      const TextStyle(color: DefaultTheme.WHITE, fontSize: 18),
+                  style: const TextStyle(color: AppColor.WHITE, fontSize: 18),
                 ),
               ],
             )

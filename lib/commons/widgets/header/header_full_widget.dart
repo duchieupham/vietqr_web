@@ -1,10 +1,12 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
-import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/commons/utils/clocker_widget.dart';
+import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_open_bank_account.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
+import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
@@ -94,29 +96,59 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                     },
                   ),
                 ),
-          const Padding(padding: EdgeInsets.only(right: 10)),
+          const Padding(padding: EdgeInsets.only(right: 12)),
           //logo
           Tooltip(
             message: 'Trang chủ',
             child: InkWell(
               onTap: () {
-                if (widget.isSubHeader != null && widget.isSubHeader!) {
-                  context.go('/');
-                } else {
-                  Provider.of<MenuProvider>(context, listen: false)
-                      .selectMenu(MenuHomeType.HOME);
-                }
+                context.go('/');
               },
-              child: Image.asset(
-                'assets/images/logo-vietqr-vn.png',
-                height: 50,
-                fit: BoxFit.fitHeight,
+              child: Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+                height: 40,
               ),
             ),
           ),
           // _buildTitle('Trang chủ'),
           //time
+
+          // ButtonIconWidget(
+          //   title: 'Thêm TK ngân hàng',
+          //   function: () {
+          //     context.go('/add-bank/step1');
+          //   },
+          //   height: 32,
+          //   textSize: 11,
+          //   bgColor: AppColor.WHITE.withOpacity(0.7),
+          //   textColor: AppColor.BLUE_TEXT,
+          // ),
           const Spacer(),
+          // ButtonIconWidget(
+          //   title: 'Quét QR',
+          //   function: () {},
+          //   height: 32,
+          //   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+          //   icon: Icons.qr_code_outlined,
+          //   textSize: 11,
+          //   bgColor: AppColor.WHITE.withOpacity(0.7),
+          //   textColor: AppColor.BLUE_TEXT,
+          // ),
+          _buildWallet(),
+          const SizedBox(
+            width: 12,
+          ),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColor.WHITE.withOpacity(0.5)),
+              child: const ClockWidget()),
+          const SizedBox(
+            width: 12,
+          ),
           Tooltip(
             message: 'Thông báo',
             child: InkWell(
@@ -177,7 +209,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: DefaultTheme.RED_CALENDAR,
+                                color: AppColor.RED_CALENDAR,
                               ),
                               child: Text(
                                 _notificationCount.toString(),
@@ -188,7 +220,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                                               3)
                                           ? 8
                                           : 10,
-                                  color: DefaultTheme.WHITE,
+                                  color: AppColor.WHITE,
                                 ),
                               ),
                             ),
@@ -204,6 +236,13 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           ),
           const Padding(padding: EdgeInsets.only(right: 10)),
           //shortcut
+          Text(
+            UserInformationHelper.instance.getUserFullname(),
+            style: const TextStyle(color: AppColor.GREY_TEXT),
+          ),
+          const SizedBox(
+            width: 8,
+          ),
           _buildAvatar(context, imgId, 35),
         ],
       ),
@@ -224,10 +263,69 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             fit: BoxFit.cover,
             image: (imgId.trim().isNotEmpty)
                 ? ImageUtils.instance.getImageNetWork(imgId)
-                : Image.asset('assets/images/ic-avatar.png').image,
+                : ImageUtils.instance
+                    .getImageNetWork(AppImages.personalRelation),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildWallet() {
+    return Consumer<WalletHomeProvider>(builder: (context, provider, child) {
+      return Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColor.WHITE.withOpacity(0.5)),
+        child: Row(
+          children: [
+            Text(
+              provider.showAmount
+                  ? '${CurrencyUtils.instance.getCurrencyFormatted(Session.instance.wallet.amount)} VQR'
+                  : '********',
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.BLACK,
+                  fontSize: 12),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            InkWell(
+              onTap: () {
+                provider.changeShowAmount();
+              },
+              child: provider.showAmount
+                  ? const Icon(
+                      Icons.visibility,
+                      size: 14,
+                    )
+                  : const Icon(
+                      Icons.visibility_off,
+                      size: 14,
+                    ),
+            ),
+            const SizedBox(
+              width: 12,
+            ),
+            Text(
+              Session.instance.wallet.point,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.BLACK,
+                  fontSize: 12),
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            Image(
+              image: ImageUtils.instance.getImageNetWork(AppImages.icPoint),
+              width: 16,
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

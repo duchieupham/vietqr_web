@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:flutter/widgets.dart';
 
@@ -22,6 +23,13 @@ class BankTypeProvider with ChangeNotifier {
     caiValue: '',
   );
 
+  BankCardRequestOTP bankCardRequestOTP = const BankCardRequestOTP();
+  String requestId = '';
+  String bankAccount = '';
+  String name = '';
+  String phone = '';
+  String nationalId = '';
+
   bool _isNameErr = false;
   bool _isBankAccountErr = false;
   bool _isNationalErr = false;
@@ -40,6 +48,38 @@ class BankTypeProvider with ChangeNotifier {
   bool get showBankAccount => _isShowBankAccount;
   bool get isAmountErr => _isAmountErr;
   bool get isValidCreate => _isValidCreate;
+
+  bool _showMoreOption = false;
+  bool get showMoreOption => _showMoreOption;
+
+  updateShowMoreOption(bool value) async {
+    _showMoreOption = value;
+    notifyListeners();
+  }
+
+  void updateBankCardRequestOTP(BankCardRequestOTP dto) {
+    bankCardRequestOTP = dto;
+  }
+
+  void updateRequestId(String value) {
+    requestId = value;
+  }
+
+  void updateBankAccount(String value) {
+    bankAccount = value;
+  }
+
+  void updateName(String value) {
+    name = value;
+  }
+
+  void updatePhone(String value) {
+    phone = value;
+  }
+
+  void updateNationalId(String value) {
+    nationalId = value;
+  }
 
   void updateShowBankAccount(bool value) {
     _isShowBankAccount = value;

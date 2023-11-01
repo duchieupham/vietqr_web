@@ -1,4 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/services/providers/card_number_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,9 +19,9 @@ class LoginByCardWidget extends StatelessWidget {
     RawKeyboard.instance.addListener((RawKeyEvent event) {
       _vietQRId += event.character ?? '';
       if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-        _cardNumberLoginProvider.updateCardNumber(_vietQRId);
+        _cardNumberLoginProvider.updateCardNumber(_vietQRId.trim());
         Future.delayed(_duration, () {
-          Navigator.pop(context, _vietQRId);
+          Navigator.pop(context, _vietQRId.trim());
         });
       }
     });
@@ -69,8 +71,8 @@ class LoginByCardWidget extends StatelessWidget {
           ),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 50)),
-        Image.asset(
-          'assets/images/ic-card-nfc.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.icCardNfc),
           width: 200,
           height: 200,
         ),
@@ -93,7 +95,7 @@ class LoginByCardWidget extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 2.5),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: DefaultTheme.GREY_TEXT,
+                          color: AppColor.GREY_TEXT,
                         ),
                       ),
                     ),

@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/numeral.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/pin_widget.dart';
@@ -11,7 +13,9 @@ import 'package:VietQR/main.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DialogWidget {
   //
@@ -29,7 +33,7 @@ class DialogWidget {
       context: NavigationService.navigatorKey.currentContext!,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
             child: (PlatformUtils.instance.isWeb())
                 ? Container(
@@ -86,8 +90,8 @@ class DialogWidget {
                           width: 250,
                           height: 30,
                           text: 'Đóng',
-                          textColor: DefaultTheme.WHITE,
-                          bgColor: DefaultTheme.GREEN,
+                          textColor: AppColor.WHITE,
+                          bgColor: AppColor.BLUE_TEXT,
                           borderRadius: 5,
                           function: () {
                             focusNode.dispose();
@@ -133,7 +137,7 @@ class DialogWidget {
                               ),
                               child: const Icon(
                                 Icons.close_rounded,
-                                color: DefaultTheme.RED_TEXT,
+                                color: AppColor.RED_TEXT,
                                 size: 15,
                               ),
                             ),
@@ -190,7 +194,7 @@ class DialogWidget {
   }) {
     return showDialog(
         context: NavigationService.navigatorKey.currentContext!,
-        barrierColor: DefaultTheme.TRANSPARENT,
+        barrierColor: AppColor.TRANSPARENT,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return GestureDetector(
@@ -199,7 +203,7 @@ class DialogWidget {
               onTapBarrier();
             },
             child: Material(
-              color: DefaultTheme.TRANSPARENT,
+              color: AppColor.TRANSPARENT,
               child: Align(
                 alignment: Alignment.topRight,
                 child: BoxLayout(
@@ -236,7 +240,7 @@ class DialogWidget {
   openBoxWebConfirm({
     required String title,
     required String confirmText,
-    required String imageAsset,
+    required String urlIcon,
     required String description,
     required VoidCallback confirmFunction,
     VoidCallback? cancelFunction,
@@ -247,7 +251,7 @@ class DialogWidget {
         context: NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
               child: Container(
                 width: 300,
@@ -263,8 +267,8 @@ class DialogWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      imageAsset,
+                    Image(
+                      image: ImageUtils.instance.getImageNetWork(urlIcon),
                       width: 80,
                       height: 80,
                     ),
@@ -293,10 +297,10 @@ class DialogWidget {
                       width: 250,
                       height: 30,
                       text: confirmText,
-                      textColor: DefaultTheme.WHITE,
+                      textColor: AppColor.WHITE,
                       bgColor: (confirmColor != null)
                           ? confirmColor
-                          : DefaultTheme.BLUE_TEXT,
+                          : AppColor.BLUE_TEXT,
                       borderRadius: 5,
                       function: confirmFunction,
                     ),
@@ -333,7 +337,7 @@ class DialogWidget {
         context: context,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
               child: Container(
                 width: width,
@@ -364,7 +368,7 @@ class DialogWidget {
         isScrollControlled: true,
         enableDrag: false, // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: DefaultTheme.TRANSPARENT,
+        backgroundColor: AppColor.TRANSPARENT,
         builder: (context) {
           return Container(
             width: width,
@@ -387,7 +391,7 @@ class DialogWidget {
         isScrollControlled: true,
         enableDrag: false, // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: DefaultTheme.TRANSPARENT,
+        backgroundColor: AppColor.TRANSPARENT,
         builder: (context) {
           final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
           return BackdropFilter(
@@ -423,7 +427,7 @@ class DialogWidget {
         context: context,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
               child: Container(
                 width: 400,
@@ -474,7 +478,7 @@ class DialogWidget {
           context: NavigationService.navigatorKey.currentContext!,
           builder: (BuildContext context) {
             return Material(
-              color: DefaultTheme.TRANSPARENT,
+              color: AppColor.TRANSPARENT,
               child: Center(
                 child: (PlatformUtils.instance.isWeb())
                     ? Container(
@@ -492,7 +496,7 @@ class DialogWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
                             CircularProgressIndicator(
-                              color: DefaultTheme.GREEN,
+                              color: AppColor.BLUE_TEXT,
                             ),
                             Padding(padding: EdgeInsets.only(top: 30)),
                             Text(
@@ -515,7 +519,7 @@ class DialogWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const CircularProgressIndicator(
-                          color: DefaultTheme.GREEN,
+                          color: AppColor.BLUE_TEXT,
                         ),
                       ),
               ),
@@ -534,7 +538,7 @@ class DialogWidget {
         context: context ?? NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
                 child:
                     // (PlatformUtils.instance.isWeb())
@@ -552,11 +556,13 @@ class DialogWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/ic-warning.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icWarning),
                     width: 80,
                     height: 80,
                   ),
+
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   Text(
                     title,
@@ -585,8 +591,8 @@ class DialogWidget {
                     width: 250,
                     height: 40,
                     text: 'Đóng',
-                    textColor: DefaultTheme.WHITE,
-                    bgColor: DefaultTheme.BLUE_TEXT,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
                     function: (function != null)
                         ? function
@@ -640,6 +646,153 @@ class DialogWidget {
         });
   }
 
+  openMsgQRInstallApp({VoidCallback? function, BuildContext? context}) {
+    Widget _buildButton({
+      required double width,
+      required String text,
+      required String assetImage,
+      required VoidCallback onTap,
+    }) {
+      return InkWell(
+        onTap: onTap,
+        child: BoxLayout(
+          width: width * 0.4,
+          height: 28,
+          padding: const EdgeInsets.all(0),
+          bgColor: AppColor.BLACK,
+          borderRadius: 5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image(
+                image: ImageUtils.instance.getImageNetWork(assetImage),
+                width: 18,
+                height: 18,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 5),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Tải ứng dụng trên',
+                    style: TextStyle(color: AppColor.WHITE, fontSize: 6),
+                  ),
+                  Text(
+                    text,
+                    style: const TextStyle(color: AppColor.WHITE, fontSize: 12),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
+    return showDialog(
+        barrierDismissible: false,
+        context: context ?? NavigationService.navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return Material(
+            color: AppColor.TRANSPARENT,
+            child: Center(
+                child:
+                    // (PlatformUtils.instance.isWeb())
+                    //     ?
+                    Container(
+              width: 400,
+              height: 460,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4, right: 4),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColor.BLACK_BUTTON,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  QrImage(
+                    data: 'https://onelink.to/q7zwpe',
+                    size: 260,
+                    embeddedImage: ImageUtils.instance
+                        .getImageNetWork(AppImages.icVietQrLogin),
+                    embeddedImageStyle: QrEmbeddedImageStyle(
+                      size: const Size(30, 30),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8, bottom: 12),
+                    child: Text(
+                      'Quét mã QR để tải ứng dụng',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
+                    ),
+                  ),
+                  const Text(
+                    'Tải ứng dụng để trải nghiệm đủ tính năng',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Padding(padding: EdgeInsets.only(top: 30)),
+                  SizedBox(
+                    width: 260,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _buildButton(
+                          width: 300,
+                          text: 'App Store',
+                          assetImage: AppImages.logoAppStore,
+                          onTap: () async {
+                            await launchUrl(Uri.parse(
+                                'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+                          },
+                        ),
+                        const Padding(padding: EdgeInsets.only(left: 14)),
+                        _buildButton(
+                          width: 300,
+                          text: 'Google Play',
+                          assetImage: AppImages.logoGooglePlay,
+                          onTap: () async {
+                            await launchUrl(Uri.parse(
+                                'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer()
+                ],
+              ),
+            )),
+          );
+        });
+  }
+
   openMsgSuccessDialog(
       {required String title,
       String? msg,
@@ -650,7 +803,7 @@ class DialogWidget {
         context: context ?? NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
                 child: Container(
               width: 300,
@@ -694,8 +847,8 @@ class DialogWidget {
                     width: 250,
                     height: 35,
                     text: 'Đóng',
-                    textColor: DefaultTheme.WHITE,
-                    bgColor: DefaultTheme.GREEN,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
                     function: (function != null)
                         ? function
@@ -723,7 +876,7 @@ class DialogWidget {
       context: context,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
               child: Container(
             width: width,
@@ -747,7 +900,7 @@ class DialogWidget {
       context: context,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
               child: Container(
             width: 800,
@@ -771,7 +924,7 @@ class DialogWidget {
       context: NavigationService.navigatorKey.currentContext!,
       builder: (BuildContext context) {
         return Material(
-          color: DefaultTheme.TRANSPARENT,
+          color: AppColor.TRANSPARENT,
           child: Center(
             child: Container(
               padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
@@ -806,7 +959,7 @@ class DialogWidget {
                             'Từ: ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                             ),
                           ),
                         ),
@@ -835,7 +988,7 @@ class DialogWidget {
                             'Nội dung: ',
                             style: TextStyle(
                               fontSize: 15,
-                              color: DefaultTheme.GREY_TEXT,
+                              color: AppColor.GREY_TEXT,
                             ),
                           ),
                         ),
@@ -863,14 +1016,14 @@ class DialogWidget {
                       width: 250,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: DefaultTheme.GREEN,
+                        color: AppColor.GREEN,
                         borderRadius: BorderRadius.circular(25),
                       ),
                       alignment: Alignment.center,
                       child: const Text(
                         'OK',
                         style: TextStyle(
-                          color: DefaultTheme.WHITE,
+                          color: AppColor.WHITE,
                         ),
                       ),
                     ),
@@ -895,7 +1048,7 @@ class DialogWidget {
       enableDrag: false,
       useRootNavigator: true,
       context: context,
-      backgroundColor: DefaultTheme.TRANSPARENT,
+      backgroundColor: AppColor.TRANSPARENT,
       builder: (context) {
         final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
         return BackdropFilter(
@@ -936,7 +1089,7 @@ class DialogWidget {
         context: context ?? NavigationService.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return Material(
-            color: DefaultTheme.TRANSPARENT,
+            color: AppColor.TRANSPARENT,
             child: Center(
                 child: Container(
               width: 300,
@@ -951,8 +1104,9 @@ class DialogWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/ic-warning.png',
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icWarning),
                     width: 80,
                     height: 80,
                   ),
@@ -987,8 +1141,8 @@ class DialogWidget {
                           width: 250,
                           height: 40,
                           text: 'Đóng',
-                          textColor: DefaultTheme.GREEN,
-                          bgColor: DefaultTheme.WHITE,
+                          textColor: AppColor.GREEN,
+                          bgColor: AppColor.WHITE,
                           borderRadius: 5,
                           function: (onCancel != null)
                               ? onCancel
@@ -1005,8 +1159,8 @@ class DialogWidget {
                           width: 250,
                           height: 40,
                           text: 'Xác nhận',
-                          textColor: DefaultTheme.WHITE,
-                          bgColor: DefaultTheme.GREEN,
+                          textColor: AppColor.WHITE,
+                          bgColor: AppColor.GREEN,
                           borderRadius: 5,
                           function: (onConfirm != null)
                               ? onConfirm

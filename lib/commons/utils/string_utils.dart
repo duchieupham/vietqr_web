@@ -11,6 +11,7 @@ class StringUtils {
       r'^[a-zA-Z0-9.,!@#$&*/? ]+$';
   final String _transactionContentPattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9.,!@#$&*/? ]+$';
   final String _fullNamePattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9 ]+$';
+  final String _phonePattern = r'^(?:[+0]9)?[0-9]{10}$';
 
   bool isNumeric(String text) {
     return int.tryParse(text) != null;
@@ -28,6 +29,16 @@ class StringUtils {
 
   bool isValidConfirmText(String text, String confirmText) {
     return text.trim() == confirmText.trim();
+  }
+
+  static String formatMoney(String money) {
+    if (money.length > 2) {
+      var value = money;
+      value = value.replaceAll(RegExp(r'\D'), '');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.');
+      return value;
+    }
+    return money;
   }
 
   bool isValidFullName(String text) {
@@ -90,7 +101,17 @@ class StringUtils {
     if (value == null) {
       return '0';
     }
-    var numberFormat = NumberFormat.decimalPattern('vi-VI');
+    var numberFormat = NumberFormat.decimalPattern('en');
     return numberFormat.format(value);
+  }
+
+  String? validatePhone(String value) {
+    RegExp regExp = RegExp(_phonePattern);
+    if (value.isEmpty) {
+      return null;
+    } else if (!regExp.hasMatch(value)) {
+      return 'Số điện thoại không đúng định dạng.';
+    }
+    return null;
   }
 }

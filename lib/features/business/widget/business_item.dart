@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -47,7 +48,7 @@ class BusinessItem extends StatelessWidget {
                         topLeft: Radius.circular(8),
                         topRight: Radius.circular(8),
                       ),
-                      color: DefaultTheme.GREY_TOP_TAB_BAR.withOpacity(0.3),
+                      color: AppColor.GREY_TOP_TAB_BAR.withOpacity(0.3),
                       image: (dto.coverImgId.isNotEmpty)
                           ? DecorationImage(
                               fit: BoxFit.cover,
@@ -67,7 +68,7 @@ class BusinessItem extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        DefaultTheme.TRANSPARENT,
+                        AppColor.TRANSPARENT,
                         Theme.of(context)
                             .scaffoldBackgroundColor
                             .withOpacity(0.4),
@@ -113,11 +114,12 @@ class BusinessItem extends StatelessWidget {
                               image: (dto.imgId.isNotEmpty)
                                   ? ImageUtils.instance
                                       .getImageNetWork(dto.imgId)
-                                  : Image.asset(
-                                      'assets/images/ic-avatar-business.png',
-                                      fit: BoxFit.cover,
-                                      width: 50,
+                                  : Image(
+                                      image: ImageUtils.instance
+                                          .getImageNetWork(
+                                              AppImages.icBusiness3D),
                                       height: 50,
+                                      width: 50,
                                     ).image,
                             ),
                           ),
@@ -148,20 +150,20 @@ class BusinessItem extends StatelessWidget {
                 _buildChip(
                   context: context,
                   icon: Icons.assignment_ind_rounded,
-                  color: DefaultTheme.RED_CALENDAR,
+                  color: AppColor.RED_CALENDAR,
                   text: getRoleName(dto.role),
                 ),
                 _buildChip(
                   context: context,
                   icon: Icons.business_rounded,
-                  color: DefaultTheme.GREEN,
+                  color: AppColor.GREEN,
                   text: '${dto.totalBranch} chi nhánh',
                 ),
                 _buildChip(
                   context: context,
                   icon: Icons.people_rounded,
                   text: '${dto.totalMember} thành viên',
-                  color: DefaultTheme.BLUE_TEXT,
+                  color: AppColor.BLUE_TEXT,
                 ),
               ],
             ),
@@ -230,11 +232,11 @@ class BusinessItem extends StatelessWidget {
                 height: 40,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(0),
-                bgColor: DefaultTheme.TRANSPARENT,
+                bgColor: AppColor.TRANSPARENT,
                 child: const Text(
                   'Xem thêm',
                   style: TextStyle(
-                    color: DefaultTheme.GREEN,
+                    color: AppColor.BLUE_TEXT,
                     decoration: TextDecoration.underline,
                   ),
                 ),
@@ -334,7 +336,7 @@ class BusinessItem extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      color: DefaultTheme.GREY_TEXT,
+                      color: AppColor.GREY_TEXT,
                     ),
                   ),
                 ],

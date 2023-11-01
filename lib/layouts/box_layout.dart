@@ -40,8 +40,9 @@ class BoxLayout extends StatelessWidget {
           : const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: (bgColor != null) ? bgColor! : Theme.of(context).cardColor,
+        border: border,
         image: bgImage != null
-            ? DecorationImage(image: AssetImage(bgImage!), fit: BoxFit.fitWidth)
+            ? DecorationImage(image: AssetImage(bgImage!), fit: BoxFit.fill)
             : null,
         borderRadius:
             BorderRadius.circular((borderRadius != null) ? borderRadius! : 15),

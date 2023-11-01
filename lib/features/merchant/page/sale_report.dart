@@ -89,13 +89,13 @@ class _SaleReportState extends State<SaleReport> {
     return Container(
       decoration: const BoxDecoration(
           border: Border(
-              bottom: BorderSide(width: 0.5, color: DefaultTheme.BLACK_LIGHT))),
+              bottom: BorderSide(width: 0.5, color: AppColor.BLACK_LIGHT))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (dto.bankAccounts?.isNotEmpty ?? false)
             Container(
-              color: index % 2 == 0 ? DefaultTheme.GREY_BG : DefaultTheme.WHITE,
+              color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
               alignment: Alignment.center,
               child: Row(
                 children: [
@@ -120,8 +120,8 @@ class _SaleReportState extends State<SaleReport> {
                             border: Border(
                                 bottom: BorderSide(
                                     color: index + 1 == dto.bankAccounts!.length
-                                        ? DefaultTheme.TRANSPARENT
-                                        : DefaultTheme.GREY_TEXT
+                                        ? AppColor.TRANSPARENT
+                                        : AppColor.GREY_TEXT
                                             .withOpacity(0.15)))),
                         child: Row(
                           children: [
@@ -129,11 +129,11 @@ class _SaleReportState extends State<SaleReport> {
                               decoration: BoxDecoration(
                                 border: Border(
                                   right: BorderSide(
-                                      color: DefaultTheme.GREY_TEXT
-                                          .withOpacity(0.1)),
+                                      color:
+                                          AppColor.GREY_TEXT.withOpacity(0.1)),
                                   left: BorderSide(
-                                      color: DefaultTheme.GREY_TEXT
-                                          .withOpacity(0.1)),
+                                      color:
+                                          AppColor.GREY_TEXT.withOpacity(0.1)),
                                 ),
                               ),
                               width: 120,
@@ -180,17 +180,15 @@ class _SaleReportState extends State<SaleReport> {
             dto.countingTransType == 0 ? 'Tất cả' : 'Chỉ GD có đối soát',
             width: 140,
             notBottomBorder: lastItem,
-            valueColor: dto.countingTransType == 1
-                ? DefaultTheme.GREEN
-                : DefaultTheme.BLACK),
+            valueColor:
+                dto.countingTransType == 1 ? AppColor.GREEN : AppColor.BLACK),
         _buildBoxItem(dto.totalTrans.toString(),
             width: 100, notBottomBorder: lastItem),
         _buildBoxItem('${StringUtils.formatNumber(dto.totalAmount)} VND',
             width: 140,
             notBottomBorder: lastItem,
-            valueColor: dto.countingTransType == 1
-                ? DefaultTheme.GREEN
-                : DefaultTheme.BLACK),
+            valueColor:
+                dto.countingTransType == 1 ? AppColor.GREEN : AppColor.BLACK),
         _buildBoxItem('${dto.vat}%', width: 80, notBottomBorder: lastItem),
         _buildBoxItem('${StringUtils.formatNumber(dto.discountAmount)} VND',
             width: 120, notBottomBorder: lastItem),
@@ -199,8 +197,7 @@ class _SaleReportState extends State<SaleReport> {
         _buildBoxItem(dto.status == 1 ? 'Đã TT' : 'Chưa TT',
             width: 120,
             notBottomBorder: lastItem,
-            valueColor:
-                dto.status == 1 ? DefaultTheme.BLACK : DefaultTheme.RED_TEXT),
+            valueColor: dto.status == 1 ? AppColor.BLACK : AppColor.RED_TEXT),
       ],
     );
   }
@@ -213,9 +210,8 @@ class _SaleReportState extends State<SaleReport> {
           border: Border(
               bottom: notBottomBorder
                   ? BorderSide.none
-                  : BorderSide(color: DefaultTheme.GREY_TEXT.withOpacity(0.1)),
-              right:
-                  BorderSide(color: DefaultTheme.GREY_TEXT.withOpacity(0.1)))),
+                  : BorderSide(color: AppColor.GREY_TEXT.withOpacity(0.1)),
+              right: BorderSide(color: AppColor.GREY_TEXT.withOpacity(0.1)))),
       height: 50,
       alignment: Alignment.center,
       width: width,
@@ -230,7 +226,7 @@ class _SaleReportState extends State<SaleReport> {
   Widget _buildTitleItem() {
     return Container(
       alignment: Alignment.center,
-      decoration: const BoxDecoration(color: DefaultTheme.BLUE_DARK),
+      decoration: const BoxDecoration(color: AppColor.BLUE_DARK),
       child: Row(
         children: [
           _buildItemTitle('No.', width: 50, padding: EdgeInsets.zero),
@@ -264,8 +260,7 @@ class _SaleReportState extends State<SaleReport> {
         return Container(
           height: 45,
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration:
-              BoxDecoration(color: DefaultTheme.BLUE_TEXT.withOpacity(0.2)),
+          decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.2)),
           child: Row(
             children: [
               const Align(
@@ -302,15 +297,15 @@ class _SaleReportState extends State<SaleReport> {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: DefaultTheme.GREY_BG,
+                    color: AppColor.GREY_BG,
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Row(
                     children: [
                       const Text(
                         'Tháng',
-                        style: TextStyle(
-                            fontSize: 11, color: DefaultTheme.GREY_TEXT),
+                        style:
+                            TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                       ),
                       const SizedBox(
                         width: 20,
@@ -350,12 +345,11 @@ class _SaleReportState extends State<SaleReport> {
       padding: padding,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-          border:
-              Border(left: BorderSide(color: DefaultTheme.WHITE, width: 0.5))),
+          border: Border(left: BorderSide(color: AppColor.WHITE, width: 0.5))),
       child: Text(
         title,
         textAlign: textAlign,
-        style: const TextStyle(fontSize: 12, color: DefaultTheme.WHITE),
+        style: const TextStyle(fontSize: 12, color: AppColor.WHITE),
       ),
     );
   }

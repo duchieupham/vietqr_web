@@ -86,7 +86,7 @@ class _CountDownTimerState extends State<CountDownTimeOtp>
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style:
-                        TextStyle(fontSize: 13, color: DefaultTheme.GREY_TEXT),
+                        TextStyle(fontSize: 13, color: AppColor.GREY_TEXT),
                   ),
                   Text(
                     timerDisplayString,
@@ -106,7 +106,7 @@ class _CountDownTimerState extends State<CountDownTimeOtp>
                     'Gửi lại OTP',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                     ),
                   )),
             ],
