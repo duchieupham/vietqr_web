@@ -629,14 +629,10 @@ class _QrGenerateState extends State<QrGenerate> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const Text(
-              'Giao dịch có thời hạn 15 phút',
-              style: TextStyle(fontSize: 12),
-            ),
             Row(
               children: [
                 const Text(
-                  'Hết hạn sau',
+                  'Giao dịch hết hạn sau',
                   style: TextStyle(fontSize: 12),
                 ),
                 const SizedBox(
