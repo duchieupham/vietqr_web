@@ -18,11 +18,17 @@ import 'package:provider/provider.dart';
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/time_utils.dart';
 
-class ListTransactionUser extends StatelessWidget {
+class ListTransactionUser extends StatefulWidget {
   final TransactionUserBloc transactionUserBloc;
   ListTransactionUser({super.key, required this.transactionUserBloc});
 
+  @override
+  State<ListTransactionUser> createState() => _ListTransactionUserState();
+}
+
+class _ListTransactionUserState extends State<ListTransactionUser> {
   List<TransactionMerchantDTO> listTransaction = [];
+
   init() {
     Map<String, dynamic> paramInit = {};
     paramInit['userId'] = UserInformationHelper.instance.getUserId();
@@ -31,16 +37,22 @@ class ListTransactionUser extends StatelessWidget {
     paramInit['from'] = '0';
     paramInit['to'] = '0';
     paramInit['offset'] = 0;
-    transactionUserBloc
+    widget.transactionUserBloc
         .add(GetListTransactionByEvent(param: paramInit, isLoadingPage: true));
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TransUserProvider>(
       create: (context) => TransUserProvider()
-        ..init(transactionUserBloc, () {
-          init();
+        ..init(widget.transactionUserBloc, () {
+          // init();
         }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -690,7 +702,7 @@ class ListTransactionUser extends StatelessWidget {
                   param['merchantId'] =
                       Session.instance.accountIsMerchantDTO.customerSyncId;
 
-                  transactionUserBloc
+                  widget.transactionUserBloc
                       .add(GetListTransactionByEvent(param: param));
                 } else {
                   DialogWidget.instance.openMsgDialog(

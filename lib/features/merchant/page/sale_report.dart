@@ -266,7 +266,7 @@ class _SaleReportState extends State<SaleReport> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Báo cáo doanh thu',
+                  'Phí dịch vụ',
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,

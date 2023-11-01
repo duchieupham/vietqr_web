@@ -26,7 +26,7 @@ class _MerchantViewState extends State<MerchantView> {
   final ScrollController scrollController = ScrollController();
 
   int offset = 0;
-  SubMenuType currentType = SubMenuType.SALE_REPORT;
+  SubMenuType currentType = SubMenuType.LIST_TRANSACTION;
   bool isEnded = false;
   String nowMonth = '';
   @override
@@ -46,13 +46,6 @@ class _MerchantViewState extends State<MerchantView> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    if (currentType == SubMenuType.SALE_REPORT) {
-      nowMonth = TimeUtils.instance.getFormatMonth(DateTime.now());
-      merchantBloc.add(GetMerchantFeeEvent(
-          customerSyncId: Session.instance.accountIsMerchantDTO.customerSyncId,
-          month: nowMonth,
-          isLoadingPage: true));
-    }
 
     return MerchantFrame(
       menu: const MenuLeft(
@@ -78,9 +71,7 @@ class _MerchantViewState extends State<MerchantView> {
                     ItemMenuTop(
                       title: 'Báo cáo tổng hợp',
                       isSelect: currentType == SubMenuType.SALE_REPORT,
-                      onTap: () {
-                        changePage(SubMenuType.SALE_REPORT);
-                      },
+                      onTap: () {},
                     ),
                     ItemMenuTop(
                       title: 'Thống kê giao dịch',
@@ -101,8 +92,19 @@ class _MerchantViewState extends State<MerchantView> {
                     ),
                     ItemMenuTop(
                       title: 'Phí dịch vụ',
-                      isSelect: currentType == SubMenuType.OTHER,
-                      onTap: () {},
+                      isSelect: currentType == SubMenuType.SERVICE_FEE,
+                      onTap: () {
+                        changePage(SubMenuType.SERVICE_FEE);
+                        if (currentType == SubMenuType.SERVICE_FEE) {
+                          nowMonth =
+                              TimeUtils.instance.getFormatMonth(DateTime.now());
+                          merchantBloc.add(GetMerchantFeeEvent(
+                              customerSyncId: Session
+                                  .instance.accountIsMerchantDTO.customerSyncId,
+                              month: nowMonth,
+                              isLoadingPage: true));
+                        }
+                      },
                     ),
                     ItemMenuTop(
                       title: 'Bảng giá',
@@ -114,13 +116,13 @@ class _MerchantViewState extends State<MerchantView> {
               ),
               Expanded(
                   child: [
-                SaleReport(
-                  merchantBloc: merchantBloc,
-                ),
                 ListTransaction(
                   merchantBloc: merchantBloc,
                 ),
-              ][currentType == SubMenuType.LIST_TRANSACTION ? 1 : 0])
+                SaleReport(
+                  merchantBloc: merchantBloc,
+                ),
+              ][currentType == SubMenuType.LIST_TRANSACTION ? 0 : 1])
             ],
           ),
         ),
