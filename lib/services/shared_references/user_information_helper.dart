@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:VietQR/main.dart';
 import 'package:VietQR/models/account_information_dto.dart';
+import 'package:VietQR/models/info_user_dto.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
 
 class UserInformationHelper {
@@ -86,5 +87,15 @@ class UserInformationHelper {
         phoneNo: dto.phoneNo);
     await sharedPrefs.setString(
         'ACCOUNT_INFORMATION', newDto.toDataString().toString());
+  }
+
+  Future<void> setLoginAccount(List<String> list) async {
+    await sharedPrefs.setStringList('LOGIN_ACCOUNT', list);
+  }
+
+  List<InfoUserDTO> getLoginAccount() {
+    return ListLoginAccountDTO.fromJson(
+            sharedPrefs.getStringList('LOGIN_ACCOUNT'))
+        .list;
   }
 }

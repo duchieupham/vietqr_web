@@ -52,16 +52,16 @@ class _HomeFrameState extends State<HomeFrame> {
                   children: [
                     const HeaderWidget(),
                     Expanded(
-                      child: Row(
-                        children: [
-                          widget.menu,
-                          Expanded(
-                              child: Column(
+                        child: Row(
+                      children: [
+                        widget.menu,
+                        Expanded(
+                          child: Column(
                             children: [
                               Expanded(
                                 child: Row(
                                   children: [
-                                    const SizedBox(width: 16),
+                                    const SizedBox(width: 20),
                                     Expanded(child: widget.widget1),
                                     const SizedBox(width: 30),
                                     Expanded(child: widget.widget2),
@@ -73,10 +73,10 @@ class _HomeFrameState extends State<HomeFrame> {
                               ),
                               const FooterWeb(),
                             ],
-                          )),
-                        ],
-                      ),
-                    ),
+                          ),
+                        ),
+                      ],
+                    )),
                   ],
                 ),
               )

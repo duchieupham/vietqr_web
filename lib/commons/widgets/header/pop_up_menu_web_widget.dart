@@ -6,6 +6,7 @@ import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/card_number_setting_widget.dart';
+import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +115,35 @@ class PopupMenuWebWidget {
                 Padding(padding: EdgeInsets.only(left: 10)),
                 Text(
                   'Cài đặt VietQR ID Card',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
+          value: 1,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              DialogWidget.instance.openPopup(
+                width: 800,
+                height: 650,
+                child: const PopupSetting(),
+              );
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.settings,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Cài đặt',
                   style: TextStyle(
                     fontSize: 13,
                   ),

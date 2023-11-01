@@ -4,7 +4,6 @@ import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
-import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,10 +59,10 @@ class _ServiceSectionState extends State<ServiceSection> {
       children: [
         _buildItemService(context, AppImages.logoTelegramDash, 'Telegram',
             () async {
-          // Navigator.pushNamed(context, Routes.CONNECT_TELEGRAM);
+          DialogWidget.instance.openMsgQRInstallApp();
         }),
         _buildItemService(context, AppImages.logoLarkDash, 'Lark', () async {
-          // Navigator.pushNamed(context, Routes.CONNECT_LARK);
+          DialogWidget.instance.openMsgQRInstallApp();
         }),
       ],
     );
@@ -75,45 +74,25 @@ class _ServiceSectionState extends State<ServiceSection> {
       children: [
         _buildItemService(
             context, AppImages.icVqr3DUnit, 'Nạp tiền dịch vụ VietQR', () {
-          DialogWidget.instance.openMsgDialog(
-            title: 'Tính năng đang bảo trì',
-            msg: 'Vui lòng thử lại sau',
-          );
+          DialogWidget.instance.openMsgQRInstallApp();
         }, isFirst: true),
         _buildItemService(
             context, AppImages.logoMobileMoney3D, 'Nạp tiền\nđiện thoại', () {
-          // Navigator.pushNamed(context, Routes.MOBILE_RECHARGE);
+          DialogWidget.instance.openMsgQRInstallApp();
         }),
         _buildItemService(context, AppImages.icMb, 'Mở TK\nMB Bank', () {
           _launchUrl();
         }),
         _buildItemService(
-            context, AppImages.logoVietqrKiotDashboard, 'VietQR Kiot\n',
-            () async {
-          if (PlatformUtils.instance.isAndroidApp()) {
-            // final intent = AndroidIntent(
-            //     action: 'action_view',
-            //     data: Uri.encodeFull(
-            //         'https://play.google.com/store/apps/details?id=com.vietqr.kiot&hl=en_US'),
-            //     package: 'com.vietqr.kiot');
-            // intent.launch();
-          } else if (PlatformUtils.instance.isIOsApp()) {
-            await DialogWidget.instance.openMsgDialog(
-              title: 'Thông báo',
-              msg:
-                  'Chúng tôi đang bảo trì VietQR Kiot cho nền tảng iOS. Tính năng này sẽ sớm phụ vụ quý khách.',
-              function: () {
-                Navigator.pop(context);
-              },
-            );
-          }
+            context, AppImages.logoVietqrKiotDashboard, 'VietQR Kiot\n', () {
+          DialogWidget.instance.openMsgQRInstallApp();
         }),
         _buildItemService(
           context,
           AppImages.icBusiness3D,
           'Đăng ký Merchant',
           () async {
-            // Navigator.pushNamed(context, Routes.BUSINESS);
+            DialogWidget.instance.openMsgQRInstallApp();
           },
         ),
       ],

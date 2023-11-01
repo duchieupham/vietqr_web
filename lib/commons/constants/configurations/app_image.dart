@@ -1,20 +1,24 @@
 class AppImages {
   // Icons menu
   static String icMenuAddBank = 'assets/icons_menu/ic-menu-add-bank.png';
-  static String icMenuBank = 'assets/icons_menu/ic-menu-bank.png';
-  static String icMenuBusiness = 'assets/icons_menu/ic-menu-business.png';
-  static String icMenuContact = 'assets/icons_menu/ic-menu-contact.png';
-  static String icMenuHome = 'assets/icons_menu/ic-menu-home.png';
+  static String icMenuBank = '28c5553d-156e-4d34-b1c2-f5f74dfd92cb';
+  static String icMenuWallet = '43e7650b-d591-48f6-abcb-640b7426b3ed';
+  static String icMenuContact = 'aea13c59-f430-4411-a285-74e900fcc53e';
+  static String icMenuHome = '5607f58e-ee6c-493c-9e17-8cc4130f13d2';
+  static String icMenuTransaction = 'a1bb15e9-bc2e-43a3-9080-01d47a8206aa';
+  static String icMenuShareBDSD = 'aea13c59-f430-4411-a285-74e900fcc53e';
+
   static String icMenuIntroVietQrVN =
       'assets/icons_menu/ic-menu-intro-vietqrvn.png';
   static String icMenuLinked = 'assets/icons_menu/ic-menu-linked.png';
   static String icMenuLogout = 'assets/icons_menu/ic-menu-logout.png';
   static String icMenuNewMB = 'assets/icons_menu/ic-menu-new-mb.png';
-  static String icMenuQR = 'assets/icons_menu/ic-menu-qr.png';
+  static String icMenuQR = 'bdf2dc8c-38e3-4c8c-a8f3-b79dc86cd8a8';
   static String icMenuScanBank = 'assets/icons_menu/ic-menu-scan-bank.png';
   static String icMenuScanCCCD = 'assets/icons_menu/ic-menu-scan-cccd.png';
   static String icMenuSetting = 'assets/icons_menu/ic-menu-setting.png';
 
+  static String icSuccessGreen = 'edf87221-86e7-4396-aa50-f17bf7638557';
   static String avtVietqr = 'fdb25744-a258-4892-9c0d-3e63f9b02a0d';
   static String icBusiness3D = 'b569de96-c37b-4f1f-a195-b3bc11358fa7';
   static String icBusinessCard = '4f1b3883-7ed3-47bc-a6ef-1cd08353911d';

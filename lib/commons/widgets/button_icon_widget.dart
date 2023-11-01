@@ -19,6 +19,7 @@ class ButtonIconWidget extends StatelessWidget {
   final EdgeInsets customPaddingIcon;
   final bool enableShadow;
   final String pathIcon;
+  final BoxBorder? border;
 
   const ButtonIconWidget(
       {super.key,
@@ -35,6 +36,7 @@ class ButtonIconWidget extends StatelessWidget {
       this.focusNode,
       this.alignment,
       this.iconSize,
+      this.border,
       this.pathIcon = '',
       this.contentPadding =
           const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -54,6 +56,7 @@ class ButtonIconWidget extends StatelessWidget {
         padding: contentPadding,
         alignment: alignment,
         decoration: BoxDecoration(
+          border: border,
           color: bgColor,
           boxShadow: enableShadow
               ? [
@@ -85,6 +88,9 @@ class ButtonIconWidget extends StatelessWidget {
                 color: textColor,
                 size: iconSize ?? 15,
               ),
+            const SizedBox(
+              width: 8,
+            ),
             if (title.isNotEmpty) ...[
               if (pathIcon.isEmpty) Padding(padding: customPaddingIcon),
               Text(

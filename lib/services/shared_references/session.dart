@@ -120,7 +120,7 @@ class Session {
     String name = qrGeneratedDTO.userBankName.replaceAll(' ', '_');
     String amount = qrGeneratedDTO.amount;
     String content = qrGeneratedDTO.content.replaceAll(' ', '_');
-    return '?bankCode=$bankCode&account=$account&name=$name&amount=$amount&content=$content&action=$action&showBankAccount=$showBankAccount';
+    return '?bankCode=$bankCode&account=$account&name=$name&amount=$amount&content=$content&action=$action';
   }
 
   // Wallet

@@ -19,9 +19,9 @@ class LoginByCardWidget extends StatelessWidget {
     RawKeyboard.instance.addListener((RawKeyEvent event) {
       _vietQRId += event.character ?? '';
       if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-        _cardNumberLoginProvider.updateCardNumber(_vietQRId);
+        _cardNumberLoginProvider.updateCardNumber(_vietQRId.trim());
         Future.delayed(_duration, () {
-          Navigator.pop(context, _vietQRId);
+          Navigator.pop(context, _vietQRId.trim());
         });
       }
     });

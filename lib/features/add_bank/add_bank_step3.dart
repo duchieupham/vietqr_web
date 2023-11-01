@@ -1,7 +1,6 @@
 import 'dart:html' as html;
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -24,6 +23,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../../commons/enums/type_menu_home.dart';
 
 class AddBankStep3 extends StatefulWidget {
   const AddBankStep3({

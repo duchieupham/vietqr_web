@@ -50,11 +50,11 @@ class _WalletFrameState extends State<WalletFrame> {
                   children: [
                     const HeaderWidget(),
                     Expanded(
-                      child: Row(
-                        children: [
-                          widget.menu,
-                          Expanded(
-                              child: Column(
+                        child: Row(
+                      children: [
+                        widget.menu,
+                        Expanded(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Padding(
@@ -84,12 +84,12 @@ class _WalletFrameState extends State<WalletFrame> {
                                   const SizedBox(width: 30),
                                 ],
                               )),
-                              const FooterWeb(),
                             ],
-                          )),
-                        ],
-                      ),
-                    ),
+                          ),
+                        ),
+                      ],
+                    )),
+                    const FooterWeb(),
                   ],
                 ),
               )

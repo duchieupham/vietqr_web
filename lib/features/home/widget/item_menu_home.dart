@@ -1,10 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
 class ItemMenuHome extends StatefulWidget {
-  final String pathIcon;
+  final String iconId;
   final String title;
   final Function onTap;
   final bool isSelect, isLogout, enableDropDownList, enableMenuCard;
@@ -12,13 +13,13 @@ class ItemMenuHome extends StatefulWidget {
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
   final double titleSize;
-  final bool isOnlyIcon;
+  final bool isOnlyIcon, isDefaultColor;
   final EdgeInsets paddingIcon;
   const ItemMenuHome(
       {Key? key,
       required this.title,
       required this.onTap,
-      this.pathIcon = '',
+      this.iconId = '',
       this.pathImage,
       this.isSelect = false,
       this.isLogout = false,
@@ -28,6 +29,7 @@ class ItemMenuHome extends StatefulWidget {
       this.titleSize = 13,
       this.enableMenuCard = false,
       this.isOnlyIcon = false,
+      this.isDefaultColor = false,
       this.paddingIcon = EdgeInsets.zero})
       : super(key: key);
 
@@ -92,20 +94,30 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
         );
       }
 
-      if (widget.pathIcon.isNotEmpty) {
-        return Tooltip(
-          message: widget.title,
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: widget.paddingIcon,
-            color: widget.isSelect
-                ? AppColor.ITEM_MENU_SELECTED
-                : Colors.transparent,
-            width: 40,
-            height: 40,
-            child: Image.asset(
-              widget.pathIcon,
-              height: 50,
+      if (widget.iconId.isNotEmpty) {
+        return InkWell(
+          onTap: () {
+            widget.onTap();
+          },
+          child: Tooltip(
+            message: widget.title,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: widget.paddingIcon,
+              color: widget.isSelect
+                  ? AppColor.ITEM_MENU_SELECTED
+                  : Colors.transparent,
+              width: 40,
+              height: 40,
+              child: Image(
+                image: ImageUtils.instance.getImageNetWork(widget.iconId),
+                color: widget.isDefaultColor
+                    ? null
+                    : widget.isSelect
+                        ? AppColor.BLUE_TEXT
+                        : AppColor.BLACK,
+                height: 40,
+              ),
             ),
           ),
         );

@@ -9,6 +9,7 @@ class BorderLayout extends StatelessWidget {
   final double? height;
   final double borderWidth;
   final Color? bgColor;
+  final Color borderColor;
 
   const BorderLayout(
       {super.key,
@@ -17,7 +18,8 @@ class BorderLayout extends StatelessWidget {
       required this.child,
       this.padding,
       this.height,
-      this.borderWidth = 0.5,
+      this.borderWidth = 1,
+      this.borderColor = AppColor.GREY_TOP_TAB_BAR,
       this.bgColor});
 
   @override
@@ -29,7 +31,7 @@ class BorderLayout extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         border: Border.all(
-            color: (isError) ? AppColor.RED_TEXT : AppColor.GREY_TOP_TAB_BAR,
+            color: (isError) ? AppColor.RED_TEXT : borderColor,
             width: borderWidth),
         borderRadius: BorderRadius.circular(5),
       ),

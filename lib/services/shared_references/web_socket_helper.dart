@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
@@ -20,6 +22,9 @@ class WebSocketHelper {
 
   static late WebSocketChannel _channelQRLink;
   WebSocketChannel get channelQRLink => _channelQRLink;
+
+  static late WebSocketChannel _channelLoginLink;
+  WebSocketChannel get channelLoginLink => _channelLoginLink;
 
   static final WebSocketHelper _instance =
       WebSocketHelper._privateConstructor();
@@ -84,9 +89,15 @@ class WebSocketHelper {
   }
 
   void listenTransactionQRSocket(String id, Function transactionSuccess) {
+    late Uri wsUrl;
     try {
       setListenTransactionQRWS(true);
-      final wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
+      if (EnvConfig.getEnv() == EnvType.PROD) {
+        wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
+      } else {
+        wsUrl = Uri.parse(' wss://dev.vietqr.org/vqr/socket?refId=$id');
+      }
+
       _channelQRLink = WebSocketChannel.connect(wsUrl);
       if (_channelQRLink.closeCode == null) {
         _channelQRLink.stream.listen((event) {
@@ -96,6 +107,26 @@ class WebSocketHelper {
                   Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
             transactionSuccess();
           }
+        });
+      } else {
+        setListenTransactionQRWS(false);
+      }
+    } catch (e) {
+      LOG.error('WS: $e');
+    }
+  }
+
+  void listenLoginSocket(String loginID, Function(Map<String, dynamic>) login) {
+    try {
+      setListenTransactionQRWS(true);
+      final wsUrl =
+          Uri.parse('wss://api.vietqr.org/vqr/socket?loginId=$loginID');
+      _channelLoginLink = WebSocketChannel.connect(wsUrl);
+      if (_channelLoginLink.closeCode == null) {
+        _channelLoginLink.stream.listen((event) {
+          var data = jsonDecode(event);
+          print('-------------------------------------- $data');
+          login(data);
         });
       } else {
         setListenTransactionQRWS(false);

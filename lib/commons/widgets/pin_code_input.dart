@@ -17,6 +17,7 @@ class PinCodeInput extends StatelessWidget {
     this.textStyle,
     this.length,
     this.size,
+    this.fillWidth,
   }) : super(key: key);
 
   final ValueChanged<String>? onChanged;
@@ -31,6 +32,7 @@ class PinCodeInput extends StatelessWidget {
   final TextStyle? textStyle;
   final int? length;
   final double? size;
+  final double? fillWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class PinCodeInput extends StatelessWidget {
         shape: shape,
         fieldHeight: size ?? _size,
         fieldOuterPadding: EdgeInsets.zero,
-        fieldWidth: size ?? _size,
+        fieldWidth: fillWidth ?? size ?? _size,
         activeColor: clBorderErr ?? activeColor,
         borderRadius: BorderRadius.circular(5),
         activeFillColor: AppColor.WHITE,

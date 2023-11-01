@@ -75,3 +75,20 @@ class LoginEventUpdateCode extends LoginEvent {
   @override
   List<Object?> get props => [code, userId];
 }
+
+class CheckExistPhone extends LoginEvent {
+  final String phone;
+
+  const CheckExistPhone({required this.phone});
+
+  @override
+  List<Object?> get props => [phone];
+}
+class LoginQREvent extends LoginEvent {
+  final String userId;
+
+  const LoginQREvent({required this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}

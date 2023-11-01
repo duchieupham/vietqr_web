@@ -1,21 +1,21 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:flutter/material.dart';
 
 class CreateQRFrame extends StatefulWidget {
   final Widget widget1;
   final Widget widget2;
   // final Widget widget3;
-  final Widget menu;
 
   const CreateQRFrame({
     super.key,
     required this.widget1,
     required this.widget2,
     // required this.widget3,
-    required this.menu,
   });
 
   @override
@@ -54,42 +54,45 @@ class _HomeFrameState extends State<CreateQRFrame> {
                     Expanded(
                       child: Row(
                         children: [
-                          widget.menu,
+                          const MenuLeft(
+                            currentType: MenuHomeType.CREATE_QR,
+                          ),
                           Expanded(
-                              child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 16),
-                                child: Text(
-                                  'Tạo mã VietQR',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 16,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text(
+                                    'Tạo mã VietQR',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  const SizedBox(width: 16),
-                                  Expanded(flex: 2, child: widget.widget1),
-                                  const SizedBox(width: 30),
-                                  Expanded(flex: 2, child: widget.widget2),
-                                  const SizedBox(width: 30),
-                                  const Spacer()
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Expanded(
+                                    child: Row(
+                                  children: [
+                                    const SizedBox(width: 16),
+                                    Expanded(flex: 2, child: widget.widget1),
+                                    const SizedBox(width: 30),
+                                    Expanded(flex: 2, child: widget.widget2),
+                                    const SizedBox(width: 30),
+                                    const Spacer()
 
-                                  // Expanded(flex: 2, child: widget.widget3),
-                                  // const SizedBox(width: 16),
-                                ],
-                              )),
-                              const FooterWeb(),
-                            ],
-                          )),
+                                    // Expanded(flex: 2, child: widget.widget3),
+                                    // const SizedBox(width: 16),
+                                  ],
+                                )),
+                                const FooterWeb(),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),

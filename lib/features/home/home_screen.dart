@@ -143,10 +143,9 @@ class _HomeScreenState extends State<_HomeScreen> {
           menu: const MenuLeft(
             currentType: MenuHomeType.HOME,
           ),
-          widget1: ChangeNotifierProvider<WalletHomeProvider>(
-              create: (context) => WalletHomeProvider(), child: _buildHome()),
+          widget1: _buildHome(),
           widget2: _buildListBank(state.listBanks, state.colors),
-          widget3: _buildInfoAccount(dto, qrGeneratedDTO),
+          widget3: _buildInfoAccount(dto, qrGeneratedDTO, state),
         );
       },
     );
@@ -182,15 +181,15 @@ class _HomeScreenState extends State<_HomeScreen> {
                       children: [
                         const TextSpan(
                           text: 'Số dư: ',
-                          style: TextStyle(fontSize: 13),
+                          style: TextStyle(fontSize: 13, color: AppColor.BLACK),
                         ),
                         TextSpan(
                           text: provider.showAmount
                               ? '${CurrencyUtils.instance.getCurrencyFormatted(Session.instance.wallet.amount)} VQR'
                               : '********',
                           style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
+                              fontWeight: FontWeight.w600,
+                              color: AppColor.BLACK),
                         ),
                       ],
                     ),
@@ -418,8 +417,18 @@ class _HomeScreenState extends State<_HomeScreen> {
     );
   }
 
-  Widget _buildInfoAccount(AccountBankDetailDTO dto, QRGeneratedDTO qrDTO) {
+  Widget _buildInfoAccount(
+      AccountBankDetailDTO dto, QRGeneratedDTO qrDTO, HomeState state) {
     String bankId = Provider.of<HomeProvider>(context, listen: false).bankId;
+    if (state.status == BlocStatus.LOADING) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: UnconstrainedBox(
+            child: SizedBox(
+                height: 32, width: 32, child: CircularProgressIndicator())),
+      );
+    }
+
     return InfoDetailBankAccount(
       refresh: () async {},
       dto: dto,

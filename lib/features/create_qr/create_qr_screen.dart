@@ -1,4 +1,8 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
+import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
@@ -9,7 +13,6 @@ import 'package:VietQR/features/create_qr/frame/create_qr_frame.dart';
 import 'package:VietQR/features/create_qr/provider/create_qr_provider.dart';
 import 'package:VietQR/features/create_qr/states/create_qr_state.dart';
 import 'package:VietQR/features/create_qr/widget/calculator_view.dart';
-import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -18,15 +21,14 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../commons/enums/type_menu_home.dart';
 import '../../commons/utils/image_utils.dart';
 import 'event/create_qr_event.dart';
 
 class CreateQrScreen extends StatefulWidget {
   final String bankAccountId;
+
   const CreateQrScreen({super.key, this.bankAccountId = ''});
 
   @override
@@ -45,6 +47,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
     businessDetails: [],
     transactions: [],
   );
+
   @override
   void initState() {
     createQRBloc = CreateQRBloc()..add(GetListBankAccount());
@@ -65,9 +68,11 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {
               createQRBloc
                   .add(BankEventGetDetail(bankId: widget.bankAccountId));
-              context
-                  .read<CreateQRProvider>()
-                  .voidChooseBank(widget.bankAccountId);
+              for (var bank in bankAccounts) {
+                if (bank.id == widget.bankAccountId) {
+                  context.read<CreateQRProvider>().updateBankAccountDto(bank);
+                }
+              }
             }
           }
           if (state is BankDetailSuccessState) {
@@ -75,14 +80,43 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             if (widget.bankAccountId.isNotEmpty) {}
           }
           if (state is QRGenerateSuccessState) {
-            context.go('/qr-generate?token=${state.dto.transactionRefId}',
-                extra: true);
+            if (EnvConfig.getEnv() == EnvType.PROD) {
+              if (widget.bankAccountId.isNotEmpty) {
+                html.window.open(
+                    Uri.base.toString().replaceFirst(
+                        '/create-qr/${widget.bankAccountId}',
+                        '/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              } else {
+                html.window.open(
+                    Uri.base.toString().replaceFirst('/create-qr',
+                        '/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              }
+
+              // context.go('/qr-generated?token=${state.dto.transactionRefId}',
+              //     extra: true);
+            } else {
+              if (widget.bankAccountId.isNotEmpty) {
+                html.window.open(
+                    Uri.base.toString().replaceFirst(
+                        '/create-qr/${widget.bankAccountId}',
+                        '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              } else {
+                html.window.open(
+                    Uri.base.toString().replaceFirst('/create-qr',
+                        '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                    'new tab');
+              }
+
+              // context.go(
+              //     '/test/qr-generated?token=${state.dto.transactionRefId}',
+              //     extra: true);
+            }
           }
         }, builder: (context, state) {
           return CreateQRFrame(
-            menu: const MenuLeft(
-              currentType: MenuHomeType.CREATE_QR,
-            ),
             widget1: _buildListBank(),
             widget2: _formCreate(),
             // widget3: _buildQRcode(state),
@@ -93,225 +127,247 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
   }
 
   Widget _formCreate() {
-    return Consumer<CreateQRProvider>(builder: (context, provider, child) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          const Text(
-            'Thông tin tạo mã VietQR',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          const Text(
-            'Số tiền*',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          Column(
-            children: [
-              BorderLayout(
-                height: 50,
-                isError: provider.amountErr,
-                bgColor: AppColor.WHITE,
-                child: Row(
+    return Consumer<CreateQRProvider>(
+      builder: (context, provider, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const Text(
+                      'Thông tin tạo mã VietQR',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    const Text(
+                      'Số tiền*',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    Column(
+                      children: [
+                        BorderLayout(
+                          height: 50,
+                          isError: provider.amountErr,
+                          bgColor: AppColor.WHITE,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextFieldWidget(
+                                  isObscureText: false,
+                                  autoFocus: true,
+                                  focusNode: focusNode,
+                                  hintText: 'VD: 50,000',
+                                  fontSize: 12,
+                                  value: provider.money,
+                                  inputType: TextInputType.number,
+                                  inputFormatter: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  keyboardAction: TextInputAction.next,
+                                  onChange: (value) {
+                                    provider.updateMoney(value.toString());
+                                    if (provider.money.isNotEmpty) {
+                                      if (provider.money
+                                              .replaceAll(',', '')
+                                              .length >=
+                                          4) {
+                                        provider.updateValidCreate(true);
+                                        provider.updateAmountErr(false);
+                                      } else {
+                                        provider.updateValidCreate(false);
+                                        provider.updateAmountErr(true);
+                                      }
+                                    } else {
+                                      provider.updateAmountErr(false);
+                                      provider.updateValidCreate(false);
+                                    }
+                                  },
+                                ),
+                              ),
+                              const Text(
+                                'VND',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const Padding(padding: EdgeInsets.only(left: 20)),
+                            ],
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 5)),
+                        if (provider.amountErr)
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Số tiền không đúng định dạng',
+                              style: TextStyle(
+                                color: AppColor.RED_CALENDAR,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 24)),
+                    const Text(
+                      'Nội dung thanh toán',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    BorderLayout(
+                      height: 50,
+                      isError: false,
+                      bgColor: AppColor.WHITE,
                       child: TextFieldWidget(
                         isObscureText: false,
                         autoFocus: true,
-                        focusNode: focusNode,
-                        hintText: 'VD: 50,000',
+                        hintText: 'Nội dung thanh toán tối đa 50 ký tự',
                         fontSize: 12,
-                        value: provider.money,
+                        maxLength: 50,
+                        controller: contentController,
                         inputType: TextInputType.number,
-                        inputFormatter: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardAction: TextInputAction.next,
-                        onChange: (value) {
-                          provider.updateMoney(value.toString());
-                          if (provider.money.isNotEmpty) {
-                            if (provider.money.replaceAll(',', '').length >=
-                                4) {
-                              provider.updateValidCreate(true);
-                              provider.updateAmountErr(false);
-                            } else {
-                              provider.updateValidCreate(false);
-                              provider.updateAmountErr(true);
-                            }
-                          } else {
-                            provider.updateAmountErr(false);
-                            provider.updateValidCreate(false);
+                        keyboardAction: TextInputAction.done,
+                        onChange: (vavlue) {},
+                        onSubmitted: (value) {
+                          if (amountController.text.isNotEmpty &&
+                              StringUtils.instance
+                                  .isNumeric(amountController.text)) {
+                            QRCreateDTO qrCreateDTO = QRCreateDTO(
+                              bankId: bankDetailDTO.id,
+                              amount: provider.money.replaceAll(',', ''),
+                              content: StringUtils.instance
+                                  .removeDiacritic(contentController.text),
+                              branchId:
+                                  (bankDetailDTO.businessDetails.isNotEmpty ??
+                                          false)
+                                      ? bankDetailDTO.businessDetails.first
+                                          .branchDetails.first.branchId
+                                      : '',
+                              businessId:
+                                  (bankDetailDTO.businessDetails.isNotEmpty ??
+                                          false)
+                                      ? bankDetailDTO
+                                          .businessDetails.first.businessId
+                                      : '',
+                              userId:
+                                  UserInformationHelper.instance.getUserId(),
+                            );
+                            // _qrBloc.add(QREventGenerate(dto: qrCreateDTO));
                           }
                         },
                       ),
                     ),
-                    const Text(
-                      'VND',
-                      style: TextStyle(fontSize: 12),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    SizedBox(
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: [
+                          _buildChoiceChip(
+                            context,
+                            'Thanh toan',
+                          ),
+                          _buildChoiceChip(
+                            context,
+                            'Chuyen khoan den ${bankDetailDTO.bankAccount}',
+                          ),
+                          if (bankDetailDTO.businessDetails?.isNotEmpty ??
+                              false) ...[
+                            _buildChoiceChip(
+                              context,
+                              'Thanh toan cho ${bankDetailDTO.businessDetails!.first.businessName}',
+                            ),
+                            _buildChoiceChip(
+                              context,
+                              'Giao dich ${bankDetailDTO.businessDetails!.first.branchDetails.first.branchName}',
+                            ),
+                          ],
+                          if (bankDetailDTO.type == 0) ...[
+                            _buildChoiceChip(
+                              context,
+                              'Chuyen khoan cho ${bankDetailDTO.userBankName}',
+                            ),
+                            _buildChoiceChip(
+                              context,
+                              'Giao dich ngay ${TimeUtils.instance.formatDate(DateTime.now().toString())}',
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
-                    const Padding(padding: EdgeInsets.only(left: 20)),
+                    const Padding(padding: EdgeInsets.only(top: 24)),
+                    const Text(
+                      'Đính kèm nội dung',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      alignment: Alignment.centerLeft,
+                      child: _buildTemplateSubButton('Tải tệp đính kèm', () {
+                        DialogWidget.instance.openMsgQRInstallApp();
+                      }, Icons.file_open),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 24)),
+                    const Text(
+                      'Công cụ',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Wrap(
+                        runSpacing: 12,
+                        spacing: 12,
+                        children: [
+                          _buildTemplateSubButton('Máy tính', () {
+                            DialogWidget.instance.openPopup(
+                              width: 400,
+                              height: 560,
+                              child: CalculatorScreen(
+                                onSubmit: (vale) {
+                                  double money = double.parse(vale);
+
+                                  provider.updateMoneyFormCalculator(
+                                      money.round().toString());
+                                },
+                              ),
+                            );
+                          }, Icons.calculate_outlined),
+                          _buildTemplateSubButton('Quét QR/Barcode nội dung', () {
+                            DialogWidget.instance.openMsgQRInstallApp();
+                          }, Icons.qr_code_outlined),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(top: 5)),
-              if (provider.amountErr)
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Số tiền không đúng định dạng',
-                    style: TextStyle(
-                      color: AppColor.RED_CALENDAR,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const Padding(padding: EdgeInsets.only(top: 24)),
-          const Text(
-            'Nội dung thanh toán',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
             ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          BorderLayout(
-            height: 50,
-            isError: false,
-            bgColor: AppColor.WHITE,
-            child: TextFieldWidget(
-              isObscureText: false,
-              autoFocus: true,
-              hintText: 'Nội dung thanh toán tối đa 50 ký tự',
-              fontSize: 12,
-              maxLength: 50,
-              controller: contentController,
-              inputType: TextInputType.number,
-              keyboardAction: TextInputAction.done,
-              onChange: (vavlue) {},
-              onSubmitted: (value) {
-                if (amountController.text.isNotEmpty &&
-                    StringUtils.instance.isNumeric(amountController.text)) {
-                  QRCreateDTO qrCreateDTO = QRCreateDTO(
-                    bankId: bankDetailDTO.id,
-                    amount: provider.money.replaceAll(',', ''),
-                    content: StringUtils.instance
-                        .removeDiacritic(contentController.text),
-                    branchId:
-                        (bankDetailDTO.businessDetails.isNotEmpty ?? false)
-                            ? bankDetailDTO.businessDetails.first.branchDetails
-                                .first.branchId
-                            : '',
-                    businessId:
-                        (bankDetailDTO.businessDetails.isNotEmpty ?? false)
-                            ? bankDetailDTO.businessDetails.first.businessId
-                            : '',
-                    userId: UserInformationHelper.instance.getUserId(),
-                  );
-                  // _qrBloc.add(QREventGenerate(dto: qrCreateDTO));
-                }
-              },
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10)),
-          SizedBox(
-            child: Wrap(
-              alignment: WrapAlignment.start,
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                _buildChoiceChip(
-                  context,
-                  'Thanh toan',
-                ),
-                _buildChoiceChip(
-                  context,
-                  'Chuyen khoan den ${bankDetailDTO.bankAccount}',
-                ),
-                if (bankDetailDTO.businessDetails?.isNotEmpty ?? false) ...[
-                  _buildChoiceChip(
-                    context,
-                    'Thanh toan cho ${bankDetailDTO.businessDetails!.first.businessName}',
-                  ),
-                  _buildChoiceChip(
-                    context,
-                    'Giao dich ${bankDetailDTO.businessDetails!.first.branchDetails.first.branchName}',
-                  ),
-                ],
-                if (bankDetailDTO.type == 0) ...[
-                  _buildChoiceChip(
-                    context,
-                    'Chuyen khoan cho ${bankDetailDTO.userBankName}',
-                  ),
-                  _buildChoiceChip(
-                    context,
-                    'Giao dich ngay ${TimeUtils.instance.formatDate(DateTime.now().toString())}',
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 24)),
-          const Text(
-            'Đính kèm nội dung',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: _buildTemplateSubButton(
-                'Tải tệp đính kèm', () {}, Icons.file_open),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 24)),
-          const Text(
-            'Công cụ',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Wrap(
-              runSpacing: 12,
-              spacing: 12,
-              children: [
-                _buildTemplateSubButton('Máy tính', () {
-                  DialogWidget.instance.openPopup(
-                    width: 400,
-                    height: 560,
-                    child: CalculatorScreen(
-                      onSubmit: (vale) {
-                        double money = double.parse(vale);
 
-                        provider.updateMoneyFormCalculator(
-                            money.round().toString());
-                      },
-                    ),
-                  );
-                }, Icons.calculate_outlined),
-                _buildTemplateSubButton(
-                    'Quét QR/Barcode nội dung', () {}, Icons.qr_code_outlined),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Padding(
+            Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: ButtonIconWidget(
                 height: 40,
@@ -341,22 +397,26 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                             ? bankDetailDTO.businessDetails.first.branchDetails
                                 .first.branchId
                             : '',
-                        businessId:
-                            (bankDetailDTO.businessDetails.isNotEmpty ?? false)
-                                ? bankDetailDTO.businessDetails.first.businessId
-                                : '',
+                        businessId: (bankDetailDTO.businessDetails.isNotEmpty)
+                            ? bankDetailDTO.businessDetails.first.businessId
+                            : '',
                         userId: UserInformationHelper.instance.getUserId(),
                       );
+
+                      print(
+                          '------------------------------------${qrCreateDTO.toJson()}');
                       createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
                     }
                   }
                 },
                 bgColor: AppColor.BLUE_TEXT,
                 textColor: AppColor.WHITE,
-              )),
-        ],
-      );
-    });
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildListBank() {

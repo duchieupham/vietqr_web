@@ -3,10 +3,12 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/wallet/blocs/wallet_qr_bloc.dart';
@@ -94,7 +96,9 @@ class _WalletScreenState extends State<WalletScreen> {
               pathIcon: AppImages.icContactBankWhite,
               textSize: 12,
               title: 'Tạo QR Vcard',
-              function: () {},
+              function: () {
+                DialogWidget.instance.openMsgQRInstallApp();
+              },
               textColor: AppColor.BLUE_TEXT,
               iconPathColor: AppColor.BLUE_TEXT,
               bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
@@ -108,7 +112,9 @@ class _WalletScreenState extends State<WalletScreen> {
               pathIcon: AppImages.icHookBlue,
               textSize: 12,
               title: 'Tạo QR Link',
-              function: () {},
+              function: () {
+                DialogWidget.instance.openMsgQRInstallApp();
+              },
               textColor: AppColor.BLUE_TEXT,
               bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
             ),
@@ -244,20 +250,23 @@ class _WalletScreenState extends State<WalletScreen> {
                   width: 12,
                 ),
                 Expanded(
-                    child: ListView(
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.horizontal,
-                        children: provider.listCategories.map((e) {
-                          int index = provider.listCategories.indexOf(e);
-                          return _buildItemCategory(e.title, onTap: () {
-                            provider.onChangeCategory(e);
-                            bloc.add(ContactEventGetList(
-                                isLoading: true, type: e.type, offset: 0));
-                          },
-                              pathIcon: e.url,
-                              isSelected: e.type == provider.categoryModel.type,
-                              index: index);
-                        }).toList())),
+                    child: ScrollConfiguration(
+                  behavior: MyCustomScrollBehavior(),
+                  child: ListView(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.horizontal,
+                      children: provider.listCategories.map((e) {
+                        int index = provider.listCategories.indexOf(e);
+                        return _buildItemCategory(e.title, onTap: () {
+                          provider.onChangeCategory(e);
+                          bloc.add(ContactEventGetList(
+                              isLoading: true, type: e.type, offset: 0));
+                        },
+                            pathIcon: e.url,
+                            isSelected: e.type == provider.categoryModel.type,
+                            index: index);
+                      }).toList()),
+                )),
               ],
             ),
           ),
