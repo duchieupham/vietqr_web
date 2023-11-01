@@ -57,7 +57,7 @@ class CardNumberSettingWidget extends StatelessWidget {
                   Future.delayed(const Duration(milliseconds: 0), () {
                     Provider.of<CardNumberSettingProvider>(context,
                             listen: false)
-                        .updateVietQRId(_vietQRId);
+                        .updateVietQRId(_vietQRId.trim());
                     Future.delayed(const Duration(milliseconds: 300), () {
                       Provider.of<CardNumberSettingProvider>(context,
                               listen: false)
@@ -73,7 +73,7 @@ class CardNumberSettingWidget extends StatelessWidget {
                   Future.delayed(const Duration(milliseconds: 0), () {
                     Provider.of<CardNumberSettingProvider>(context,
                             listen: false)
-                        .updateConfirm(_confitmVietQRId);
+                        .updateConfirm(_confitmVietQRId.trim());
                     _cardNumBloc.add(
                       CardNumEventCompare(
                         id: Provider.of<CardNumberSettingProvider>(context,
