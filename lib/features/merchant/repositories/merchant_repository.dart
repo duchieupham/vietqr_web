@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'package:VietQR/commons/utils/log.dart';
-import 'package:VietQR/models/active_fee_dto.dart';
-import 'package:VietQR/commons/utils/base_api.dart';
-import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/account_is_merchant.dart';
-import 'package:VietQR/models/transaction_merchant_dto.dart';
+
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
-
+import 'package:VietQR/commons/utils/base_api.dart';
+import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/models/account_is_merchant.dart';
+import 'package:VietQR/models/active_fee_dto.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/synthesis_report_dto.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
 
 class MerchantRepository {
   const MerchantRepository();
@@ -122,6 +123,29 @@ class MerchantRepository {
               .toList();
           return result;
         }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<List<SynthesisReportDTO>> getListSynthesisReport(
+      int type, String time, String id) async {
+    List<SynthesisReportDTO> result = [];
+    try {
+      final String url =
+          '${EnvConfig.getBaseUrl()}transactions/merchant/statistic?type=$type&id=$id&time=$time';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        result = data
+            .map<SynthesisReportDTO>(
+                (json) => SynthesisReportDTO.fromJson(json))
+            .toList();
       }
     } catch (e) {
       LOG.error(e.toString());

@@ -3,6 +3,7 @@ import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
 import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
+import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ class MerchantBloc extends Bloc<MerchantEvent, MerchantState> {
     on<GetMerchantFeeEvent>(_getMerchantFee);
     on<GetListTransactionByUserEvent>(_getListTransactionByUser);
     on<GetListTransactionByMerchantEvent>(_getListTransactionByMerchant);
+    on<GetSynthesisReportEvent>(_getListSynthesisReport);
   }
 }
 
@@ -95,5 +97,32 @@ void _getListTransactionByMerchant(MerchantEvent event, Emitter emit) async {
   } catch (e) {
     LOG.error(e.toString());
     emit(MerchantGetListByMerchantSuccessfulState(list: list));
+  }
+}
+
+void _getListSynthesisReport(MerchantEvent event, Emitter emit) async {
+  List<SynthesisReportDTO> list = [];
+  String id = '';
+  try {
+    if (event is GetSynthesisReportEvent) {
+      if (event.isLoadingPage) {
+        emit(MerchantLoadingInitState());
+      } else {
+        emit(MerchantLoadingListState());
+      }
+
+      if (event.type == 0 || event.type == 1) {
+        id = event.customerSyncId;
+      } else {
+        id = event.bankId;
+      }
+      list = await merchantRepository.getListSynthesisReport(
+          event.type, event.time, id);
+      emit(MerchantGetSynthesisReportSuccessfulState(
+          list: list, isLoadingPage: event.isLoadingPage));
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    emit(MerchantGetSynthesisReportSuccessfulState(list: list));
   }
 }

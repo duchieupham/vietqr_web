@@ -613,7 +613,7 @@ class ListTransaction extends StatelessWidget {
                         onChanged: (BankAccountDTO? value) {
                           provider.changeBankAccount(value!);
                         },
-                        items: Session.instance.listBankAccountOfMerchant
+                        items: provider.bankAccounts
                             .map<DropdownMenuItem<BankAccountDTO>>(
                                 (BankAccountDTO value) {
                           return DropdownMenuItem<BankAccountDTO>(

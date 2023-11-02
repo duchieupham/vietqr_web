@@ -7,6 +7,7 @@ class BankAccountDTO {
   final String bankCode;
   final String bankName;
   final String imgId;
+  final String bankId;
   final int type;
   final String branchId;
   final String businessId;
@@ -29,6 +30,7 @@ class BankAccountDTO {
     this.imgId = '',
     this.type = 0,
     this.branchId = '',
+    this.bankId = '',
     this.businessId = '',
     this.branchName = '',
     this.businessName = '',
@@ -52,6 +54,7 @@ class BankAccountDTO {
       bankName: json['bankName'] ?? '',
       imgId: json['imgId'] ?? '',
       type: json['type'] ?? 0,
+      bankId: json['bankId'] ?? '',
       branchId: json['branchId'] ?? '',
       businessId: json['businessId'] ?? '',
       branchName: json['branchName'] ?? '',

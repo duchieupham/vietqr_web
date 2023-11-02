@@ -46,7 +46,7 @@ class MerchantProvider with ChangeNotifier {
   ScrollController scrollControllerList = ScrollController();
   int _currentPage = 0;
   int get currentPage => _currentPage;
-  List<BankAccountDTO> _bankAccounts = [];
+  List<BankAccountDTO> bankAccounts = [];
   init(MerchantBloc merchantBloc) {
     getListBankAccount();
     scrollControllerList.addListener(() {
@@ -83,8 +83,8 @@ class MerchantProvider with ChangeNotifier {
     String userId = UserInformationHelper.instance.getUserId();
     AccountIsMerchantDTO dto =
         await merchantRepository.checkAccountIsMerchant(userId);
-    _bankAccounts = await merchantRepository.getListBank(dto.customerSyncId);
-    _bankAccountDTO = _bankAccounts.first;
+    bankAccounts = await merchantRepository.getListBank(dto.customerSyncId);
+    _bankAccountDTO = bankAccounts.first;
   }
 
   updateCallLoadMore(bool value) {

@@ -14,15 +14,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 
-class SaleReport extends StatefulWidget {
+class ServiceFee extends StatefulWidget {
   final MerchantBloc merchantBloc;
-  const SaleReport({super.key, required this.merchantBloc});
+  const ServiceFee({super.key, required this.merchantBloc});
 
   @override
-  State<SaleReport> createState() => _SaleReportState();
+  State<ServiceFee> createState() => _SaleReportState();
 }
 
-class _SaleReportState extends State<SaleReport> {
+class _SaleReportState extends State<ServiceFee> {
   List<ActiveFeeDTO> listActiveFee = [];
 
   @override

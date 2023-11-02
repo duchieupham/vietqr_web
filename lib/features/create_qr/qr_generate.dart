@@ -790,7 +790,7 @@ class _QrGenerateState extends State<QrGenerate> {
               webPosition: 'center',
             ),
           );
-        }, Alignment.centerLeft, 'Sap chép Link to Pay'),
+        }, Alignment.centerLeft, 'Sao chép Link to Pay'),
         const Spacer(),
         _buildButtonText(() {}, Alignment.centerRight, 'Hướng dẫn thanh toán'),
       ],

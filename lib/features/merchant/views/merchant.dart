@@ -7,6 +7,7 @@ import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/page/list_transaction.dart';
 import 'package:VietQR/features/merchant/page/sale_report.dart';
+import 'package:VietQR/features/merchant/page/synthesis_repor.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,19 @@ class _MerchantViewState extends State<MerchantView> {
     setState(() {
       currentType = type;
     });
+  }
+
+  int getPage(SubMenuType currentType) {
+    switch (currentType) {
+      case SubMenuType.LIST_TRANSACTION:
+        return 0;
+      case SubMenuType.SYNTHESIS_REPORT:
+        return 1;
+      case SubMenuType.SERVICE_FEE:
+        return 2;
+      default:
+        return 0;
+    }
   }
 
   @override
@@ -87,8 +101,16 @@ class _MerchantViewState extends State<MerchantView> {
                     ),
                     ItemMenuTop(
                       title: 'Báo cáo tổng hợp',
-                      isSelect: currentType == SubMenuType.SALE_REPORT,
-                      onTap: () {},
+                      isSelect: currentType == SubMenuType.SYNTHESIS_REPORT,
+                      onTap: () {
+                        changePage(SubMenuType.SYNTHESIS_REPORT);
+                        merchantBloc.add(GetSynthesisReportEvent(
+                            customerSyncId: Session
+                                .instance.accountIsMerchantDTO.customerSyncId,
+                            type: 0,
+                            time: DateTime.now().year.toString(),
+                            isLoadingPage: true));
+                      },
                     ),
                     ItemMenuTop(
                       title: 'Phí dịch vụ',
@@ -119,10 +141,13 @@ class _MerchantViewState extends State<MerchantView> {
                 ListTransaction(
                   merchantBloc: merchantBloc,
                 ),
-                SaleReport(
+                SynthesisReport(
                   merchantBloc: merchantBloc,
                 ),
-              ][currentType == SubMenuType.LIST_TRANSACTION ? 0 : 1])
+                ServiceFee(
+                  merchantBloc: merchantBloc,
+                ),
+              ][getPage(currentType)])
             ],
           ),
         ),

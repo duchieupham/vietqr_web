@@ -34,6 +34,13 @@ void _getBankAccounts(CreateQREvent event, Emitter emit) async {
       PaletteGenerator? paletteGenerator;
       BuildContext context = NavigationService.navigatorKey.currentContext!;
       if (list.isNotEmpty) {
+        List<BankAccountDTO> listLinked =
+            list.where((e) => e.isAuthenticated).toList();
+        List<BankAccountDTO> listNotLinked =
+            list.where((e) => !e.isAuthenticated).toList();
+
+        list = [...listLinked, ...listNotLinked];
+
         for (BankAccountDTO dto in list) {
           NetworkImage image = ImageUtils.instance.getImageNetWork(dto.imgId);
           paletteGenerator = await PaletteGenerator.fromImageProvider(image);
