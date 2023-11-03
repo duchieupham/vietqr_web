@@ -274,6 +274,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
   Widget _buildWallet() {
     return Consumer<WalletHomeProvider>(builder: (context, provider, child) {
       return Container(
+        height: 40,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),

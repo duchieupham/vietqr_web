@@ -12,7 +12,7 @@ class ClockWidget extends StatelessWidget {
       stream: Stream.periodic(const Duration(seconds: 1)),
       builder: (context, snapshot) {
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(

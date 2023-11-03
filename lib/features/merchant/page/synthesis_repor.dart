@@ -60,26 +60,29 @@ class _SaleReportState extends State<SynthesisReport> {
                     child: Center(child: Text('Không có dữ liệu')),
                   );
                 } else {
-                  return SingleChildScrollView(
-                    child: ScrollConfiguration(
-                      behavior: MyCustomScrollBehavior(),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: SizedBox(
-                          width: 970,
-                          child: Column(
-                            children: [
-                              _buildTitleItem(),
-                              ...listSynthesisReport.map((e) {
-                                int i = listSynthesisReport.indexOf(e);
-                                return _buildItem(i, e);
-                              }).toList()
-                            ],
+                  return Consumer<SynthesisReportProvider>(
+                      builder: (context, provider, child) {
+                    return SingleChildScrollView(
+                      child: ScrollConfiguration(
+                        behavior: MyCustomScrollBehavior(),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            width: provider.valueFilter.id == 1 ? 1090 : 970,
+                            child: Column(
+                              children: [
+                                _buildTitleItem(provider.valueFilter.id == 1),
+                                ...listSynthesisReport.map((e) {
+                                  int i = listSynthesisReport.indexOf(e);
+                                  return _buildItem(i, e, provider);
+                                }).toList()
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  });
                 }
               }
             });
@@ -89,14 +92,24 @@ class _SaleReportState extends State<SynthesisReport> {
     );
   }
 
-  Widget _buildItem(int index, SynthesisReportDTO dto) {
+  Widget _buildItem(
+      int index, SynthesisReportDTO dto, SynthesisReportProvider provider) {
     return Container(
       color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
       alignment: Alignment.center,
       child: Row(
         children: [
           _buildBoxItem('${index + 1}', width: 50),
-          _buildBoxItem(dto.time, width: 120),
+          if (provider.valueFilter.id == 1)
+            _buildBoxItem(
+                '${provider.bankAccountDTO.bankShortName}\n${provider.bankAccountDTO.bankAccount}',
+                width: 120,
+                textAlign: TextAlign.start),
+          if (provider.valueTimeFilter.id == 1)
+            _buildBoxItem(TimeUtils.instance.formatDate(dto.time), width: 120)
+          else
+            _buildBoxItem(TimeUtils.instance.formatMonthYear(dto.time),
+                width: 120),
           _buildBoxItem(
             dto.totalTrans.toString(),
             width: 120,
@@ -120,7 +133,10 @@ class _SaleReportState extends State<SynthesisReport> {
     );
   }
 
-  Widget _buildBoxItem(String value, {double width = 100, Color? valueColor}) {
+  Widget _buildBoxItem(String value,
+      {double width = 100,
+      Color? valueColor,
+      TextAlign textAlign = TextAlign.center}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
@@ -132,19 +148,22 @@ class _SaleReportState extends State<SynthesisReport> {
       width: width,
       child: SelectableText(
         value,
-        textAlign: TextAlign.center,
+        textAlign: textAlign,
         style: TextStyle(fontSize: 12, color: valueColor),
       ),
     );
   }
 
-  Widget _buildTitleItem() {
+  Widget _buildTitleItem(bool showTk) {
     return Container(
       alignment: Alignment.center,
       decoration: const BoxDecoration(color: AppColor.BLUE_DARK),
       child: Row(
         children: [
           _buildItemTitle('No.', width: 50, padding: EdgeInsets.zero),
+          if (showTk)
+            _buildItemTitle('TK ngân hàng',
+                width: 120, padding: const EdgeInsets.symmetric(horizontal: 4)),
           _buildItemTitle('Thời gian',
               width: 120, padding: const EdgeInsets.symmetric(horizontal: 4)),
           _buildItemTitle('Tổng giao dịch',
