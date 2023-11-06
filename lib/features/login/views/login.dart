@@ -221,7 +221,7 @@ class _Login extends State<Login> {
       required LoginProvider provider}) {
     return SizedBox(
       height: height,
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Column(
           children: [
@@ -287,7 +287,7 @@ class _Login extends State<Login> {
                   _loginBloc
                       .add(CheckExistPhone(phone: phoneNoController.text));
                 },
-                onChange: (vavlue) {},
+                onChange: (value) {},
               ),
             ),
             const Padding(padding: EdgeInsets.only(top: 24)),
@@ -396,7 +396,6 @@ class _Login extends State<Login> {
                 ),
               ),
             ),
-            const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -418,19 +417,16 @@ class _Login extends State<Login> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ButtonWidget(
-                width: width,
-                height: 40,
-                text: 'Đăng ký tài khoản mới',
-                borderRadius: 5,
-                textColor: AppColor.BLUE_TEXT,
-                bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
-                function: () {
-                  context.go('/register');
-                },
-              ),
+            ButtonWidget(
+              width: width,
+              height: 40,
+              text: 'Đăng ký tài khoản mới',
+              borderRadius: 5,
+              textColor: AppColor.BLUE_TEXT,
+              bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+              function: () {
+                context.go('/register');
+              },
             ),
           ],
         ),
