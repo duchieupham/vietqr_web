@@ -6,6 +6,7 @@ class TimeUtils {
   const TimeUtils._privateConsrtructor();
 
   static const TimeUtils _instance = TimeUtils._privateConsrtructor();
+
   static TimeUtils get instance => _instance;
 
   DateTime getDateFromString(String time) {
@@ -164,7 +165,7 @@ class TimeUtils {
 
   String getCurrentDate(DateTime? now) {
     now ??= DateTime.now();
-    DateFormat format = DateFormat('yyyy-MM-dd');
+    DateFormat format = DateFormat('yyyy-MM-dd HH:mm:ss');
     String formatted = format.format(now);
     return formatted;
   }

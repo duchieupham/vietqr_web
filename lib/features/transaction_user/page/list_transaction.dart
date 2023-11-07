@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -13,20 +14,22 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/time_utils.dart';
 
 class ListTransactionUser extends StatefulWidget {
-  final TransactionUserBloc transactionUserBloc;
-  ListTransactionUser({super.key, required this.transactionUserBloc});
+  const ListTransactionUser({super.key});
 
   @override
   State<ListTransactionUser> createState() => _ListTransactionUserState();
 }
 
 class _ListTransactionUserState extends State<ListTransactionUser> {
+  late TransactionUserBloc transactionUserBloc;
+
   List<TransactionMerchantDTO> listTransaction = [];
 
   init() {
@@ -37,23 +40,24 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
     paramInit['from'] = '0';
     paramInit['to'] = '0';
     paramInit['offset'] = 0;
-    widget.transactionUserBloc
+    transactionUserBloc
         .add(GetListTransactionByEvent(param: paramInit, isLoadingPage: true));
   }
 
   @override
   void initState() {
-    init();
     super.initState();
+    transactionUserBloc = BlocProvider.of(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      init();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TransUserProvider>(
-      create: (context) => TransUserProvider()
-        ..init(widget.transactionUserBloc, () {
-          // init();
-        }),
+      create: (context) =>
+          TransUserProvider()..init(transactionUserBloc, () {}),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -311,6 +315,23 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
               ),
             ),
           ),
+          Container(
+            width: 100,
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            child: Text(
+              dto.note,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -367,6 +388,11 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 alignment: Alignment.center),
           ),
           _buildItemTitle('Loại GD',
+              height: 50,
+              width: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center),
+          _buildItemTitle('Ghi chú',
               height: 50,
               width: 100,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -449,8 +475,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 ],
               ),
             ),
-            if (provider.valueFilter.id == 9 ||
-                provider.valueFilter.id == 0) ...[
+            if (provider.valueFilter.id.type == TypeFilter.ALL ||
+                provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
               Container(
                 width: 200,
                 height: 40,
@@ -501,14 +527,17 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                   ],
                 ),
               ),
-              if (provider.valueTimeFilter.id == 1) ...[
+
+              ///tìm kiếm theo khoảng thời gian
+              if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id) ...[
                 InkWell(
                   onTap: () async {
                     DateTime? date = await showDateTimePicker(
                       context: context,
                       initialDate: provider.fromDate,
-                      firstDate: DateTime(2022),
-                      lastDate: DateTime.now(),
+                      firstDate:
+                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
+                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
                     );
                     provider.updateFromDate(date ?? DateTime.now());
                   },
@@ -553,8 +582,9 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                     DateTime? date = await showDateTimePicker(
                       context: context,
                       initialDate: provider.toDate,
-                      firstDate: DateTime(2022),
-                      lastDate: DateTime.now(),
+                      firstDate:
+                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
+                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
                     );
                     provider.updateToDate(date ?? DateTime.now());
                   },
@@ -595,9 +625,9 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                   ),
                 ),
               ],
-              if (provider.valueFilter.id == 0) ...[
+              if (provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
                 Container(
-                  width: 215,
+                  width: 220,
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   alignment: Alignment.center,
@@ -649,7 +679,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 ),
               ]
             ],
-            if (provider.valueFilter.id != 9 && provider.valueFilter.id != 0)
+            if (provider.valueFilter.id.type != TypeFilter.ALL &&
+                provider.valueFilter.id.type != TypeFilter.BANK_NUMBER)
               Container(
                 height: 40,
                 padding:
@@ -680,12 +711,11 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 if (provider.fromDate.millisecondsSinceEpoch <=
                     provider.toDate.millisecondsSinceEpoch) {
                   Map<String, dynamic> param = {};
-                  Provider.of<TransUserProvider>(context, listen: false)
-                      .updateOffset(0);
+                  provider.updateOffset(0);
                   param['type'] = provider.valueFilter.id;
-                  if (provider.valueTimeFilter.id == 0 ||
-                      (provider.valueFilter.id != 0 &&
-                          provider.valueFilter.id != 9)) {
+                  if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
+                      (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
+                          provider.valueFilter.id.type != TypeFilter.ALL)) {
                     param['from'] = '0';
                     param['to'] = '0';
                   } else {
@@ -702,7 +732,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                   param['merchantId'] =
                       Session.instance.accountIsMerchantDTO.customerSyncId;
 
-                  widget.transactionUserBloc
+                  transactionUserBloc
                       .add(GetListTransactionByEvent(param: param));
                 } else {
                   DialogWidget.instance.openMsgDialog(
@@ -725,7 +755,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 ),
               ),
             ),
-            if (provider.valueTimeFilter.id == 1)
+            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id)
               InkWell(
                 onTap: () {
                   String link =
@@ -793,7 +823,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
 
     if (selectedDate == null) return null;
 
-    if (!context.mounted) return selectedDate;
+    if (!mounted) return selectedDate;
 
     final TimeOfDay? selectedTime = await showTimePicker(
       context: context,

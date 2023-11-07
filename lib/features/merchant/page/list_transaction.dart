@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -12,6 +13,7 @@ import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
@@ -19,9 +21,11 @@ import '../../../commons/utils/time_utils.dart';
 
 class ListTransaction extends StatelessWidget {
   final MerchantBloc merchantBloc;
+
   ListTransaction({super.key, required this.merchantBloc});
 
   List<TransactionMerchantDTO> listTransaction = [];
+
   init() {
     Map<String, dynamic> param = {};
     param['merchantId'] = Session.instance.accountIsMerchantDTO.customerSyncId;
@@ -296,6 +300,23 @@ class ListTransaction extends StatelessWidget {
               ),
             ),
           ),
+          Container(
+            width: 100,
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            child: Text(
+              dto.note,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -352,6 +373,11 @@ class ListTransaction extends StatelessWidget {
                 alignment: Alignment.center),
           ),
           _buildItemTitle('Loại GD',
+              height: 50,
+              width: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center),
+          _buildItemTitle('Ghi chú',
               height: 50,
               width: 100,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -433,8 +459,8 @@ class ListTransaction extends StatelessWidget {
                 ],
               ),
             ),
-            if (provider.valueFilter.id == 9 ||
-                provider.valueFilter.id == 0) ...[
+            if (provider.valueFilter.id.type == TypeFilter.ALL ||
+                provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
               Container(
                 width: 200,
                 height: 40,
@@ -485,14 +511,17 @@ class ListTransaction extends StatelessWidget {
                   ],
                 ),
               ),
-              if (provider.valueTimeFilter.id == 1) ...[
+
+              ///tìm kiếm theo khoảng thời gian
+              if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id) ...[
                 InkWell(
                   onTap: () async {
                     DateTime? date = await showDateTimePicker(
                       context: context,
                       initialDate: provider.fromDate,
-                      firstDate: DateTime(2022),
-                      lastDate: DateTime.now(),
+                      firstDate:
+                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
+                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
                     );
                     provider.updateFromDate(date ?? DateTime.now());
                   },
@@ -537,8 +566,9 @@ class ListTransaction extends StatelessWidget {
                     DateTime? date = await showDateTimePicker(
                       context: context,
                       initialDate: provider.toDate,
-                      firstDate: DateTime(2022),
-                      lastDate: DateTime.now(),
+                      firstDate:
+                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
+                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
                     );
                     provider.updateToDate(date ?? DateTime.now());
                   },
@@ -579,7 +609,7 @@ class ListTransaction extends StatelessWidget {
                   ),
                 ),
               ],
-              if (provider.valueFilter.id == 0) ...[
+              if (provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
                 Container(
                   width: 200,
                   height: 40,
@@ -633,7 +663,8 @@ class ListTransaction extends StatelessWidget {
                 ),
               ]
             ],
-            if (provider.valueFilter.id != 9 && provider.valueFilter.id != 0)
+            if (provider.valueFilter.id.type != TypeFilter.ALL &&
+                provider.valueFilter.id.type != TypeFilter.BANK_NUMBER)
               Container(
                 height: 40,
                 padding:
@@ -665,9 +696,9 @@ class ListTransaction extends StatelessWidget {
                     provider.toDate.millisecondsSinceEpoch) {
                   Map<String, dynamic> param = {};
                   param['type'] = provider.valueFilter.id;
-                  if (provider.valueTimeFilter.id == 0 ||
-                      (provider.valueFilter.id != 0 &&
-                          provider.valueFilter.id != 9)) {
+                  if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
+                      (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
+                          provider.valueFilter.id.type != TypeFilter.ALL)) {
                     param['from'] = '0';
                     param['to'] = '0';
                   } else {
@@ -705,7 +736,7 @@ class ListTransaction extends StatelessWidget {
                 ),
               ),
             ),
-            if (provider.valueTimeFilter.id == 1)
+            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id)
               InkWell(
                 onTap: () {
                   String link =
