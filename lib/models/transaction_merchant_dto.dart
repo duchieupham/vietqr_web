@@ -16,6 +16,7 @@ class TransactionMerchantDTO {
   final String id;
   final int type;
   final String content;
+  final String note;
 
   const TransactionMerchantDTO(
       {this.amount = 0,
@@ -30,6 +31,7 @@ class TransactionMerchantDTO {
       this.timeCreated = 0,
       this.timePaid = 0,
       this.transType = '',
+      this.note = '',
       this.type = 0,
       this.userBankName = ''});
 
@@ -49,8 +51,10 @@ class TransactionMerchantDTO {
       transType: json['transType'] ?? '',
       type: json['type'] ?? 0,
       userBankName: json['userBankName'] ?? '',
+      note: json['note'] ?? '',
     );
   }
+
   Color getAmountColor() {
     // if (status == 0) {
     //   return DefaultTheme.ORANGE;

@@ -15,11 +15,8 @@ class TransactionUserScreen extends StatefulWidget {
 }
 
 class _MerchantViewState extends State<TransactionUserScreen> {
-  late TransactionUserBloc transactionUserBloc;
-
   @override
   void initState() {
-    transactionUserBloc = TransactionUserBloc();
     super.initState();
   }
 
@@ -32,13 +29,11 @@ class _MerchantViewState extends State<TransactionUserScreen> {
         currentType: MenuHomeType.TRANSACTION,
       ),
       table: BlocProvider<TransactionUserBloc>(
-        create: (context) => transactionUserBloc,
+        create: (context) => TransactionUserBloc(),
         child: SizedBox(
           width: width,
           height: height - 60,
-          child: ListTransactionUser(
-            transactionUserBloc: transactionUserBloc,
-          ),
+          child: const ListTransactionUser(),
         ),
       ),
     );

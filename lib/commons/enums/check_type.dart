@@ -70,3 +70,65 @@ extension TypeQRExt on TypeQR {
     }
   }
 }
+
+enum TypeFilter {
+  ALL,
+  BANK_NUMBER,
+  TRANS_CODE,
+  ORDER_ID,
+  CONTENT,
+  CODE_SALE,
+  NONE
+}
+
+extension TypeFilterExt on int {
+  TypeFilter get type {
+    switch (this) {
+      case 9:
+        return TypeFilter.ALL;
+      case 0:
+        return TypeFilter.BANK_NUMBER;
+      case 1:
+        return TypeFilter.TRANS_CODE;
+      case 2:
+        return TypeFilter.ORDER_ID;
+      case 3:
+        return TypeFilter.CONTENT;
+      case 4:
+        return TypeFilter.CODE_SALE;
+      default:
+        return TypeFilter.NONE;
+    }
+  }
+}
+
+enum TypeTimeFilter {
+  ALL,
+  TODAY,
+  SEVEN_LAST_DAY,
+  THIRTY_LAST_DAY,
+  THREE_MONTH_LAST_DAY,
+  PERIOD,
+  NONE
+}
+
+extension TypeTimeFilterExt on TypeTimeFilter {
+  int get id {
+    switch (this) {
+      case TypeTimeFilter.ALL:
+        return 0;
+      case TypeTimeFilter.TODAY:
+        return 1;
+      case TypeTimeFilter.SEVEN_LAST_DAY:
+        return 2;
+      case TypeTimeFilter.THIRTY_LAST_DAY:
+        return 3;
+      case TypeTimeFilter.THREE_MONTH_LAST_DAY:
+        return 4;
+      case TypeTimeFilter.PERIOD:
+        return 5;
+      default:
+        return 0;
+    }
+  }
+}
