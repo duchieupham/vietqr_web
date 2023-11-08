@@ -713,6 +713,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                   Map<String, dynamic> param = {};
                   provider.updateOffset(0);
                   param['type'] = provider.valueFilter.id;
+                  param['userId'] = UserInformationHelper.instance.getUserId();
                   if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
                       (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
                           provider.valueFilter.id.type != TypeFilter.ALL)) {

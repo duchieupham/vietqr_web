@@ -511,8 +511,6 @@ class ListTransaction extends StatelessWidget {
                   ],
                 ),
               ),
-
-              ///tìm kiếm theo khoảng thời gian
               if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id) ...[
                 InkWell(
                   onTap: () async {
