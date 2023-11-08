@@ -2,8 +2,10 @@ import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/transaction_user/blocs/tran_user_bloc.dart';
 import 'package:VietQR/features/transaction_user/page/list_transaction.dart';
+import 'package:VietQR/features/transaction_user/provider/trans_user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../frame/trans_user_frame.dart';
 
@@ -30,10 +32,13 @@ class _MerchantViewState extends State<TransactionUserScreen> {
       ),
       table: BlocProvider<TransactionUserBloc>(
         create: (context) => TransactionUserBloc(),
-        child: SizedBox(
-          width: width,
-          height: height - 60,
-          child: const ListTransactionUser(),
+        child: ChangeNotifierProvider<TransUserProvider>(
+          create: (context) => TransUserProvider(),
+          child: SizedBox(
+            width: width,
+            height: height - 60,
+            child: const ListTransactionUser(),
+          ),
         ),
       ),
     );

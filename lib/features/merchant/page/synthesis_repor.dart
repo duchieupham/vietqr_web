@@ -16,15 +16,22 @@ import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 
 class SynthesisReport extends StatefulWidget {
-  final MerchantBloc merchantBloc;
-  const SynthesisReport({super.key, required this.merchantBloc});
+  const SynthesisReport({super.key});
 
   @override
   State<SynthesisReport> createState() => _SaleReportState();
 }
 
 class _SaleReportState extends State<SynthesisReport> {
+  late MerchantBloc merchantBloc;
+
   List<SynthesisReportDTO> listSynthesisReport = [];
+
+  @override
+  void initState() {
+    super.initState();
+    merchantBloc = BlocProvider.of(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +242,7 @@ class _SaleReportState extends State<SynthesisReport> {
                     underline: const SizedBox.shrink(),
                     onChanged: (FilterTransaction? value) {
                       provider.changeFilter(value!);
-                      widget.merchantBloc.add(GetSynthesisReportEvent(
+                      merchantBloc.add(GetSynthesisReportEvent(
                           customerSyncId: Session
                               .instance.accountIsMerchantDTO.customerSyncId,
                           time: provider.time,
@@ -296,7 +303,7 @@ class _SaleReportState extends State<SynthesisReport> {
                       underline: const SizedBox.shrink(),
                       onChanged: (BankAccountDTO? value) {
                         provider.changeBankAccount(value!);
-                        widget.merchantBloc.add(GetSynthesisReportEvent(
+                        merchantBloc.add(GetSynthesisReportEvent(
                             customerSyncId: Session
                                 .instance.accountIsMerchantDTO.customerSyncId,
                             time: provider.time,
@@ -353,7 +360,7 @@ class _SaleReportState extends State<SynthesisReport> {
                     underline: const SizedBox.shrink(),
                     onChanged: (FilterTimeTransaction? value) {
                       provider.changeTimeFilter(value!);
-                      widget.merchantBloc.add(GetSynthesisReportEvent(
+                      merchantBloc.add(GetSynthesisReportEvent(
                           customerSyncId: Session
                               .instance.accountIsMerchantDTO.customerSyncId,
                           time: provider.time,
@@ -393,7 +400,7 @@ class _SaleReportState extends State<SynthesisReport> {
                   );
                   provider.updateCurrentTime(selected!);
 
-                  widget.merchantBloc.add(GetSynthesisReportEvent(
+                  merchantBloc.add(GetSynthesisReportEvent(
                       customerSyncId:
                           Session.instance.accountIsMerchantDTO.customerSyncId,
                       time: provider.time,
@@ -465,7 +472,7 @@ class _SaleReportState extends State<SynthesisReport> {
                       ),
                       underline: const SizedBox.shrink(),
                       onChanged: (int? value) {
-                        widget.merchantBloc.add(GetSynthesisReportEvent(
+                        merchantBloc.add(GetSynthesisReportEvent(
                             customerSyncId: Session
                                 .instance.accountIsMerchantDTO.customerSyncId,
                             time: value.toString(),

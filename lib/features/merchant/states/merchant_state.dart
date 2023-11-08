@@ -46,6 +46,7 @@ class MerchantLoadMoreListState extends MerchantState {}
 class MerchantGetListByUserSuccessfulState extends MerchantState {
   final List<TransactionMerchantDTO> list;
   final bool isLoadingPage;
+
   const MerchantGetListByUserSuccessfulState(
       {required this.list, this.isLoadingPage = false});
 
@@ -58,6 +59,7 @@ class MerchantGetListByMerchantSuccessfulState extends MerchantState {
   final bool isLoadingPage;
 
   final bool isLoadMore;
+
   const MerchantGetListByMerchantSuccessfulState(
       {required this.list,
       this.isLoadingPage = false,
@@ -78,4 +80,15 @@ class MerchantGetSynthesisReportSuccessfulState extends MerchantState {
 
   @override
   List<Object?> get props => [list];
+}
+
+class UpdateNoteState extends MerchantState {}
+
+class UpdateNoteMerchantFailedState extends MerchantState {
+  final String msg;
+
+  const UpdateNoteMerchantFailedState(this.msg);
+
+  @override
+  List<Object?> get props => [msg];
 }

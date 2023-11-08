@@ -24,6 +24,7 @@ class GetListTransactionByUserSuccessfulState extends TransUserState {
   final List<TransactionMerchantDTO> list;
   final bool isLoadingPage;
   final bool isLoadMore;
+
   const GetListTransactionByUserSuccessfulState(
       {required this.list,
       this.isLoadingPage = false,
@@ -31,4 +32,15 @@ class GetListTransactionByUserSuccessfulState extends TransUserState {
 
   @override
   List<Object?> get props => [list];
+}
+
+class UpdateNoteState extends TransUserState {}
+
+class UpdateNoteFailedState extends TransUserState {
+  final String message;
+
+  const UpdateNoteFailedState(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
