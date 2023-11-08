@@ -9,6 +9,7 @@ class QRCodeUnUTEvent extends Equatable {
 
 class QRCodeUnUTCreateQR extends QRCodeUnUTEvent {
   final Map<String, dynamic> data;
+
   const QRCodeUnUTCreateQR({required this.data});
 
   @override
@@ -17,7 +18,17 @@ class QRCodeUnUTCreateQR extends QRCodeUnUTEvent {
 
 class GetTransactionQRBytToken extends QRCodeUnUTEvent {
   final String token;
+
   const GetTransactionQRBytToken({required this.token});
+
+  @override
+  List<Object?> get props => [token];
+}
+
+class QRGenerateCancelEvent extends QRCodeUnUTEvent {
+  final String token;
+
+  const QRGenerateCancelEvent(this.token);
 
   @override
   List<Object?> get props => [token];

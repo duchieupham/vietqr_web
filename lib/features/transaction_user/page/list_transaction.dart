@@ -338,7 +338,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
               String note = dto.note;
 
               return Container(
-                width: 100,
+                width: 120,
                 height: 50,
                 padding: const EdgeInsets.only(left: 8, right: 4),
                 alignment: Alignment.center,
@@ -403,6 +403,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 child: Icon(
                   Icons.done,
                   size: 20,
+                  color: AppColor.BLUE_TEXT,
                 ),
               ),
             ),
@@ -468,7 +469,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
               alignment: Alignment.center),
           _buildItemTitle('Ghi chú',
               height: 50,
-              width: 100,
+              width: 120,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.center),
           Container(
@@ -561,7 +562,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
               ),
             ),
             if (provider.valueFilter.id.type == TypeFilter.ALL ||
-                provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
+                provider.valueFilter.id.type == TypeFilter.BANK_NUMBER ||
+                provider.valueFilter.id.type == TypeFilter.CODE_SALE) ...[
               Container(
                 width: 200,
                 height: 40,
@@ -593,7 +595,9 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                       underline: const SizedBox.shrink(),
                       onChanged: (FilterTimeTransaction? value) {
                         provider.changeTimeFilter(value!);
-                        if (value.id != TypeTimeFilter.PERIOD.id) {
+                        if (value.id != TypeTimeFilter.PERIOD.id &&
+                            provider.valueFilter.id.type !=
+                                TypeFilter.CODE_SALE) {
                           onSearch(provider);
                         }
                       },
@@ -850,7 +854,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
       param['userId'] = UserInformationHelper.instance.getUserId();
       if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
           (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
-              provider.valueFilter.id.type != TypeFilter.ALL)) {
+              provider.valueFilter.id.type != TypeFilter.ALL &&
+              provider.valueFilter.id.type != TypeFilter.CODE_SALE)) {
         param['from'] = '0';
         param['to'] = '0';
       } else {

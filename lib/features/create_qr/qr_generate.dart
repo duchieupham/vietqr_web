@@ -334,7 +334,7 @@ class _QrGenerateState extends State<QrGenerate> {
               child: Padding(
                 padding: EdgeInsets.only(top: 32, bottom: 20),
                 child: Text(
-                  'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
+                  'Quét mã qua ứng dụng Ngân hàng/Ví điện tử',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -443,9 +443,9 @@ class _QrGenerateState extends State<QrGenerate> {
             width: width,
             child: ButtonWidget(
               height: 36,
-              text: 'Hủy thanh toán',
+              text: 'Huỷ thanh toán',
               function: () async {
-                html.window.close();
+                qrCodeUnUTBloc.add(QRGenerateCancelEvent(data['token']));
               },
               bgColor: AppColor.GREY_BUTTON.withOpacity(0.5),
               borderRadius: 4,
