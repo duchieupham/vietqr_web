@@ -16,6 +16,7 @@ class AppColor {
   static const Color GREY_BG = Color(0xFFF4F4F4);
   static const Color GREY_HIGHLIGHT = Color(0xFF222222);
   static const Color RED_TEXT = Color(0xFFFF0A0A);
+  static const Color RED_EC1010 = Color(0xffEC1010);
   static const Color BLUE_TEXT = Color(0xFF0A7AFF);
   static const Color BLUE_CARD = Color(0xFF0A7AFF);
   static const Color RED_CALENDAR = Color(0xFFF5233C);

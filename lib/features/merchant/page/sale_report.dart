@@ -15,15 +15,22 @@ import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 
 class ServiceFee extends StatefulWidget {
-  final MerchantBloc merchantBloc;
-  const ServiceFee({super.key, required this.merchantBloc});
+  const ServiceFee({super.key});
 
   @override
   State<ServiceFee> createState() => _SaleReportState();
 }
 
 class _SaleReportState extends State<ServiceFee> {
+  late MerchantBloc merchantBloc;
+
   List<ActiveFeeDTO> listActiveFee = [];
+
+  @override
+  void initState() {
+    super.initState();
+    merchantBloc = BlocProvider.of(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +293,7 @@ class _SaleReportState extends State<ServiceFee> {
                   );
                   provider.changeDate(selected!);
                   String month = TimeUtils.instance.getFormatMonth(selected);
-                  widget.merchantBloc.add(GetMerchantFeeEvent(
+                  merchantBloc.add(GetMerchantFeeEvent(
                       customerSyncId:
                           Session.instance.accountIsMerchantDTO.customerSyncId,
                       month: month,

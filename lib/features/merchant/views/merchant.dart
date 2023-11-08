@@ -22,18 +22,15 @@ class MerchantView extends StatefulWidget {
 }
 
 class _MerchantViewState extends State<MerchantView> {
-  late MerchantBloc merchantBloc;
-
   final ScrollController scrollController = ScrollController();
 
   int offset = 0;
   SubMenuType currentType = SubMenuType.LIST_TRANSACTION;
   bool isEnded = false;
   String nowMonth = '';
+
   @override
   void initState() {
-    merchantBloc = MerchantBloc();
-
     super.initState();
   }
 
@@ -66,7 +63,7 @@ class _MerchantViewState extends State<MerchantView> {
         currentType: MenuHomeType.MERCHANT,
       ),
       table: BlocProvider<MerchantBloc>(
-        create: (context) => merchantBloc,
+        create: (context) => MerchantBloc(),
         child: SizedBox(
           width: width,
           height: height - 60,
@@ -95,8 +92,9 @@ class _MerchantViewState extends State<MerchantView> {
                         param['from'] = '0';
                         param['to'] = '0';
                         param['offset'] = 0;
-                        merchantBloc.add(GetListTransactionByMerchantEvent(
-                            param: param, isLoadingPage: true));
+                        context.read<MerchantBloc>().add(
+                            GetListTransactionByMerchantEvent(
+                                param: param, isLoadingPage: true));
                       },
                     ),
                     ItemMenuTop(
@@ -104,12 +102,13 @@ class _MerchantViewState extends State<MerchantView> {
                       isSelect: currentType == SubMenuType.SYNTHESIS_REPORT,
                       onTap: () {
                         changePage(SubMenuType.SYNTHESIS_REPORT);
-                        merchantBloc.add(GetSynthesisReportEvent(
-                            customerSyncId: Session
-                                .instance.accountIsMerchantDTO.customerSyncId,
-                            type: 0,
-                            time: DateTime.now().year.toString(),
-                            isLoadingPage: true));
+                        context.read<MerchantBloc>().add(
+                            GetSynthesisReportEvent(
+                                customerSyncId: Session.instance
+                                    .accountIsMerchantDTO.customerSyncId,
+                                type: 0,
+                                time: DateTime.now().year.toString(),
+                                isLoadingPage: true));
                       },
                     ),
                     ItemMenuTop(
@@ -120,7 +119,7 @@ class _MerchantViewState extends State<MerchantView> {
                         if (currentType == SubMenuType.SERVICE_FEE) {
                           nowMonth =
                               TimeUtils.instance.getFormatMonth(DateTime.now());
-                          merchantBloc.add(GetMerchantFeeEvent(
+                          context.read<MerchantBloc>().add(GetMerchantFeeEvent(
                               customerSyncId: Session
                                   .instance.accountIsMerchantDTO.customerSyncId,
                               month: nowMonth,
@@ -138,15 +137,9 @@ class _MerchantViewState extends State<MerchantView> {
               ),
               Expanded(
                   child: [
-                ListTransaction(
-                  merchantBloc: merchantBloc,
-                ),
-                SynthesisReport(
-                  merchantBloc: merchantBloc,
-                ),
-                ServiceFee(
-                  merchantBloc: merchantBloc,
-                ),
+                const ListTransaction(),
+                const SynthesisReport(),
+                const ServiceFee(),
               ][getPage(currentType)])
             ],
           ),

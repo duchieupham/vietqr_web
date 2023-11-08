@@ -48,6 +48,9 @@ class TransUserProvider with ChangeNotifier {
   BankAccountDTO get bankAccountDTO => _bankAccountDTO;
 
   String _keywordSearch = '';
+  bool isEdit = false;
+
+  final noteController = TextEditingController();
 
   String get keywordSearch => _keywordSearch;
 
@@ -182,6 +185,11 @@ class TransUserProvider with ChangeNotifier {
     } else {
       _keywordSearch = text;
     }
+  }
+
+  updateEditNote(bool value) {
+    isEdit = value;
+    notifyListeners();
   }
 
   void updateFromDate(DateTime value) {
