@@ -55,7 +55,7 @@ class TimeUtils {
       if (time != 0) {
         DateTime timeConverted =
             DateTime.fromMillisecondsSinceEpoch(time.toInt() * 1000);
-        DateFormat format = DateFormat('dd/MM/yyyy \nHH:mm:ss ');
+        DateFormat format = DateFormat('HH:mm:ss \ndd/MM/yyyy ');
         result = format.format(timeConverted).toString();
       }
     } catch (e) {

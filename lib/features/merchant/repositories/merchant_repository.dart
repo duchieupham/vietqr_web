@@ -40,17 +40,20 @@ class MerchantRepository {
 
   Future<ResponseMessageDTO> updateNote(Map<String, dynamic> param) async {
     ResponseMessageDTO result =
-    const ResponseMessageDTO(status: '', message: '');
+        const ResponseMessageDTO(status: '', message: '');
     try {
       final String url = '${EnvConfig.getBaseUrl()}transactions/note';
       final response = await BaseAPIClient.postAPI(
           url: url, type: AuthenticationType.SYSTEM, body: param);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 400) {
         var data = jsonDecode(response.body);
         result = ResponseMessageDTO.fromJson(data);
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
       }
     } catch (e) {
       LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
     }
     return result;
   }

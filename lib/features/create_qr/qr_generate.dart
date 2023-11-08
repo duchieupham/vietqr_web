@@ -36,17 +36,35 @@ import '../../commons/widgets/repaint_boundary_widget.dart';
 import '../bank/events/bank_type_event.dart';
 import '../login/states/qrcode_un_authen_state.dart';
 
-class QrGenerate extends StatefulWidget {
+class QrGenerate extends StatelessWidget {
   final Map<String, String> params;
   final bool isAuthen;
 
-  const QrGenerate({super.key, required this.params, this.isAuthen = false});
+  const QrGenerate({super.key, required this.params, required this.isAuthen});
 
   @override
-  State<QrGenerate> createState() => _QrGenerateState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<TransactionQRProvider>(
+      create: (context) => TransactionQRProvider(),
+      child: _QrGenerate(
+        params: params,
+        isAuthen: isAuthen,
+      ),
+    );
+  }
 }
 
-class _QrGenerateState extends State<QrGenerate> {
+class _QrGenerate extends StatefulWidget {
+  final Map<String, String> params;
+  final bool isAuthen;
+
+  const _QrGenerate({super.key, required this.params, this.isAuthen = false});
+
+  @override
+  State<_QrGenerate> createState() => _QrGenerateState();
+}
+
+class _QrGenerateState extends State<_QrGenerate> {
   Map<String, dynamic> data = {};
   TransactionQRDTO transactionQRdto = const TransactionQRDTO();
   QRGeneratedDTO qrGeneratedDTO = const QRGeneratedDTO();
@@ -80,6 +98,9 @@ class _QrGenerateState extends State<QrGenerate> {
         setState(() {
           isSuccess = true;
         });
+      }, () {
+        Provider.of<TransactionQRProvider>(context, listen: false)
+            .updateTimeExpires(true);
       });
     });
     qrCodeUnUTBloc.add(GetTransactionQRBytToken(token: data['token']));
@@ -115,155 +136,113 @@ class _QrGenerateState extends State<QrGenerate> {
     double widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColor.GREY_BG,
-      body: ChangeNotifierProvider<TransactionQRProvider>(
-        create: (context) => TransactionQRProvider(),
-        child: Center(
-          child: SizedBox(
-            width: 960,
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: AppColor.WHITE,
-              ),
-              padding: const EdgeInsets.only(top: 16),
-              child: BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
-                  listener: (context, state) {
-                if (state is CreateTransactionQRSuccessfulState) {
-                  transactionQRdto = state.dto;
-                  qrGeneratedDTO = QRGeneratedDTO(
-                    bankAccount: transactionQRdto.bankAccount,
-                    bankCode: transactionQRdto.bankCode,
-                    bankName: transactionQRdto.bankName,
-                    qrCode: transactionQRdto.qr,
-                    type: transactionQRdto.type,
-                    imgId: transactionQRdto.imgId,
-                    content: transactionQRdto.content,
-                    userBankName: transactionQRdto.userBankName,
-                    amount: transactionQRdto.amount.toString(),
-                  );
-                  if (transactionQRdto.status == 1) {
-                    isSuccess = true;
-                  }
-                  timeCountDown = DateTime.fromMillisecondsSinceEpoch(
-                              transactionQRdto.timeCreated * 1000)
-                          .add(const Duration(minutes: 15))
-                          .millisecondsSinceEpoch -
-                      DateTime.now().millisecondsSinceEpoch;
-                  context
-                      .read<TransactionQRProvider>()
-                      .updateTimeCountDown(timeCountDown);
+      body: Center(
+        child: SizedBox(
+          width: 960,
+          child: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: AppColor.WHITE,
+            ),
+            padding: const EdgeInsets.only(top: 16),
+            child: BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
+                listener: (context, state) {
+              if (state is CreateTransactionQRSuccessfulState) {
+                transactionQRdto = state.dto;
+                qrGeneratedDTO = QRGeneratedDTO(
+                  bankAccount: transactionQRdto.bankAccount,
+                  bankCode: transactionQRdto.bankCode,
+                  bankName: transactionQRdto.bankName,
+                  qrCode: transactionQRdto.qr,
+                  type: transactionQRdto.type,
+                  imgId: transactionQRdto.imgId,
+                  content: transactionQRdto.content,
+                  userBankName: transactionQRdto.userBankName,
+                  amount: transactionQRdto.amount.toString(),
+                );
+                if (transactionQRdto.status == 1) {
+                  isSuccess = true;
                 }
-              }, builder: (context, state) {
-                if (state is CreateQRLoadingState) {
-                  return Column(
-                    children: [
-                      _buildCountDown(),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      DividerWidget(
-                        width: double.infinity,
-                        color: AppColor.GREY_BUTTON.withOpacity(0.8),
-                      ),
-                      const Expanded(
-                        child: UnconstrainedBox(
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(
-                              color: AppColor.BLUE_TEXT,
-                            ),
+                timeCountDown = DateTime.fromMillisecondsSinceEpoch(
+                            transactionQRdto.timeCreated * 1000)
+                        .add(const Duration(minutes: 15))
+                        .millisecondsSinceEpoch -
+                    DateTime.now().millisecondsSinceEpoch;
+                context
+                    .read<TransactionQRProvider>()
+                    .updateTimeCountDown(timeCountDown);
+              }
+              if (state is CancelQRSuccessState) {
+                html.window.close();
+              }
+            }, builder: (context, state) {
+              if (state is CreateQRLoadingState) {
+                return Column(
+                  children: [
+                    _buildCountDown(),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    DividerWidget(
+                      width: double.infinity,
+                      color: AppColor.GREY_BUTTON.withOpacity(0.8),
+                    ),
+                    const Expanded(
+                      child: UnconstrainedBox(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            color: AppColor.BLUE_TEXT,
                           ),
                         ),
                       ),
-                    ],
-                  );
+                    ),
+                  ],
+                );
+              }
+
+              if (state is CreateTransactionQRSuccessfulState) {
+                if (state.dto.qr.isEmpty) {
+                  return _buildWidgetTimeExpires();
+                }
+              }
+
+              return Consumer<TransactionQRProvider>(
+                  builder: (context, provider, child) {
+                if (provider.timeExpires || timeCountDown <= 0) {
+                  return _buildWidgetTimeExpires();
                 }
 
-                if (state is CreateTransactionQRSuccessfulState) {
-                  if (state.dto.qr.isEmpty) {
-                    return _buildWidgetTimeExpires();
-                  }
-                }
-
-                return Consumer<TransactionQRProvider>(
-                    builder: (context, provider, child) {
-                  if (provider.timeExpires || timeCountDown <= 0) {
-                    return _buildWidgetTimeExpires();
-                  }
-
-                  return LayoutBuilder(builder: (context, constraints) {
-                    if (constraints.maxWidth > 760) {
-                      return Column(
-                        children: [
-                          _buildCountDown(),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          DividerWidget(
-                            width: double.infinity,
-                            color: AppColor.GREY_BUTTON.withOpacity(0.8),
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: _buildWidgetQr(state, false,
-                                            width: 300),
-                                      ),
-                                      Expanded(child: _buildInfo(false)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  _buildListBank(),
-                                  DividerWidget(
-                                    width: double.infinity,
-                                    color:
-                                        AppColor.GREY_BUTTON.withOpacity(0.8),
-                                  ),
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12),
-                                    child: FooterWeb(
-                                      bgColor: AppColor.WHITE,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    return Center(
-                      child: Column(
-                        children: [
-                          _buildCountDown(),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          DividerWidget(
-                            width: double.infinity,
-                            color: AppColor.GREY_BUTTON.withOpacity(0.8),
-                          ),
-                          Expanded(
-                            child: ListView(
-                              padding: EdgeInsets.zero,
+                return LayoutBuilder(builder: (context, constraints) {
+                  if (constraints.maxWidth > 760) {
+                    return Column(
+                      children: [
+                        _buildCountDown(),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        DividerWidget(
+                          width: double.infinity,
+                          color: AppColor.GREY_BUTTON.withOpacity(0.8),
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
                               children: [
-                                _buildWidgetQr(state, true,
-                                    width: widthScreen * 0.9),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24, vertical: 12),
-                                  child: _buildRowButton(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: _buildWidgetQr(state, false,
+                                          width: 300),
+                                    ),
+                                    Expanded(child: _buildInfo(false)),
+                                  ],
                                 ),
-                                _buildListBank(forMobile: true),
+                                const SizedBox(height: 20),
+                                _buildListBank(),
                                 DividerWidget(
                                   width: double.infinity,
                                   color: AppColor.GREY_BUTTON.withOpacity(0.8),
@@ -277,13 +256,52 @@ class _QrGenerateState extends State<QrGenerate> {
                               ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
-                  });
+                  }
+                  return Center(
+                    child: Column(
+                      children: [
+                        _buildCountDown(),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        DividerWidget(
+                          width: double.infinity,
+                          color: AppColor.GREY_BUTTON.withOpacity(0.8),
+                        ),
+                        Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.zero,
+                            children: [
+                              _buildWidgetQr(state, true,
+                                  width: widthScreen * 0.9),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12),
+                                child: _buildRowButton(),
+                              ),
+                              _buildListBank(forMobile: true),
+                              DividerWidget(
+                                width: double.infinity,
+                                color: AppColor.GREY_BUTTON.withOpacity(0.8),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: FooterWeb(
+                                  bgColor: AppColor.WHITE,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 });
-              }),
-            ),
+              });
+            }),
           ),
         ),
       ),
@@ -334,7 +352,7 @@ class _QrGenerateState extends State<QrGenerate> {
               child: Padding(
                 padding: EdgeInsets.only(top: 32, bottom: 20),
                 child: Text(
-                  'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
+                  'Quét mã qua ứng dụng Ngân hàng/Ví điện tử',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -443,9 +461,9 @@ class _QrGenerateState extends State<QrGenerate> {
             width: width,
             child: ButtonWidget(
               height: 36,
-              text: 'Hủy thanh toán',
+              text: 'Huỷ thanh toán',
               function: () async {
-                html.window.close();
+                qrCodeUnUTBloc.add(QRGenerateCancelEvent(data['token']));
               },
               bgColor: AppColor.GREY_BUTTON.withOpacity(0.5),
               borderRadius: 4,
@@ -744,6 +762,7 @@ class _QrGenerateState extends State<QrGenerate> {
             'Thông báo',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+          const SizedBox(height: 24),
           const Text(
               'Không tìm thấy giao dịch này hoặc giao dịch đã hết hạn thanh toán',
               textAlign: TextAlign.center,
