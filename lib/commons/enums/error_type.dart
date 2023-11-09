@@ -24,4 +24,8 @@ enum ErrorType {
   E21,
   E22,
   E23,
+  E46,
+  E98,
+  E99,
+  E100,
 }

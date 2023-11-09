@@ -86,6 +86,18 @@ class ErrorUtils {
       case ErrorType.E23:
         result = 'TK đã đăng ký nhận BĐSD';
         break;
+      case ErrorType.E46:
+        result = 'Invalid Request Body/Request Param';
+        break;
+      case ErrorType.E98:
+        result = 'Dịch vụ Active máy bán hàng không khả dụng';
+        break;
+      case ErrorType.E99:
+        result = 'Token VHITEK không hợp lệ';
+        break;
+      case ErrorType.E100:
+        result = 'Check Valid user của VHITEK lỗi';
+        break;
       default:
         result = message;
     }

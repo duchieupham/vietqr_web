@@ -115,13 +115,16 @@ class _Login extends State<Login> {
                     listCheck.sort((a, b) =>
                         a.expiryAsDateTime.compareTo(b.expiryAsDateTime));
                   }
-
                   for (var element in listCheck) {
                     list.add(element.toSPJson().toString());
                   }
 
                   provider.updateListInfoUser(list);
-                  context.push('/home');
+                  if (Uri.base.toString().contains('service/vhitek/active')) {
+                    context.push('/service/vhitek/active');
+                  } else {
+                    context.push('/home');
+                  }
                 }
                 if (state is LoginQRSuccessfulState) {
                   Navigator.of(context).pop();

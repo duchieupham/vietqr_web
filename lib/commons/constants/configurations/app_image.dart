@@ -18,6 +18,7 @@ class AppImages {
   static String icMenuScanCCCD = 'assets/icons_menu/ic-menu-scan-cccd.png';
   static String icMenuSetting = 'assets/icons_menu/ic-menu-setting.png';
 
+  static String iconPartnerVhitek = '7e9655f5-9d2d-4d3e-b0b2-d906c0b7bdd1';
   static String icSuccessGreen = 'edf87221-86e7-4396-aa50-f17bf7638557';
   static String avtVietqr = 'fdb25744-a258-4892-9c0d-3e63f9b02a0d';
   static String icBusiness3D = 'b569de96-c37b-4f1f-a195-b3bc11358fa7';
