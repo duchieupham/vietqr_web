@@ -198,7 +198,7 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
               const Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 20),
                 child: Text(
-                  'Quyét mã qua ứng dụng Ngân hàng/Ví điện tử',
+                  'Quét mã qua ứng dụng Ngân hàng/Ví điện tử',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),

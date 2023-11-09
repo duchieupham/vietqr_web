@@ -17,17 +17,22 @@ import '../../commons/utils/log.dart';
 
 class WebSocketHelper {
   WebSocketHelper._privateConstructor();
+
   static late WebSocketChannel _channelTransaction;
+
   WebSocketChannel get channelTransaction => _channelTransaction;
 
   static late WebSocketChannel _channelQRLink;
+
   WebSocketChannel get channelQRLink => _channelQRLink;
 
   static late WebSocketChannel _channelLoginLink;
+
   WebSocketChannel get channelLoginLink => _channelLoginLink;
 
   static final WebSocketHelper _instance =
       WebSocketHelper._privateConstructor();
+
   static WebSocketHelper get instance => _instance;
 
   Future<void> initialWebSocket() async {
@@ -88,24 +93,29 @@ class WebSocketHelper {
     return sharedPrefs.getBool('TRANSACTION_QR_WS') ?? false;
   }
 
-  void listenTransactionQRSocket(String id, Function transactionSuccess) {
+  void listenTransactionQRSocket(
+      String id, Function transactionSuccess, Function transactionCancel) {
     late Uri wsUrl;
     try {
       setListenTransactionQRWS(true);
       if (EnvConfig.getEnv() == EnvType.PROD) {
         wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
       } else {
-        wsUrl = Uri.parse(' wss://dev.vietqr.org/vqr/socket?refId=$id');
+        wsUrl = Uri.parse('wss://dev.vietqr.org/vqr/socket?refId=$id');
       }
 
       _channelQRLink = WebSocketChannel.connect(wsUrl);
       if (_channelQRLink.closeCode == null) {
         _channelQRLink.stream.listen((event) {
           var data = jsonDecode(event);
-          if (data['notificationType'] != null &&
-              data['notificationType'] ==
-                  Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-            transactionSuccess();
+          if (data['notificationType'] != null) {
+            if (data['notificationType'] ==
+                Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+              transactionSuccess();
+            } else if (data['notificationType'] ==
+                Stringify.NOTI_TYPE_CANCEL_TRANSACTION) {
+              transactionCancel();
+            }
           }
         });
       } else {
