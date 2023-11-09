@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -7,21 +8,37 @@ import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/provider/merchant_provider.dart';
 import 'package:VietQR/features/merchant/states/merchant_state.dart';
+import 'package:VietQR/layouts/text_field_custom.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/time_utils.dart';
 
-class ListTransaction extends StatelessWidget {
-  final MerchantBloc merchantBloc;
-  ListTransaction({super.key, required this.merchantBloc});
+class ListTransaction extends StatefulWidget {
+  const ListTransaction({super.key});
 
+  @override
+  State<ListTransaction> createState() => _ListTransactionState();
+}
+
+class _ListTransactionState extends State<ListTransaction> {
   List<TransactionMerchantDTO> listTransaction = [];
+
+  late MerchantBloc merchantBloc;
+
+  @override
+  initState() {
+    super.initState();
+    merchantBloc = BlocProvider.of(context);
+    init();
+  }
+
   init() {
     Map<String, dynamic> param = {};
     param['merchantId'] = Session.instance.accountIsMerchantDTO.customerSyncId;
@@ -36,7 +53,6 @@ class ListTransaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    init();
     return ChangeNotifierProvider<MerchantProvider>(
       create: (context) => MerchantProvider()..init(merchantBloc),
       child: Column(
@@ -44,85 +60,103 @@ class ListTransaction extends StatelessWidget {
         children: [
           _buildTitle(),
           _buildFilter(),
-          Expanded(child: LayoutBuilder(builder: (context, constraints) {
-            return BlocConsumer<MerchantBloc, MerchantState>(
-                listener: (context, state) {
-              if (state is MerchantLoadingListState) {
-                DialogWidget.instance.openLoadingDialog();
-              }
-              if (state is MerchantGetListByMerchantSuccessfulState) {
-                if (state.isLoadMore) {
-                  listTransaction.addAll(state.list);
-                  Provider.of<MerchantProvider>(context, listen: false)
-                      .updateCallLoadMore(true);
-                } else {
-                  if (!state.isLoadingPage) {
-                    Navigator.pop(context);
-                  }
-                  listTransaction = state.list;
-                }
-              }
-            }, builder: (context, state) {
-              if (state is MerchantLoadingInitState) {
-                return const Padding(
-                  padding: EdgeInsets.only(top: 40),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              } else {
-                if (listTransaction.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: Center(child: Text('Không có dữ liệu')),
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          controller: Provider.of<MerchantProvider>(context,
-                                  listen: false)
-                              .scrollControllerList,
-                          child: ScrollConfiguration(
-                            behavior: MyCustomScrollBehavior(),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: SizedBox(
-                                width: constraints.maxWidth > 1360
-                                    ? constraints.maxWidth
-                                    : 1360,
-                                child: SelectionArea(
-                                  child: Column(
-                                    children: [
-                                      _buildTitleItem(),
-                                      ...listTransaction.map((e) {
-                                        int index =
-                                            listTransaction.indexOf(e) + 1;
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return BlocConsumer<MerchantBloc, MerchantState>(
+                  listener: (context, state) {
+                    if (state is MerchantLoadingListState) {
+                      DialogWidget.instance.openLoadingDialog();
+                    }
+                    if (state is MerchantGetListByMerchantSuccessfulState) {
+                      if (state.isLoadMore) {
+                        listTransaction.addAll(state.list);
+                        Provider.of<MerchantProvider>(context, listen: false)
+                            .updateCallLoadMore(true);
+                      } else {
+                        if (!state.isLoadingPage) {
+                          Navigator.pop(context);
+                        }
+                        listTransaction = state.list;
+                      }
+                    }
 
-                                        return _buildItem(e, index);
-                                      }).toList(),
-                                      const SizedBox(width: 12),
-                                    ],
+                    if (state is UpdateNoteMerchantFailedState) {
+                      DialogWidget.instance
+                          .openMsgDialog(title: 'Thông báo', msg: state.msg);
+                    }
+
+                    if (state is UpdateNoteState) {
+                      onSearch(Provider.of<MerchantProvider>(context,
+                          listen: false));
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is MerchantLoadingInitState) {
+                      return const Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else {
+                      if (listTransaction.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 40),
+                          child: Center(child: Text('Không có dữ liệu')),
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                controller: Provider.of<MerchantProvider>(
+                                        context,
+                                        listen: false)
+                                    .scrollControllerList,
+                                child: ScrollConfiguration(
+                                  behavior: MyCustomScrollBehavior(),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: SizedBox(
+                                      width: constraints.maxWidth > 1360
+                                          ? constraints.maxWidth
+                                          : 1360,
+                                      child: SelectionArea(
+                                        child: Column(
+                                          children: [
+                                            _buildTitleItem(),
+                                            ...listTransaction.map((e) {
+                                              int index =
+                                                  listTransaction.indexOf(e) +
+                                                      1;
+
+                                              return _buildItem(e, index);
+                                            }).toList(),
+                                            const SizedBox(width: 12),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      if (state is MerchantLoadMoreListState)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator()),
-                        )
-                    ],
-                  );
-                }
-              }
-            });
-          }))
+                            if (state is MerchantLoadMoreListState)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator()),
+                              )
+                          ],
+                        );
+                      }
+                    }
+                  },
+                );
+              },
+            ),
+          )
         ],
       ),
     );
@@ -296,6 +330,80 @@ class ListTransaction extends StatelessWidget {
               ),
             ),
           ),
+          Consumer<MerchantProvider>(
+            builder: (context, provider, child) {
+              String note = dto.note;
+
+              return Container(
+                width: 120,
+                height: 50,
+                padding: const EdgeInsets.only(left: 8, right: 4),
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                        right: BorderSide(color: AppColor.GREY_BUTTON))),
+                child: MTextFieldCustom(
+                  hintText: '',
+                  keyboardAction: TextInputAction.next,
+                  value: dto.note,
+                  enable: dto.isEdit,
+                  onChange: (value) {
+                    dto.note = value;
+                  },
+                  inputType: TextInputType.text,
+                  isObscureText: false,
+                  textAlign: TextAlign.center,
+                  fontSize: 12,
+                  fillColor: AppColor.TRANSPARENT,
+                  suffixIcon: dto.isEdit
+                      ? GestureDetector(
+                          onTap: () {
+                            dto.note = note;
+                            setState(() {});
+                          },
+                          child: const Icon(Icons.clear, size: 12),
+                        )
+                      : null,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              );
+            },
+          ),
+          if (!dto.isEdit)
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  dto.isEdit = true;
+                });
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: Icon(
+                  Icons.edit,
+                  size: 20,
+                ),
+              ),
+            )
+          else
+            GestureDetector(
+              onTap: () {
+                dto.isEdit = false;
+                Map<String, dynamic> body = {
+                  'note': dto.note,
+                  'id': dto.id,
+                };
+                merchantBloc.add(UpdateNoteMerchantEvent(body));
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: Icon(
+                  Icons.done,
+                  size: 20,
+                  color: AppColor.BLUE_TEXT,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -356,6 +464,19 @@ class ListTransaction extends StatelessWidget {
               width: 100,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.center),
+          _buildItemTitle('Ghi chú',
+              height: 50,
+              width: 120,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: const Icon(
+              Icons.edit,
+              color: Colors.transparent,
+              size: 20,
+            ),
+          ),
         ],
       ),
     );
@@ -414,6 +535,9 @@ class ListTransaction extends StatelessWidget {
                     underline: const SizedBox.shrink(),
                     onChanged: (FilterTransaction? value) {
                       provider.changeFilter(value!);
+                      if (value.id.type == TypeFilter.ALL) {
+                        onSearch(provider);
+                      }
                     },
                     items: provider.listFilter
                         .map<DropdownMenuItem<FilterTransaction>>(
@@ -433,8 +557,9 @@ class ListTransaction extends StatelessWidget {
                 ],
               ),
             ),
-            if (provider.valueFilter.id == 9 ||
-                provider.valueFilter.id == 0) ...[
+            if (provider.valueFilter.id.type == TypeFilter.ALL ||
+                provider.valueFilter.id.type == TypeFilter.BANK_NUMBER ||
+                provider.valueFilter.id.type == TypeFilter.CODE_SALE) ...[
               Container(
                 width: 200,
                 height: 40,
@@ -466,6 +591,11 @@ class ListTransaction extends StatelessWidget {
                       underline: const SizedBox.shrink(),
                       onChanged: (FilterTimeTransaction? value) {
                         provider.changeTimeFilter(value!);
+                        if (value.id != TypeTimeFilter.PERIOD.id &&
+                            provider.valueFilter.id.type !=
+                                TypeFilter.CODE_SALE) {
+                          onSearch(provider);
+                        }
                       },
                       items: provider.listTimeFilter
                           .map<DropdownMenuItem<FilterTimeTransaction>>(
@@ -485,14 +615,15 @@ class ListTransaction extends StatelessWidget {
                   ],
                 ),
               ),
-              if (provider.valueTimeFilter.id == 1) ...[
+              if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id) ...[
                 InkWell(
                   onTap: () async {
                     DateTime? date = await showDateTimePicker(
                       context: context,
                       initialDate: provider.fromDate,
-                      firstDate: DateTime(2022),
-                      lastDate: DateTime.now(),
+                      firstDate:
+                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
+                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
                     );
                     provider.updateFromDate(date ?? DateTime.now());
                   },
@@ -537,8 +668,9 @@ class ListTransaction extends StatelessWidget {
                     DateTime? date = await showDateTimePicker(
                       context: context,
                       initialDate: provider.toDate,
-                      firstDate: DateTime(2022),
-                      lastDate: DateTime.now(),
+                      firstDate:
+                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
+                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
                     );
                     provider.updateToDate(date ?? DateTime.now());
                   },
@@ -579,7 +711,7 @@ class ListTransaction extends StatelessWidget {
                   ),
                 ),
               ],
-              if (provider.valueFilter.id == 0) ...[
+              if (provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
                 Container(
                   width: 200,
                   height: 40,
@@ -633,7 +765,8 @@ class ListTransaction extends StatelessWidget {
                 ),
               ]
             ],
-            if (provider.valueFilter.id != 9 && provider.valueFilter.id != 0)
+            if (provider.valueFilter.id.type != TypeFilter.ALL &&
+                provider.valueFilter.id.type != TypeFilter.BANK_NUMBER)
               Container(
                 height: 40,
                 padding:
@@ -659,53 +792,28 @@ class ListTransaction extends StatelessWidget {
                           fontSize: 12, color: AppColor.GREY_TEXT)),
                 ),
               ),
-            InkWell(
-              onTap: () {
-                if (provider.fromDate.millisecondsSinceEpoch <=
-                    provider.toDate.millisecondsSinceEpoch) {
-                  Map<String, dynamic> param = {};
-                  param['type'] = provider.valueFilter.id;
-                  if (provider.valueTimeFilter.id == 0 ||
-                      (provider.valueFilter.id != 0 &&
-                          provider.valueFilter.id != 9)) {
-                    param['from'] = '0';
-                    param['to'] = '0';
-                  } else {
-                    param['from'] =
-                        TimeUtils.instance.getCurrentDate(provider.fromDate);
-                    param['to'] =
-                        TimeUtils.instance.getCurrentDate(provider.toDate);
-                  }
-                  param['value'] = provider.keywordSearch;
-
-                  param['offset'] = 0;
-                  param['merchantId'] =
-                      Session.instance.accountIsMerchantDTO.customerSyncId;
-
-                  merchantBloc
-                      .add(GetListTransactionByMerchantEvent(param: param));
-                } else {
-                  DialogWidget.instance.openMsgDialog(
-                      title: 'Không hợp lệ',
-                      msg: 'Ngày bắt đầu không được lớn hơn ngày kết thúc');
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                width: 120,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColor.BLUE_TEXT,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: const Text(
-                  'Tìm kiếm',
-                  style: TextStyle(fontSize: 12, color: AppColor.WHITE),
+            if (provider.valueFilter.id.type != TypeFilter.ALL ||
+                provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id)
+              InkWell(
+                onTap: () {
+                  onSearch(provider);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  width: 120,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColor.BLUE_TEXT,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Text(
+                    'Tìm kiếm',
+                    style: TextStyle(fontSize: 12, color: AppColor.WHITE),
+                  ),
                 ),
               ),
-            ),
-            if (provider.valueTimeFilter.id == 1)
+            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id)
               InkWell(
                 onTap: () {
                   String link =
@@ -789,5 +897,34 @@ class ListTransaction extends StatelessWidget {
             selectedTime.hour,
             selectedTime.minute,
           );
+  }
+
+  void onSearch(MerchantProvider provider) {
+    if (provider.fromDate.millisecondsSinceEpoch <=
+        provider.toDate.millisecondsSinceEpoch) {
+      Map<String, dynamic> param = {};
+      param['type'] = provider.valueFilter.id;
+      if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
+          (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
+              provider.valueFilter.id.type != TypeFilter.ALL &&
+              provider.valueFilter.id.type != TypeFilter.CODE_SALE)) {
+        param['from'] = '0';
+        param['to'] = '0';
+      } else {
+        param['from'] = TimeUtils.instance.getCurrentDate(provider.fromDate);
+        param['to'] = TimeUtils.instance.getCurrentDate(provider.toDate);
+      }
+      param['value'] = provider.keywordSearch;
+
+      param['offset'] = 0;
+      param['merchantId'] =
+          Session.instance.accountIsMerchantDTO.customerSyncId;
+
+      merchantBloc.add(GetListTransactionByMerchantEvent(param: param));
+    } else {
+      DialogWidget.instance.openMsgDialog(
+          title: 'Không hợp lệ',
+          msg: 'Ngày bắt đầu không được lớn hơn ngày kết thúc');
+    }
   }
 }

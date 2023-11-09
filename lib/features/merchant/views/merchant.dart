@@ -22,19 +22,19 @@ class MerchantView extends StatefulWidget {
 }
 
 class _MerchantViewState extends State<MerchantView> {
-  late MerchantBloc merchantBloc;
-
   final ScrollController scrollController = ScrollController();
 
   int offset = 0;
   SubMenuType currentType = SubMenuType.LIST_TRANSACTION;
   bool isEnded = false;
   String nowMonth = '';
+
+  late MerchantBloc merchantBloc;
+
   @override
   void initState() {
-    merchantBloc = MerchantBloc();
-
     super.initState();
+    merchantBloc = MerchantBloc();
   }
 
   changePage(SubMenuType type) {
@@ -138,15 +138,9 @@ class _MerchantViewState extends State<MerchantView> {
               ),
               Expanded(
                   child: [
-                ListTransaction(
-                  merchantBloc: merchantBloc,
-                ),
-                SynthesisReport(
-                  merchantBloc: merchantBloc,
-                ),
-                ServiceFee(
-                  merchantBloc: merchantBloc,
-                ),
+                const ListTransaction(),
+                const SynthesisReport(),
+                const ServiceFee(),
               ][getPage(currentType)])
             ],
           ),

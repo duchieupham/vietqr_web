@@ -16,22 +16,27 @@ class TransactionMerchantDTO {
   final String id;
   final int type;
   final String content;
+  String note;
+  bool isEdit;
 
-  const TransactionMerchantDTO(
-      {this.amount = 0,
-      this.bankAccount = '',
-      this.bankId = '',
-      this.bankShortName = '',
-      this.content = '',
-      this.id = '',
-      this.orderId = '',
-      this.referenceNumber = '',
-      this.status = 0,
-      this.timeCreated = 0,
-      this.timePaid = 0,
-      this.transType = '',
-      this.type = 0,
-      this.userBankName = ''});
+  TransactionMerchantDTO({
+    this.amount = 0,
+    this.bankAccount = '',
+    this.bankId = '',
+    this.bankShortName = '',
+    this.content = '',
+    this.id = '',
+    this.orderId = '',
+    this.referenceNumber = '',
+    this.status = 0,
+    this.timeCreated = 0,
+    this.timePaid = 0,
+    this.transType = '',
+    this.note = '',
+    this.type = 0,
+    this.userBankName = '',
+    this.isEdit = false,
+  });
 
   factory TransactionMerchantDTO.fromJson(Map<String, dynamic> json) {
     return TransactionMerchantDTO(
@@ -49,8 +54,11 @@ class TransactionMerchantDTO {
       transType: json['transType'] ?? '',
       type: json['type'] ?? 0,
       userBankName: json['userBankName'] ?? '',
+      note: json['note'] ?? '',
+      isEdit: false,
     );
   }
+
   Color getAmountColor() {
     // if (status == 0) {
     //   return DefaultTheme.ORANGE;

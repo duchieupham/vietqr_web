@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/features/home/repositories/home_repository.dart';
 import 'package:VietQR/features/transaction_user/blocs/tran_user_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:VietQR/features/transaction_user/events/tran_user_event.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 
 class TransUserProvider with ChangeNotifier {
   List<FilterTransaction> listFilter = [
@@ -12,33 +14,48 @@ class TransUserProvider with ChangeNotifier {
     const FilterTransaction(id: 0, title: 'Số tài khoản'),
     const FilterTransaction(id: 1, title: 'Mã giao dịch'),
     const FilterTransaction(id: 2, title: 'Order ID'),
-    const FilterTransaction(id: 3, title: 'Nội dung')
+    const FilterTransaction(id: 4, title: 'Mã điểm bán'),
+    const FilterTransaction(id: 3, title: 'Nội dung'),
   ];
 
   FilterTransaction _valueFilter =
       const FilterTransaction(id: 9, title: 'Tất cả');
+
   FilterTransaction get valueFilter => _valueFilter;
 
   List<FilterTimeTransaction> listTimeFilter = [
     const FilterTimeTransaction(id: 0, title: 'Tất cả'),
-    const FilterTimeTransaction(id: 1, title: 'Khoảng thời gian'),
+    const FilterTimeTransaction(id: 1, title: 'Hôm nay'),
+    const FilterTimeTransaction(id: 2, title: '7 ngày gần nhất'),
+    const FilterTimeTransaction(id: 3, title: '30 ngày gần nhất'),
+    const FilterTimeTransaction(id: 4, title: '3 tháng gần nhất'),
+    const FilterTimeTransaction(id: 5, title: 'Khoảng thời gian'),
   ];
   FilterTimeTransaction _valueTimeFilter =
       const FilterTimeTransaction(id: 0, title: 'Tất cả');
+
   FilterTimeTransaction get valueTimeFilter => _valueTimeFilter;
   DateTime _toDate = DateTime.now();
+
   DateTime get toDate => _toDate;
 
   DateTime _formDate = DateTime.now();
+
   DateTime get fromDate => _formDate;
 
   BankAccountDTO _bankAccountDTO = BankAccountDTO();
+
   BankAccountDTO get bankAccountDTO => _bankAccountDTO;
 
   String _keywordSearch = '';
+  bool isEdit = false;
+
+  final noteController = TextEditingController();
+
   String get keywordSearch => _keywordSearch;
 
   int _currentPage = 0;
+
   int get currentPage => _currentPage;
   int offset = 0;
   bool isCalling = true;
@@ -57,8 +74,9 @@ class TransUserProvider with ChangeNotifier {
           offset = offset + 20;
           Map<String, dynamic> param = {};
           param['type'] = _valueFilter.id;
-          if (_valueTimeFilter.id == 0 ||
-              (_valueFilter.id != 0 && _valueFilter.id != 9)) {
+          if (_valueTimeFilter.id == TypeTimeFilter.ALL.id ||
+              (_valueFilter.id.type != TypeFilter.ALL &&
+                  _valueFilter.id.type != TypeFilter.BANK_NUMBER)) {
             param['from'] = '0';
             param['to'] = '0';
           } else {
@@ -119,6 +137,44 @@ class TransUserProvider with ChangeNotifier {
 
   void changeTimeFilter(FilterTimeTransaction value) {
     _valueTimeFilter = value;
+    DateTime now = DateTime.now();
+    DateTime fromDate = DateTime(now.year, now.month, now.day);
+    if (value.id == TypeTimeFilter.PERIOD.id) {
+      DateTime endDate = fromDate
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+      updateFromDate(fromDate);
+      updateToDate(endDate);
+    } else if (value.id == TypeTimeFilter.TODAY.id) {
+      DateTime endDate = fromDate
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+      updateFromDate(fromDate);
+      updateToDate(endDate);
+    } else if (value.id == TypeTimeFilter.SEVEN_LAST_DAY.id) {
+      DateTime endDate = fromDate.subtract(const Duration(days: 7));
+
+      fromDate = fromDate
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+      updateFromDate(endDate);
+      updateToDate(fromDate);
+    } else if (value.id == TypeTimeFilter.THIRTY_LAST_DAY.id) {
+      DateTime endDate = fromDate.subtract(const Duration(days: 30));
+
+      fromDate = fromDate
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+      updateFromDate(endDate);
+      updateToDate(fromDate);
+    } else if (value.id == TypeTimeFilter.THREE_MONTH_LAST_DAY.id) {
+      DateTime endDate = Jiffy(fromDate).subtract(months: 3).dateTime;
+      fromDate = fromDate
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
+      updateFromDate(endDate);
+      updateToDate(fromDate);
+    }
     notifyListeners();
   }
 
@@ -129,6 +185,11 @@ class TransUserProvider with ChangeNotifier {
     } else {
       _keywordSearch = text;
     }
+  }
+
+  updateEditNote(bool value) {
+    isEdit = value;
+    notifyListeners();
   }
 
   void updateFromDate(DateTime value) {
@@ -150,11 +211,13 @@ class TransUserProvider with ChangeNotifier {
 class FilterTransaction {
   final String title;
   final int id;
+
   const FilterTransaction({required this.id, required this.title});
 }
 
 class FilterTimeTransaction {
   final String title;
   final int id;
+
   const FilterTimeTransaction({required this.id, required this.title});
 }

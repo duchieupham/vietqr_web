@@ -32,3 +32,14 @@ class CreateTransactionQRSuccessfulState extends QRCodeUnUTState {
   @override
   List<Object?> get props => [dto];
 }
+
+class CancelQRSuccessState extends QRCodeUnUTState {}
+
+class CancelQRFailedState extends QRCodeUnUTState {
+  final String msg;
+
+  const CancelQRFailedState(this.msg);
+
+  @override
+  List<Object?> get props => [msg];
+}

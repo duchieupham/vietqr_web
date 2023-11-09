@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
+import 'package:VietQR/commons/utils/encrypt_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/widgets/introduc.dart';
 import 'package:VietQR/commons/widgets/print_qr.dart';

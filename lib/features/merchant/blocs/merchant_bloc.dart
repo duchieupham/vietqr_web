@@ -1,8 +1,11 @@
+import 'package:VietQR/commons/constants/configurations/stringify.dart';
+import 'package:VietQR/commons/utils/error_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
 import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
+import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -17,10 +20,33 @@ class MerchantBloc extends Bloc<MerchantEvent, MerchantState> {
     on<GetListTransactionByUserEvent>(_getListTransactionByUser);
     on<GetListTransactionByMerchantEvent>(_getListTransactionByMerchant);
     on<GetSynthesisReportEvent>(_getListSynthesisReport);
+    on<UpdateNoteMerchantEvent>(_updateNote);
   }
 }
 
 const MerchantRepository merchantRepository = MerchantRepository();
+
+void _updateNote(MerchantEvent event, Emitter emit) async {
+  ResponseMessageDTO result;
+  try {
+    if (event is UpdateNoteMerchantEvent) {
+      result = await merchantRepository.updateNote(event.param);
+      if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+        emit(UpdateNoteState());
+      } else {
+        String msg = ErrorUtils.instance.getErrorMessage(result.message);
+        emit(UpdateNoteMerchantFailedState(msg));
+      }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    ResponseMessageDTO responseMessageDTO =
+        const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+    String msg =
+        ErrorUtils.instance.getErrorMessage(responseMessageDTO.message);
+    emit(UpdateNoteMerchantFailedState(msg));
+  }
+}
 
 void _checkAccountIsMerchant(MerchantEvent event, Emitter emit) async {
   AccountIsMerchantDTO result = const AccountIsMerchantDTO();

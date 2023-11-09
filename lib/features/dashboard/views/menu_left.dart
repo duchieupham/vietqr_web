@@ -123,14 +123,14 @@ class MenuLeft extends StatelessWidget {
                     context.go('/merchant');
                   },
                 ),
-              ItemMenuHome(
-                title: 'TK ngân hàng',
-                iconId: AppImages.icMenuContact,
-                isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
-                onTap: () {
-                  DialogWidget.instance.openMsgQRInstallApp();
-                },
-              ),
+              // ItemMenuHome(
+              //   title: 'TK ngân hàng',
+              //   iconId: AppImages.icMenuContact,
+              //   isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
+              //   onTap: () {
+              //     DialogWidget.instance.openMsgQRInstallApp();
+              //   },
+              // ),
               ItemMenuHome(
                 title: 'Tạo mã VietQR',
                 iconId: AppImages.icVietQrSmall,
@@ -199,114 +199,107 @@ class MenuLeft extends StatelessWidget {
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
     return SizedBox(
       width: 50,
-      child: Column(
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                ItemMenuHome(
-                  title: 'Trang chủ',
-                  isOnlyIcon: true,
-                  paddingIcon: const EdgeInsets.all(4),
-                  iconId: AppImages.icMenuHome,
-                  isSelect: currentType == MenuHomeType.HOME,
-                  onTap: () {
-                    context.go('/home');
-                    provider.updateShowMenu(true);
-                  },
-                ),
-                ItemMenuHome(
-                  title: 'Giao dịch',
-                  paddingIcon: const EdgeInsets.all(4),
-                  iconId: AppImages.icMenuTransaction,
-                  isOnlyIcon: true,
-                  isSelect: currentType == MenuHomeType.TRANSACTION,
-                  onTap: () {
-                    context.go('/transaction');
-                    provider.updateShowMenu(true);
-                  },
-                ),
-                if (provider.isAccountIsMerchant)
-                  ItemMenuHome(
-                    title: 'Đại lý',
-                    paddingIcon: const EdgeInsets.all(4),
-                    iconId: AppImages.icMenuBank,
-                    isOnlyIcon: true,
-                    isSelect: currentType == MenuHomeType.MERCHANT,
-                    onTap: () {
-                      context.go('/merchant');
-                      provider.updateShowMenu(true);
-                    },
-                  ),
-                ItemMenuHome(
-                  title: 'TK ngân hàng',
-                  paddingIcon: const EdgeInsets.all(4),
-                  iconId: AppImages.icMenuContact,
-                  isOnlyIcon: true,
-                  isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
-                  onTap: () {
-                    provider.updateShowMenu(true);
-                    DialogWidget.instance.openMsgDialog(
-                      title: 'Tính năng đang bảo trì',
-                      msg: 'Vui lòng thử lại sau',
-                    );
-                  },
-                ),
-                ItemMenuHome(
-                  title: 'Tạo mã VietQR',
-                  paddingIcon: const EdgeInsets.all(4),
-                  iconId: AppImages.icMenuQR,
-                  isOnlyIcon: true,
-                  isSelect: currentType == MenuHomeType.CREATE_QR,
-                  onTap: () {
-                    provider.updateShowMenu(true);
-                    context.go('/create-qr');
-                  },
-                ),
-                ItemMenuHome(
-                  title: 'Ví QR',
-                  iconId: AppImages.icMenuWallet,
-                  paddingIcon: const EdgeInsets.all(4),
-                  isOnlyIcon: true,
-                  isSelect: currentType == MenuHomeType.WALLET_QR,
-                  onTap: () {
-                    provider.updateShowMenu(true);
-                    context.go('/qr-wallet');
-                  },
-                ),
-                ItemMenuHome(
-                  title: 'Chia sẻ BĐSD',
-                  paddingIcon: const EdgeInsets.all(4),
-                  iconId: AppImages.icMenuShareBDSD,
-                  isOnlyIcon: true,
-                  isSelect: currentType == MenuHomeType.BUSINESS,
-                  onTap: () {
-                    // onTab(MenuHomeType.BUSINESS);
-                    provider.updateShowMenu(true);
-                    context.go('/business');
-                  },
-                ),
-                ItemMenuHome(
-                  title: 'Giới thiệu VietQR VN',
-                  iconId: AppImages.icVietQrSmall,
-                  paddingIcon: const EdgeInsets.all(4),
-                  isOnlyIcon: true,
-                  isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
-                  isDefaultColor: true,
-                  onTap: () {
-                    provider.updateShowMenu(true);
-                    DialogWidget.instance.openPopup(
-                      width: 500,
-                      height: 300,
-                      child: const PopupShareCode(),
-                    );
-                  },
-                ),
-              ],
-            ),
+          ItemMenuHome(
+            title: 'Trang chủ',
+            isOnlyIcon: true,
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuHome,
+            isSelect: currentType == MenuHomeType.HOME,
+            onTap: () {
+              context.go('/home');
+              provider.updateShowMenu(true);
+            },
           ),
-          const Spacer(),
+          ItemMenuHome(
+            title: 'Giao dịch',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuTransaction,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.TRANSACTION,
+            onTap: () {
+              context.go('/transaction');
+              provider.updateShowMenu(true);
+            },
+          ),
+          if (provider.isAccountIsMerchant)
+            ItemMenuHome(
+              title: 'Đại lý',
+              paddingIcon: const EdgeInsets.all(4),
+              iconId: AppImages.icMenuBank,
+              isOnlyIcon: true,
+              isSelect: currentType == MenuHomeType.MERCHANT,
+              onTap: () {
+                context.go('/merchant');
+                provider.updateShowMenu(true);
+              },
+            ),
+          ItemMenuHome(
+            title: 'TK ngân hàng',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuContact,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
+            onTap: () {
+              provider.updateShowMenu(true);
+              DialogWidget.instance.openMsgDialog(
+                title: 'Tính năng đang bảo trì',
+                msg: 'Vui lòng thử lại sau',
+              );
+            },
+          ),
+          ItemMenuHome(
+            title: 'Tạo mã VietQR',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuQR,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.CREATE_QR,
+            onTap: () {
+              provider.updateShowMenu(true);
+              context.go('/create-qr');
+            },
+          ),
+          ItemMenuHome(
+            title: 'Ví QR',
+            iconId: AppImages.icMenuWallet,
+            paddingIcon: const EdgeInsets.all(4),
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.WALLET_QR,
+            onTap: () {
+              provider.updateShowMenu(true);
+              context.go('/qr-wallet');
+            },
+          ),
+          ItemMenuHome(
+            title: 'Chia sẻ BĐSD',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuShareBDSD,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.BUSINESS,
+            onTap: () {
+              // onTab(MenuHomeType.BUSINESS);
+              provider.updateShowMenu(true);
+              context.go('/business');
+            },
+          ),
+          ItemMenuHome(
+            title: 'Giới thiệu VietQR VN',
+            iconId: AppImages.icVietQrSmall,
+            paddingIcon: const EdgeInsets.all(4),
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
+            isDefaultColor: true,
+            onTap: () {
+              provider.updateShowMenu(true);
+              DialogWidget.instance.openPopup(
+                width: 500,
+                height: 300,
+                child: const PopupShareCode(),
+              );
+            },
+          ),
         ],
       ),
     );
