@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/error_utils.dart';
@@ -50,6 +52,11 @@ class _VhitekState extends State<_VhitekScreen> {
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
+    html.window.addEventListener('message', (event) {
+      var data = (event as html.MessageEvent).data;
+      String received = data['message'];
+      print('--------------------------------listen form app: $received');
+    });
   }
 
   void _animatedToPage(int index) {
@@ -73,11 +80,11 @@ class _VhitekState extends State<_VhitekScreen> {
           if (state is VhitekCheckUserValidSuccessState) {
             Navigator.pop(context);
             if (state.dto.status == 'SUCCESS') {
-              context.read<ActiveVhitekProvider>().changePage(2);
+              context.read<ActiveVhitekProvider>().changePage(3);
               context
                   .read<ActiveVhitekProvider>()
                   .changeUserIdVhitek(state.dto.message);
-              _animatedToPage(2);
+              _animatedToPage(3);
             } else if (state.dto.status == 'CHECK') {
               context.read<ActiveVhitekProvider>().changePage(1);
               _animatedToPage(1);
@@ -233,6 +240,7 @@ class _VhitekState extends State<_VhitekScreen> {
             borderRadius: 5,
             bgColor: AppColor.BLUE_TEXT,
             function: () {
+              html.window.postMessage('closeWebView', '*');
               context.push('/home');
             });
       }
