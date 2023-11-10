@@ -73,11 +73,11 @@ class _VhitekState extends State<_VhitekScreen> {
           if (state is VhitekCheckUserValidSuccessState) {
             Navigator.pop(context);
             if (state.dto.status == 'SUCCESS') {
-              context.read<ActiveVhitekProvider>().changePage(3);
+              context.read<ActiveVhitekProvider>().changePage(2);
               context
                   .read<ActiveVhitekProvider>()
                   .changeUserIdVhitek(state.dto.message);
-              _animatedToPage(3);
+              _animatedToPage(2);
             } else if (state.dto.status == 'CHECK') {
               context.read<ActiveVhitekProvider>().changePage(1);
               _animatedToPage(1);
