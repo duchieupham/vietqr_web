@@ -10,18 +10,20 @@ class ButtonWidget extends StatelessWidget {
   final double? height;
   final double textSize;
   final double? borderRadius;
+  final EdgeInsets padding;
 
-  const ButtonWidget({
-    Key? key,
-    this.width,
-    required this.text,
-    required this.textColor,
-    required this.bgColor,
-    required this.function,
-    this.height,
-    this.textSize = 14,
-    this.borderRadius,
-  }) : super(key: key);
+  const ButtonWidget(
+      {Key? key,
+      this.width,
+      required this.text,
+      required this.textColor,
+      required this.bgColor,
+      required this.function,
+      this.height,
+      this.textSize = 14,
+      this.borderRadius,
+      this.padding = EdgeInsets.zero})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class ButtonWidget extends StatelessWidget {
       onTap: function,
       child: Container(
         width: width,
+        padding: padding,
         height: (height != null) ? height : 50,
         alignment: Alignment.center,
         decoration: BoxDecoration(

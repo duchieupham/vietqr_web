@@ -1,12 +1,11 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
-import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/page/list_transaction.dart';
-import 'package:VietQR/features/merchant/page/sale_report.dart';
+import 'package:VietQR/features/merchant/page/service_charge.dart';
 import 'package:VietQR/features/merchant/page/synthesis_repor.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
@@ -118,12 +117,11 @@ class _MerchantViewState extends State<MerchantView> {
                       onTap: () {
                         changePage(SubMenuType.SERVICE_FEE);
                         if (currentType == SubMenuType.SERVICE_FEE) {
-                          nowMonth =
-                              TimeUtils.instance.getFormatMonth(DateTime.now());
                           merchantBloc.add(GetMerchantFeeEvent(
                               customerSyncId: Session
                                   .instance.accountIsMerchantDTO.customerSyncId,
-                              month: nowMonth,
+                              year: DateTime.now().year.toString(),
+                              status: 0,
                               isLoadingPage: true));
                         }
                       },

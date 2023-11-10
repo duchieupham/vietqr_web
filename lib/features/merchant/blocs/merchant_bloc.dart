@@ -6,12 +6,11 @@ import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
 import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
 import 'package:VietQR/models/response_message_dto.dart';
+import 'package:VietQR/models/service_charge_dto.dart';
 import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../models/active_fee_dto.dart';
 
 class MerchantBloc extends Bloc<MerchantEvent, MerchantState> {
   MerchantBloc() : super(MerchantInitialState()) {
@@ -64,16 +63,16 @@ void _checkAccountIsMerchant(MerchantEvent event, Emitter emit) async {
 }
 
 void _getMerchantFee(MerchantEvent event, Emitter emit) async {
-  List<ActiveFeeDTO> list = [];
+  List<ServiceChargeDTO> list = [];
   try {
     if (event is GetMerchantFeeEvent) {
       if (event.isLoadingPage) {
         emit(MerchantLoadingActiveFeeState());
       } else {
-        emit(MerchantLoadingInitState());
+        emit(MerchantLoadingState());
       }
       list = await merchantRepository.getMerchantFee(
-          event.customerSyncId, event.month);
+          event.customerSyncId, event.year, event.status);
       emit(MerchantGetMerchantFeeSuccessfulState(
           list: list, isLoadingPage: event.isLoadingPage));
     }

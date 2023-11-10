@@ -11,16 +11,18 @@ class CheckAccountIsMerchantEvent extends MerchantEvent {}
 
 class GetMerchantFeeEvent extends MerchantEvent {
   final String customerSyncId;
-  final String month;
+  final String year;
+  final int status;
   final bool isLoadingPage;
 
   const GetMerchantFeeEvent(
       {required this.customerSyncId,
-      required this.month,
+      required this.year,
+      required this.status,
       this.isLoadingPage = false});
 
   @override
-  List<Object?> get props => [customerSyncId, month];
+  List<Object?> get props => [customerSyncId, year, status];
 }
 
 class GetSynthesisReportEvent extends MerchantEvent {

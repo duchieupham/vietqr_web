@@ -462,7 +462,7 @@ class _SaleReportState extends State<SynthesisReport> {
                       width: 20,
                     ),
                     DropdownButton<int>(
-                      value: DateTime.now().year,
+                      value: provider.year,
                       icon: const RotatedBox(
                         quarterTurns: 5,
                         child: Icon(
@@ -472,6 +472,7 @@ class _SaleReportState extends State<SynthesisReport> {
                       ),
                       underline: const SizedBox.shrink(),
                       onChanged: (int? value) {
+                        provider.updateYear(value ?? DateTime.now().year);
                         merchantBloc.add(GetSynthesisReportEvent(
                             customerSyncId: Session
                                 .instance.accountIsMerchantDTO.customerSyncId,

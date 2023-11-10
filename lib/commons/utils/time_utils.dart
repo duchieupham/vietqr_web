@@ -85,6 +85,10 @@ class TimeUtils {
   }
 
   String formatDate(String date) {
+    if(!date.contains('-')){
+      return date;
+    }
+
     String result = '';
     DateFormat format = DateFormat('dd/MM/yyyy');
 
@@ -96,6 +100,10 @@ class TimeUtils {
   }
 
   String formatMonthYear(String date) {
+    if (!date.contains('-')) {
+      return date;
+    }
+
     String result = '';
     List<String> splitDate = date.split('-');
 

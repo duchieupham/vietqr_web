@@ -35,6 +35,14 @@ class SynthesisReportProvider with ChangeNotifier {
 
   List<BankAccountDTO> bankAccounts = [];
   List<int> years = [];
+
+  int _year = DateTime.now().year;
+  int get year => _year;
+  updateYear(int value) {
+    _year = value;
+    notifyListeners();
+  }
+
   getListBankAccount() async {
     getListYear();
     String userId = UserInformationHelper.instance.getUserId();
