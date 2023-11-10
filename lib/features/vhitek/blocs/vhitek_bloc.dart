@@ -10,6 +10,7 @@ class VhitekBloc extends Bloc<VhitekEvent, VhitekState> {
     on<CheckUserValidEvent>(_checkUserValid);
     on<CreateUserEvent>(_createUser);
     on<ActiveEvent>(_active);
+    on<LoginByUserIdEvent>(_loginByUserId);
   }
 }
 
@@ -50,6 +51,18 @@ void _active(VhitekEvent event, Emitter emit) async {
       final ResponseMessageDTO result =
           await _vhitekRepository.active(event.param);
       emit(VhitekActiveSuccessState(dto: result));
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+  }
+}
+
+void _loginByUserId(VhitekEvent event, Emitter emit) async {
+  try {
+    if (event is LoginByUserIdEvent) {
+      emit(VhitekStateLoadingState());
+      bool result = await _vhitekRepository.loginByUserId(event.userId);
+      emit(LoginByUserIdSuccessState(result: result));
     }
   } catch (e) {
     LOG.error(e.toString());

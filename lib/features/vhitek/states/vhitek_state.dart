@@ -38,3 +38,12 @@ class VhitekActiveSuccessState extends VhitekState {
   @override
   List<Object?> get props => [dto];
 }
+
+class LoginByUserIdSuccessState extends VhitekState {
+  final bool result;
+
+  const LoginByUserIdSuccessState({required this.result});
+
+  @override
+  List<Object?> get props => [result];
+}

@@ -1,7 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
-import 'package:VietQR/commons/utils/encrypt_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/widgets/introduc.dart';
 import 'package:VietQR/commons/widgets/print_qr.dart';
@@ -427,26 +426,18 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/service/vhitek/active',
-        builder: (BuildContext context, GoRouterState state) {
-          if (UserInformationHelper.instance.getUserId().trim().isNotEmpty) {
-            return VhitekScreen(
+        builder: (BuildContext context, GoRouterState state) => VhitekScreen(
               mid: state.params['mid'] ?? '',
-            );
-          }
-          return const Login();
-        },
+            ),
         pageBuilder: (BuildContext context, GoRouterState state) {
           Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
-            context: context,
-            state: state,
-            child: UserInformationHelper.instance.getUserId().trim().isNotEmpty
-                ? VhitekScreen(
-                    mid: state.params['mid'] ?? '',
-                  )
-                : const Login(),
-          );
+              context: context,
+              state: state,
+              child: VhitekScreen(
+                mid: state.params['mid'] ?? '',
+              ));
         }),
     GoRoute(
         path: '/create-qr',

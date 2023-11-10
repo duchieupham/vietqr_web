@@ -18,6 +18,7 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'events/vhitek_event.dart';
@@ -52,11 +53,19 @@ class _VhitekState extends State<_VhitekScreen> {
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
-    html.window.addEventListener('message', (event) {
-      var data = (event as html.MessageEvent).data;
-      String received = data['message'];
-      print('--------------------------------listen form app: $received');
-    });
+    getDataFromHeader();
+  }
+
+  getDataFromHeader() async {
+    http.Response response = await http.get(Uri.base);
+
+    if (response.statusCode == 200) {
+      String responseData = response.body;
+    print('--------------------------data from header:$responseData ');
+    } else {
+      // Xử lý lỗi nếu có
+      // ...
+    }
   }
 
   void _animatedToPage(int index) {

@@ -39,3 +39,14 @@ class ActiveEvent extends VhitekEvent {
   @override
   List<Object?> get props => [param];
 }
+
+class LoginByUserIdEvent extends VhitekEvent {
+  final String userId;
+
+  const LoginByUserIdEvent({
+    required this.userId,
+  });
+
+  @override
+  List<Object?> get props => [userId];
+}
