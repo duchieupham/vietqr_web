@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'dart:js' as js;
 
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
@@ -25,6 +26,7 @@ import 'events/vhitek_event.dart';
 
 class VhitekScreen extends StatelessWidget {
   final String mid;
+
   const VhitekScreen({super.key, this.mid = ''});
 
   @override
@@ -49,11 +51,24 @@ class _VhitekScreen extends StatefulWidget {
 class _VhitekState extends State<_VhitekScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   late VhitekBloc _vhitekBloc;
+  String text = '';
+
   @override
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
     getDataFromHeader();
+
+    // Lắng nghe sự kiện từ window.postMessage
+    html.window.onMessage.listen((event) {
+      if (event.data['type'] == 'dataFromHtml') {
+        String data = event.data['data'];
+        text = 'hêhhhee';
+        setState(() {});
+        // Xử lý dữ liệu nhận được từ index.html
+        print('Data received from index.html: $data');
+      }
+    });
   }
 
   getDataFromHeader() async {
@@ -61,7 +76,9 @@ class _VhitekState extends State<_VhitekScreen> {
 
     if (response.statusCode == 200) {
       String responseData = response.body;
-    print('--------------------------data from header:$responseData ');
+      text = '--------------------------data from header:$responseData ';
+      setState(() {});
+      print('--------------------------data from header:$responseData ');
     } else {
       // Xử lý lỗi nếu có
       // ...
@@ -132,6 +149,7 @@ class _VhitekState extends State<_VhitekScreen> {
           return Column(
             children: [
               _buildHeader(),
+              Text(text),
               Expanded(child: LayoutBuilder(builder: (context, constraints) {
                 return SizedBox(
                   width:
@@ -142,7 +160,7 @@ class _VhitekState extends State<_VhitekScreen> {
                     onPageChanged: (index) {},
                     children: [
                       ActiveVhitek(
-                        mid: widget.mid,
+                        mid: text,
                       ),
                       RegisterVhitek(
                         edit: () {
