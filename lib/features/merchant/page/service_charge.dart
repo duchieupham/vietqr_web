@@ -173,25 +173,19 @@ class _SaleReportState extends State<ServiceFee> {
                   height: 30,
                 ),
                 _buildBoxItem(
-                  dto.totalFee == 0
-                      ? '-'
-                      : '${StringUtils.formatNumber(dto.totalFee)} VND',
+                  '${StringUtils.formatNumber(dto.totalFee)} VND',
                   width: 120,
                   fontWeight: FontWeight.bold,
                   height: 30,
                 ),
                 _buildBoxItem(
-                  dto.totalVatFee == 0
-                      ? '-'
-                      : '${StringUtils.formatNumber(dto.totalVatFee)} VND',
+                  '${StringUtils.formatNumber(dto.totalVatFee)} VND',
                   width: 120,
                   fontWeight: FontWeight.bold,
                   height: 30,
                 ),
                 _buildBoxItem(
-                  dto.totalFeeAfterVat == 0
-                      ? '-'
-                      : '${StringUtils.formatNumber(dto.totalFeeAfterVat)} VND',
+                  '${StringUtils.formatNumber(dto.totalFeeAfterVat)} VND',
                   width: 120,
                   fontWeight: FontWeight.bold,
                   height: 30,
@@ -228,24 +222,12 @@ class _SaleReportState extends State<ServiceFee> {
           notBottomBorder: lastItem,
         ),
         _buildBoxItem('${dto.vat}%', width: 80, notBottomBorder: lastItem),
-        _buildBoxItem(
-            dto.totalFee == 0
-                ? '-'
-                : '${StringUtils.formatNumber(dto.totalFee)} VND',
-            width: 120,
-            notBottomBorder: lastItem),
-        _buildBoxItem(
-            dto.vatFee == 0
-                ? '-'
-                : '${StringUtils.formatNumber(dto.vatFee)} VND',
-            width: 120,
-            notBottomBorder: lastItem),
-        _buildBoxItem(
-            dto.totalFeeAfterVat == 0
-                ? '-'
-                : '${StringUtils.formatNumber(dto.totalFeeAfterVat)} VND',
-            width: 120,
-            notBottomBorder: lastItem),
+        _buildBoxItem('${StringUtils.formatNumber(dto.totalFee)} VND',
+            width: 120, notBottomBorder: lastItem),
+        _buildBoxItem('${StringUtils.formatNumber(dto.vatFee)} VND',
+            width: 120, notBottomBorder: lastItem),
+        _buildBoxItem('${StringUtils.formatNumber(dto.totalFeeAfterVat)} VND',
+            width: 120, notBottomBorder: lastItem),
         _buildBoxItem(dto.status == 1 ? 'Đã TT' : 'Chưa TT',
             width: 120,
             notBottomBorder: lastItem,
@@ -287,7 +269,7 @@ class _SaleReportState extends State<ServiceFee> {
       decoration: const BoxDecoration(color: AppColor.BLUE_DARK),
       child: Row(
         children: [
-          _buildItemTitle('No.', width: 50, padding: EdgeInsets.zero),
+          _buildItemTitle('STT', width: 50, padding: EdgeInsets.zero),
           _buildItemTitle('Thời gian',
               width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
           _buildItemTitle('Tên đại lý',
@@ -334,6 +316,58 @@ class _SaleReportState extends State<ServiceFee> {
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.underline),
                 ),
+              ),
+
+              const SizedBox(
+                width: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: ButtonWidget(
+                    text: 'Chưa thanh toán',
+                    textColor: provider.status == 0
+                        ? AppColor.WHITE
+                        : AppColor.GREY_TEXT,
+                    bgColor: provider.status == 0
+                        ? AppColor.BLUE_TEXT
+                        : AppColor.GREY_BUTTON,
+                    textSize: 12,
+                    bdRadius:
+                        const BorderRadius.only(topLeft: Radius.circular(5)),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    function: () {
+                      provider.changeStatus(0);
+                      merchantBloc.add(GetMerchantFeeEvent(
+                          customerSyncId: Session
+                              .instance.accountIsMerchantDTO.customerSyncId,
+                          year: provider.year.toString(),
+                          status: 0,
+                          isLoadingPage: false));
+                    }),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: ButtonWidget(
+                    text: 'Đã thanh toán',
+                    textColor: provider.status == 1
+                        ? AppColor.WHITE
+                        : AppColor.GREY_TEXT,
+                    bgColor: provider.status == 1
+                        ? AppColor.BLUE_TEXT
+                        : AppColor.GREY_BUTTON,
+                    bdRadius:
+                        const BorderRadius.only(topRight: Radius.circular(5)),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    textSize: 12,
+                    function: () {
+                      provider.changeStatus(1);
+                      merchantBloc.add(GetMerchantFeeEvent(
+                          customerSyncId: Session
+                              .instance.accountIsMerchantDTO.customerSyncId,
+                          year: provider.year.toString(),
+                          status: 1,
+                          isLoadingPage: false));
+                    }),
               ),
               const SizedBox(
                 width: 24,
@@ -392,58 +426,6 @@ class _SaleReportState extends State<ServiceFee> {
                   ],
                 ),
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: ButtonWidget(
-                    text: 'Chưa thanh toán',
-                    textColor: provider.status == 0
-                        ? AppColor.WHITE
-                        : AppColor.BLUE_TEXT,
-                    bgColor: provider.status == 0
-                        ? AppColor.BLUE_TEXT
-                        : AppColor.WHITE,
-                    textSize: 12,
-                    borderRadius: 5,
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    function: () {
-                      provider.changeStatus(0);
-                      merchantBloc.add(GetMerchantFeeEvent(
-                          customerSyncId: Session
-                              .instance.accountIsMerchantDTO.customerSyncId,
-                          year: provider.year.toString(),
-                          status: 0,
-                          isLoadingPage: false));
-                    }),
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: ButtonWidget(
-                    text: 'Đã thanh toán',
-                    textColor: provider.status == 1
-                        ? AppColor.WHITE
-                        : AppColor.BLUE_TEXT,
-                    bgColor: provider.status == 1
-                        ? AppColor.BLUE_TEXT
-                        : AppColor.WHITE,
-                    borderRadius: 5,
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    textSize: 12,
-                    function: () {
-                      provider.changeStatus(1);
-                      merchantBloc.add(GetMerchantFeeEvent(
-                          customerSyncId: Session
-                              .instance.accountIsMerchantDTO.customerSyncId,
-                          year: provider.year.toString(),
-                          status: 1,
-                          isLoadingPage: false));
-                    }),
-              )
             ],
           ),
         );

@@ -11,6 +11,7 @@ class ButtonWidget extends StatelessWidget {
   final double textSize;
   final double? borderRadius;
   final EdgeInsets padding;
+  final BorderRadius? bdRadius;
 
   const ButtonWidget(
       {Key? key,
@@ -22,6 +23,7 @@ class ButtonWidget extends StatelessWidget {
       this.height,
       this.textSize = 14,
       this.borderRadius,
+      this.bdRadius,
       this.padding = EdgeInsets.zero})
       : super(key: key);
 
@@ -35,8 +37,9 @@ class ButtonWidget extends StatelessWidget {
         height: (height != null) ? height : 50,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-              (borderRadius != null) ? borderRadius! : 15),
+          borderRadius: bdRadius ??
+              BorderRadius.circular(
+                  (borderRadius != null) ? borderRadius! : 15),
           color: bgColor,
         ),
         child: Text(
