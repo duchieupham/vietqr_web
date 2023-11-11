@@ -19,7 +19,6 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'events/vhitek_event.dart';
@@ -56,6 +55,11 @@ class _VhitekState extends State<_VhitekScreen> {
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
+    if (js.context['state'] != null) {
+      var state = js.JsObject.fromBrowserObject(js.context['state']);
+      String userId = state['userId'];
+      _vhitekBloc.add(LoginByUserIdEvent(userId: userId));
+    }
   }
 
   void _animatedToPage(int index) {
@@ -79,11 +83,11 @@ class _VhitekState extends State<_VhitekScreen> {
           if (state is VhitekCheckUserValidSuccessState) {
             Navigator.pop(context);
             if (state.dto.status == 'SUCCESS') {
-              context.read<ActiveVhitekProvider>().changePage(3);
+              context.read<ActiveVhitekProvider>().changePage(2);
               context
                   .read<ActiveVhitekProvider>()
                   .changeUserIdVhitek(state.dto.message);
-              _animatedToPage(3);
+              _animatedToPage(2);
             } else if (state.dto.status == 'CHECK') {
               context.read<ActiveVhitekProvider>().changePage(1);
               _animatedToPage(1);
@@ -119,10 +123,15 @@ class _VhitekState extends State<_VhitekScreen> {
             }
           }
         }, builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildHeader(),
+          return Column(
+            children: [
+              _buildHeader(),
+              if (state is VhitekLoginLoadingState)
+                const Padding(
+                  padding: EdgeInsets.only(top: 40),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else ...[
                 Expanded(child: LayoutBuilder(builder: (context, constraints) {
                   return SizedBox(
                     width:
@@ -161,8 +170,8 @@ class _VhitekState extends State<_VhitekScreen> {
                     ),
                   );
                 })
-              ],
-            ),
+              ]
+            ],
           );
         }),
       ),

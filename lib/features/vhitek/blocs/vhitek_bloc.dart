@@ -60,7 +60,7 @@ void _active(VhitekEvent event, Emitter emit) async {
 void _loginByUserId(VhitekEvent event, Emitter emit) async {
   try {
     if (event is LoginByUserIdEvent) {
-      emit(VhitekStateLoadingState());
+      emit(VhitekLoginLoadingState());
       bool result = await _vhitekRepository.loginByUserId(event.userId);
       emit(LoginByUserIdSuccessState(result: result));
     }

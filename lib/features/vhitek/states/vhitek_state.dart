@@ -12,6 +12,8 @@ class VhitekStateInitialState extends VhitekState {}
 
 class VhitekStateLoadingState extends VhitekState {}
 
+class VhitekLoginLoadingState extends VhitekState {}
+
 class VhitekCheckUserValidSuccessState extends VhitekState {
   final ResponseMessageDTO dto;
 
