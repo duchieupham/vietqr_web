@@ -30,6 +30,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../models/account_login_method_dto.dart';
 import '../widgets/login_by_card_widget.dart';
 
+import 'dart:js' as js;
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -50,6 +52,15 @@ class _Login extends State<Login> {
   @override
   void initState() {
     super.initState();
+
+
+    //e test ở đây, a chuyển sang màn kia nhá
+    if (js.context['state'] != null) {
+      var state = js.JsObject.fromBrowserObject(js.context['state']);
+      phoneNoController.text = state['userId'];
+      setState(() {});
+    }
+
     String loginID = des.getLoginID();
     String randomKey = des.getRandomKey();
     String encrypted = des.getEncryptedString(loginID, randomKey);

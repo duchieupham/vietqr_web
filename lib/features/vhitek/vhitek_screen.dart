@@ -51,38 +51,11 @@ class _VhitekScreen extends StatefulWidget {
 class _VhitekState extends State<_VhitekScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   late VhitekBloc _vhitekBloc;
-  String text = '';
 
   @override
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
-    getDataFromHeader();
-
-    // Lắng nghe sự kiện từ window.postMessage
-    html.window.onMessage.listen((event) {
-      if (event.data['type'] == 'dataFromHtml') {
-        String data = event.data['data'];
-        text = 'hêhhhee';
-        setState(() {});
-        // Xử lý dữ liệu nhận được từ index.html
-        print('Data received from index.html: $data');
-      }
-    });
-  }
-
-  getDataFromHeader() async {
-    http.Response response = await http.get(Uri.base);
-
-    if (response.statusCode == 200) {
-      String responseData = response.body;
-      text = '--------------------------data from header:$responseData ';
-      setState(() {});
-      print('--------------------------data from header:$responseData ');
-    } else {
-      // Xử lý lỗi nếu có
-      // ...
-    }
   }
 
   void _animatedToPage(int index) {
@@ -146,49 +119,50 @@ class _VhitekState extends State<_VhitekScreen> {
             }
           }
         }, builder: (context, state) {
-          return Column(
-            children: [
-              _buildHeader(),
-              Text(text),
-              Expanded(child: LayoutBuilder(builder: (context, constraints) {
-                return SizedBox(
-                  width:
-                      constraints.maxWidth > 700 ? 600 : constraints.maxWidth,
-                  child: PageView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    controller: _pageController,
-                    onPageChanged: (index) {},
-                    children: [
-                      ActiveVhitek(
-                        mid: text,
-                      ),
-                      RegisterVhitek(
-                        edit: () {
-                          _animatedToPage(0);
-                        },
-                      ),
-                      ConfirmActive(
-                        edit: () {
-                          _animatedToPage(1);
-                        },
-                      ),
-                      const ActiveSuccess()
-                    ],
-                  ),
-                );
-              })),
-              LayoutBuilder(builder: (context, constraints) {
-                return SizedBox(
-                  width:
-                      constraints.maxWidth > 700 ? 600 : constraints.maxWidth,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 28, vertical: 20),
-                    child: _buildButton(),
-                  ),
-                );
-              })
-            ],
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(),
+                Expanded(child: LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    width:
+                        constraints.maxWidth > 700 ? 600 : constraints.maxWidth,
+                    child: PageView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: _pageController,
+                      onPageChanged: (index) {},
+                      children: [
+                        ActiveVhitek(
+                          mid: widget.mid,
+                        ),
+                        RegisterVhitek(
+                          edit: () {
+                            _animatedToPage(0);
+                          },
+                        ),
+                        ConfirmActive(
+                          edit: () {
+                            _animatedToPage(1);
+                          },
+                        ),
+                        const ActiveSuccess()
+                      ],
+                    ),
+                  );
+                })),
+                LayoutBuilder(builder: (context, constraints) {
+                  return SizedBox(
+                    width:
+                        constraints.maxWidth > 700 ? 600 : constraints.maxWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 28, vertical: 20),
+                      child: _buildButton(),
+                    ),
+                  );
+                })
+              ],
+            ),
           );
         }),
       ),
