@@ -55,11 +55,13 @@ class _VhitekState extends State<_VhitekScreen> {
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
-    if (js.context['state'] != null) {
-      var state = js.JsObject.fromBrowserObject(js.context['state']);
-      String userId = state['userId'];
-      _vhitekBloc.add(LoginByUserIdEvent(userId: userId));
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (js.context['state'] != null) {
+        var state = js.JsObject.fromBrowserObject(js.context['state']);
+        String userId = state['userId'];
+        _vhitekBloc.add(LoginByUserIdEvent(userId: userId));
+      }
+    });
   }
 
   void _animatedToPage(int index) {
