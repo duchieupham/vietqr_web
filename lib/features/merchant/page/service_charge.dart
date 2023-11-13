@@ -317,60 +317,8 @@ class _SaleReportState extends State<ServiceFee> {
                       decoration: TextDecoration.underline),
                 ),
               ),
-
               const SizedBox(
                 width: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: ButtonWidget(
-                    text: 'Chưa thanh toán',
-                    textColor: provider.status == 0
-                        ? AppColor.WHITE
-                        : AppColor.GREY_TEXT,
-                    bgColor: provider.status == 0
-                        ? AppColor.BLUE_TEXT
-                        : AppColor.GREY_BUTTON,
-                    textSize: 12,
-                    bdRadius:
-                        const BorderRadius.only(topLeft: Radius.circular(5)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    function: () {
-                      provider.changeStatus(0);
-                      merchantBloc.add(GetMerchantFeeEvent(
-                          customerSyncId: Session
-                              .instance.accountIsMerchantDTO.customerSyncId,
-                          year: provider.year.toString(),
-                          status: 0,
-                          isLoadingPage: false));
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: ButtonWidget(
-                    text: 'Đã thanh toán',
-                    textColor: provider.status == 1
-                        ? AppColor.WHITE
-                        : AppColor.GREY_TEXT,
-                    bgColor: provider.status == 1
-                        ? AppColor.BLUE_TEXT
-                        : AppColor.GREY_BUTTON,
-                    bdRadius:
-                        const BorderRadius.only(topRight: Radius.circular(5)),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    textSize: 12,
-                    function: () {
-                      provider.changeStatus(1);
-                      merchantBloc.add(GetMerchantFeeEvent(
-                          customerSyncId: Session
-                              .instance.accountIsMerchantDTO.customerSyncId,
-                          year: provider.year.toString(),
-                          status: 1,
-                          isLoadingPage: false));
-                    }),
-              ),
-              const SizedBox(
-                width: 24,
               ),
               Container(
                 width: 114,
@@ -423,6 +371,64 @@ class _SaleReportState extends State<ServiceFee> {
                         );
                       }).toList(),
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                width: 24,
+              ),
+              Container(
+                padding: const EdgeInsets.all(4),
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: AppColor.BLUE_TEXT),
+                ),
+                child: Row(
+                  children: [
+                    ButtonWidget(
+                        text: 'Chưa thanh toán',
+                        textColor: provider.status == 0
+                            ? AppColor.WHITE
+                            : AppColor.BLACK,
+                        bgColor: provider.status == 0
+                            ? AppColor.BLUE_TEXT
+                            : AppColor.TRANSPARENT,
+                        textSize: 12,
+                        borderRadius: 5,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        function: () {
+                          provider.changeStatus(0);
+                          merchantBloc.add(GetMerchantFeeEvent(
+                              customerSyncId: Session
+                                  .instance.accountIsMerchantDTO.customerSyncId,
+                              year: provider.year.toString(),
+                              status: 0,
+                              isLoadingPage: false));
+                        }),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    ButtonWidget(
+                        text: 'Đã thanh toán',
+                        textColor: provider.status == 1
+                            ? AppColor.WHITE
+                            : AppColor.BLACK,
+                        bgColor: provider.status == 1
+                            ? AppColor.BLUE_TEXT
+                            : AppColor.TRANSPARENT,
+                        borderRadius: 5,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        textSize: 12,
+                        function: () {
+                          provider.changeStatus(1);
+                          merchantBloc.add(GetMerchantFeeEvent(
+                              customerSyncId: Session
+                                  .instance.accountIsMerchantDTO.customerSyncId,
+                              year: provider.year.toString(),
+                              status: 1,
+                              isLoadingPage: false));
+                        }),
                   ],
                 ),
               ),

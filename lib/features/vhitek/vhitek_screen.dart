@@ -89,8 +89,14 @@ class _VhitekState extends State<_VhitekScreen> {
                   .changeUserIdVhitek(state.dto.message);
               _animatedToPage(2);
             } else if (state.dto.status == 'CHECK') {
-              context.read<ActiveVhitekProvider>().changePage(1);
-              _animatedToPage(1);
+              if (state.dto.message == 'C09') {
+                DialogWidget.instance.openMsgDialog(
+                    title: 'Đã kích hoạt',
+                    msg: 'Máy bán hàng đã được kích hoạt trước đó.');
+              } else {
+                context.read<ActiveVhitekProvider>().changePage(1);
+                _animatedToPage(1);
+              }
             } else {
               DialogWidget.instance.openMsgDialog(
                   title: 'Lỗi',

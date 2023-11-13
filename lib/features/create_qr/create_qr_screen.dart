@@ -182,7 +182,10 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                                   onChange: (value) {
                                     provider.updateMoney(value.toString());
                                     if (provider.money.isNotEmpty) {
-                                      if (provider.money
+                                      if (provider.money == '0') {
+                                        provider.updateValidCreate(true);
+                                        provider.updateAmountErr(false);
+                                      } else if (provider.money
                                               .replaceAll(',', '')
                                               .length >=
                                           4) {
@@ -194,7 +197,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                                       }
                                     } else {
                                       provider.updateAmountErr(false);
-                                      provider.updateValidCreate(false);
+                                      provider.updateValidCreate(true);
                                     }
                                   },
                                 ),
@@ -355,7 +358,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                               ),
                             );
                           }, Icons.calculate_outlined),
-                          _buildTemplateSubButton('Quét QR/Barcode nội dung', () {
+                          _buildTemplateSubButton('Quét QR/Barcode nội dung',
+                              () {
                             DialogWidget.instance.openMsgQRInstallApp();
                           }, Icons.qr_code_outlined),
                         ],
@@ -366,7 +370,6 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: ButtonIconWidget(
@@ -378,19 +381,20 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     DialogWidget.instance.openMsgDialog(
                         title: 'TK ngân hàng không hợp lệ',
                         msg: 'Vui lòng chọn tài khoản ngân hàng');
-                  } else if (provider.money.isEmpty ||
-                      provider.money == '0' ||
-                      provider.amountErr) {
+                  } else if (provider.amountErr) {
                     DialogWidget.instance.openMsgDialog(
                         title: 'Số tiền không hợp lệ',
                         msg: 'Vui lòng nhập số tiền');
                   } else {
-                    if (StringUtils.instance
-                            .isNumeric(provider.money.replaceAll(',', '')) &&
-                        provider.bankAccountDTO.id.isNotEmpty) {
+                    String amount = '0';
+                    if (provider.money.isNotEmpty) {
+                      amount = provider.money.replaceAll(',', '');
+                    }
+
+                    if (provider.bankAccountDTO.id.isNotEmpty) {
                       QRCreateDTO qrCreateDTO = QRCreateDTO(
                         bankId: bankDetailDTO.id,
-                        amount: provider.money.replaceAll(',', ''),
+                        amount: amount,
                         content: StringUtils.instance
                             .removeDiacritic(contentController.text),
                         branchId: (bankDetailDTO.businessDetails.isNotEmpty)
@@ -403,8 +407,6 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                         userId: UserInformationHelper.instance.getUserId(),
                       );
 
-                      print(
-                          '------------------------------------${qrCreateDTO.toJson()}');
                       createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
                     }
                   }

@@ -69,25 +69,31 @@ class _SaleReportState extends State<SynthesisReport> {
                 } else {
                   return Consumer<SynthesisReportProvider>(
                       builder: (context, provider, child) {
-                    return SingleChildScrollView(
-                      child: ScrollConfiguration(
-                        behavior: MyCustomScrollBehavior(),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            width: provider.valueFilter.id == 1 ? 1090 : 970,
-                            child: Column(
-                              children: [
-                                _buildTitleItem(provider.valueFilter.id == 1),
-                                ...listSynthesisReport.map((e) {
-                                  int i = listSynthesisReport.indexOf(e);
-                                  return _buildItem(i, e, provider);
-                                }).toList()
-                              ],
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitleItem(provider.valueFilter.id == 1),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: ScrollConfiguration(
+                              behavior: MyCustomScrollBehavior(),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width:
+                                      provider.valueFilter.id == 1 ? 1090 : 970,
+                                  child: Column(
+                                    children: listSynthesisReport.map((e) {
+                                      int i = listSynthesisReport.indexOf(e);
+                                      return _buildItem(i, e, provider);
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     );
                   });
                 }
@@ -106,35 +112,41 @@ class _SaleReportState extends State<SynthesisReport> {
       alignment: Alignment.center,
       child: Row(
         children: [
-          _buildBoxItem('${index + 1}', width: 50),
+          _buildBoxItem('${index + 1}',
+              width: 50,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           if (provider.valueFilter.id == 1)
             _buildBoxItem(
                 '${provider.bankAccountDTO.bankShortName}\n${provider.bankAccountDTO.bankAccount}',
                 width: 120,
-                textAlign: TextAlign.start),
+                textAlign: TextAlign.start,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           if (provider.valueTimeFilter.id == 1)
-            _buildBoxItem(TimeUtils.instance.formatDate(dto.time), width: 120)
+            _buildBoxItem(TimeUtils.instance.formatDate(dto.time),
+                width: 120,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal)
           else
             _buildBoxItem(TimeUtils.instance.formatMonthYear(dto.time),
-                width: 120),
-          _buildBoxItem(
-            dto.totalTrans.toString(),
-            width: 120,
-          ),
+                width: 120,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          _buildBoxItem(dto.totalTrans.toString(),
+              width: 120,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalAmount)} VND',
-              width: 160),
-          _buildBoxItem(
-            dto.totalTransC.toString(),
-            width: 100,
-          ),
+              width: 160,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          _buildBoxItem(dto.totalTransC.toString(),
+              width: 100,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalCredit)} VND',
-              width: 160),
-          _buildBoxItem(
-            dto.totalTransD.toString(),
-            width: 100,
-          ),
+              width: 160,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          _buildBoxItem(dto.totalTransD.toString(),
+              width: 100,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalDebit)} VND',
-              width: 160),
+              width: 160,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
         ],
       ),
     );
@@ -143,6 +155,7 @@ class _SaleReportState extends State<SynthesisReport> {
   Widget _buildBoxItem(String value,
       {double width = 100,
       Color? valueColor,
+      FontWeight? fontWeight,
       TextAlign textAlign = TextAlign.center}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -156,7 +169,8 @@ class _SaleReportState extends State<SynthesisReport> {
       child: SelectableText(
         value,
         textAlign: textAlign,
-        style: TextStyle(fontSize: 12, color: valueColor),
+        style:
+            TextStyle(fontSize: 12, color: valueColor, fontWeight: fontWeight),
       ),
     );
   }
