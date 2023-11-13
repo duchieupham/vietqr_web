@@ -12,7 +12,6 @@ class ActiveVhitek extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
-    ;
     if (mid.isNotEmpty) {
       controller = TextEditingController(text: mid);
     }
@@ -35,14 +34,14 @@ class ActiveVhitek extends StatelessWidget {
             height: 40,
           ),
           const Text(
-            'Mã vạch máy*',
+            'Mã máy*',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           const SizedBox(
             height: 6,
           ),
           const Text(
-            'Mã vạch máy bán hàng được quét từ mã QR',
+            'Mã máy bán hàng được quét từ mã QR',
             style: TextStyle(fontSize: 12),
           ),
           const SizedBox(
@@ -56,7 +55,7 @@ class ActiveVhitek extends StatelessWidget {
             child: TextFieldWidget(
                 isObscureText: false,
                 autoFocus: true,
-                hintText: 'Mã vạch máy',
+                hintText: 'Mã máy',
                 fontSize: 12,
                 maxLength: 50,
                 controller: mid.isNotEmpty
@@ -73,14 +72,14 @@ class ActiveVhitek extends StatelessWidget {
             height: 16,
           ),
           const Text(
-            'Địa chỉ/Mã định danh máy*',
+            'Địa chỉ máy*',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           const SizedBox(
             height: 6,
           ),
           const Text(
-            'Khách hàng tự nhập Địa chỉ/Mã định danh máy để phân biệt các máy',
+            'Khách hàng nhập địa chỉ để phân biệt giữa các máy',
             style: TextStyle(fontSize: 12),
           ),
           const SizedBox(
@@ -94,7 +93,7 @@ class ActiveVhitek extends StatelessWidget {
             child: TextFieldWidget(
                 isObscureText: false,
                 autoFocus: true,
-                hintText: 'Mã định danh máy bán hàng',
+                hintText: 'Địa chỉ máy bán hàng',
                 fontSize: 12,
                 maxLength: 50,
                 controller: TextEditingController(text: provider.midAddress),
