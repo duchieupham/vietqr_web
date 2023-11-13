@@ -87,6 +87,14 @@
         }
     }
     </script>
+  <script>
+            function sendDataToFlutter(data) {
+            // Gửi dữ liệu từ WebView về Flutter thông qua InAppWebView
+            window.flutter_inappwebview.callHandler('sendDataToFlutter', data);
+        }
+
+
+  </script>
   <script
     src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.15/plugins/export/libs/FileSaver.js/FileSaver.min.js"></script>
 </body>
