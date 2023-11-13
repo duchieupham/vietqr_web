@@ -14,6 +14,7 @@ class ActiveVhitek extends StatelessWidget {
     TextEditingController controller = TextEditingController();
     if (mid.isNotEmpty) {
       controller = TextEditingController(text: mid);
+      context.read<ActiveVhitekProvider>().changeMid(mid);
     }
 
     return Consumer<ActiveVhitekProvider>(builder: (context, provider, child) {
