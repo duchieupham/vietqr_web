@@ -1,4 +1,3 @@
-import 'dart:html' as html;
 import 'dart:js' as js;
 
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
@@ -50,25 +49,27 @@ class _VhitekScreen extends StatefulWidget {
 class _VhitekState extends State<_VhitekScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   late VhitekBloc _vhitekBloc;
-
+  String userId = '';
   @override
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
-    if (js.context['state'] != null) {
-      var state = js.JsObject.fromBrowserObject(js.context['state']);
-      String userId = state['userId'];
-      _vhitekBloc.add(LoginByUserIdEvent(userId: userId));
-    }
   }
 
   @override
   void didChangeDependencies() {
-    if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
-      Map<String, dynamic> param = {};
-      param['pathHistory'] = '/service/vhitek/active';
-      context.push('/login', extra: param);
+    if (js.context['state'] != null) {
+      var state = js.JsObject.fromBrowserObject(js.context['state']);
+      userId = state['userId'];
+      _vhitekBloc.add(LoginByUserIdEvent(userId: userId));
+    } else {
+      if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
+        Map<String, dynamic> param = {};
+        param['pathHistory'] = '/service/vhitek/active';
+        context.push('/login', extra: param);
+      }
     }
+
     super.didChangeDependencies();
   }
 
@@ -113,6 +114,7 @@ class _VhitekState extends State<_VhitekScreen> {
                   msg: ErrorUtils.instance.getErrorMessage(state.dto.message));
             }
           }
+          if (state is LoginByUserIdSuccessState) {}
           if (state is VhitekCreateUserSuccessState) {
             Navigator.pop(context);
             if (state.dto.status == 'SUCCESS') {
@@ -141,7 +143,12 @@ class _VhitekState extends State<_VhitekScreen> {
         }, builder: (context, state) {
           return Column(
             children: [
-              _buildHeader(),
+              if (widget.mid.isEmpty)
+                _buildHeader()
+              else
+                const SizedBox(
+                  width: double.infinity,
+                ),
               if (state is VhitekLoginLoadingState)
                 const Padding(
                   padding: EdgeInsets.only(top: 40),
@@ -266,7 +273,7 @@ class _VhitekState extends State<_VhitekScreen> {
             borderRadius: 5,
             bgColor: AppColor.BLUE_TEXT,
             function: () {
-              html.window.postMessage('closeWebView', '*');
+              js.context.callMethod('sendDataToFlutter', ['CLOSE_WEB', '*']);
               context.push('/home');
             });
       }
