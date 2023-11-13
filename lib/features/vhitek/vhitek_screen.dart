@@ -1,27 +1,27 @@
-import 'dart:html' as html;
 import 'dart:js' as js;
-
-import 'package:VietQR/commons/constants/configurations/app_image.dart';
-import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'dart:html' as html;
+import 'events/vhitek_event.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:VietQR/commons/utils/error_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/features/vhitek/blocs/vhitek_bloc.dart';
-import 'package:VietQR/features/vhitek/page/active_success.dart';
 import 'package:VietQR/features/vhitek/page/active_vhitek.dart';
+import 'package:VietQR/features/vhitek/page/active_success.dart';
 import 'package:VietQR/features/vhitek/page/confirm_active.dart';
-import 'package:VietQR/features/vhitek/page/register_vhitek.dart';
-import 'package:VietQR/features/vhitek/provider/active_vhitek_provider.dart';
 import 'package:VietQR/features/vhitek/states/vhitek_state.dart';
+import 'package:VietQR/features/vhitek/page/register_vhitek.dart';
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/features/vhitek/provider/active_vhitek_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-import 'events/vhitek_event.dart';
+
 
 class VhitekScreen extends StatelessWidget {
   final String mid;
