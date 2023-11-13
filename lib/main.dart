@@ -428,9 +428,11 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/service/vhitek/active',
-        builder: (BuildContext context, GoRouterState state) => VhitekScreen(
-              mid: state.params['mid'] ?? '',
-            ),
+        builder: (BuildContext context, GoRouterState state) {
+          return VhitekScreen(
+            mid: state.queryParams['mid'] ?? '',
+          );
+        },
         pageBuilder: (BuildContext context, GoRouterState state) {
           Map<String, String> params = state.queryParams;
 
@@ -438,7 +440,7 @@ final GoRouter _router = GoRouter(
               context: context,
               state: state,
               child: VhitekScreen(
-                mid: state.params['mid'] ?? '',
+                mid: params['mid'] ?? '',
               ));
         }),
     GoRoute(
