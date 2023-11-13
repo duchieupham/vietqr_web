@@ -183,19 +183,21 @@ final GoRouter _router = GoRouter(
       },
     ),
     GoRoute(
-        path: '/login',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/home'
-                : '/login',
-        builder: (BuildContext context, GoRouterState state) => const Login(),
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithoutAnimation(
-            context: context,
-            state: state,
-            child: const Login(),
-          );
-        }),
+      path: '/login',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/home'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) {
+        Map<String, dynamic> param = {};
+        if (state.extra != null) {
+          param = state.extra as Map<String, dynamic>;
+        }
+        return Login(
+          pathHistory: param['pathHistory'] ?? '',
+        );
+      },
+    ),
     GoRoute(
         path: '/service',
         builder: (BuildContext context, GoRouterState state) =>

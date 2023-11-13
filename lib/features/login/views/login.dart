@@ -31,7 +31,8 @@ import '../../../models/account_login_method_dto.dart';
 import '../widgets/login_by_card_widget.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  final String pathHistory;
+  const Login({Key? key, this.pathHistory = ''}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _Login();
@@ -121,8 +122,8 @@ class _Login extends State<Login> {
                   }
 
                   provider.updateListInfoUser(list);
-                  if (Uri.base.toString().contains('service/vhitek/active')) {
-                    context.push('/service/vhitek/active');
+                  if (widget.pathHistory.isNotEmpty) {
+                    context.push(widget.pathHistory);
                   } else {
                     context.push('/home');
                   }

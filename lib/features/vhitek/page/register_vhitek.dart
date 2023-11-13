@@ -1,6 +1,4 @@
-import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/vhitek/provider/active_vhitek_provider.dart';
@@ -22,17 +20,9 @@ class RegisterVhitek extends StatelessWidget {
             height: 4,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Image(
-                  image: ImageUtils.instance
-                      .getImageNetWork(AppImages.iconPartnerVhitek),
-                  height: 60,
-                ),
-                const SizedBox(
-                  width: 12,
-                ),
                 Expanded(
                     child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

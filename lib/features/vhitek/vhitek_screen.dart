@@ -62,6 +62,16 @@ class _VhitekState extends State<_VhitekScreen> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
+      Map<String, dynamic> param = {};
+      param['pathHistory'] = '/service/vhitek/active';
+      context.push('/login', extra: param);
+    }
+    super.didChangeDependencies();
+  }
+
   void _animatedToPage(int index) {
     _pageController.animateToPage(
       index,

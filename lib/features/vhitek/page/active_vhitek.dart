@@ -1,6 +1,4 @@
-import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/vhitek/provider/active_vhitek_provider.dart';
 import 'package:VietQR/layouts/border_layout.dart';
@@ -24,15 +22,7 @@ class ActiveVhitek extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 28),
         children: [
           const SizedBox(
-            height: 28,
-          ),
-          Image(
-            image: ImageUtils.instance
-                .getImageNetWork(AppImages.iconPartnerVhitek),
-            height: 120,
-          ),
-          const SizedBox(
-            height: 8,
+            height: 32,
           ),
           const Align(
             alignment: Alignment.center,
