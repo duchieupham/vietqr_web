@@ -448,6 +448,7 @@ final GoRouter _router = GoRouter(
         builder: (BuildContext context, GoRouterState state) {
           return VhitekScreen(
             mid: state.queryParams['mid'] ?? '',
+            path: '/service/may-ban-hang/active',
           );
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -458,6 +459,7 @@ final GoRouter _router = GoRouter(
               state: state,
               child: VhitekScreen(
                 mid: params['mid'] ?? '',
+                path: '/service/may-ban-hang/active',
               ));
         }),
     GoRoute(

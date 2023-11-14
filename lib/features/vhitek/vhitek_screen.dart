@@ -24,8 +24,9 @@ import 'events/vhitek_event.dart';
 
 class VhitekScreen extends StatelessWidget {
   final String mid;
+  final String path;
 
-  const VhitekScreen({super.key, this.mid = ''});
+  const VhitekScreen({super.key, this.mid = '', this.path = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +34,16 @@ class VhitekScreen extends StatelessWidget {
         create: (contextProvider) => ActiveVhitekProvider(),
         child: _VhitekScreen(
           mid: mid,
+          path: path,
         ));
   }
 }
 
 class _VhitekScreen extends StatefulWidget {
   final String mid;
+  final String path;
 
-  const _VhitekScreen({super.key, this.mid = ''});
+  const _VhitekScreen({super.key, this.mid = '', this.path = ''});
 
   @override
   State<_VhitekScreen> createState() => _VhitekState();
@@ -65,7 +68,12 @@ class _VhitekState extends State<_VhitekScreen> {
     } else {
       if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
         Map<String, dynamic> param = {};
-        param['pathHistory'] = '/service/vhitek/active';
+        if (widget.path.isNotEmpty) {
+          param['pathHistory'] = widget.path;
+        } else {
+          param['pathHistory'] = '/service/vhitek/active';
+        }
+
         context.push('/login', extra: param);
       }
     }
