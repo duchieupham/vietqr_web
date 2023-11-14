@@ -813,7 +813,9 @@ class _ListTransactionState extends State<ListTransaction> {
                   ),
                 ),
               ),
-            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id)
+            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id ||
+                (provider.valueFilter.id == 4 &&
+                    provider.valueTimeFilter.id != 0))
               InkWell(
                 onTap: () {
                   String link =

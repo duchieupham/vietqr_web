@@ -72,7 +72,15 @@ class _SaleReportState extends State<SynthesisReport> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTitleItem(provider.valueFilter.id == 1),
+                        SizedBox(
+                            width: provider.valueFilter.id == 1 ? 1090 : 970,
+                            child: Column(
+                              children: [
+                                _buildTitleItem(provider.valueFilter.id == 1),
+                                _buildItemTotal(
+                                    0, listSynthesisReport.first, provider),
+                              ],
+                            )),
                         Expanded(
                           child: SingleChildScrollView(
                             child: ScrollConfiguration(
@@ -106,6 +114,57 @@ class _SaleReportState extends State<SynthesisReport> {
   }
 
   Widget _buildItem(
+      int index, SynthesisReportDTO dto, SynthesisReportProvider provider) {
+    if (index > 0) {
+      return Container(
+        color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
+        alignment: Alignment.center,
+        child: Row(
+          children: [
+            _buildBoxItem('${index + 1}',
+                width: 50,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            if (provider.valueFilter.id == 1)
+              _buildBoxItem(
+                  '${provider.bankAccountDTO.bankShortName}\n${provider.bankAccountDTO.bankAccount}',
+                  width: 120,
+                  textAlign: TextAlign.start,
+                  fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            if (provider.valueTimeFilter.id == 1)
+              _buildBoxItem(TimeUtils.instance.formatDate(dto.time),
+                  width: 120,
+                  fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal)
+            else
+              _buildBoxItem(TimeUtils.instance.formatMonthYear(dto.time),
+                  width: 120,
+                  fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem(dto.totalTrans.toString(),
+                width: 120,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem('${StringUtils.formatNumber(dto.totalAmount)} VND',
+                width: 160,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem(dto.totalTransC.toString(),
+                width: 100,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem('${StringUtils.formatNumber(dto.totalCredit)} VND',
+                width: 160,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem(dto.totalTransD.toString(),
+                width: 100,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem('${StringUtils.formatNumber(dto.totalDebit)} VND',
+                width: 160,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          ],
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildItemTotal(
       int index, SynthesisReportDTO dto, SynthesisReportProvider provider) {
     return Container(
       color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
