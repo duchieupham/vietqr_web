@@ -4,6 +4,7 @@ import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
+import 'package:VietQR/features/merchant/page/bill.dart';
 import 'package:VietQR/features/merchant/page/list_transaction.dart';
 import 'package:VietQR/features/merchant/page/service_charge.dart';
 import 'package:VietQR/features/merchant/page/synthesis_repor.dart';
@@ -50,6 +51,8 @@ class _MerchantViewState extends State<MerchantView> {
         return 1;
       case SubMenuType.SERVICE_FEE:
         return 2;
+      case SubMenuType.BILL:
+        return 3;
       default:
         return 0;
     }
@@ -127,6 +130,21 @@ class _MerchantViewState extends State<MerchantView> {
                       },
                     ),
                     ItemMenuTop(
+                      title: 'Hóa đơn',
+                      isSelect: currentType == SubMenuType.BILL,
+                      onTap: () {
+                        changePage(SubMenuType.BILL);
+                        if (currentType == SubMenuType.BILL) {
+                          merchantBloc.add(GetMerchantFeeEvent(
+                              customerSyncId: Session
+                                  .instance.accountIsMerchantDTO.customerSyncId,
+                              year: DateTime.now().year.toString(),
+                              status: 0,
+                              isLoadingPage: true));
+                        }
+                      },
+                    ),
+                    ItemMenuTop(
                       title: 'Bảng giá',
                       isSelect: currentType == SubMenuType.OTHER,
                       onTap: () {},
@@ -139,6 +157,7 @@ class _MerchantViewState extends State<MerchantView> {
                 const ListTransaction(),
                 const SynthesisReport(),
                 const ServiceFee(),
+                const Bill(),
               ][getPage(currentType)])
             ],
           ),

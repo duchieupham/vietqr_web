@@ -19,4 +19,11 @@ enum MenuHomeType {
   OTHER,
 }
 
-enum SubMenuType { LIST_TRANSACTION, SYNTHESIS_REPORT, OTHER, SERVICE_FEE }
+enum SubMenuType {
+  LIST_TRANSACTION,
+  SYNTHESIS_REPORT,
+  BILL,
+
+  SERVICE_FEE,
+  OTHER,
+}
