@@ -20,6 +20,7 @@ class _BillState extends State<Bill> {
   late MerchantBloc merchantBloc;
 
   List<ServiceChargeDTO> listActiveFee = [];
+  List<ServiceChargeDTO> listBill = [];
   int totalAmount = 0;
   int totalVat = 0;
   int totalAmountAfterVat = 0;
@@ -58,7 +59,9 @@ class _BillState extends State<Bill> {
               }
 
               listActiveFee = state.list;
-              getTotalAmount(state.list);
+              listBill = state.list;
+              listBill.removeAt(0);
+              getTotalAmount(listBill);
             }
           }, builder: (context, state) {
             if (state is MerchantLoadingActiveFeeState) {
@@ -73,31 +76,79 @@ class _BillState extends State<Bill> {
                   child: Center(child: Text('Không có dữ liệu')),
                 );
               } else {
-                return SingleChildScrollView(
-                  child: ScrollConfiguration(
-                    behavior: MyCustomScrollBehavior(),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: 1180,
-                        child: Column(
-                          children: [
-                            _buildTitleItem(),
-                            ...listActiveFee.map((e) {
-                              int i = listActiveFee.indexOf(e);
-                              return _buildItem(i, e);
-                            }).toList(),
-                            _buildItemTotal(totalAmount,
-                                'Tổng tiền hàng (Total amount excl. VAT):'),
-                            _buildItemTotal(
-                                totalVat, 'Tiền thuế GTGT (VAT amount):'),
-                            _buildItemTotal(totalAmountAfterVat,
-                                'Tổng tiền thanh toán (Total Amount):'),
-                          ],
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 12),
+                      child: Text(
+                        'Phí dịch vụ tháng hiện tại',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    ScrollConfiguration(
+                      behavior: MyCustomScrollBehavior(),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                            width: 1240,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _buildTitleItem(),
+                                _buildItem(0, listActiveFee.first),
+                              ],
+                            )),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 12),
+                      child: Text(
+                        'Hoá đơn cần thanh toán',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: ScrollConfiguration(
+                          behavior: MyCustomScrollBehavior(),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: SizedBox(
+                              width: 1240,
+                              child: Column(
+                                children: [
+                                  _buildTitleItem(),
+                                  ...listActiveFee.map((e) {
+                                    int i = listActiveFee.indexOf(e);
+                                    return _buildItem(i, e);
+                                  }).toList(),
+                                  _buildItemTotal(totalAmount,
+                                      'Tổng tiền hàng (Total amount excl. VAT):'),
+                                  _buildItemTotal(
+                                      totalVat, 'Tiền thuế GTGT (VAT amount):'),
+                                  _buildItemTotal(totalAmountAfterVat,
+                                      'Tổng tiền thanh toán (Total Amount):'),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 );
               }
             }
@@ -121,7 +172,7 @@ class _BillState extends State<Bill> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           SizedBox(
-            width: 320,
+            width: 360,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -158,10 +209,10 @@ class _BillState extends State<Bill> {
           ),
           _buildBoxItem(
             'Phần mền VietQR thông báo xử lý giao dịch tháng ${TimeUtils.instance.formatMonthYear(dto.month)}',
-            width: 370,
+            width: 350,
           ),
           _buildBoxItem(
-            'Giao dịch/Tháng',
+            'Tháng',
             width: 120,
           ),
           _buildBoxItem('1', width: 80, textAlign: TextAlign.center),
@@ -169,8 +220,10 @@ class _BillState extends State<Bill> {
               width: 140),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalFee)} VND',
               width: 140),
-          _buildBoxItem('8%', width: 140),
+          _buildBoxItem('8%', width: 80),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalVatFee)} VND',
+              width: 140),
+          _buildBoxItem('${StringUtils.formatNumber(dto.totalFeeAfterVat)} VND',
               width: 140),
         ],
       ),
@@ -213,20 +266,36 @@ class _BillState extends State<Bill> {
           _buildItemTitle('STT\n(No)', width: 50, padding: EdgeInsets.zero),
           _buildItemTitle(
               'Nội dung hóa đơn thanh toán\n(Name of goods and services)',
-              width: 370,
+              width: 350,
               padding: const EdgeInsets.symmetric(horizontal: 12)),
           _buildItemTitle('Đơn vị tính\n(Unit)',
-              width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
+              textAlign: TextAlign.center,
+              width: 120,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
           _buildItemTitle('Số lượng\n(Quantity)',
-              width: 80, padding: const EdgeInsets.symmetric(horizontal: 12)),
+              textAlign: TextAlign.center,
+              width: 80,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
           _buildItemTitle('Đơn giá\n(Unit price)',
-              width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
+              textAlign: TextAlign.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
           _buildItemTitle('Thành tiền\n(Amount)',
-              width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Thuế suất GTGT\n(VAT rate)',
-              width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
+              textAlign: TextAlign.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('%VAT\n(VAT rate)',
+              textAlign: TextAlign.center,
+              width: 80,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
           _buildItemTitle('Tiền thuế GTGT\n(VAT Amount)',
-              width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
+              textAlign: TextAlign.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Tổng tiền\n(Amount after VAT)',
+              textAlign: TextAlign.center,
+              width: 140,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
         ],
       ),
     );
