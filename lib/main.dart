@@ -427,23 +427,6 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
-        path: '/service/vhitek/active',
-        builder: (BuildContext context, GoRouterState state) {
-          return VhitekScreen(
-            mid: state.queryParams['mid'] ?? '',
-          );
-        },
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
-
-          return buildPageWithoutAnimation(
-              context: context,
-              state: state,
-              child: VhitekScreen(
-                mid: params['mid'] ?? '',
-              ));
-        }),
-    GoRoute(
         path: '/service/may-ban-hang/active',
         builder: (BuildContext context, GoRouterState state) {
           return VhitekScreen(

@@ -1,3 +1,6 @@
+import 'package:VietQR/features/home/repositories/home_repository.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 
 class ActiveVhitekProvider with ChangeNotifier {
@@ -36,6 +39,22 @@ class ActiveVhitekProvider with ChangeNotifier {
 
   String _errorPass = '';
   String get errorPass => _errorPass;
+
+  final homeRepository = const HomeRepository();
+  BankAccountDTO _bankAccountDTO = BankAccountDTO();
+  BankAccountDTO get bankAccountDTO => _bankAccountDTO;
+
+  List<BankAccountDTO> bankAccounts = [];
+  bool isLoadingGetListBank = false;
+  getListBankAccount() async {
+    bankAccounts = await homeRepository
+        .getListBankAccount(UserInformationHelper.instance.getUserId());
+  }
+
+  updateBankAccountDTO(BankAccountDTO value) {
+    _bankAccountDTO = value;
+    notifyListeners();
+  }
 
   void changePage(int page) {
     _page = page;

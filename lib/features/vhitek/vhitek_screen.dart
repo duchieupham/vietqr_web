@@ -68,13 +68,10 @@ class _VhitekState extends State<_VhitekScreen> {
     } else {
       if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
         Map<String, dynamic> param = {};
-        if (widget.path.isNotEmpty) {
-          param['pathHistory'] = widget.path;
-        } else {
-          param['pathHistory'] = '/service/vhitek/active';
-        }
-
+        param['pathHistory'] = widget.path;
         context.push('/login', extra: param);
+      } else {
+        context.read<ActiveVhitekProvider>().getListBankAccount();
       }
     }
 
@@ -122,7 +119,9 @@ class _VhitekState extends State<_VhitekScreen> {
                   msg: ErrorUtils.instance.getErrorMessage(state.dto.message));
             }
           }
-          if (state is LoginByUserIdSuccessState) {}
+          if (state is LoginByUserIdSuccessState) {
+            context.read<ActiveVhitekProvider>().getListBankAccount();
+          }
           if (state is VhitekCreateUserSuccessState) {
             Navigator.pop(context);
             if (state.dto.status == 'SUCCESS') {
@@ -218,7 +217,11 @@ class _VhitekState extends State<_VhitekScreen> {
             borderRadius: 5,
             bgColor: AppColor.BLUE_TEXT,
             function: () {
-              if (provider.mid.isEmpty ||
+              if (provider.bankAccountDTO.bankAccount.isEmpty) {
+                DialogWidget.instance.openMsgDialog(
+                    title: 'Cảnh báo',
+                    msg: 'Vui lòng chọn tài khoản ngân hàng');
+              } else if (provider.mid.isEmpty ||
                   provider.midAddress.isEmpty ||
                   provider.email.isEmpty) {
                 DialogWidget.instance.openMsgDialog(
@@ -272,6 +275,9 @@ class _VhitekState extends State<_VhitekScreen> {
               param['mid'] = provider.mid;
               param['address'] = provider.midAddress;
               param['userIdVhitek'] = provider.userIdVhitek;
+              param['bankAccount'] = provider.bankAccountDTO.bankAccount;
+              param['bankCode '] = provider.bankAccountDTO.bankCode;
+              param['userBankName '] = provider.bankAccountDTO.userBankName;
               _vhitekBloc.add(ActiveEvent(param: param));
             });
       } else if (provider.page == 3) {

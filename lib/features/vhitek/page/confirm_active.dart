@@ -39,6 +39,12 @@ class ConfirmActive extends StatelessWidget {
                   width: double.infinity,
                   color: AppColor.BLACK_BUTTON.withOpacity(0.2),
                 ),
+                _buildItemInfo('Tk ngân hàng',
+                    '${provider.bankAccountDTO.bankAccount} - ${provider.bankAccountDTO.bankCode} '),
+                DividerWidget(
+                  width: double.infinity,
+                  color: AppColor.BLACK_BUTTON.withOpacity(0.2),
+                ),
                 _buildItemInfo('Định danh máy', provider.midAddress),
                 DividerWidget(
                   width: double.infinity,
@@ -78,7 +84,7 @@ class ConfirmActive extends StatelessWidget {
             const Spacer(),
             Text(
               content,
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ],
         ),

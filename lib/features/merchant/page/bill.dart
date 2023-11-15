@@ -87,10 +87,12 @@ class _BillState extends State<Bill> {
                               int i = listActiveFee.indexOf(e);
                               return _buildItem(i, e);
                             }).toList(),
-                            _buildItemTotal(totalAmount, 'Tổng tiền hàng:'),
-                            _buildItemTotal(totalVat, 'Tiền thuế GTGT:'),
+                            _buildItemTotal(totalAmount,
+                                'Tổng tiền hàng (Total amount excl. VAT):'),
                             _buildItemTotal(
-                                totalAmountAfterVat, 'Tổng tiền thanh toán:'),
+                                totalVat, 'Tiền thuế GTGT (VAT amount):'),
+                            _buildItemTotal(totalAmountAfterVat,
+                                'Tổng tiền thanh toán (Total Amount):'),
                           ],
                         ),
                       ),
@@ -119,7 +121,7 @@ class _BillState extends State<Bill> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           SizedBox(
-            width: 280,
+            width: 320,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -208,20 +210,22 @@ class _BillState extends State<Bill> {
       decoration: const BoxDecoration(color: AppColor.BLUE_DARK),
       child: Row(
         children: [
-          _buildItemTitle('STT', width: 50, padding: EdgeInsets.zero),
-          _buildItemTitle('Nội dung hóa đơn thanh toán',
-              width: 370, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Đơn vị tính',
+          _buildItemTitle('STT\n(No)', width: 50, padding: EdgeInsets.zero),
+          _buildItemTitle(
+              'Nội dung hóa đơn thanh toán\n(Name of goods and services)',
+              width: 370,
+              padding: const EdgeInsets.symmetric(horizontal: 12)),
+          _buildItemTitle('Đơn vị tính\n(Unit)',
               width: 120, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Số lượng',
+          _buildItemTitle('Số lượng\n(Quantity)',
               width: 80, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Đơn giá',
+          _buildItemTitle('Đơn giá\n(Unit price)',
               width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Thành tiền',
+          _buildItemTitle('Thành tiền\n(Amount)',
               width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Thuế suất GTGT',
+          _buildItemTitle('Thuế suất GTGT\n(VAT rate)',
               width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
-          _buildItemTitle('Tiền thuế GTGT',
+          _buildItemTitle('Tiền thuế GTGT\n(VAT Amount)',
               width: 140, padding: const EdgeInsets.symmetric(horizontal: 12)),
         ],
       ),
