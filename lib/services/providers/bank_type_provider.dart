@@ -1,6 +1,9 @@
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/features/home/repositories/home_repository.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/widgets.dart';
 
 class BankTypeProvider with ChangeNotifier {
@@ -51,10 +54,17 @@ class BankTypeProvider with ChangeNotifier {
 
   bool _showMoreOption = false;
   bool get showMoreOption => _showMoreOption;
+  final homeRepository = const HomeRepository();
+  List<BankAccountDTO> bankAccounts = [];
 
   updateShowMoreOption(bool value) async {
     _showMoreOption = value;
     notifyListeners();
+  }
+
+  getListBankAccount() async {
+    bankAccounts = await homeRepository
+        .getListBankAccount(UserInformationHelper.instance.getUserId());
   }
 
   void updateBankCardRequestOTP(BankCardRequestOTP dto) {

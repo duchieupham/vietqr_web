@@ -52,6 +52,7 @@ class _AddBankView extends State<AddBankStep2> {
   void initState() {
     super.initState();
     bankBloc = BlocProvider.of(context);
+    Provider.of<BankTypeProvider>(context, listen: false).getListBankAccount();
   }
 
   @override
@@ -308,16 +309,39 @@ class _AddBankView extends State<AddBankStep2> {
                                                                   listen: false)
                                                           .bankType
                                                           .id;
-                                                      bankBloc.add(
-                                                        BankCheckExistedEvent(
-                                                            isAuthenticated:
-                                                                false,
-                                                            bankAccount:
-                                                                bankAccountController
-                                                                    .text,
-                                                            bankTypeId:
-                                                                bankTypeId),
-                                                      );
+
+                                                      bool isAccountExist =
+                                                          false;
+                                                      for (var element
+                                                          in provider
+                                                              .bankAccounts) {
+                                                        if (element
+                                                                .bankAccount ==
+                                                            bankAccountController
+                                                                .text) {
+                                                          isAccountExist = true;
+                                                        }
+                                                      }
+                                                      if (!isAccountExist) {
+                                                        bankBloc.add(
+                                                          BankCheckExistedEvent(
+                                                              isAuthenticated:
+                                                                  false,
+                                                              bankAccount:
+                                                                  bankAccountController
+                                                                      .text,
+                                                              bankTypeId:
+                                                                  bankTypeId),
+                                                        );
+                                                      } else {
+                                                        DialogWidget.instance
+                                                            .openMsgDialog(
+                                                          title:
+                                                              'Không thể tạo',
+                                                          msg:
+                                                              'Tài khoản đã tồn tại',
+                                                        );
+                                                      }
                                                     }
                                                   } else {
                                                     DialogWidget.instance
