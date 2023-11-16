@@ -68,7 +68,11 @@ class _VhitekState extends State<_VhitekScreen> {
     } else {
       if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
         Map<String, dynamic> param = {};
-        param['pathHistory'] = widget.path;
+        if (widget.path.isNotEmpty) {
+          param['pathHistory'] = widget.path;
+        } else {
+          param['pathHistory'] = '/service/vhitek/active';
+        }
         context.push('/login', extra: param);
       } else {
         context.read<ActiveVhitekProvider>().getListBankAccount();
@@ -278,6 +282,7 @@ class _VhitekState extends State<_VhitekScreen> {
               param['bankAccount'] = provider.bankAccountDTO.bankAccount;
               param['bankCode '] = provider.bankAccountDTO.bankCode;
               param['userBankName '] = provider.bankAccountDTO.userBankName;
+              param['bankID '] = provider.bankAccountDTO.bankId;
               _vhitekBloc.add(ActiveEvent(param: param));
             });
       } else if (provider.page == 3) {
