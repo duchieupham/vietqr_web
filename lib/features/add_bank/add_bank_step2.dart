@@ -318,7 +318,8 @@ class _AddBankView extends State<AddBankStep2> {
                                                         if (element
                                                                 .bankAccount ==
                                                             bankAccountController
-                                                                .text) {
+                                                                .text
+                                                                .trim()) {
                                                           isAccountExist = true;
                                                         }
                                                       }
