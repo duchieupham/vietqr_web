@@ -280,9 +280,9 @@ class _VhitekState extends State<_VhitekScreen> {
               param['address'] = provider.midAddress;
               param['userIdVhitek'] = provider.userIdVhitek;
               param['bankAccount'] = provider.bankAccountDTO.bankAccount;
-              param['bankCode '] = provider.bankAccountDTO.bankCode;
-              param['userBankName '] = provider.bankAccountDTO.userBankName;
-              param['bankID '] = provider.bankAccountDTO.bankId;
+              param['userBankName'] = provider.bankAccountDTO.userBankName;
+              param['bankId'] = provider.bankAccountDTO.id;
+
               _vhitekBloc.add(ActiveEvent(param: param));
             });
       } else if (provider.page == 3) {

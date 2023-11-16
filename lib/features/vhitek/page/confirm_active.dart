@@ -60,7 +60,7 @@ class ConfirmActive extends StatelessWidget {
           InkWell(
               onTap: () {
                 edit();
-                provider.changePage(1);
+                provider.changePage(0);
               },
               child: const Text(
                 'Chỉnh sửa thông tin',
