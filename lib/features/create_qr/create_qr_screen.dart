@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/env_type.dart';
@@ -21,6 +22,7 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../commons/utils/image_utils.dart';
@@ -439,6 +441,43 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                 ),
               ),
               const SizedBox(height: 32),
+              GestureDetector(
+                onTap: () async {
+                  context.go('/add-bank/step1');
+                },
+                child: Container(
+                  height: 45,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppColor.WHITE,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(AppImages.icCardBlue),
+                            height: 28,
+                          ),
+                          const Padding(padding: EdgeInsets.only(left: 5)),
+                          const Text(
+                            'Thêm tài khoản ngân hàng',
+                            style: TextStyle(
+                              color: AppColor.BLUE_TEXT,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

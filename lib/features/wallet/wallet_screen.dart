@@ -712,7 +712,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 html.window.open(
                     Uri.base
                         .toString()
-                        .replaceFirst('/qr-wallet', '/qr_generate$paramData'),
+                        .replaceFirst('/qr-wallet', '/qr-generate$paramData'),
                     'new tab');
               },
               bgColor: AppColor.WHITE.withOpacity(0.4),

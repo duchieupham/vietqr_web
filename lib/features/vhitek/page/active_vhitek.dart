@@ -20,7 +20,7 @@ class ActiveVhitek extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
-    if (mid.isNotEmpty) {
+    if (mid.isNotEmpty && mid.length > 2) {
       controller = TextEditingController(text: mid);
       context.read<ActiveVhitekProvider>().changeMid(mid);
     }
