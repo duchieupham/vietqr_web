@@ -66,7 +66,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
   final FocusNode _focusNode = FocusNode();
   late QRCodeUnUTBloc qrCodeUnUTBloc;
   late BankTypeBloc bankTypeBloc;
-  bool focusKeyBroadListen = false;
+
   List<BankTypeDTO> bankTypes = [];
   QRGeneratedDTO qrGeneratedDTO = const QRGeneratedDTO(
     imgId: '58b7190b-a294-4b14-968f-cd365593893e',
@@ -103,34 +103,24 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    return RawKeyboardListener(
-      focusNode: FocusNode(),
-      autofocus: true,
-      onKey: (RawKeyEvent event) {
-        if (focusKeyBroadListen) {
-          print("4) ${event.physicalKey.debugName}");
-        }
-        focusKeyBroadListen = true;
-      },
-      child: ChangeNotifierProvider<CreateQRLoginProvider>(
-        create: (context) => CreateQRLoginProvider(),
-        child: CreateQRLoginFrame(
-          width: width,
-          height: height,
-          widget1: _buildFormInput(),
-          widget2: _buildQRCode(),
-          menuTop: const MenuLogin(),
-          bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
-              listener: (context, state) {
-            if (state is BankTypeGetListSuccessfulState) {
-              bankTypes = state.list;
-            }
-          }, builder: (context, state) {
-            return const FooterWeb(
-              showListBank: true,
-            );
-          }),
-        ),
+    return ChangeNotifierProvider<CreateQRLoginProvider>(
+      create: (context) => CreateQRLoginProvider(),
+      child: CreateQRLoginFrame(
+        width: width,
+        height: height,
+        widget1: _buildFormInput(),
+        widget2: _buildQRCode(),
+        menuTop: const MenuLogin(),
+        bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
+            listener: (context, state) {
+          if (state is BankTypeGetListSuccessfulState) {
+            bankTypes = state.list;
+          }
+        }, builder: (context, state) {
+          return const FooterWeb(
+            showListBank: true,
+          );
+        }),
       ),
     );
   }

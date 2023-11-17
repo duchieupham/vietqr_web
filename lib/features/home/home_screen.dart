@@ -84,7 +84,7 @@ class _HomeScreenState extends State<_HomeScreen> {
     authenticated: false,
     caiValue: '',
   );
-
+  bool focusKeyBroadListen = false;
   @override
   void initState() {
     super.initState();
@@ -116,38 +116,52 @@ class _HomeScreenState extends State<_HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state.request == BankType.GET_DETAIL) {
-          if (state.bankDetailDTO != null) {
-            dto = state.bankDetailDTO!;
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      autofocus: true,
+      onKey: (RawKeyEvent event) {
+        if (focusKeyBroadListen) {
+          if (event.data.keyLabel == '1') {
+            context.go('/create-qr');
           }
-          qrGeneratedDTO = QRGeneratedDTO(
-            bankCode: dto.bankCode,
-            bankName: dto.bankName,
-            bankAccount: dto.bankAccount,
-            userBankName: dto.userBankName,
-            amount: '',
-            content: '',
-            qrCode: dto.qrCode,
-            imgId: dto.imgId,
+        }
+        focusKeyBroadListen = true;
+      },
+      child: BlocConsumer<HomeBloc, HomeState>(
+        listener: (context, state) {
+          if (state.request == BankType.GET_DETAIL) {
+            if (state.bankDetailDTO != null) {
+              dto = state.bankDetailDTO!;
+            }
+            qrGeneratedDTO = QRGeneratedDTO(
+              bankCode: dto.bankCode,
+              bankName: dto.bankName,
+              bankAccount: dto.bankAccount,
+              userBankName: dto.userBankName,
+              amount: '',
+              content: '',
+              qrCode: dto.qrCode,
+              imgId: dto.imgId,
+            );
+          }
+          if (state.request == BankType.BANK) {
+            context
+                .read<HomeProvider>()
+                .onChangeBankId(state.listBanks.first.id);
+            _bloc.add(BankCardGetDetailEvent(bankId: state.listBanks.first.id));
+          }
+        },
+        builder: (context, state) {
+          return HomeFrame(
+            menu: const MenuLeft(
+              currentType: MenuHomeType.HOME,
+            ),
+            widget1: _buildHome(),
+            widget2: _buildListBank(state.listBanks, state.colors),
+            widget3: _buildInfoAccount(dto, qrGeneratedDTO, state),
           );
-        }
-        if (state.request == BankType.BANK) {
-          context.read<HomeProvider>().onChangeBankId(state.listBanks.first.id);
-          _bloc.add(BankCardGetDetailEvent(bankId: state.listBanks.first.id));
-        }
-      },
-      builder: (context, state) {
-        return HomeFrame(
-          menu: const MenuLeft(
-            currentType: MenuHomeType.HOME,
-          ),
-          widget1: _buildHome(),
-          widget2: _buildListBank(state.listBanks, state.colors),
-          widget3: _buildInfoAccount(dto, qrGeneratedDTO, state),
-        );
-      },
+        },
+      ),
     );
   }
 

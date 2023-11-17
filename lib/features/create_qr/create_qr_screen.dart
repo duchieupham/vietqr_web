@@ -44,16 +44,26 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
   List<BankAccountDTO> bankAccounts = [];
   List<Color> colors = [];
   FocusNode focusNode = FocusNode();
-
+  FocusNode focusNodeContent = FocusNode();
+  FocusNode focusNodeWidget = FocusNode();
   AccountBankDetailDTO bankDetailDTO = const AccountBankDetailDTO(
     businessDetails: [],
     transactions: [],
   );
-
+  int focusKeyBroadListen = 0;
+  bool showDialog = false;
+  int indexBankAccount = 0;
+  bool focusAmount = false;
   @override
   void initState() {
     createQRBloc = CreateQRBloc()..add(GetListBankAccount());
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    FocusScope.of(context).requestFocus(focusNodeWidget);
+    super.didChangeDependencies();
   }
 
   @override
@@ -75,6 +85,10 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                   context.read<CreateQRProvider>().updateBankAccountDto(bank);
                 }
               }
+            } else {
+              context
+                  .read<CreateQRProvider>()
+                  .updateBankAccountDto(bankAccounts.first);
             }
           }
           if (state is BankDetailSuccessState) {
@@ -118,10 +132,59 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             }
           }
         }, builder: (context, state) {
-          return CreateQRFrame(
-            widget1: _buildListBank(),
-            widget2: _formCreate(),
-            // widget3: _buildQRcode(state),
+          return RawKeyboardListener(
+            focusNode: focusNodeWidget,
+            autofocus: false,
+            onKey: (RawKeyEvent event) {
+              focusKeyBroadListen++;
+
+              if (focusKeyBroadListen == 1) {
+                indexBankAccount =
+                    bankAccounts.indexOf(bankAccounts[indexBankAccount]);
+
+                if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                  if (indexBankAccount == bankAccounts.length - 1) {
+                    indexBankAccount = -1;
+                  }
+                  indexBankAccount++;
+                  context
+                      .read<CreateQRProvider>()
+                      .updateBankAccountDto(bankAccounts[indexBankAccount]);
+                  createQRBloc.add(BankEventGetDetail(
+                      bankId: bankAccounts[indexBankAccount].id));
+                }
+
+                if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                  if (indexBankAccount == 0) {
+                    indexBankAccount = bankAccounts.length;
+                    indexBankAccount--;
+                  } else {
+                    indexBankAccount--;
+                  }
+
+                  context
+                      .read<CreateQRProvider>()
+                      .updateBankAccountDto(bankAccounts[indexBankAccount]);
+                  createQRBloc.add(BankEventGetDetail(
+                      bankId: bankAccounts[indexBankAccount].id));
+                }
+                if (!focusAmount) {
+                  if (event.logicalKey == LogicalKeyboardKey.enter) {
+                    FocusScope.of(context).requestFocus(focusNode);
+                    focusAmount= true;
+                  }
+                }
+              }
+
+              if (focusKeyBroadListen == 2) {
+                focusKeyBroadListen = 0;
+              }
+            },
+            child: CreateQRFrame(
+              widget1: _buildListBank(),
+              widget2: _formCreate(),
+              // widget3: _buildQRcode(state),
+            ),
           );
         }),
       ),
@@ -180,8 +243,12 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                                   inputFormatter: [
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
-                                  keyboardAction: TextInputAction.next,
+                                  keyboardAction: TextInputAction.done,
                                   onChange: (value) {
+                                    if (showDialog) {
+                                      Navigator.pop(context);
+                                      showDialog = false;
+                                    }
                                     provider.updateMoney(value.toString());
                                     if (provider.money.isNotEmpty) {
                                       if (provider.money == '0') {
@@ -201,6 +268,10 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                                       provider.updateAmountErr(false);
                                       provider.updateValidCreate(true);
                                     }
+                                  },
+                                  onSubmitted: (value) {
+                                    FocusScope.of(context)
+                                        .requestFocus(focusNodeContent);
                                   },
                                 ),
                               ),
@@ -241,7 +312,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       bgColor: AppColor.WHITE,
                       child: TextFieldWidget(
                         isObscureText: false,
-                        autoFocus: true,
+                        autoFocus: false,
+                        focusNode: focusNodeContent,
                         hintText: 'Nội dung thanh toán tối đa 50 ký tự',
                         fontSize: 12,
                         maxLength: 50,
@@ -250,30 +322,42 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                         keyboardAction: TextInputAction.done,
                         onChange: (vavlue) {},
                         onSubmitted: (value) {
-                          if (amountController.text.isNotEmpty &&
-                              StringUtils.instance
-                                  .isNumeric(amountController.text)) {
+                          String amount = '0';
+                          if (provider.money.isNotEmpty) {
+                            amount = provider.money.replaceAll(',', '');
+                          }
+
+                          if (provider.bankAccountDTO.id.isEmpty) {
+                            if (showDialog) {
+                              Navigator.pop(context);
+                              showDialog = false;
+                            } else {
+                              showDialog = true;
+                              DialogWidget.instance.openMsgDialog(
+                                  title: 'TK ngân hàng không hợp lệ',
+                                  msg: 'Vui lòng chọn tài khoản ngân hàng');
+                            }
+                          } else if (provider.bankAccountDTO.id.isNotEmpty) {
                             QRCreateDTO qrCreateDTO = QRCreateDTO(
                               bankId: bankDetailDTO.id,
-                              amount: provider.money.replaceAll(',', ''),
+                              amount: amount,
                               content: StringUtils.instance
                                   .removeDiacritic(contentController.text),
                               branchId:
-                                  (bankDetailDTO.businessDetails.isNotEmpty ??
-                                          false)
+                                  (bankDetailDTO.businessDetails.isNotEmpty)
                                       ? bankDetailDTO.businessDetails.first
                                           .branchDetails.first.branchId
                                       : '',
                               businessId:
-                                  (bankDetailDTO.businessDetails.isNotEmpty ??
-                                          false)
+                                  (bankDetailDTO.businessDetails.isNotEmpty)
                                       ? bankDetailDTO
                                           .businessDetails.first.businessId
                                       : '',
                               userId:
                                   UserInformationHelper.instance.getUserId(),
                             );
-                            // _qrBloc.add(QREventGenerate(dto: qrCreateDTO));
+
+                            createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
                           }
                         },
                       ),
@@ -380,10 +464,12 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                 title: 'Tạo mã VietQR',
                 function: () {
                   if (provider.bankAccountDTO.id.isEmpty) {
+                    showDialog = true;
                     DialogWidget.instance.openMsgDialog(
                         title: 'TK ngân hàng không hợp lệ',
                         msg: 'Vui lòng chọn tài khoản ngân hàng');
                   } else if (provider.amountErr) {
+                    showDialog = true;
                     DialogWidget.instance.openMsgDialog(
                         title: 'Số tiền không hợp lệ',
                         msg: 'Vui lòng nhập số tiền');
