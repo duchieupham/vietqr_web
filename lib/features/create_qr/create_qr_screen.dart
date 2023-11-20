@@ -136,13 +136,17 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
             focusNode: focusNodeWidget,
             autofocus: false,
             onKey: (RawKeyEvent event) {
+              if (event.data.keyLabel == '*') {
+                context.push('/home');
+              }
+
               focusKeyBroadListen++;
 
               if (focusKeyBroadListen == 1) {
                 indexBankAccount =
                     bankAccounts.indexOf(bankAccounts[indexBankAccount]);
 
-                if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                if (event.data.keyLabel == '+') {
                   if (indexBankAccount == bankAccounts.length - 1) {
                     indexBankAccount = -1;
                   }
@@ -154,7 +158,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       bankId: bankAccounts[indexBankAccount].id));
                 }
 
-                if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                if (event.data.keyLabel == '-') {
                   if (indexBankAccount == 0) {
                     indexBankAccount = bankAccounts.length;
                     indexBankAccount--;
@@ -171,7 +175,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                 if (!focusAmount) {
                   if (event.logicalKey == LogicalKeyboardKey.enter) {
                     FocusScope.of(context).requestFocus(focusNode);
-                    focusAmount= true;
+                    focusAmount = true;
                   }
                 }
               }

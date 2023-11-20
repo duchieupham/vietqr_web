@@ -121,7 +121,7 @@ class _HomeScreenState extends State<_HomeScreen> {
       autofocus: true,
       onKey: (RawKeyEvent event) {
         if (focusKeyBroadListen) {
-          if (event.data.keyLabel == '1') {
+          if (event.data.keyLabel == '/') {
             context.go('/create-qr');
           }
         }
