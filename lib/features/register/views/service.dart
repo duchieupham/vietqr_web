@@ -27,171 +27,281 @@ class ServiceView extends StatelessWidget {
             end: Alignment.topRight,
           ),
         ),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColor.BLUE_TEXT.withOpacity(0.2),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: AppColor.BLUE_TEXT.withOpacity(0.2),
+                ),
+                child: const MenuLogin(),
               ),
-              child: const MenuLogin(),
+              Expanded(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 80,
+                    ),
+                    const Text(
+                      'Danh sách tài liệu VietQR VN',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    if (constraints.maxWidth < 750)
+                      Expanded(child: _buildFormForMobile(constraints.maxWidth))
+                    else
+                      _buildFormForWeb()
+                  ],
+                ),
+              ),
+              if (constraints.maxWidth < 750)
+                const FooterWeb(
+                  showListBank: false,
+                  bgColor: AppColor.WHITE,
+                )
+              else
+                const FooterWeb(
+                  showListBank: true,
+                )
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildFormForWeb() {
+    return SizedBox(
+      width: 700,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: Row(
+              children: [
+                Container(
+                  height: 50,
+                  color: AppColor.BLUE_TEXT.withOpacity(0.3),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 400,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                        child: const Text(
+                          'Tên tài liệu',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        width: 200,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                        child: const Text(
+                          'Ngày cập nhật',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                        child: const Text(
+                          'Truy cập',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
-            Expanded(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 80,
-                  ),
-                  const Text(
-                    'Danh sách tài liệu VietQR VN',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: 700,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 50,
-                                color: AppColor.BLUE_TEXT.withOpacity(0.3),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 400,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColor.BLACK_BUTTON
-                                                  .withOpacity(0.2))),
-                                      child: const Text(
-                                        'Tên tài liệu',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 200,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColor.BLACK_BUTTON
-                                                  .withOpacity(0.2))),
-                                      child: const Text(
-                                        'Ngày cập nhật',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 100,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColor.BLACK_BUTTON
-                                                  .withOpacity(0.2))),
-                                      child: const Text(
-                                        'Truy cập',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+          ),
+          SizedBox(
+            height: 50,
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 400,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                      child: InkWell(
+                        onTap: () {
+                          html.window.open(
+                              'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
+                              'new tab');
+                        },
+                        child: const Text(
+                          'Tài liệu kết nối API VietQR VN - Nhận biến động số dư',
+                          style: TextStyle(
+                              color: AppColor.BLUE_TEXT,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 200,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                      child: const Text(
+                        '24/10/2023',
+                      ),
+                    ),
+                    Container(
+                      width: 100,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                      child: InkWell(
+                        onTap: () {
+                          html.window.open(
+                              'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
+                              'new tab');
+                        },
+                        child: const Text(
+                          'Truy cập',
+                          style: TextStyle(
+                              color: AppColor.BLUE_TEXT,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormForMobile(double maxWidth) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            color: AppColor.BLUE_TEXT.withOpacity(0.3),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                    child: const Text(
+                      'Tên tài liệu',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  SizedBox(
-                    width: 700,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 400,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: AppColor.BLACK_BUTTON
-                                                .withOpacity(0.2))),
-                                    child: InkWell(
-                                      onTap: () {
-                                        html.window.open(
-                                            'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
-                                            'new tab');
-                                      },
-                                      child: const Text(
-                                        'Tài liệu kết nối API VietQR VN - Nhận biến động số dư',
-                                        style: TextStyle(
-                                            color: AppColor.BLUE_TEXT,
-                                            decoration:
-                                                TextDecoration.underline),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 200,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: AppColor.BLACK_BUTTON
-                                                .withOpacity(0.2))),
-                                    child: const Text(
-                                      '24/10/2023',
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 100,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: AppColor.BLACK_BUTTON
-                                                .withOpacity(0.2))),
-                                    child: InkWell(
-                                      onTap: () {
-                                        html.window.open(
-                                            'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
-                                            'new tab');
-                                      },
-                                      child: const Text(
-                                        'Truy cập',
-                                        style: TextStyle(
-                                            color: AppColor.BLUE_TEXT,
-                                            decoration:
-                                                TextDecoration.underline),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                ),
+                Container(
+                  width: 130,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    'Ngày cập nhật',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Container(
+                  width: 70,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    'Truy cập',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 50,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                    child: InkWell(
+                      onTap: () {
+                        html.window.open(
+                            'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
+                            'new tab');
+                      },
+                      child: const Text(
+                        'Tài liệu kết nối API VietQR VN - Nhận biến động số dư',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: AppColor.BLUE_TEXT,
+                            decoration: TextDecoration.underline),
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  width: 130,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    '24/10/2023',
+                  ),
+                ),
+                Container(
+                  width: 70,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
+                          'new tab');
+                    },
+                    child: const Text(
+                      'Truy cập',
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                )
+              ],
             ),
-            const FooterWeb(
-              showListBank: true,
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

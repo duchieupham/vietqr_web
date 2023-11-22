@@ -36,7 +36,7 @@ class LoginFrame extends StatelessWidget {
           end: Alignment.topRight,
         ),
       ),
-      child: (PlatformUtils.instance.resizeWhen(width, 850))
+      child: (PlatformUtils.instance.resizeWhen(width, 750))
           ? Column(
               children: [
                 Container(
@@ -84,11 +84,32 @@ class LoginFrame extends StatelessWidget {
                 )
               ],
             )
-          : BoxLayout(
-              width: width * 0.8,
-              borderRadius: 5,
-              enableShadow: true,
-              child: widget1,
+          : Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppColor.BLUE_TEXT.withOpacity(0.2),
+                  ),
+                  child: menuTop,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 40),
+                    child: BoxLayout(
+                      width: width * 0.8,
+                      borderRadius: 5,
+                      enableShadow: true,
+                      child: Expanded(child: widget1),
+                    ),
+                  ),
+                ),
+                const FooterWeb(
+                  showListBank: false,
+                  bgColor: AppColor.WHITE,
+                )
+              ],
             ),
     );
   }
