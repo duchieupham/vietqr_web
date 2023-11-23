@@ -30,7 +30,10 @@ import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
 import 'package:VietQR/features/login/views/create_QR_login.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
-import 'package:VietQR/features/merchant/views/merchant.dart';
+import 'package:VietQR/features/merchant/views/merchant_bill.dart';
+import 'package:VietQR/features/merchant/views/merchant_fee.dart';
+import 'package:VietQR/features/merchant/views/merchant_report.dart';
+import 'package:VietQR/features/merchant/views/merchant_transaction.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
@@ -378,18 +381,63 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
-        path: '/merchant',
+        path: '/merchant/transaction',
         redirect: (context, state) =>
             (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant'
+                ? '/merchant/transaction'
                 : '/login',
         builder: (BuildContext context, GoRouterState state) =>
-            const MerchantView(),
+            const MerchantTransaction(),
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const MerchantView(),
+            child: const MerchantTransaction(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/report',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/report'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantReport(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantReport(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/fee',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/fee'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantFee(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantFee(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/bill',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/bill'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantBill(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantBill(),
           );
         }),
     GoRoute(

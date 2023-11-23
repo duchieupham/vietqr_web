@@ -39,7 +39,7 @@ class ItemMenuHome extends StatefulWidget {
 
 class _ItemMenuHomeState extends State<ItemMenuHome> {
   double heightItem = 45;
-  bool openListDropDown = false;
+  bool openListDropDown = true;
   bool amIHovering = false;
   bool openMenuCard = true;
   Offset exitFrom = const Offset(0, 0);
@@ -137,9 +137,9 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               openMenuCard = !openMenuCard;
             });
           }
-          if (widget.enableDropDownList) {
-            onOpenDropDownList();
-          }
+          // if (widget.enableDropDownList) {
+          //   onOpenDropDownList();
+          // }
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -192,7 +192,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                           color: AppColor.CARD_CODE_BG,
                           borderRadius: BorderRadius.circular(15)),
                       child: Transform.rotate(
-                        angle: openListDropDown ? math.pi : 0,
+                        angle: !openListDropDown ? math.pi : 0,
                         child: const Icon(
                           Icons.keyboard_arrow_down,
                           size: 15,
