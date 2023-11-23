@@ -32,6 +32,14 @@ class _SaleReportState extends State<ServiceFee> {
     merchantBloc = BlocProvider.of(context);
   }
 
+  int status = 0;
+
+  changeStatus(int value) {
+    setState(() {
+      status = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -190,12 +198,12 @@ class _SaleReportState extends State<ServiceFee> {
                   fontWeight: FontWeight.bold,
                   height: 30,
                 ),
-                _buildBoxItem(dto.status == 1 ? 'Đã TT' : 'Chưa TT',
+                _buildBoxItem(status == 1 ? 'Đã TT' : 'Chưa TT',
                     width: 120,
                     height: 30,
                     fontWeight: FontWeight.bold,
                     valueColor:
-                        dto.status == 1 ? AppColor.BLACK : AppColor.RED_TEXT),
+                        status == 1 ? AppColor.BLACK : AppColor.RED_TEXT),
               ],
             ),
           ),
@@ -228,10 +236,10 @@ class _SaleReportState extends State<ServiceFee> {
             width: 120, notBottomBorder: lastItem),
         _buildBoxItem('${StringUtils.formatNumber(dto.totalFeeAfterVat)} VND',
             width: 120, notBottomBorder: lastItem),
-        _buildBoxItem(dto.status == 1 ? 'Đã TT' : 'Chưa TT',
+        _buildBoxItem(status == 1 ? 'Đã TT' : 'Chưa TT',
             width: 120,
             notBottomBorder: lastItem,
-            valueColor: dto.status == 1 ? AppColor.BLACK : AppColor.RED_TEXT),
+            valueColor: status == 1 ? AppColor.BLACK : AppColor.RED_TEXT),
       ],
     );
   }
@@ -398,13 +406,15 @@ class _SaleReportState extends State<ServiceFee> {
                         borderRadius: 5,
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         function: () {
-                          provider.changeStatus(0);
+                          changeStatus(0);
+
                           merchantBloc.add(GetMerchantFeeEvent(
                               customerSyncId: Session
                                   .instance.accountIsMerchantDTO.customerSyncId,
                               year: provider.year.toString(),
                               status: 0,
                               isLoadingPage: false));
+                          provider.changeStatus(0);
                         }),
                     const SizedBox(
                       width: 8,
@@ -428,6 +438,7 @@ class _SaleReportState extends State<ServiceFee> {
                               year: provider.year.toString(),
                               status: 1,
                               isLoadingPage: false));
+                          changeStatus(1);
                         }),
                   ],
                 ),
