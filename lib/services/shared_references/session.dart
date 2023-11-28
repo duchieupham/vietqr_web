@@ -170,7 +170,9 @@ class Session {
       if (_accountIsMerchantDTO.accountId.isEmpty) {
         AccountIsMerchantDTO dto =
             await merchantRepository.checkAccountIsMerchant(userId);
+
         _accountIsMerchantDTO = dto;
+
         _listBankAccountOfMerchant =
             await merchantRepository.getListBank(dto.customerSyncId);
       }

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
   int _initPage = 0;
@@ -36,9 +36,9 @@ class MenuProvider with ChangeNotifier {
     else if (value == MenuHomeType.BUSINESS) {
       _initPage = 3;
     } else if (value == MenuHomeType.CREATE_QR) {
-      if(Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty){
+      if (Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty) {
         _initPage = 5;
-      }else{
+      } else {
         _initPage = 3;
       }
     }
@@ -46,7 +46,7 @@ class MenuProvider with ChangeNotifier {
 
   checkAccountIsMerchant() async {
     await Session.instance.checkAccountIsMerchant();
-    if (Session.instance.accountIsMerchantDTO.accountId.isNotEmpty) {
+    if (Session.instance.accountIsMerchantDTO.customerSyncId.isNotEmpty) {
       _isAccountIsMerchant = true;
     } else {
       _isAccountIsMerchant = false;

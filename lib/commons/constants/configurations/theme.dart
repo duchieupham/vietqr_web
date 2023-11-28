@@ -41,6 +41,7 @@ class AppColor {
   static const Color HOT_COLOR = Color(0xFFE4BE4A);
   static const Color WARM_COLOR = Color(0xFF75F181);
   static const Color COOL_COLOR = Color(0xFF7EE4A7);
+  static const Color ORANGE_DARK = Color(0xFFff5c01);
   static const Color COLD_COLOR = Color(0xFF52B5D3);
   static const Color WINTER_COLOR = Color(0xFF338AED);
   static const Color RED_NOTI_1 = Color(0xFFFAC4DF);

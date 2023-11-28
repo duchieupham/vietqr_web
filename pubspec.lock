@@ -874,6 +874,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
+  validators:
+    dependency: transitive
+    description:
+      name: validators
+      sha256: "884515951f831a9c669a41ed6c4d3c61c2a0e8ec6bca761a4480b28e99cecf5d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  vcard_maintained:
+    dependency: "direct main"
+    description:
+      name: vcard_maintained
+      sha256: "99863d573eb933fbe472f323e7c40f86011078f1440d69dddc65fd3c84ed62d4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+1"
   vector_math:
     dependency: transitive
     description:

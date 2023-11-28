@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServiceSection extends StatefulWidget {
@@ -78,7 +79,7 @@ class _ServiceSectionState extends State<ServiceSection> {
         }, isFirst: true),
         _buildItemService(
             context, AppImages.logoMobileMoney3D, 'Nạp tiền\nđiện thoại', () {
-          DialogWidget.instance.openMsgQRInstallApp();
+          context.go('/naptien');
         }),
         _buildItemService(context, AppImages.icMb, 'Mở TK\nMB Bank', () {
           _launchUrl();

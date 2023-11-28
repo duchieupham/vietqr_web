@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:VietQR/commons/constants/configurations/numeral.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
@@ -130,6 +130,7 @@ class BaseAPIClient {
     Map<String, String>? result = {};
     type ??= AuthenticationType.NONE;
     final String _token = AccountHelper.instance.getToken();
+
     switch (type) {
       case AuthenticationType.SYSTEM:
         result['Authorization'] = 'Bearer $_token';

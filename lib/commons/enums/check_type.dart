@@ -30,6 +30,7 @@ enum BlocStatus {
   NONE,
   LOADING,
   UNLOADING,
+  ERROR,
 }
 
 enum BankType {
@@ -53,7 +54,9 @@ enum TypeQR {
   OTHER,
   QR_LINK,
   NEGATIVE_TWO,
+  QR_VCARD,
   NEGATIVE_ONE,
+  QR_SALE,
 }
 
 extension TypeQRExt on TypeQR {

@@ -34,6 +34,7 @@ import 'package:VietQR/features/merchant/views/merchant_bill.dart';
 import 'package:VietQR/features/merchant/views/merchant_fee.dart';
 import 'package:VietQR/features/merchant/views/merchant_report.dart';
 import 'package:VietQR/features/merchant/views/merchant_transaction.dart';
+import 'package:VietQR/features/mobile_recharge/mobile_recharge_screen.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
@@ -616,6 +617,21 @@ final GoRouter _router = GoRouter(
             context: context,
             state: state,
             child: const AddBankStep3(),
+          );
+        }),
+    GoRoute(
+        path: '/naptien',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/naptien'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            MobileRechargeScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: MobileRechargeScreen(),
           );
         }),
   ],

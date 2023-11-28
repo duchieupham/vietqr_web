@@ -185,7 +185,7 @@ class _VhitekState extends State<_VhitekScreen> {
                         ),
                         ConfirmActive(
                           edit: () {
-                            _animatedToPage(1);
+                            _animatedToPage(0);
                           },
                         ),
                         const ActiveSuccess()

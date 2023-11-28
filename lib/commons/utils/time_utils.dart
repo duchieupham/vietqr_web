@@ -85,7 +85,7 @@ class TimeUtils {
   }
 
   String formatDate(String date) {
-    if(!date.contains('-')){
+    if (!date.contains('-')) {
       return date;
     }
 
@@ -368,5 +368,12 @@ class TimeUtils {
       final formattedTime = formatter.format(time);
       return formattedTime;
     }
+  }
+
+  String convertDateString(String dateString) {
+    String day = dateString.substring(0, 2);
+    String month = dateString.substring(2, 4);
+    String year = dateString.substring(4, 8);
+    return '$day/$month/$year';
   }
 }

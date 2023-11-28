@@ -470,7 +470,7 @@ class DialogWidget {
         });
   }
 
-  void openLoadingDialog() async {
+  void openLoadingDialog({String msg = ''}) async {
     if (!isPopLoading) {
       isPopLoading = true;
       return await showDialog(
@@ -494,19 +494,26 @@ class DialogWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            CircularProgressIndicator(
+                          children: [
+                            const CircularProgressIndicator(
                               color: AppColor.BLUE_TEXT,
                             ),
-                            Padding(padding: EdgeInsets.only(top: 30)),
-                            Text(
-                              'Đang tải',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            const Padding(padding: EdgeInsets.only(top: 30)),
+                            if (msg.isNotEmpty) ...[
+                              const Padding(padding: EdgeInsets.only(top: 30)),
+                              Text(
+                                msg,
+                                textAlign: TextAlign.center,
                               ),
-                            ),
+                            ] else
+                              const Text(
+                                'Đang tải',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                           ],
                         ),
                       )
@@ -893,7 +900,8 @@ class DialogWidget {
     );
   }
 
-  openWidgetDialog({required Widget child}) {
+  openWidgetDialog(
+      {required Widget child, double width = 800, double height = 600}) {
     final BuildContext context = NavigationService.navigatorKey.currentContext!;
     return showDialog(
       barrierDismissible: false,
@@ -903,8 +911,8 @@ class DialogWidget {
           color: AppColor.TRANSPARENT,
           child: Center(
               child: Container(
-            width: 800,
-            height: 600,
+            width: width,
+            height: height,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,

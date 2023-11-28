@@ -289,8 +289,8 @@ class _Login extends State<Login> {
                 inputType: TextInputType.text,
                 keyboardAction: TextInputAction.done,
                 onSubmitted: (value) {
-                  _loginBloc
-                      .add(CheckExistPhone(phone: phoneNoController.text));
+                  _loginBloc.add(
+                      CheckExistPhone(phone: phoneNoController.text.trim()));
                 },
                 onChange: (value) {},
               ),
