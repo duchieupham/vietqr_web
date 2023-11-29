@@ -4,9 +4,11 @@ import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/mobile_recharge/widget/pop_up_top_up_sucsess.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/main.dart';
 import 'package:VietQR/models/notification_transaction_success_dto.dart';
+import 'package:VietQR/models/top_up_sucsess_dto.dart';
 import 'package:VietQR/services/shared_references/media_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -60,6 +62,7 @@ class WebSocketHelper {
           if (_channelTransaction.closeCode == null) {
             _channelTransaction.stream.listen((event) {
               var data = jsonDecode(event);
+              print('------------------------------- $data');
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
@@ -70,6 +73,17 @@ class WebSocketHelper {
                   DialogWidget.instance.openWidgetDialog(
                     child: TransactionSuccessWidget(
                       dto: NotificationTransactionSuccessDTO.fromJson(data),
+                    ),
+                  );
+                }
+              }
+              if (data['notificationType'] != null &&
+                  data['notificationType'] ==
+                      Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
+                if (data['paymentMethod'] == "1") {
+                  DialogWidget.instance.openWidgetDialog(
+                    child: PopupTopUpSuccess(
+                      dto: TopUpSuccessDTO.fromJson(data),
                     ),
                   );
                 }

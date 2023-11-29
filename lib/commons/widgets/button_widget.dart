@@ -11,6 +11,7 @@ class ButtonWidget extends StatelessWidget {
   final double textSize;
   final double? borderRadius;
   final EdgeInsets padding;
+
   final BorderRadius? bdRadius;
 
   const ButtonWidget(

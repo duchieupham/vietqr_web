@@ -208,7 +208,7 @@ class _BillState extends State<Bill> {
             width: 50,
           ),
           _buildBoxItem(
-            'Phần mền VietQR thông báo xử lý giao dịch tháng ${TimeUtils.instance.formatMonthYear(dto.month)}',
+            'Phần mềm VietQR thông báo xử lý giao dịch tháng ${TimeUtils.instance.formatMonthYear(dto.month)}',
             width: 350,
           ),
           _buildBoxItem(
