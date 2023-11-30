@@ -59,6 +59,7 @@ class VhitekRepository {
         const ResponseMessageDTO(status: '', message: '');
     try {
       String url = '${EnvConfig.getBaseUrl()}service/vhitek/active-terminal';
+      print('--------------------------$param');
       final response = await BaseAPIClient.postAPI(
         url: url,
         type: AuthenticationType.SYSTEM,

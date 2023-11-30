@@ -18,12 +18,14 @@ import 'package:provider/provider.dart';
 class MenuLeft extends StatelessWidget {
   final MenuHomeType currentType;
   final List<Widget> subMenuMerchant;
+  final List<Widget> subMenuTransactionUser;
   final Function(int)? onSelectMenu;
 
   const MenuLeft(
       {super.key,
       required this.currentType,
       this.onSelectMenu,
+      this.subMenuTransactionUser = const [],
       this.subMenuMerchant = const []});
 
   @override
@@ -114,6 +116,8 @@ class MenuLeft extends StatelessWidget {
               ItemMenuHome(
                 title: 'Giao dịch',
                 iconId: AppImages.icMenuTransaction,
+                enableDropDownList: true,
+                listItemDrop: subMenuTransactionUser,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
                   context.go('/transaction');

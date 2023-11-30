@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
@@ -5,6 +6,7 @@ import 'package:VietQR/features/vhitek/provider/active_vhitek_provider.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SelectBankAccountWidget extends StatelessWidget {
   final ActiveVhitekProvider provider;
@@ -62,7 +64,7 @@ class SelectBankAccountWidget extends StatelessWidget {
               ),
             ),
           )
-        else
+        else if (provider.bankAccounts.isNotEmpty)
           Expanded(
             child: Visibility(
               visible: provider.bankAccounts.isNotEmpty,
@@ -77,6 +79,45 @@ class SelectBankAccountWidget extends StatelessWidget {
                 separatorBuilder: (context, index) {
                   return DividerWidget(width: width);
                 },
+              ),
+            ),
+          )
+        else
+          GestureDetector(
+            onTap: () async {
+              context.go('/add-bank/step1');
+            },
+            child: Container(
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColor.BLUE_TEXT,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.icCardBlue),
+                        height: 28,
+                        color: AppColor.WHITE,
+                      ),
+                      const Padding(padding: EdgeInsets.only(left: 5)),
+                      const Text(
+                        'Thêm tài khoản ngân hàng',
+                        style: TextStyle(
+                          color: AppColor.WHITE,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

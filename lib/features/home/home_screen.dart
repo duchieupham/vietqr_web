@@ -145,10 +145,13 @@ class _HomeScreenState extends State<_HomeScreen> {
             );
           }
           if (state.request == BankType.BANK) {
-            context
-                .read<HomeProvider>()
-                .onChangeBankId(state.listBanks.first.id);
-            _bloc.add(BankCardGetDetailEvent(bankId: state.listBanks.first.id));
+            if (state.listBanks.isNotEmpty) {
+              context
+                  .read<HomeProvider>()
+                  .onChangeBankId(state.listBanks.first.id);
+              _bloc.add(
+                  BankCardGetDetailEvent(bankId: state.listBanks.first.id));
+            }
           }
         },
         builder: (context, state) {

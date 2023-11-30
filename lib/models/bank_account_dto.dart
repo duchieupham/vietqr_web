@@ -72,6 +72,7 @@ class BankAccountDTO {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     data['id'] = id;
+    data['bankId'] = bankId;
     data['bankAccount'] = bankAccount;
     data['userBankName'] = userBankName;
     data['bankCode'] = bankCode;

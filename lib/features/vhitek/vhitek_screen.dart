@@ -282,7 +282,8 @@ class _VhitekState extends State<_VhitekScreen> {
               param['bankAccount'] = provider.bankAccountDTO.bankAccount;
               param['userBankName'] = provider.bankAccountDTO.userBankName;
               param['bankId'] = provider.bankAccountDTO.id;
-
+              print(
+                  '-------------------------------------${provider.bankAccountDTO.toJson()}');
               _vhitekBloc.add(ActiveEvent(param: param));
             });
       } else if (provider.page == 3) {

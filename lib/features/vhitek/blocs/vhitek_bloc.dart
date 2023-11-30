@@ -47,7 +47,7 @@ void _active(VhitekEvent event, Emitter emit) async {
   try {
     if (event is ActiveEvent) {
       emit(VhitekStateLoadingState());
-      print(event.param);
+
       final ResponseMessageDTO result =
           await _vhitekRepository.active(event.param);
       emit(VhitekActiveSuccessState(dto: result));
