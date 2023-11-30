@@ -1,3 +1,4 @@
+import 'dart:html' as html;
 import 'dart:math' as math;
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
@@ -24,7 +25,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'dart:html' as html;
+
 class MerchantRequest extends StatefulWidget {
   const MerchantRequest({super.key});
 
@@ -885,9 +886,16 @@ class _MerchantViewState extends State<MerchantRequest> {
                   if (provider.isValidate()) {
                     Map<String, dynamic> param = {};
                     param['merchantName'] = provider.merchant;
-                    param['url'] = urlCtrl.text;
-                    param['id'] = ipCtrl.text;
-                    param['port'] = portCtrl.text;
+                    if (provider.valueTypeConnect == 0) {
+                      param['url'] = urlCtrl.text;
+                      param['id'] = '';
+                      param['port'] = '';
+                    } else {
+                      param['url'] = '';
+                      param['id'] = ipCtrl.text;
+                      param['port'] = portCtrl.text;
+                    }
+
                     param['suffixUrl'] = urlPathCtrl.text;
                     param['address'] = addressCtrl.text;
                     param['bankAccount'] = provider.bankAccountDTO.bankAccount;
