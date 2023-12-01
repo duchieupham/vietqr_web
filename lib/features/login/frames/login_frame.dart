@@ -101,7 +101,7 @@ class LoginFrame extends StatelessWidget {
                       width: width * 0.8,
                       borderRadius: 5,
                       enableShadow: true,
-                      child: Expanded(child: widget1),
+                      child: widget1,
                     ),
                   ),
                 ),

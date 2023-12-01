@@ -134,6 +134,15 @@ class MenuLeft extends StatelessWidget {
                     context.go('/merchant/transaction');
                   },
                 ),
+              if (!provider.isAccountIsMerchant)
+                ItemMenuHome(
+                  title: 'Tích hợp và kết nối',
+                  iconId: AppImages.icMenuBank,
+                  isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+                  onTap: () {
+                    context.go('/merchant/request');
+                  },
+                ),
               // ItemMenuHome(
               //   title: 'TK ngân hàng',
               //   iconId: AppImages.icMenuContact,

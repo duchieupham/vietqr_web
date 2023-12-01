@@ -10,6 +10,7 @@ class CreateQRLoginFrame extends StatelessWidget {
   final Widget widget2;
   final Widget menuTop;
   final Widget bottom;
+  final ScrollController controller;
 
   const CreateQRLoginFrame({
     super.key,
@@ -19,6 +20,7 @@ class CreateQRLoginFrame extends StatelessWidget {
     required this.widget2,
     required this.menuTop,
     required this.bottom,
+    required this.controller,
   });
 
   @override
@@ -98,12 +100,16 @@ class CreateQRLoginFrame extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: ListView(
+                        controller: controller,
                         children: [
                           widget1,
                           const SizedBox(
                             height: 40,
                           ),
                           widget2,
+                          const SizedBox(
+                            height: 40,
+                          ),
                         ],
                       ),
                     ),

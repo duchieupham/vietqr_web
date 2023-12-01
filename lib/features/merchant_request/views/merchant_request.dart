@@ -68,7 +68,7 @@ class _MerchantViewState extends State<MerchantRequest> {
         create: (context) => MerchantRequestProvider()..getListBankAccount(),
         child: MerchantRequestFrame(
           menu: const MenuLeft(
-            currentType: MenuHomeType.CREATE_QR,
+            currentType: MenuHomeType.MERCHANT_REQUEST,
           ),
           title: _buildTitle(),
           widget1: _buildAddressConnect(),
@@ -977,58 +977,58 @@ class _MerchantViewState extends State<MerchantRequest> {
       decoration: BoxDecoration(color: AppColor.BLUE_TEXT.withOpacity(0.1)),
       child: Row(
         children: [
-          InkWell(
-            onTap: () {
-              context.go('/home');
-            },
-            child: Container(
-              margin: const EdgeInsets.only(top: 8, bottom: 8, right: 24),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColor.BLUE_TEXT.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.arrow_back_ios,
-                    color: AppColor.BLUE_TEXT,
-                    size: 12,
-                  ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    'Trở về',
-                    style: TextStyle(fontSize: 11, color: AppColor.BLUE_TEXT),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     context.go('/home');
+          //   },
+          //   child: Container(
+          //     margin: const EdgeInsets.only(top: 8, bottom: 8, right: 24),
+          //     padding: const EdgeInsets.symmetric(horizontal: 12),
+          //     alignment: Alignment.center,
+          //     decoration: BoxDecoration(
+          //       color: AppColor.BLUE_TEXT.withOpacity(0.1),
+          //       borderRadius: BorderRadius.circular(5),
+          //     ),
+          //     child: Row(
+          //       children: const [
+          //         Icon(
+          //           Icons.arrow_back_ios,
+          //           color: AppColor.BLUE_TEXT,
+          //           size: 12,
+          //         ),
+          //         SizedBox(
+          //           width: 4,
+          //         ),
+          //         Text(
+          //           'Trở về',
+          //           style: TextStyle(fontSize: 11, color: AppColor.BLUE_TEXT),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          // const Align(
+          //   alignment: Alignment.centerLeft,
+          //   child: Text(
+          //     'Trang chủ',
+          //     style: TextStyle(
+          //         fontSize: 15,
+          //         fontWeight: FontWeight.bold,
+          //         decoration: TextDecoration.underline),
+          //   ),
+          // ),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 24),
+          //   child: Icon(
+          //     Icons.arrow_forward_ios,
+          //     color: AppColor.BLUE_TEXT,
+          //     size: 20,
+          //   ),
+          // ),
           const Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Trang chủ',
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Icon(
-              Icons.arrow_forward_ios,
-              color: AppColor.BLUE_TEXT,
-              size: 20,
-            ),
-          ),
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Đăng ký đại lý môi trường TEST',
+              'Tích hợp và kết nối',
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

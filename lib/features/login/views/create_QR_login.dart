@@ -32,7 +32,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -56,6 +55,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
       TextEditingController(text: '');
   static final TextEditingController contentController =
       TextEditingController(text: '');
+  final ScrollController _controllerScroll = ScrollController();
 
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -108,6 +108,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
       child: CreateQRLoginFrame(
         width: width,
         height: height,
+        controller: _controllerScroll,
         widget1: _buildFormInput(),
         widget2: _buildQRCode(),
         menuTop: const MenuLogin(),
@@ -131,11 +132,20 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16),
-              child: Text(
-                'Tạo mã QR',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            GestureDetector(
+              onTap: () {
+                _controllerScroll.animateTo(
+                  _controllerScroll.position.maxScrollExtent,
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.fastOutSlowIn,
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
+                  'Tạo mã QR',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             const Padding(
@@ -891,51 +901,55 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
   }
 
   Widget _buildListBank() {
-    return Consumer<BankTypeProvider>(
-      builder: (context, provider, child) {
-        return InkWell(
-          onTap: () {
-            DialogWidget.instance.openPopup(
-              child: const SelectBankTypeWidget(
-                authenticated: false,
-              ),
-              width: 500,
-              height: 500,
-            );
-          },
-          child: (provider.bankType.bankCode.isEmpty)
-              ? BoxLayout(
-                  bgColor: AppColor.WHITE,
-                  height: 50,
-                  borderRadius: 5,
-                  border:
-                      Border.all(color: AppColor.BLACK_BUTTON.withOpacity(0.3)),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Chọn ngân hàng thụ hưởng',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      ),
-                      const Spacer(),
-                      Transform.rotate(
-                          angle: -math.pi / 2,
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 14,
-                            color: AppColor.BLACK,
-                          ))
-                    ],
-                  ),
-                )
-              : _buildSelectedBankType(
-                  context,
-                  provider.bankType,
+    return LayoutBuilder(builder: (context, constraints) {
+      return Consumer<BankTypeProvider>(
+        builder: (context, provider, child) {
+          return InkWell(
+            onTap: () {
+              DialogWidget.instance.openPopup(
+                child: const SelectBankTypeWidget(
+                  authenticated: false,
                 ),
-        );
-      },
-    );
+                width: constraints.maxWidth >= 700
+                    ? 500
+                    : constraints.maxWidth * 0.9,
+                height: 500,
+              );
+            },
+            child: (provider.bankType.bankCode.isEmpty)
+                ? BoxLayout(
+                    bgColor: AppColor.WHITE,
+                    height: 50,
+                    borderRadius: 5,
+                    border: Border.all(
+                        color: AppColor.BLACK_BUTTON.withOpacity(0.3)),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Chọn ngân hàng thụ hưởng',
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
+                        const Spacer(),
+                        Transform.rotate(
+                            angle: -math.pi / 2,
+                            child: const Icon(
+                              Icons.arrow_back_ios_new,
+                              size: 14,
+                              color: AppColor.BLACK,
+                            ))
+                      ],
+                    ),
+                  )
+                : _buildSelectedBankType(
+                    context,
+                    provider.bankType,
+                  ),
+          );
+        },
+      );
+    });
   }
 
   Widget _buildSelectedBankType(BuildContext context, BankTypeDTO dto) {
@@ -999,10 +1013,26 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
       listener: (context, state) {
         if (state is CreateSuccessfulState) {
           qrGeneratedDTO = state.dto;
+
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _controllerScroll.animateTo(
+              _controllerScroll.position.maxScrollExtent - 80,
+              duration: const Duration(seconds: 1),
+              curve: Curves.fastOutSlowIn,
+            );
+          });
+
           vcardGenerateDto = const VcardGenerateDto();
         }
         if (state is CreateVcardSuccessfulState) {
           vcardGenerateDto = state.dto;
+          Future.delayed(const Duration(milliseconds: 500), () {
+            _controllerScroll.animateTo(
+              _controllerScroll.position.maxScrollExtent - 80,
+              duration: const Duration(seconds: 1),
+              curve: Curves.fastOutSlowIn,
+            );
+          });
           qrGeneratedDTO = const QRGeneratedDTO(
             imgId: '58b7190b-a294-4b14-968f-cd365593893e',
           );
@@ -1381,16 +1411,18 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                   ),
                   SizedBox(
                     width: horizontalInfo ? double.infinity : 360,
-                    child: ButtonIconWidget(
+                    child: ButtonWidget(
                       height: 40,
-                      icon: Icons.home_rounded,
-                      title: 'Trang chủ',
+                      text: 'Tạo lại mã VietQR',
+                      borderRadius: 5,
                       textColor: AppColor.BLUE_TEXT,
                       bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
                       function: () {
-                        Future.delayed(const Duration(milliseconds: 500), () {
-                          context.go('/');
-                        });
+                        _controllerScroll.animateTo(
+                          _controllerScroll.position.minScrollExtent,
+                          duration: const Duration(seconds: 1),
+                          curve: Curves.fastOutSlowIn,
+                        );
                       },
                     ),
                   )
