@@ -47,8 +47,9 @@ class ActiveVhitekProvider with ChangeNotifier {
   List<BankAccountDTO> bankAccounts = [];
   bool isLoadingGetListBank = false;
   getListBankAccount() async {
-    bankAccounts = await homeRepository
+    List<BankAccountDTO> result = await homeRepository
         .getListBankAccount(UserInformationHelper.instance.getUserId());
+    bankAccounts = result.where((e) => e.isAuthenticated).toList();
   }
 
   updateBankAccountDTO(BankAccountDTO value) {

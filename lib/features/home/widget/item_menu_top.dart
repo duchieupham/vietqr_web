@@ -6,12 +6,14 @@ class ItemMenuTop extends StatefulWidget {
   final Function onTap;
   final bool isSelect;
   final double titleSize;
+  final bool showBottomBorder;
   const ItemMenuTop({
     Key? key,
     required this.title,
     required this.onTap,
     this.isSelect = false,
     this.titleSize = 14,
+    this.showBottomBorder = false,
   }) : super(key: key);
 
   @override
@@ -62,7 +64,16 @@ class _ItemMenuHomeState extends State<ItemMenuTop> {
           height: heightItem,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          color: getBgItem(),
+          decoration: BoxDecoration(
+              color: getBgItem(),
+              border: widget.showBottomBorder
+                  ? Border(
+                      bottom: BorderSide(
+                          width: 2,
+                          color: widget.isSelect
+                              ? AppColor.BLUE_TEXT
+                              : AppColor.TRANSPARENT))
+                  : null),
           child: Text(
             widget.title,
             style: TextStyle(

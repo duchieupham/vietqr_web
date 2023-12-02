@@ -115,8 +115,7 @@ class RegisterView extends StatelessWidget {
                         DialogWidget.instance.openMsgSuccessDialog(
                             title: 'Thông báo',
                             msg: 'Đăng ký thành công',
-                            function: () {
-                              Navigator.of(context).pop();
+                            onTapClose: () {
                               _registerBloc
                                   .add(LoginEventByPhone(dto: state.dto));
                             });

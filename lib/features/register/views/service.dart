@@ -89,48 +89,45 @@ class ServiceView extends StatelessWidget {
       width: 760,
       child: Column(
         children: [
-          SizedBox(
+          Container(
             height: 58,
-            child: Container(
-              height: 58,
-              color: AppColor.BLUE_TEXT.withOpacity(0.3),
-              child: Row(
-                children: [
-                  Container(
-                    width: 460,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
-                    child: const Text(
-                      'Tên tài liệu',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+            color: AppColor.BLUE_TEXT.withOpacity(0.3),
+            child: Row(
+              children: [
+                Container(
+                  width: 460,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    'Tên tài liệu',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Container(
-                    width: 200,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
-                    child: const Text(
-                      'Ngày cập nhật',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                ),
+                Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    'Ngày cập nhật',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Container(
-                    width: 100,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
-                    child: const Text(
-                      'Truy cập',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
+                ),
+                Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    'Truy cập',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
             ),
           ),
           SizedBox(

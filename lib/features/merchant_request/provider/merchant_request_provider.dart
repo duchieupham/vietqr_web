@@ -44,6 +44,10 @@ class MerchantRequestProvider with ChangeNotifier {
   String _systemUsername = '';
 
   String get systemUsername => _systemUsername;
+
+  String _systemPassword = '';
+
+  String get systemPassword => _systemPassword;
   String _merchant = '';
 
   String get merchant => _merchant;
@@ -82,9 +86,18 @@ class MerchantRequestProvider with ChangeNotifier {
   List<BankAccountDTO> bankAccounts = [];
   final homeRepository = const HomeRepository();
 
+  int _page = 0;
+  int get page => _page;
+
+  changePage(int page) {
+    _page = page;
+    notifyListeners();
+  }
+
   getListBankAccount() async {
-    bankAccounts = await homeRepository
+    List<BankAccountDTO> result = await homeRepository
         .getListBankAccount(UserInformationHelper.instance.getUserId());
+    bankAccounts = result.where((e) => e.isAuthenticated).toList();
   }
 
   changeTypeConnect(int type) {
@@ -190,6 +203,10 @@ class MerchantRequestProvider with ChangeNotifier {
 
   void updateSystemName(String value) {
     _systemUsername = value;
+  }
+
+  void updateSystemPass(String value) {
+    _systemPassword = value;
   }
 
   checkValidate() {

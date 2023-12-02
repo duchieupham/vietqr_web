@@ -9,13 +9,11 @@ class MerchantRequestFrame extends StatelessWidget {
   final Widget title;
   final Widget menu;
   final Widget widget1;
-  final Widget widget2;
   const MerchantRequestFrame({
     super.key,
     required this.title,
     required this.menu,
     required this.widget1,
-    required this.widget2,
   });
 
   @override
@@ -54,31 +52,9 @@ class MerchantRequestFrame extends StatelessWidget {
                                   height: 20,
                                 ),
                                 Expanded(
-                                    child: ListView(
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        Expanded(child: widget1),
-                                        const SizedBox(
-                                          width: 48,
-                                        ),
-                                        Expanded(
-                                            child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 60),
-                                          child: widget2,
-                                        )),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                    child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: widget1,
                                 )),
                               ],
                             ),

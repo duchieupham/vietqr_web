@@ -2,6 +2,7 @@ class AppImages {
   // Icons menu
   static String icMenuAddBank = 'assets/icons_menu/ic-menu-add-bank.png';
   static String icMenuBank = '28c5553d-156e-4d34-b1c2-f5f74dfd92cb';
+  static String icMenuMerchantRequest = '4fb47c94-cae9-49d5-a157-4319e402763a';
   static String icMenuWallet = '43e7650b-d591-48f6-abcb-640b7426b3ed';
   static String icMenuContact = 'aea13c59-f430-4411-a285-74e900fcc53e';
   static String icMenuHome = '5607f58e-ee6c-493c-9e17-8cc4130f13d2';
@@ -26,6 +27,7 @@ class AppImages {
   static String icMb = '47e29769-d499-438c-ae6d-e4994ec503bf';
   static String icPersonalCard = '145ecd19-66c2-461d-bace-91a938b12fea';
   static String icSuccess = 'a8a40f57-c23a-4f6f-aeba-4af1c0734d9d';
+  static String ic3dMerchant = '444f972e-e264-4ac0-be7d-b853b04c0c28';
   static String icVqr3DUnit = 'f17a2bc0-b046-43ee-8a35-657722c97b6c';
   static String logoVietgrPayment = '9ec4c849-0286-445f-b531-07c34e7fe86d';
   static String logoFacebook = '686bfdfa-2841-4b7a-9cc2-19fcb0d0c10a';

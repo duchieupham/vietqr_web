@@ -134,15 +134,22 @@ class MenuLeft extends StatelessWidget {
                     context.go('/merchant/transaction');
                   },
                 ),
-              if (!provider.isAccountIsMerchant)
-                ItemMenuHome(
-                  title: 'Tích hợp và kết nối',
-                  iconId: AppImages.icMenuBank,
-                  isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
-                  onTap: () {
-                    context.go('/merchant/request');
-                  },
-                ),
+              ItemMenuHome(
+                title: 'Tích hợp và kết nối',
+                iconId: AppImages.icMenuBank,
+                isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+                onTap: () {
+                  context.go('/merchant/request');
+                },
+              ),
+              // ItemMenuHome(
+              //   title: 'Kết nối máy bán hàng',
+              //   iconId: AppImages.icMenuBank,
+              //   isSelect: currentType == MenuHomeType.MBH,
+              //   onTap: () {
+              //     context.go('/merchant/request/mbh');
+              //   },
+              // ),
               // ItemMenuHome(
               //   title: 'TK ngân hàng',
               //   iconId: AppImages.icMenuContact,
@@ -256,6 +263,17 @@ class MenuLeft extends StatelessWidget {
                 provider.updateShowMenu(true);
               },
             ),
+          ItemMenuHome(
+            title: 'Tích hợp và kết nối',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuMerchantRequest,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+            onTap: () {
+              context.go('/merchant/request');
+              provider.updateShowMenu(true);
+            },
+          ),
           ItemMenuHome(
             title: 'TK ngân hàng',
             paddingIcon: const EdgeInsets.all(4),

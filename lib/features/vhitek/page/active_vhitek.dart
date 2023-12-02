@@ -26,165 +26,168 @@ class ActiveVhitek extends StatelessWidget {
     }
 
     return Consumer<ActiveVhitekProvider>(builder: (context, provider, child) {
-      return ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 28),
-        children: [
-          const SizedBox(
-            height: 32,
-          ),
-          const Align(
-            alignment: Alignment.center,
-            child: Text(
-              'Kích hoạt máy bán hàng',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      return Align(
+        alignment: Alignment.center,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          children: [
+            const SizedBox(
+              height: 32,
             ),
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          const Text(
-            'Chọn tài khoản ngân hàng*',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          const Text(
-            'Tài khoản ngân hàng được gắn với máy để tạo mã VietQR',
-            style: TextStyle(fontSize: 12),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          _buildListBank(provider),
-          const SizedBox(
-            height: 8,
-          ),
-          InkWell(
-            onTap: () {
-              context.push('/add-bank/step1');
-            },
-            child: const Text(
-              'Liên kết tài khoản ngân hàng mới',
-              style: TextStyle(
-                  color: AppColor.BLUE_TEXT,
-                  decoration: TextDecoration.underline),
+            const Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Kích hoạt máy bán hàng',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          const Text(
-            'Mã máy*',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          const Text(
-            'Mã máy bán hàng được quét từ mã QR',
-            style: TextStyle(fontSize: 12),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          BorderLayout(
-            height: 50,
-            isError: false,
-            borderColor: AppColor.WHITE,
-            bgColor: AppColor.WHITE,
-            child: TextFieldWidget(
-                isObscureText: false,
-                autoFocus: true,
-                hintText: 'Mã máy',
-                fontSize: 12,
-                maxLength: 50,
-                controller: mid.isNotEmpty
-                    ? controller
-                    : TextEditingController(text: provider.mid),
-                inputType: TextInputType.text,
-                keyboardAction: TextInputAction.next,
-                onChange: (value) {
-                  provider.changeMid(value.toString());
-                },
-                onSubmitted: (value) {}),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          const Text(
-            'Địa chỉ máy*',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          const Text(
-            'Khách hàng nhập địa chỉ để phân biệt giữa các máy',
-            style: TextStyle(fontSize: 12),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          BorderLayout(
-            height: 50,
-            isError: false,
-            borderColor: AppColor.WHITE,
-            bgColor: AppColor.WHITE,
-            child: TextFieldWidget(
-                isObscureText: false,
-                autoFocus: true,
-                hintText: 'Địa chỉ máy bán hàng',
-                fontSize: 12,
-                maxLength: 50,
-                controller: TextEditingController(text: provider.midAddress),
-                inputType: TextInputType.text,
-                keyboardAction: TextInputAction.next,
-                onChange: (value) {
-                  provider.changeMidAddress(value.toString());
-                },
-                onSubmitted: (value) {}),
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          const Text(
-            'Email*',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          const Text(
-            'Nhập Email của bạn để kích hoạt máy bán hàng',
-            style: TextStyle(fontSize: 12),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          BorderLayout(
-            height: 50,
-            isError: false,
-            borderColor: AppColor.WHITE,
-            bgColor: AppColor.WHITE,
-            child: TextFieldWidget(
-                isObscureText: false,
-                autoFocus: true,
-                hintText: 'youremail@gmail.com',
-                fontSize: 12,
-                maxLength: 50,
-                controller: TextEditingController(text: provider.email),
-                inputType: TextInputType.text,
-                keyboardAction: TextInputAction.next,
-                onChange: (value) {
-                  provider.changeEmail(value.toString());
-                },
-                onSubmitted: (value) {}),
-          ),
-        ],
+            const SizedBox(
+              height: 40,
+            ),
+            const Text(
+              'Chọn tài khoản ngân hàng*',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            const Text(
+              'Tài khoản ngân hàng được gắn với máy để tạo mã VietQR',
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            _buildListBank(provider),
+            const SizedBox(
+              height: 8,
+            ),
+            InkWell(
+              onTap: () {
+                context.push('/add-bank/step1');
+              },
+              child: const Text(
+                'Liên kết tài khoản ngân hàng mới',
+                style: TextStyle(
+                    color: AppColor.BLUE_TEXT,
+                    decoration: TextDecoration.underline),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              'Mã máy*',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            const Text(
+              'Mã máy bán hàng được quét từ mã QR',
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            BorderLayout(
+              height: 50,
+              isError: false,
+              borderColor: AppColor.WHITE,
+              bgColor: AppColor.WHITE,
+              child: TextFieldWidget(
+                  isObscureText: false,
+                  autoFocus: true,
+                  hintText: 'Mã máy',
+                  fontSize: 12,
+                  maxLength: 50,
+                  controller: mid.isNotEmpty
+                      ? controller
+                      : TextEditingController(text: provider.mid),
+                  inputType: TextInputType.text,
+                  keyboardAction: TextInputAction.next,
+                  onChange: (value) {
+                    provider.changeMid(value.toString());
+                  },
+                  onSubmitted: (value) {}),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              'Địa chỉ máy*',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            const Text(
+              'Khách hàng nhập địa chỉ để phân biệt giữa các máy',
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            BorderLayout(
+              height: 50,
+              isError: false,
+              borderColor: AppColor.WHITE,
+              bgColor: AppColor.WHITE,
+              child: TextFieldWidget(
+                  isObscureText: false,
+                  autoFocus: true,
+                  hintText: 'Địa chỉ máy bán hàng',
+                  fontSize: 12,
+                  maxLength: 50,
+                  controller: TextEditingController(text: provider.midAddress),
+                  inputType: TextInputType.text,
+                  keyboardAction: TextInputAction.next,
+                  onChange: (value) {
+                    provider.changeMidAddress(value.toString());
+                  },
+                  onSubmitted: (value) {}),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            const Text(
+              'Email*',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            const Text(
+              'Nhập Email của bạn để kích hoạt máy bán hàng',
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            BorderLayout(
+              height: 50,
+              isError: false,
+              borderColor: AppColor.WHITE,
+              bgColor: AppColor.WHITE,
+              child: TextFieldWidget(
+                  isObscureText: false,
+                  autoFocus: true,
+                  hintText: 'youremail@gmail.com',
+                  fontSize: 12,
+                  maxLength: 50,
+                  controller: TextEditingController(text: provider.email),
+                  inputType: TextInputType.text,
+                  keyboardAction: TextInputAction.next,
+                  onChange: (value) {
+                    provider.changeEmail(value.toString());
+                  },
+                  onSubmitted: (value) {}),
+            ),
+          ],
+        ),
       );
     });
   }

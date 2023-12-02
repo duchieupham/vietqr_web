@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
@@ -36,15 +38,22 @@ class MenuLogin extends StatelessWidget {
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Tin tức',
-                        isSelected: provider.page == 2, onTap: () {}),
+                        isSelected: provider.page == 2, onTap: () {
+                      html.window.open('https://vietqr.com/blog', 'new tab');
+                    }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Giới thiệu',
-                        isSelected: provider.page == 3, onTap: () {}),
+                        isSelected: provider.page == 3, onTap: () {
+                      html.window.open('https://vietqr.com', 'new tab');
+                    }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Liên hệ',
-                        isSelected: provider.page == 4, onTap: () {}),
+                        isSelected: provider.page == 4, onTap: () {
+                      html.window
+                          .open('https://vietqr.com/lien-he.html', 'new tab');
+                    }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Đăng nhập',
@@ -98,11 +107,19 @@ class MenuLogin extends StatelessWidget {
                               context.go('/service');
                             }),
                             _buildItemMenu('Tin tức',
-                                isSelected: provider.page == 2, onTap: () {}),
+                                isSelected: provider.page == 2, onTap: () {
+                              html.window
+                                  .open('https://vietqr.com/blog', 'new tab');
+                            }),
                             _buildItemMenu('Giới thiệu',
-                                isSelected: provider.page == 3, onTap: () {}),
+                                isSelected: provider.page == 3, onTap: () {
+                              html.window.open('https://vietqr.com', 'new tab');
+                            }),
                             _buildItemMenu('Liên hệ',
-                                isSelected: provider.page == 4, onTap: () {}),
+                                isSelected: provider.page == 4, onTap: () {
+                              html.window.open(
+                                  'https://vietqr.com/lien-he.html', 'new tab');
+                            }),
                             _buildItemMenu('Đăng nhập',
                                 isSelected: provider.page == 5, onTap: () {
                               provider.changePage(5);

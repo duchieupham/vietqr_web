@@ -803,7 +803,7 @@ class DialogWidget {
   openMsgSuccessDialog(
       {required String title,
       String? msg,
-      VoidCallback? function,
+      VoidCallback? onTapClose,
       BuildContext? context}) {
     return showDialog(
         barrierDismissible: false,
@@ -857,11 +857,10 @@ class DialogWidget {
                     textColor: AppColor.WHITE,
                     bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
-                    function: (function != null)
-                        ? function
-                        : () {
-                            Navigator.pop(context);
-                          },
+                    function: () {
+                      Navigator.pop(context);
+                      onTapClose;
+                    },
                   ),
                   // const Padding(padding: EdgeInsets.only(top: 10)),
                 ],

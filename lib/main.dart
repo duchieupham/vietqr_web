@@ -42,10 +42,12 @@ import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/register/views/service.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
+import 'package:VietQR/features/setting/get_key_page.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction_user/views/transaction_user_screen.dart';
+import 'package:VietQR/features/vhitek/vhitek_screen_page.dart';
 import 'package:VietQR/features/wallet/wallet_card_generate.dart';
 import 'package:VietQR/features/wallet/wallet_screen.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
@@ -458,6 +460,20 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
+        path: '/merchant/request/ecommerce',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/request/ecommerce'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) => GetKeyPage(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const GetKeyPage(),
+          );
+        }),
+    GoRoute(
         path: '/transaction',
         redirect: (context, state) =>
             (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
@@ -525,6 +541,21 @@ final GoRouter _router = GoRouter(
               child: VhitekScreen(
                 mid: params['mid'] ?? '',
                 path: '/service/may-ban-hang/active',
+              ));
+        }),
+    GoRoute(
+        path: '/merchant/request/mbh',
+        builder: (BuildContext context, GoRouterState state) {
+          return const VhitekPage(
+            path: '/merchant/request/mbh',
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+              context: context,
+              state: state,
+              child: const VhitekPage(
+                path: '/merchant/request/mbh',
               ));
         }),
     GoRoute(
