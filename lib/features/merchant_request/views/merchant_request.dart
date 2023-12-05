@@ -279,7 +279,7 @@ class _MerchantViewState extends State<MerchantRequest> {
                 width: 16,
               ),
               ItemMenuTop(
-                title: 'KÍCH HOẠT MÁY BÁN HÀNG',
+                title: 'KẾT NỐI MÁY BÁN HÀNG',
                 isSelect: false,
                 onTap: () {
                   context.go('/merchant/request/mbh');

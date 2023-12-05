@@ -20,7 +20,7 @@ class ConfirmActive extends StatelessWidget {
           const Align(
             alignment: Alignment.center,
             child: Text(
-              'Xác nhận kích hoạt máy bán hàng',
+              'Xác nhận kết nối máy bán hàng',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),

@@ -97,7 +97,11 @@ class MerchantRequestProvider with ChangeNotifier {
   getListBankAccount() async {
     List<BankAccountDTO> result = await homeRepository
         .getListBankAccount(UserInformationHelper.instance.getUserId());
-    bankAccounts = result.where((e) => e.isAuthenticated).toList();
+    bankAccounts = result
+        .where((e) =>
+            e.isAuthenticated &&
+            e.userId == UserInformationHelper.instance.getUserId())
+        .toList();
   }
 
   changeTypeConnect(int type) {

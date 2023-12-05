@@ -319,7 +319,7 @@ class _GetKeyPageState extends State<GetKeyPage> {
             width: 16,
           ),
           ItemMenuTop(
-            title: 'KÍCH HOẠT MÁY BÁN HÀNG',
+            title: 'KẾT NỐI MÁY BÁN HÀNG',
             onTap: () {
               context.go('/merchant/request/mbh');
             },

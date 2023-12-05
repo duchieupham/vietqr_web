@@ -28,7 +28,7 @@ class RegisterVhitek extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Kích hoạt máy bán hàng',
+                      'Kết nối máy bán hàng',
                       style: TextStyle(fontSize: 12),
                     ),
                     const SizedBox(
@@ -87,7 +87,7 @@ class RegisterVhitek extends StatelessWidget {
                   height: 6,
                 ),
                 const Text(
-                  'Địa chỉ Email được sử dụng để kích hoạt máy bán hàng',
+                  'Địa chỉ Email được sử dụng để kết nối máy bán hàng',
                   style: TextStyle(fontSize: 12),
                 ),
                 const SizedBox(

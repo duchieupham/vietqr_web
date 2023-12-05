@@ -37,7 +37,7 @@ class ActiveVhitek extends StatelessWidget {
             const Align(
               alignment: Alignment.center,
               child: Text(
-                'Kích hoạt máy bán hàng',
+                'Kết nối máy bán hàng',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
@@ -161,7 +161,7 @@ class ActiveVhitek extends StatelessWidget {
               height: 6,
             ),
             const Text(
-              'Nhập Email của bạn để kích hoạt máy bán hàng',
+              'Nhập Email của bạn để kết nối máy bán hàng',
               style: TextStyle(fontSize: 12),
             ),
             const SizedBox(

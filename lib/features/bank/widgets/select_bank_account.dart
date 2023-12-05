@@ -155,13 +155,33 @@ class SelectBankAccountWidget extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
             Expanded(
-              child: Text(
-                '${dto.bankCode} - ${dto.bankAccount}\n${dto.userBankName}',
-                style: const TextStyle(
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.start,
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${dto.bankCode} - ${dto.bankAccount}\n${dto.userBankName}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      color: AppColor.BLUE_TEXT,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: AppColor.WHITE,
+                      size: 8,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

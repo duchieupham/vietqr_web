@@ -427,7 +427,7 @@ class _VhitekState extends State<_VhitekScreen> {
             width: 16,
           ),
           ItemMenuTop(
-            title: 'KÍCH HOẠT MÁY BÁN HÀNG',
+            title: 'KẾT NỐI MÁY BÁN HÀNG',
             isSelect: true,
             showBottomBorder: true,
             onTap: () {},
