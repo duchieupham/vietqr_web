@@ -101,7 +101,9 @@ class _Login extends State<Login> {
                       } else {
                         listCheck.sort((a, b) =>
                             a.expiryAsDateTime.compareTo(b.expiryAsDateTime));
+
                         listCheck.removeAt(2);
+                        listCheck.add(_userDTO);
                       }
                     } else {
                       listCheck.removeWhere((element) =>

@@ -12,11 +12,13 @@ class LineChart extends StatelessWidget {
   final int maxValueAmount;
   final MerchantState state;
   final int typeDate;
+  final String time;
   const LineChart(
       {Key? key,
       required this.listData,
       required this.maxValueAmount,
       required this.state,
+      this.time = '',
       this.typeDate = 0})
       : super(key: key);
 
@@ -142,7 +144,7 @@ class LineChart extends StatelessWidget {
           Align(
               alignment: Alignment.center,
               child: Text(
-                'Năm ${DateTime.now().year}',
+                typeDate == 0 ? 'Năm $time' : 'Tháng $time',
                 style: const TextStyle(fontSize: 12),
               )),
           const SizedBox(
@@ -162,7 +164,7 @@ class LineChart extends StatelessWidget {
                 width: 8,
               ),
               const Text(
-                'Nhận tiền đến',
+                'Tiền vào',
                 style: TextStyle(fontSize: 11),
               ),
               const SizedBox(
@@ -177,7 +179,7 @@ class LineChart extends StatelessWidget {
                 width: 8,
               ),
               const Text(
-                'Chuyển tiền đi',
+                'Tiền ra',
                 style: TextStyle(fontSize: 11),
               ),
             ],

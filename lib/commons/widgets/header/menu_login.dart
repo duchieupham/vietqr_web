@@ -39,20 +39,23 @@ class MenuLogin extends StatelessWidget {
                   Expanded(
                     child: _buildItemMenuMobile('Tin tức',
                         isSelected: provider.page == 2, onTap: () {
-                      html.window.open('https://vietqr.com/blog', 'new tab');
+                      html.window.open(
+                          'https://vietqr.com/tin-tuc-vietqr.html', 'new tab');
                     }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Giới thiệu',
                         isSelected: provider.page == 3, onTap: () {
-                      html.window.open('https://vietqr.com', 'new tab');
+                      html.window.open(
+                          'https://vietqr.com/gioi-thieu-vietqr.html',
+                          'new tab');
                     }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Liên hệ',
                         isSelected: provider.page == 4, onTap: () {
-                      html.window
-                          .open('https://vietqr.com/lien-he.html', 'new tab');
+                      html.window.open(
+                          'https://vietqr.com/lien-he-vietqr.html', 'new tab');
                     }),
                   ),
                   Expanded(
@@ -108,17 +111,21 @@ class MenuLogin extends StatelessWidget {
                             }),
                             _buildItemMenu('Tin tức',
                                 isSelected: provider.page == 2, onTap: () {
-                              html.window
-                                  .open('https://vietqr.com/blog', 'new tab');
+                              html.window.open(
+                                  'https://vietqr.com/tin-tuc-vietqr.html',
+                                  'new tab');
                             }),
                             _buildItemMenu('Giới thiệu',
                                 isSelected: provider.page == 3, onTap: () {
-                              html.window.open('https://vietqr.com', 'new tab');
+                              html.window.open(
+                                  'https://vietqr.com/gioi-thieu-vietqr.html',
+                                  'new tab');
                             }),
                             _buildItemMenu('Liên hệ',
                                 isSelected: provider.page == 4, onTap: () {
                               html.window.open(
-                                  'https://vietqr.com/lien-he.html', 'new tab');
+                                  'https://vietqr.com/lien-he-vietqr.html',
+                                  'new tab');
                             }),
                             _buildItemMenu('Đăng nhập',
                                 isSelected: provider.page == 5, onTap: () {

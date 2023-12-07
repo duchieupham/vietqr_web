@@ -145,6 +145,10 @@ class _SaleReportState extends State<SynthesisReport> {
                                 maxValueAmount: maxValueAmount,
                                 state: state,
                                 typeDate: provider.valueTimeFilter.id,
+                                time: provider.valueTimeFilter.id == 0
+                                    ? provider.year.toString()
+                                    : TimeUtils.instance.formatMonthToString(
+                                        provider.timeCurrent),
                               ),
                             ),
                           )
