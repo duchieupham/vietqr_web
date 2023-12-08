@@ -72,6 +72,15 @@ class _AddBankScreenState extends State<AddBankStep1> {
                                 if (state is BankTypeGetListSuccessfulState) {
                                   if (state.list.isNotEmpty) {
                                     bankTypesResult = state.list;
+                                    bankTypesResult.sort((a, b) {
+                                      if (a.status == 1) {
+                                        return -1;
+                                      } else if (b.status == 1) {
+                                        return 1;
+                                      } else {
+                                        return 0;
+                                      }
+                                    });
                                     bankTypes = state.list;
                                   }
                                 }
@@ -117,10 +126,7 @@ class _AddBankScreenState extends State<AddBankStep1> {
                                                   provider.updateBankType(e);
                                                   context.go(
                                                       '/add-bank/step2?bankId=${e.id}');
-                                                },
-                                                    isSelected:
-                                                        provider.bankType.id ==
-                                                            e.id);
+                                                }, isSelected: e.status == 1);
                                               }).toList(),
                                             ),
                                           ),

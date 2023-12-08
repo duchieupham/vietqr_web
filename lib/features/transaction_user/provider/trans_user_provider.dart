@@ -32,7 +32,7 @@ class TransUserProvider with ChangeNotifier {
     const FilterTimeTransaction(id: 5, title: 'Khoảng thời gian'),
   ];
   FilterTimeTransaction _valueTimeFilter =
-      const FilterTimeTransaction(id: 0, title: 'Tất cả');
+      const FilterTimeTransaction(id: 1, title: 'Hôm nay');
 
   FilterTimeTransaction get valueTimeFilter => _valueTimeFilter;
   DateTime _toDate = DateTime.now();

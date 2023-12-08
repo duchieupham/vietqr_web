@@ -40,8 +40,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
     paramInit['userId'] = UserInformationHelper.instance.getUserId();
     paramInit['type'] = 9;
     paramInit['value'] = '';
-    paramInit['from'] = '0';
-    paramInit['to'] = '0';
+    paramInit['from'] = TimeUtils.instance.getCurrentDate(DateTime.now());
+    paramInit['to'] = TimeUtils.instance.getCurrentDate(DateTime.now());
     paramInit['offset'] = 0;
     transactionUserBloc
         .add(GetListTransactionByEvent(param: paramInit, isLoadingPage: true));

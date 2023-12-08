@@ -1,5 +1,3 @@
-import 'dart:html' as html;
-
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
@@ -39,23 +37,22 @@ class MenuLogin extends StatelessWidget {
                   Expanded(
                     child: _buildItemMenuMobile('Tin tức',
                         isSelected: provider.page == 2, onTap: () {
-                      html.window.open(
-                          'https://vietqr.com/tin-tuc-vietqr.html', 'new tab');
+                      provider.changePage(2);
+                      context.go('/tin-tuc');
                     }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Giới thiệu',
                         isSelected: provider.page == 3, onTap: () {
-                      html.window.open(
-                          'https://vietqr.com/gioi-thieu-vietqr.html',
-                          'new tab');
+                      provider.changePage(3);
+                      context.go('/gioi-thieu');
                     }),
                   ),
                   Expanded(
                     child: _buildItemMenuMobile('Liên hệ',
                         isSelected: provider.page == 4, onTap: () {
-                      html.window.open(
-                          'https://vietqr.com/lien-he-vietqr.html', 'new tab');
+                      provider.changePage(4);
+                      context.go('/lien-he');
                     }),
                   ),
                   Expanded(
@@ -111,21 +108,18 @@ class MenuLogin extends StatelessWidget {
                             }),
                             _buildItemMenu('Tin tức',
                                 isSelected: provider.page == 2, onTap: () {
-                              html.window.open(
-                                  'https://vietqr.com/tin-tuc-vietqr.html',
-                                  'new tab');
+                              provider.changePage(2);
+                              context.go('/tin-tuc');
                             }),
                             _buildItemMenu('Giới thiệu',
                                 isSelected: provider.page == 3, onTap: () {
-                              html.window.open(
-                                  'https://vietqr.com/gioi-thieu-vietqr.html',
-                                  'new tab');
+                              provider.changePage(3);
+                              context.go('/gioi-thieu');
                             }),
                             _buildItemMenu('Liên hệ',
                                 isSelected: provider.page == 4, onTap: () {
-                              html.window.open(
-                                  'https://vietqr.com/lien-he-vietqr.html',
-                                  'new tab');
+                              provider.changePage(4);
+                              context.go('/lien-he');
                             }),
                             _buildItemMenu('Đăng nhập',
                                 isSelected: provider.page == 5, onTap: () {

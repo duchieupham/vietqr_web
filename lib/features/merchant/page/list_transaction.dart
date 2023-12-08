@@ -44,8 +44,8 @@ class _ListTransactionState extends State<ListTransaction> {
     param['merchantId'] = Session.instance.accountIsMerchantDTO.customerSyncId;
     param['type'] = 9;
     param['value'] = '';
-    param['from'] = '0';
-    param['to'] = '0';
+    param['from'] = TimeUtils.instance.getCurrentDate(DateTime.now());
+    param['to'] = TimeUtils.instance.getCurrentDate(DateTime.now());
     param['offset'] = 0;
     merchantBloc.add(
         GetListTransactionByMerchantEvent(param: param, isLoadingPage: true));
@@ -813,30 +813,42 @@ class _ListTransactionState extends State<ListTransaction> {
                   ),
                 ),
               ),
-            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id ||
-                (provider.valueFilter.id == 4 &&
-                    provider.valueTimeFilter.id != 0))
-              InkWell(
-                onTap: () {
-                  String link =
-                      'https://api.vietqr.org/vqr/api/merchant/transactions-export?merchantId=${Session.instance.accountIsMerchantDTO.customerSyncId}&type=${provider.valueFilter.id}&value=${provider.keywordSearch}&from=${TimeUtils.instance.formatDateToString(provider.fromDate, isExport: true)}&to=${TimeUtils.instance.formatDateToString(provider.toDate, isExport: true)}';
-                  html.window.open(link, 'new tab');
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  width: 120,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColor.GREEN,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: const Text(
-                    'Xuất Excel',
-                    style: TextStyle(fontSize: 12, color: AppColor.WHITE),
-                  ),
+            InkWell(
+              onTap: () {
+                if (provider.valueTimeFilter.id != 0) {
+                  int monthDiff =
+                      (provider.toDate.year - provider.fromDate.year) * 12 +
+                          (provider.toDate.month - provider.fromDate.month);
+                  if (monthDiff <= 3) {
+                    String link =
+                        'https://api.vietqr.org/vqr/api/merchant/transactions-export?merchantId=${Session.instance.accountIsMerchantDTO.customerSyncId}&type=${provider.valueFilter.id}&value=${provider.keywordSearch}&from=${TimeUtils.instance.formatDateToString(provider.fromDate, isExport: true)}&to=${TimeUtils.instance.formatDateToString(provider.toDate, isExport: true)}';
+                    html.window.open(link, 'new tab');
+                  } else {
+                    DialogWidget.instance.openMsgDialog(
+                        title: 'Xuất Excel',
+                        msg: 'Thời gian để xuất Excel tối đa là 3 tháng');
+                  }
+                } else {
+                  DialogWidget.instance.openMsgDialog(
+                      title: 'Xuất Excel',
+                      msg: 'Vui lòng chọn thời gian để Xuất giao dịch.');
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                width: 120,
+                height: 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColor.GREEN,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: const Text(
+                  'Xuất Excel',
+                  style: TextStyle(fontSize: 12, color: AppColor.WHITE),
                 ),
               ),
+            ),
           ],
         );
       }),

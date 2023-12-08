@@ -27,8 +27,11 @@ import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
+import 'package:VietQR/features/login/views/contact.dart';
 import 'package:VietQR/features/login/views/create_QR_login.dart';
+import 'package:VietQR/features/login/views/introduce.dart';
 import 'package:VietQR/features/login/views/login.dart';
+import 'package:VietQR/features/login/views/news.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/merchant/views/merchant_bill.dart';
 import 'package:VietQR/features/merchant/views/merchant_fee.dart';
@@ -386,10 +389,12 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/merchant/transaction',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/transaction'
-                : '/login',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/transaction'
+            : '/home',
         builder: (BuildContext context, GoRouterState state) =>
             const MerchantTransaction(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -401,10 +406,12 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/merchant/report',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/report'
-                : '/login',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/report'
+            : '/home',
         builder: (BuildContext context, GoRouterState state) =>
             const MerchantReport(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -416,10 +423,12 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/merchant/fee',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/fee'
-                : '/login',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/fee'
+            : '/home',
         builder: (BuildContext context, GoRouterState state) =>
             const MerchantFee(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -431,10 +440,12 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/merchant/bill',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/bill'
-                : '/login',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/bill'
+            : '/home',
         builder: (BuildContext context, GoRouterState state) =>
             const MerchantBill(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -557,6 +568,39 @@ final GoRouter _router = GoRouter(
               child: const VhitekPage(
                 path: '/merchant/request/mbh',
               ));
+        }),
+    GoRoute(
+        path: '/tin-tuc',
+        builder: (BuildContext context, GoRouterState state) {
+          return const NewsView();
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context, state: state, child: const NewsView());
+        }),
+    GoRoute(
+        path: '/lien-he',
+        builder: (BuildContext context, GoRouterState state) {
+          return const ContactView();
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context, state: state, child: const ContactView());
+        }),
+    GoRoute(
+        path: '/gioi-thieu',
+        builder: (BuildContext context, GoRouterState state) {
+          return const IntroduceView();
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context, state: state, child: const IntroduceView());
         }),
     GoRoute(
         path: '/create-qr',

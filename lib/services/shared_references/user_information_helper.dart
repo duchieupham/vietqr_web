@@ -57,6 +57,14 @@ class UserInformationHelper {
     return sharedPrefs.getString('USER_ID')!;
   }
 
+  Future<void> setCustomerSyncId(String userId) async {
+    await sharedPrefs.setString('set_Customer_SyncId', userId);
+  }
+
+  String getCustomerSyncId() {
+    return sharedPrefs.getString('set_Customer_SyncId')!;
+  }
+
   String getUserFullname() {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();

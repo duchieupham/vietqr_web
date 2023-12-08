@@ -143,8 +143,8 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
               margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColor.WHITE.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5),
+              ),
               child: const ClockWidget()),
           const SizedBox(
             width: 12,
