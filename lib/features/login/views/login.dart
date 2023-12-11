@@ -354,26 +354,10 @@ class _Login extends State<Login> {
                   children: [
                     Expanded(
                       child: _buildButtonSignIn(
-                        urlIcon: AppImages.logoGoogle,
-                        text: 'Đăng nhập với Google',
-                        bgColor: AppColor.WHITE,
-                        textColor: AppColor.BLACK,
-                        function: () {
-                          DialogWidget.instance.openMsgDialog(
-                            title: 'Tính năng bảo trì',
-                            msg:
-                                'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
-                          );
-                        },
-                      ),
-                    ),
-                    const Padding(padding: EdgeInsets.only(left: 10)),
-                    Expanded(
-                      child: _buildButtonSignIn(
                         assetsIcon: AppImages.icCard,
                         text: 'VietQR ID Card',
-                        bgColor: AppColor.BLUE_TEXT,
-                        textColor: AppColor.WHITE,
+                        bgColor: AppColor.WHITE,
+                        textColor: AppColor.BLACK,
                         function: () async {
                           await DialogWidget.instance
                               .openPopup(
@@ -460,27 +444,18 @@ class _Login extends State<Login> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (assetsIcon.isNotEmpty)
-              Image(
-                image: ImageUtils.instance.getImageNetWork(assetsIcon),
-                width: 30,
-                height: 30,
-              )
-            else
-              Image(
-                image: ImageUtils.instance.getImageNetWork(urlIcon),
-                width: 30,
-                height: 30,
-              ),
+            Image(
+              image: ImageUtils.instance.getImageNetWork(assetsIcon),
+              width: 30,
+              height: 30,
+            ),
             const Padding(padding: EdgeInsets.only(left: 5)),
-            Expanded(
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: textColor,
-                ),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: textColor,
               ),
             )
           ],

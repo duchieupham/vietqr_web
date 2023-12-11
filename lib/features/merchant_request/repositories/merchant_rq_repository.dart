@@ -77,6 +77,7 @@ class MerchantRQRepository {
 
   Future getToken(Map<String, dynamic> param) async {
     ResponseMessageDTO result = const ResponseMessageDTO();
+    print('---------------------------------------$param');
     try {
       String url =
           'https://dev.vietqr.org/vqr/api/admin/customer-sync/check-token';

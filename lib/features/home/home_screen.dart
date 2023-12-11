@@ -5,6 +5,9 @@ import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/features/add_bank/blocs/bank_type_bloc.dart';
+import 'package:VietQR/features/add_bank/events/list_bank_event.dart';
+import 'package:VietQR/features/add_bank/states/list_bank_state.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/blocs/home_bloc.dart';
 import 'package:VietQR/features/home/blocs/home_provider.dart';
@@ -16,6 +19,7 @@ import 'package:VietQR/features/home/views/info_account_view.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -52,8 +56,10 @@ class _HomeScreenState extends State<_HomeScreen> {
   int currentPage = 0;
   List<BankAccountDTO> bankAccounts = [];
   List<Color> cardColors = [];
+  List<BankTypeDTO> bankTypesResult = [];
   late HomeBloc _bloc;
   late WebSocketChannel channel;
+  late ListBankBloc bankTypeBloc;
 
   late QRGeneratedDTO qrGeneratedDTO = const QRGeneratedDTO(
       bankCode: '',
@@ -97,6 +103,7 @@ class _HomeScreenState extends State<_HomeScreen> {
 
     Session.instance.fetchWallet();
     Session.instance.fetchAccountSetting();
+    bankTypeBloc = ListBankBloc()..add(const BankTypeEventGetList());
   }
 
   @override
@@ -151,7 +158,7 @@ class _HomeScreenState extends State<_HomeScreen> {
                   .onChangeBankId(state.listBanks.first.id);
               _bloc.add(
                   BankCardGetDetailEvent(bankId: state.listBanks.first.id));
-            }
+            } else {}
           }
         },
         builder: (context, state) {
@@ -161,7 +168,9 @@ class _HomeScreenState extends State<_HomeScreen> {
             ),
             widget1: _buildHome(),
             widget2: _buildListBank(state.listBanks, state.colors),
-            widget3: _buildInfoAccount(dto, qrGeneratedDTO, state),
+            widget3: state.listBanks.isEmpty
+                ? const SizedBox.shrink()
+                : _buildInfoAccount(dto, qrGeneratedDTO, state),
           );
         },
       ),
@@ -304,53 +313,57 @@ class _HomeScreenState extends State<_HomeScreen> {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: List.generate(list.length, (index) {
-                      BankAccountDTO dto = list[index];
-                      return GestureDetector(
-                        onTap: () async {
-                          provider.onChangeBankId(dto.id);
-                          _bloc.add(BankCardGetDetailEvent(bankId: dto.id));
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: provider.bankId == dto.id
-                                ? colors[index]
-                                : AppColor.WHITE,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildTitleCard(dto, userId,
-                                  isSelect: provider.bankId == dto.id),
-                              if ((!dto.isAuthenticated &&
-                                  dto.bankCode == 'MB' &&
-                                  dto.userId == userId)) ...[
-                                const SizedBox(height: 8),
-                                InkWell(
-                                  onTap: () async {},
-                                  child: const Text(
-                                    'Liên kết tài khoản',
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: AppColor.BLUE_TEXT,
-                                        decoration: TextDecoration.underline),
-                                  ),
+                child: list.isEmpty
+                    ? _buildListBankBlank()
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(list.length, (index) {
+                            BankAccountDTO dto = list[index];
+                            return GestureDetector(
+                              onTap: () async {
+                                provider.onChangeBankId(dto.id);
+                                _bloc.add(
+                                    BankCardGetDetailEvent(bankId: dto.id));
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: provider.bankId == dto.id
+                                      ? colors[index]
+                                      : AppColor.WHITE,
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                              ]
-                            ],
-                          ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildTitleCard(dto, userId,
+                                        isSelect: provider.bankId == dto.id),
+                                    if ((!dto.isAuthenticated &&
+                                        dto.bankCode == 'MB' &&
+                                        dto.userId == userId)) ...[
+                                      const SizedBox(height: 8),
+                                      InkWell(
+                                        onTap: () async {},
+                                        child: const Text(
+                                          'Liên kết tài khoản',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color: AppColor.BLUE_TEXT,
+                                              decoration:
+                                                  TextDecoration.underline),
+                                        ),
+                                      ),
+                                    ]
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+                      ),
               )
             ],
           ),
@@ -451,6 +464,107 @@ class _HomeScreenState extends State<_HomeScreen> {
       dto: dto,
       qrGeneratedDTO: qrDTO,
       bankId: bankId,
+    );
+  }
+
+  Widget _buildListBankBlank() {
+    return BlocProvider<ListBankBloc>(
+        create: (context) => bankTypeBloc,
+        child: BlocConsumer<ListBankBloc, ListBankState>(
+            listener: (context, state) {
+          if (state is BankTypeGetListSuccessfulState) {
+            if (state.list.isNotEmpty) {
+              bankTypesResult = state.list;
+              bankTypesResult.sort((a, b) {
+                if (a.status == 1) {
+                  return -1;
+                } else if (b.status == 1) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              });
+            }
+          }
+        }, builder: (context, state) {
+          if (state is BankTypeLoadingState) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Center(
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: bankTypesResult.map((e) {
+                  return _buildItemBank(e, () {
+                    // provider.updateBankType(e);
+                    context.go('/add-bank/step2?bankId=${e.id}');
+                  }, isSelected: e.status == 1);
+                }).toList(),
+              ),
+            ),
+          );
+        }));
+  }
+
+  Widget _buildItemBank(BankTypeDTO dto, VoidCallback onTap,
+      {bool isSelected = false}) {
+    return InkWell(
+      onTap: onTap,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8, top: 8),
+            child: Column(
+              children: [
+                Container(
+                  width: 80,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: AppColor.WHITE,
+                    image: DecorationImage(
+                      image: ImageUtils.instance.getImageNetWork(
+                        dto.imageId,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  dto.bankShortName,
+                  style: const TextStyle(fontSize: 12),
+                )
+              ],
+            ),
+          ),
+          if (isSelected)
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                height: 18,
+                width: 18,
+                decoration: BoxDecoration(
+                  color: AppColor.BLUE_TEXT,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(
+                  Icons.check,
+                  size: 10,
+                  color: AppColor.WHITE,
+                ),
+              ),
+            )
+        ],
+      ),
     );
   }
 }

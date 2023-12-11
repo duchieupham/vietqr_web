@@ -51,17 +51,17 @@ class _MerchantViewState extends State<MerchantFee> {
         currentType: MenuHomeType.MERCHANT,
         subMenuMerchant: [
           ItemMenuHome(
-            title: 'Thống kê giao dịch',
-            isSelect: false,
-            onTap: () {
-              context.go('/merchant/transaction');
-            },
-          ),
-          ItemMenuHome(
             title: 'Báo cáo tổng hợp',
             isSelect: false,
             onTap: () {
               context.go('/merchant/report');
+            },
+          ),
+          ItemMenuHome(
+            title: 'Thống kê giao dịch',
+            isSelect: false,
+            onTap: () {
+              context.go('/merchant/transaction');
             },
           ),
           ItemMenuHome(
@@ -101,17 +101,17 @@ class _MerchantViewState extends State<MerchantFee> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ItemMenuTop(
-                      title: 'Thống kê giao dịch',
-                      isSelect: false,
-                      onTap: () {
-                        context.go('/merchant/transaction');
-                      },
-                    ),
-                    ItemMenuTop(
                       title: 'Báo cáo tổng hợp',
                       isSelect: false,
                       onTap: () {
                         context.go('/merchant/report');
+                      },
+                    ),
+                    ItemMenuTop(
+                      title: 'Thống kê giao dịch',
+                      isSelect: false,
+                      onTap: () {
+                        context.go('/merchant/transaction');
                       },
                     ),
                     ItemMenuTop(

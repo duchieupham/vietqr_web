@@ -44,16 +44,16 @@ class _MerchantViewState extends State<MerchantTransaction> {
         currentType: MenuHomeType.MERCHANT,
         subMenuMerchant: [
           ItemMenuHome(
-            title: 'Thống kê giao dịch',
-            isSelect: true,
-            onTap: () {},
-          ),
-          ItemMenuHome(
             title: 'Báo cáo tổng hợp',
             isSelect: false,
             onTap: () {
               context.go('/merchant/report');
             },
+          ),
+          ItemMenuHome(
+            title: 'Thống kê giao dịch',
+            isSelect: true,
+            onTap: () {},
           ),
           ItemMenuHome(
             title: 'Phí dịch vụ',
@@ -94,16 +94,16 @@ class _MerchantViewState extends State<MerchantTransaction> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ItemMenuTop(
-                      title: 'Thống kê giao dịch',
-                      isSelect: currentType == SubMenuType.LIST_TRANSACTION,
-                      onTap: () {},
-                    ),
-                    ItemMenuTop(
                       title: 'Báo cáo tổng hợp',
                       isSelect: currentType == SubMenuType.SYNTHESIS_REPORT,
                       onTap: () {
                         context.go('/merchant/report');
                       },
+                    ),
+                    ItemMenuTop(
+                      title: 'Thống kê giao dịch',
+                      isSelect: currentType == SubMenuType.LIST_TRANSACTION,
+                      onTap: () {},
                     ),
                     ItemMenuTop(
                       title: 'Phí dịch vụ',

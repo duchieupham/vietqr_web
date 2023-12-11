@@ -49,6 +49,10 @@ class WebSocketHelper {
     return sharedPrefs.getBool('IS_LISTEN_WS') ?? false;
   }
 
+  closeListenTransaction() {
+    _channelTransaction.sink.close();
+  }
+
   void listenTransactionSocket() {
     String userId = UserInformationHelper.instance.getUserId();
     if (userId.isNotEmpty) {
@@ -59,6 +63,7 @@ class WebSocketHelper {
           final wsUrl =
               Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
           _channelTransaction = WebSocketChannel.connect(wsUrl);
+
           if (_channelTransaction.closeCode == null) {
             _channelTransaction.stream.listen((event) {
               var data = jsonDecode(event);
