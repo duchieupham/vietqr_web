@@ -22,6 +22,7 @@ import 'package:VietQR/models/info_user_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -290,6 +291,9 @@ class _Login extends State<Login> {
                 controller: phoneNoController,
                 inputType: TextInputType.text,
                 keyboardAction: TextInputAction.done,
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 onSubmitted: (value) {
                   _loginBloc.add(
                       CheckExistPhone(phone: phoneNoController.text.trim()));

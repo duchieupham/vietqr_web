@@ -539,7 +539,9 @@ class DialogWidget {
       {required String title,
       required String msg,
       VoidCallback? function,
-      BuildContext? context}) {
+      BuildContext? context,
+      Color? titleColor,
+      Color? msgColor}) {
     return showDialog(
         barrierDismissible: false,
         context: context ?? NavigationService.navigatorKey.currentContext!,
@@ -574,10 +576,10 @@ class DialogWidget {
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: titleColor),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   SizedBox(
@@ -588,7 +590,8 @@ class DialogWidget {
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
+                        color: msgColor,
                         fontSize: 13,
                       ),
                     ),

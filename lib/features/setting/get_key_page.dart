@@ -324,6 +324,17 @@ class _GetKeyPageState extends State<GetKeyPage> {
               context.go('/merchant/request/mbh');
             },
           ),
+          if (UserInformationHelper.instance
+              .getCustomerSyncTestId()
+              .trim()
+              .isNotEmpty)
+            ItemMenuTop(
+              title: 'TEST CALLBACK',
+              isSelect: false,
+              onTap: () {
+                context.go('/merchant/callback');
+              },
+            ),
         ],
       ),
     );

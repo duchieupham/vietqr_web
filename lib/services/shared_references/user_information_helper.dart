@@ -58,11 +58,19 @@ class UserInformationHelper {
   }
 
   Future<void> setCustomerSyncId(String userId) async {
-    await sharedPrefs.setString('set_Customer_SyncId', userId);
+    await sharedPrefs.setString('Customer_SyncId', userId);
+  }
+
+  Future<void> setCustomerSyncTestId(String userId) async {
+    await sharedPrefs.setString('Customer_Sync_Test_Id', userId);
   }
 
   String getCustomerSyncId() {
-    return sharedPrefs.getString('set_Customer_SyncId')!;
+    return sharedPrefs.getString('Customer_SyncId')!;
+  }
+
+  String getCustomerSyncTestId() {
+    return sharedPrefs.getString('Customer_Sync_Test_Id')!;
   }
 
   String getUserFullname() {

@@ -130,10 +130,11 @@ class BaseAPIClient {
     Map<String, String>? result = {};
     type ??= AuthenticationType.NONE;
     final String _token = AccountHelper.instance.getToken();
-
+    final String tokenFree = AccountHelper.instance.getTokenFree();
     switch (type) {
       case AuthenticationType.SYSTEM:
-        result['Authorization'] = 'Bearer $_token';
+        result['Authorization'] =
+            'Bearer ${tokenFree.isNotEmpty ? tokenFree : _token}';
         result['Content-Type'] = 'application/json';
         result['Accept'] = '*/*';
         result['Access-Control-Allow-Origin'] = '*';

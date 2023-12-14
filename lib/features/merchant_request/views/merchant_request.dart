@@ -16,6 +16,7 @@ import 'package:VietQR/features/merchant_request/page/infocustomer.dart';
 import 'package:VietQR/features/merchant_request/provider/merchant_request_provider.dart';
 import 'package:VietQR/features/merchant_request/states/merchant_request_state.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -285,6 +286,17 @@ class _MerchantViewState extends State<MerchantRequest> {
                   context.go('/merchant/request/mbh');
                 },
               ),
+              if (UserInformationHelper.instance
+                  .getCustomerSyncTestId()
+                  .trim()
+                  .isNotEmpty)
+                ItemMenuTop(
+                  title: 'TEST CALLBACK',
+                  isSelect: false,
+                  onTap: () {
+                    context.go('/merchant/callback');
+                  },
+                ),
             ],
           ),
         ),

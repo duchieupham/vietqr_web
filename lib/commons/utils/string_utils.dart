@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:VietQR/commons/enums/text_data.dart';
 import 'package:intl/intl.dart';
 
@@ -105,6 +107,20 @@ class StringUtils {
     return numberFormat.format(value);
   }
 
+  static String formatNumberAmount(dynamic value) {
+    if (value == null || value == '') {
+      return '0 VND';
+    }
+
+    if (value is String) {
+      if (value.isNotEmpty) {
+        value = int.parse(value);
+      }
+    }
+    var numberFormat = NumberFormat.decimalPattern('vi-VI');
+    return '${numberFormat.format(value).replaceAll('.', ',')} VND';
+  }
+
   String? validatePhone(String value) {
     RegExp regExp = RegExp(_phonePattern);
     if (value.isEmpty) {
@@ -127,5 +143,11 @@ class StringUtils {
       }
       return numericString;
     }
+  }
+
+  String authBase64(String username, String password) {
+    String credentials = "$username:$password";
+    String credentialsBase64 = base64Encode(utf8.encode(credentials));
+    return credentialsBase64;
   }
 }

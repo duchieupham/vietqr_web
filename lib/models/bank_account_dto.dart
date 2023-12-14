@@ -16,7 +16,7 @@ class BankAccountDTO {
   final bool isAuthenticated;
   final String? userId;
   final String bankShortName;
-
+  final String customerBankName;
   Color? bankColor;
 
   // final String branchCode;
@@ -36,6 +36,7 @@ class BankAccountDTO {
     this.branchName = '',
     this.businessName = '',
     this.bankShortName = '',
+    this.customerBankName = '',
     this.isAuthenticated = false,
     this.userId,
     this.bankColor,
@@ -62,6 +63,7 @@ class BankAccountDTO {
       businessId: json['businessId'] ?? '',
       branchName: json['branchName'] ?? '',
       businessName: json['businessName'] ?? '',
+      customerBankName: json['customerBankName'] ?? '',
       isAuthenticated: json['authenticated'] ?? false,
       userId: json['userId'] ?? '',
       // branchCode: json['branchCode'],

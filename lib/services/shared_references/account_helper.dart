@@ -22,4 +22,12 @@ class AccountHelper {
   Future<void> setFcmToken(String token) async {
     await sharedPrefs.setString('FCM_TOKEN', token);
   }
+
+  Future<void> setTokenFree(String value) async {
+    await sharedPrefs.setString('TOKEN_FREE', value);
+  }
+
+  String getTokenFree() {
+    return sharedPrefs.getString('TOKEN_FREE') ?? '';
+  }
 }

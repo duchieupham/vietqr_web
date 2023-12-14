@@ -37,6 +37,7 @@ import 'package:VietQR/features/merchant/views/merchant_bill.dart';
 import 'package:VietQR/features/merchant/views/merchant_fee.dart';
 import 'package:VietQR/features/merchant/views/merchant_report.dart';
 import 'package:VietQR/features/merchant/views/merchant_transaction.dart';
+import 'package:VietQR/features/merchant_request/views/call_back_page.dart';
 import 'package:VietQR/features/merchant_request/views/merchant_request.dart';
 import 'package:VietQR/features/mobile_recharge/mobile_recharge_screen.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
@@ -482,6 +483,21 @@ final GoRouter _router = GoRouter(
             context: context,
             state: state,
             child: const GetKeyPage(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/callback',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/callback'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const CallbackPage(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const CallbackPage(),
           );
         }),
     GoRoute(

@@ -432,6 +432,17 @@ class _VhitekState extends State<_VhitekScreen> {
             showBottomBorder: true,
             onTap: () {},
           ),
+          if (UserInformationHelper.instance
+              .getCustomerSyncTestId()
+              .trim()
+              .isNotEmpty)
+            ItemMenuTop(
+              title: 'TEST CALLBACK',
+              isSelect: false,
+              onTap: () {
+                context.go('/merchant/callback');
+              },
+            ),
         ],
       ),
     );

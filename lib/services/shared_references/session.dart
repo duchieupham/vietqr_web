@@ -171,11 +171,13 @@ class Session {
         AccountIsMerchantDTO dto =
             await merchantRepository.checkAccountIsMerchant(userId);
         UserInformationHelper.instance.setCustomerSyncId(dto.customerSyncId);
-
+        UserInformationHelper.instance
+            .setCustomerSyncTestId(dto.customerSyncTestId);
         _accountIsMerchantDTO = dto;
-
-        _listBankAccountOfMerchant =
-            await merchantRepository.getListBank(dto.customerSyncId);
+        if (dto.customerSyncId.isNotEmpty) {
+          _listBankAccountOfMerchant =
+              await merchantRepository.getListBank(dto.customerSyncId);
+        }
       }
     }
   }
