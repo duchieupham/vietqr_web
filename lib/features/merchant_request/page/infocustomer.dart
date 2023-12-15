@@ -183,7 +183,7 @@ class InforCustomer extends StatelessWidget {
           height: 16,
         ),
         const Text(
-          'Ví dụ\nURL của khách hàng được cấu hình theo format tài liệu kết nối là:\n- API Get Token: https://api.vietqr.org/vqr/api/token_generate\n- Api callback: https://api.vietqr.org/vqr/bank/api/token_generate\n\nThì các tham số tương ứng như sau:\n- URL: https://api.vietqr.org\n- URL Path:vqr',
+          'Ví dụ\nURL của khách hàng được cấu hình theo format tài liệu kết nối là:\n- API Get Token: https://api.vietqr.org/vqr/api/token_generate\n- Api callback: https://api.vietqr.org/vqr/bank/api/test/transaction-callback\n\nThì các tham số tương ứng như sau:\n- URL: https://api.vietqr.org\n- URL Path:vqr',
           style: TextStyle(color: AppColor.GREY_TEXT),
         ),
         const SizedBox(
