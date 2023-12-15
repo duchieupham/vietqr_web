@@ -253,8 +253,8 @@ class MobileRechargeScreen extends StatelessWidget {
                                                   .replaceAll(',', '')) ||
                                           provider.paymentTypeMethod == 1) {
                                         DialogWidget.instance.openWidgetDialog(
-                                          width: 500,
-                                          height: 400,
+                                          width: 300,
+                                          height: 300,
                                           child: PopupConfirmPassword(
                                             onConfirmSuccess: (otp) {
                                               Navigator.of(context).pop();

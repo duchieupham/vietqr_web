@@ -7,7 +7,7 @@ import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/repaint_boundary_widget.dart';
-import 'package:VietQR/features/mobile_recharge/frame/mobile_recharge_frame.dart';
+import 'package:VietQR/features/mobile_recharge/frame/qr_recharge_frame.dart';
 import 'package:VietQR/features/mobile_recharge/provider/mobile_recharge_provider.dart';
 import 'package:VietQR/models/respone_top_up_dto.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +79,7 @@ class _QRMobileRechargeScreenState extends State<QRMobileRechargeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return MobileRechargeFrame(
+    return QRRechargeFrame(
       widget1: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

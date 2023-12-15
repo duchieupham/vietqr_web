@@ -167,10 +167,15 @@ class _HomeScreenState extends State<_HomeScreen> {
               currentType: MenuHomeType.HOME,
             ),
             widget1: _buildHome(),
-            widget2: _buildListBank(state.listBanks, state.colors),
+            widget2: Expanded(
+                flex: state.listBanks.isNotEmpty ? 1 : 2,
+                child: _buildListBank(state.listBanks, state.colors)),
             widget3: state.listBanks.isEmpty
-                ? const SizedBox.shrink()
-                : _buildInfoAccount(dto, qrGeneratedDTO, state),
+                ? const SizedBox(
+                    width: 80,
+                  )
+                : Expanded(
+                    child: _buildInfoAccount(dto, qrGeneratedDTO, state)),
           );
         },
       ),
@@ -522,7 +527,7 @@ class _HomeScreenState extends State<_HomeScreen> {
             child: Column(
               children: [
                 Container(
-                  width: 80,
+                  width: 94,
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),

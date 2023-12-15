@@ -87,6 +87,8 @@ class WebSocketHelper {
                       Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
                 if (data['paymentMethod'] == "1") {
                   DialogWidget.instance.openWidgetDialog(
+                    width: 500,
+                    height: 540,
                     child: PopupTopUpSuccess(
                       dto: TopUpSuccessDTO.fromJson(data),
                     ),
