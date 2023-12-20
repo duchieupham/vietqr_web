@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
@@ -377,7 +378,7 @@ class _ListTransactionState extends State<ListTransaction> {
                 //   dto.isEdit = true;
                 // });
                 DialogWidget.instance.openContentDialog(() {}, 'Ghi chú',
-                    child: SizedBox.shrink());
+                    width: 400, child: _buildContentDialogContent(dto, index));
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
@@ -408,6 +409,127 @@ class _ListTransactionState extends State<ListTransaction> {
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildContentDialogContent(TransactionMerchantDTO dto, int index) {
+    int indexOfList = index;
+    String note = '';
+    return ChangeNotifierProvider<MerchantProvider>(
+      create: (context) => MerchantProvider()..updateTransactionDto(dto),
+      child: Consumer<MerchantProvider>(builder: (context, provider2, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Số TK: ${provider2.transactionMerchantDTO.bankAccount}'),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                'Số tiền: ${provider2.transactionMerchantDTO.transType == 'D' ? '- ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND' : '+ ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND'}',
+                style: TextStyle(
+                    color: provider2.transactionMerchantDTO.getAmountColor()),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                  'Thời gian: ${TimeUtils.instance.formatTimeDateFromInt(provider2.transactionMerchantDTO.timeCreated, oneLine: true)}'),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                height: 50,
+                padding: const EdgeInsets.only(left: 8, right: 4),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColor.GREY_BUTTON)),
+                child: MTextFieldCustom(
+                  hintText: 'Nhập ghi chú',
+                  keyboardAction: TextInputAction.next,
+                  value: provider2.transactionMerchantDTO.note,
+                  enable: true,
+                  onChange: (value) {
+                    note = value;
+                  },
+                  inputType: TextInputType.text,
+                  isObscureText: false,
+                  textAlign: TextAlign.center,
+                  fontSize: 14,
+                  fillColor: AppColor.TRANSPARENT,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              InkWell(
+                onTap: () {
+                  if (note.isNotEmpty) {
+                    Map<String, dynamic> body = {
+                      'note': note,
+                      'id': provider2.transactionMerchantDTO.id,
+                    };
+                    merchantBloc.add(UpdateNoteMerchantEvent(body));
+                  }
+                  provider2.updateTransactionDto(listTransaction[indexOfList],
+                      init: false);
+
+                  note = '';
+                  indexOfList++;
+                },
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: AppColor.BLUE_TEXT)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Tiếp theo',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        Transform.rotate(
+                          angle: 0,
+                          child: const Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 80,
+              ),
+              ButtonWidget(
+                text: 'Lưu',
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.BLUE_TEXT,
+                function: () {
+                  Navigator.pop(context);
+                  if (note.isNotEmpty) {
+                    Map<String, dynamic> body = {
+                      'note': note,
+                      'id': provider2.transactionMerchantDTO.id,
+                    };
+                    merchantBloc.add(UpdateNoteMerchantEvent(body));
+                  }
+                },
+                borderRadius: 5,
+                height: 40,
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 

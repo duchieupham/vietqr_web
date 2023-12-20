@@ -500,9 +500,9 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 bgColor: AppColor.BLUE_TEXT,
                 function: () {
                   Navigator.pop(context);
-                  if (provider2.transactionMerchantDTO.note.isNotEmpty) {
+                  if (note.isNotEmpty) {
                     Map<String, dynamic> body = {
-                      'note': provider2.transactionMerchantDTO.note,
+                      'note': note,
                       'id': provider2.transactionMerchantDTO.id,
                     };
                     transactionUserBloc.add(UpdateNoteEvent(body));

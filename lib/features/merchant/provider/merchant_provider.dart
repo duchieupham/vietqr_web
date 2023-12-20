@@ -5,6 +5,7 @@ import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,14 @@ class MerchantProvider with ChangeNotifier {
 
   int get currentPage => _currentPage;
   List<BankAccountDTO> bankAccounts = [];
+
+  TransactionMerchantDTO transactionMerchantDTO = TransactionMerchantDTO();
+  updateTransactionDto(TransactionMerchantDTO dto, {bool init = true}) {
+    transactionMerchantDTO = dto;
+    if (!init) {
+      notifyListeners();
+    }
+  }
 
   init(MerchantBloc merchantBloc) {
     getListBankAccount();
