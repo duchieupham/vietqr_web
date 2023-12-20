@@ -4,6 +4,7 @@ import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:VietQR/features/setting/blocs/setting_bloc.dart';
 import 'package:VietQR/features/setting/events/setting_event.dart';
@@ -57,8 +58,40 @@ class _GetKeyPageState extends State<GetKeyPage> {
               Expanded(
                 child: Row(
                   children: [
-                    const MenuLeft(
+                    MenuLeft(
                       currentType: MenuHomeType.MERCHANT_REQUEST,
+                      subMenuMerchantRequest: [
+                        ItemMenuHome(
+                          title: 'API SERVICE',
+                          isSelect: false,
+                          onTap: () {
+                            context.go('/merchant/request');
+                          },
+                        ),
+                        ItemMenuHome(
+                          title: 'ECOMMERCE',
+                          isSelect: true,
+                          onTap: () {},
+                        ),
+                        ItemMenuHome(
+                          title: 'KẾT NỐI MÁY BÁN HÀNG',
+                          isSelect: false,
+                          onTap: () {
+                            context.go('/merchant/request/mbh');
+                          },
+                        ),
+                        if (UserInformationHelper.instance
+                            .getCustomerSyncTestId()
+                            .trim()
+                            .isNotEmpty)
+                          ItemMenuHome(
+                            title: 'TEST CALLBACK',
+                            isSelect: false,
+                            onTap: () {
+                              context.go('/merchant/callback');
+                            },
+                          ),
+                      ],
                     ),
                     Expanded(
                       child: Column(

@@ -73,6 +73,14 @@ class UserInformationHelper {
     return sharedPrefs.getString('Customer_Sync_Test_Id')!;
   }
 
+  Future<void> setAccountIsMerchant(bool value) async {
+    await sharedPrefs.setBool('Account_Is_Merchant', value);
+  }
+
+  bool getAccountIsMerchant() {
+    return sharedPrefs.getBool('Account_Is_Merchant') ?? false;
+  }
+
   String getUserFullname() {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();

@@ -10,6 +10,7 @@ import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +20,7 @@ class MenuLeft extends StatelessWidget {
   final MenuHomeType currentType;
   final List<Widget> subMenuMerchant;
   final List<Widget> subMenuTransactionUser;
+  final List<Widget> subMenuMerchantRequest;
   final Function(int)? onSelectMenu;
 
   const MenuLeft(
@@ -26,6 +28,7 @@ class MenuLeft extends StatelessWidget {
       required this.currentType,
       this.onSelectMenu,
       this.subMenuTransactionUser = const [],
+      this.subMenuMerchantRequest = const [],
       this.subMenuMerchant = const []});
 
   @override
@@ -62,7 +65,7 @@ class MenuLeft extends StatelessWidget {
           } else {
             width = 50;
           }
-          print('------------------- $width');
+
           return Container(
             width: width,
             color: AppColor.BLUE_TEXT.withOpacity(0.2),
@@ -123,7 +126,7 @@ class MenuLeft extends StatelessWidget {
                   context.go('/transaction');
                 },
               ),
-              if (provider.isAccountIsMerchant)
+              if (UserInformationHelper.instance.getAccountIsMerchant())
                 ItemMenuHome(
                   title: 'Đại lý',
                   iconId: AppImages.icMenuBank,
@@ -131,12 +134,14 @@ class MenuLeft extends StatelessWidget {
                   listItemDrop: subMenuMerchant,
                   isSelect: currentType == MenuHomeType.MERCHANT,
                   onTap: () {
-                    context.go('/merchant/transaction');
+                    context.go('/merchant/report');
                   },
                 ),
               ItemMenuHome(
                 title: 'Tích hợp và kết nối',
                 iconId: AppImages.icMenuBank,
+                enableDropDownList: true,
+                listItemDrop: subMenuMerchantRequest,
                 isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
                 onTap: () {
                   context.go('/merchant/request');
@@ -259,7 +264,7 @@ class MenuLeft extends StatelessWidget {
               isOnlyIcon: true,
               isSelect: currentType == MenuHomeType.MERCHANT,
               onTap: () {
-                context.go('/merchant');
+                context.go('/merchant/report');
                 provider.updateShowMenu(true);
               },
             ),

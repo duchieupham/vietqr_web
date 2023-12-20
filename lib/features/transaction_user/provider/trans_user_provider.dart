@@ -4,6 +4,7 @@ import 'package:VietQR/features/home/repositories/home_repository.dart';
 import 'package:VietQR/features/transaction_user/blocs/tran_user_bloc.dart';
 import 'package:VietQR/features/transaction_user/events/tran_user_event.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -32,7 +33,7 @@ class TransUserProvider with ChangeNotifier {
     const FilterTimeTransaction(id: 5, title: 'Khoảng thời gian'),
   ];
   FilterTimeTransaction _valueTimeFilter =
-      const FilterTimeTransaction(id: 1, title: 'Hôm nay');
+      const FilterTimeTransaction(id: 0, title: 'Tất cả');
 
   FilterTimeTransaction get valueTimeFilter => _valueTimeFilter;
   DateTime _toDate = DateTime.now();
@@ -61,8 +62,16 @@ class TransUserProvider with ChangeNotifier {
   bool isCalling = true;
   ScrollController scrollControllerList = ScrollController();
   final homeRepository = const HomeRepository();
+  TransactionMerchantDTO transactionMerchantDTO = TransactionMerchantDTO();
 
   List<BankAccountDTO> bankAccounts = [];
+
+  updateTransactionDto(TransactionMerchantDTO dto, {bool init = true}) {
+    transactionMerchantDTO = dto;
+    if (!init) {
+      notifyListeners();
+    }
+  }
 
   init(TransactionUserBloc transactionUserBloc, Function initData) {
     initData();

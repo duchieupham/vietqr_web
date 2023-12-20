@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:VietQR/features/merchant_request/blocs/merchant_request_bloc.dart';
 import 'package:VietQR/features/merchant_request/events/merchant_request_event.dart';
@@ -64,11 +65,43 @@ class _MerchantViewState extends State<MerchantRequest> {
         create: (context) => MerchantRequestProvider()..getListBankAccount(),
         child: Consumer<MenuProvider>(builder: (context, provider, child) {
           return MerchantRequestFrame(
-            menu: const MenuLeft(
+            menu: MenuLeft(
               currentType: MenuHomeType.MERCHANT_REQUEST,
+              subMenuMerchantRequest: [
+                ItemMenuHome(
+                  title: 'API SERVICE',
+                  isSelect: true,
+                  onTap: () {},
+                ),
+                ItemMenuHome(
+                  title: 'ECOMMERCE',
+                  isSelect: false,
+                  onTap: () {
+                    context.go('/merchant/request/ecommerce');
+                  },
+                ),
+                ItemMenuHome(
+                  title: 'KẾT NỐI MÁY BÁN HÀNG',
+                  isSelect: false,
+                  onTap: () {
+                    context.go('/merchant/request/mbh');
+                  },
+                ),
+                if (UserInformationHelper.instance
+                    .getCustomerSyncTestId()
+                    .trim()
+                    .isNotEmpty)
+                  ItemMenuHome(
+                    title: 'TEST CALLBACK',
+                    isSelect: false,
+                    onTap: () {
+                      context.go('/merchant/callback');
+                    },
+                  ),
+              ],
             ),
             title: _buildTitle(provider),
-            widget1: provider.isAccountIsMerchant
+            widget1: UserInformationHelper.instance.getAccountIsMerchant()
                 ? _buildBlank()
                 : BlocListener<MerchantRequestBloc, MerchantRequestState>(
                     listener: (context, state) {

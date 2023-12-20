@@ -49,13 +49,15 @@ class TimeUtils {
     return formatted;
   }
 
-  String formatTimeDateFromInt(num time) {
+  String formatTimeDateFromInt(num time, {bool oneLine = false}) {
     String result = '';
     try {
       if (time != 0) {
         DateTime timeConverted =
             DateTime.fromMillisecondsSinceEpoch(time.toInt() * 1000);
-        DateFormat format = DateFormat('HH:mm:ss \ndd/MM/yyyy ');
+        DateFormat format = oneLine
+            ? DateFormat('HH:mm:ss dd/MM/yyyy ')
+            : DateFormat('HH:mm:ss \ndd/MM/yyyy ');
         result = format.format(timeConverted).toString();
       }
     } catch (e) {

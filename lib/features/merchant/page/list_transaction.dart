@@ -44,8 +44,8 @@ class _ListTransactionState extends State<ListTransaction> {
     param['merchantId'] = Session.instance.accountIsMerchantDTO.customerSyncId;
     param['type'] = 9;
     param['value'] = '';
-    param['from'] = TimeUtils.instance.getCurrentDate(DateTime.now());
-    param['to'] = TimeUtils.instance.getCurrentDate(DateTime.now());
+    param['from'] = '0';
+    param['to'] = '0';
     param['offset'] = 0;
     merchantBloc.add(
         GetListTransactionByMerchantEvent(param: param, isLoadingPage: true));
@@ -373,9 +373,11 @@ class _ListTransactionState extends State<ListTransaction> {
           if (!dto.isEdit)
             GestureDetector(
               onTap: () {
-                setState(() {
-                  dto.isEdit = true;
-                });
+                // setState(() {
+                //   dto.isEdit = true;
+                // });
+                DialogWidget.instance.openContentDialog(() {}, 'Ghi chú',
+                    child: SizedBox.shrink());
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),

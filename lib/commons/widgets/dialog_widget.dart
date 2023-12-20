@@ -326,12 +326,10 @@ class DialogWidget {
         });
   }
 
-  openContentDialog(
-    VoidCallback? onClose,
-    Widget child,
-  ) {
+  openContentDialog(VoidCallback? onClose, String title,
+      {required Widget child, double? width}) {
     BuildContext context = NavigationService.navigatorKey.currentContext!;
-    final double width = MediaQuery.of(context).size.width;
+
     return showDialog(
         barrierDismissible: false,
         context: context,
@@ -350,7 +348,48 @@ class DialogWidget {
                   color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: child,
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Center(
+                            child: Text(
+                          title,
+                          style: const TextStyle(fontSize: 16),
+                        )),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        child,
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 25,
+                          height: 25,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Theme.of(context).canvasColor,
+                          ),
+                          child: const Icon(
+                            Icons.close_rounded,
+                            color: AppColor.BLACK,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

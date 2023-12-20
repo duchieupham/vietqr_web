@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:VietQR/features/merchant_request/blocs/run_callback_bloc.dart';
 import 'package:VietQR/features/merchant_request/states/run_call_back_state.dart';
@@ -64,8 +65,40 @@ class _CallbackPageState extends State<CallbackPage> {
               Expanded(
                 child: Row(
                   children: [
-                    const MenuLeft(
+                    MenuLeft(
                       currentType: MenuHomeType.MERCHANT_REQUEST,
+                      subMenuMerchantRequest: [
+                        ItemMenuHome(
+                          title: 'API SERVICE',
+                          isSelect: false,
+                          onTap: () {
+                            context.go('/merchant/request');
+                          },
+                        ),
+                        ItemMenuHome(
+                          title: 'ECOMMERCE',
+                          isSelect: false,
+                          onTap: () {
+                            context.go('/merchant/request/ecommerce');
+                          },
+                        ),
+                        ItemMenuHome(
+                          title: 'KẾT NỐI MÁY BÁN HÀNG',
+                          isSelect: false,
+                          onTap: () {
+                            context.go('/merchant/request/mbh');
+                          },
+                        ),
+                        if (UserInformationHelper.instance
+                            .getCustomerSyncTestId()
+                            .trim()
+                            .isNotEmpty)
+                          ItemMenuHome(
+                            title: 'TEST CALLBACK',
+                            isSelect: true,
+                            onTap: () {},
+                          ),
+                      ],
                     ),
                     Expanded(
                       child: BlocConsumer<RunCallbackBloc, RunCallBackState>(

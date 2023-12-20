@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/transaction_user/blocs/tran_user_bloc.dart';
 import 'package:VietQR/features/transaction_user/events/tran_user_event.dart';
@@ -40,8 +41,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
     paramInit['userId'] = UserInformationHelper.instance.getUserId();
     paramInit['type'] = 9;
     paramInit['value'] = '';
-    paramInit['from'] = TimeUtils.instance.getCurrentDate(DateTime.now());
-    paramInit['to'] = TimeUtils.instance.getCurrentDate(DateTime.now());
+    paramInit['from'] = 0;
+    paramInit['to'] = 0;
     paramInit['offset'] = 0;
     transactionUserBloc
         .add(GetListTransactionByEvent(param: paramInit, isLoadingPage: true));
@@ -337,78 +338,183 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
             builder: (context, provider, child) {
               String note = dto.note;
 
-              return Container(
-                width: 120,
+              return Row(
+                children: [
+                  Container(
+                    width: 120,
+                    height: 50,
+                    padding: const EdgeInsets.only(left: 8, right: 4),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                            right: BorderSide(color: AppColor.GREY_BUTTON))),
+                    child: MTextFieldCustom(
+                      hintText: '',
+                      keyboardAction: TextInputAction.next,
+                      value: dto.note,
+                      enable: dto.isEdit,
+                      onChange: (value) {
+                        dto.note = value;
+                      },
+                      inputType: TextInputType.text,
+                      isObscureText: false,
+                      textAlign: TextAlign.center,
+                      fontSize: 12,
+                      fillColor: AppColor.TRANSPARENT,
+                      suffixIcon: dto.isEdit
+                          ? GestureDetector(
+                              onTap: () {
+                                dto.note = note;
+                                setState(() {});
+                              },
+                              child: const Icon(Icons.clear, size: 12),
+                            )
+                          : null,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      DialogWidget.instance.openContentDialog(() {}, 'Ghi chú',
+                          width: 400,
+                          child: _buildContentDialogContent(dto, index));
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContentDialogContent(TransactionMerchantDTO dto, int index) {
+    int indexOfList = index;
+    String note = '';
+    return ChangeNotifierProvider<TransUserProvider>(
+      create: (context) => TransUserProvider()..updateTransactionDto(dto),
+      child: Consumer<TransUserProvider>(builder: (context, provider2, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Số TK: ${provider2.transactionMerchantDTO.bankAccount}'),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                'Số tiền: ${provider2.transactionMerchantDTO.transType == 'D' ? '- ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND' : '+ ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND'}',
+                style: TextStyle(
+                    color: provider2.transactionMerchantDTO.getAmountColor()),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                  'Thời gian: ${TimeUtils.instance.formatTimeDateFromInt(provider2.transactionMerchantDTO.timeCreated, oneLine: true)}'),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
                 height: 50,
                 padding: const EdgeInsets.only(left: 8, right: 4),
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: AppColor.GREY_BUTTON),
-                        right: BorderSide(color: AppColor.GREY_BUTTON))),
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColor.GREY_BUTTON)),
                 child: MTextFieldCustom(
-                  hintText: '',
+                  hintText: 'Nhập ghi chú',
                   keyboardAction: TextInputAction.next,
-                  value: dto.note,
-                  enable: dto.isEdit,
+                  value: provider2.transactionMerchantDTO.note,
+                  enable: true,
                   onChange: (value) {
-                    dto.note = value;
+                    note = value;
                   },
                   inputType: TextInputType.text,
                   isObscureText: false,
                   textAlign: TextAlign.center,
-                  fontSize: 12,
+                  fontSize: 14,
                   fillColor: AppColor.TRANSPARENT,
-                  suffixIcon: dto.isEdit
-                      ? GestureDetector(
-                          onTap: () {
-                            dto.note = note;
-                            setState(() {});
-                          },
-                          child: const Icon(Icons.clear, size: 12),
-                        )
-                      : null,
                   contentPadding: EdgeInsets.zero,
                 ),
-              );
-            },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              InkWell(
+                onTap: () {
+                  if (note.isNotEmpty) {
+                    Map<String, dynamic> body = {
+                      'note': note,
+                      'id': provider2.transactionMerchantDTO.id,
+                    };
+                    transactionUserBloc.add(UpdateNoteEvent(body));
+                  }
+                  provider2.updateTransactionDto(listTransaction[indexOfList],
+                      init: false);
+
+                  note = '';
+                  indexOfList++;
+                },
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: AppColor.BLUE_TEXT)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Tiếp theo',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        Transform.rotate(
+                          angle: 0,
+                          child: const Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 80,
+              ),
+              ButtonWidget(
+                text: 'Lưu',
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.BLUE_TEXT,
+                function: () {
+                  Navigator.pop(context);
+                  if (provider2.transactionMerchantDTO.note.isNotEmpty) {
+                    Map<String, dynamic> body = {
+                      'note': provider2.transactionMerchantDTO.note,
+                      'id': provider2.transactionMerchantDTO.id,
+                    };
+                    transactionUserBloc.add(UpdateNoteEvent(body));
+                  }
+                },
+                borderRadius: 5,
+                height: 40,
+              )
+            ],
           ),
-          if (!dto.isEdit)
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  dto.isEdit = true;
-                });
-              },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                child: Icon(
-                  Icons.edit,
-                  size: 20,
-                ),
-              ),
-            )
-          else
-            GestureDetector(
-              onTap: () {
-                dto.isEdit = false;
-                Map<String, dynamic> body = {
-                  'note': dto.note,
-                  'id': dto.id,
-                };
-                transactionUserBloc.add(UpdateNoteEvent(body));
-              },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                child: Icon(
-                  Icons.done,
-                  size: 20,
-                  color: AppColor.BLUE_TEXT,
-                ),
-              ),
-            ),
-        ],
-      ),
+        );
+      }),
     );
   }
 
