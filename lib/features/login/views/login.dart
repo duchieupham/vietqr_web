@@ -183,8 +183,8 @@ class _Login extends State<Login> {
   void openPinDialog(BuildContext context) {
     print(
         '-------------------------------------${EncryptUtils.instance.encrypted(
-      'vietqradmin',
-      'systemadmin123',
+      '0769231213',
+      '000000',
     )}');
 
     if (phoneNoController.text.isEmpty) {

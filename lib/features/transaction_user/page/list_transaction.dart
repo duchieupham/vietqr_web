@@ -36,6 +36,26 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
 
   final noteController = TextEditingController();
 
+  List<String> hasTagOutCome = [
+    '#ăn_uống',
+    '#hóa_dơn',
+    '#gia_đình',
+    '#di_chuyển',
+    '#sức_khỏe',
+    '#giải_trí',
+    '#bảo_hiểm',
+    '#đầu_tư',
+    '#trả_lãi',
+    '#khác'
+  ];
+
+  List<String> hasTagInCome = [
+    '#tiết_kiệm',
+    '#lương',
+    '#thu_lãi',
+    '#thu_nhập_khác',
+  ];
+
   init() {
     Map<String, dynamic> paramInit = {};
     paramInit['userId'] = UserInformationHelper.instance.getUserId();
@@ -399,122 +419,389 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
 
   Widget _buildContentDialogContent(TransactionMerchantDTO dto, int index) {
     int indexOfList = index;
+    int indexPre = index - 1;
     String note = '';
+    FocusNode focusNodeNote = FocusNode();
+    TextEditingController noteController = TextEditingController();
+    onSaveNote(TransUserProvider provider) {
+      if (note.isNotEmpty) {
+        String valueNote = '';
+        if (provider.hasTag.isNotEmpty) {
+          if (note.contains(provider.hasTag)) {
+            valueNote = note;
+          } else {
+            valueNote = '$note ${provider.hasTag}';
+          }
+        } else {
+          valueNote = note;
+        }
+        Map<String, dynamic> body = {
+          'note': valueNote,
+          'id': provider.transactionMerchantDTO.id,
+        };
+        transactionUserBloc.add(UpdateNoteEvent(body));
+      } else {
+        if (provider.transactionMerchantDTO.note.isNotEmpty) {
+          if (provider.hasTag.isNotEmpty) {
+            String valueNote = '';
+            if (provider.transactionMerchantDTO.note
+                .contains(provider.hasTag)) {
+              valueNote = provider.transactionMerchantDTO.note;
+            } else {
+              valueNote =
+                  '${provider.transactionMerchantDTO.note} ${provider.hasTag}';
+            }
+
+            Map<String, dynamic> body = {
+              'note': valueNote,
+              'id': provider.transactionMerchantDTO.id,
+            };
+
+            transactionUserBloc.add(UpdateNoteEvent(body));
+          }
+        }
+      }
+    }
+
     return ChangeNotifierProvider<TransUserProvider>(
       create: (context) => TransUserProvider()..updateTransactionDto(dto),
       child: Consumer<TransUserProvider>(builder: (context, provider2, child) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Số TK: ${provider2.transactionMerchantDTO.bankAccount}'),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(
-                'Số tiền: ${provider2.transactionMerchantDTO.transType == 'D' ? '- ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND' : '+ ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND'}',
-                style: TextStyle(
-                    color: provider2.transactionMerchantDTO.getAmountColor()),
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(
-                  'Thời gian: ${TimeUtils.instance.formatTimeDateFromInt(provider2.transactionMerchantDTO.timeCreated, oneLine: true)}'),
-              const SizedBox(
-                height: 16,
-              ),
-              Container(
-                height: 50,
-                padding: const EdgeInsets.only(left: 8, right: 4),
-                alignment: Alignment.center,
+        focusNodeNote.requestFocus();
+        if (provider2.transactionMerchantDTO.note.isNotEmpty) {
+          noteController.text = provider2.transactionMerchantDTO.note;
+        } else {
+          noteController.text = note;
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () {
+                onSaveNote(provider2);
+                if (indexPre == 0) {
+                  indexPre = listTransaction.length - 1;
+                } else {
+                  indexPre--;
+                }
+                indexOfList = indexPre + 1;
+                provider2.updateTransactionDto(listTransaction[indexPre],
+                    init: false);
+
+                note = '';
+              },
+              child: Container(
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.GREY_BUTTON)),
-                child: MTextFieldCustom(
-                  hintText: 'Nhập ghi chú',
-                  keyboardAction: TextInputAction.next,
-                  value: provider2.transactionMerchantDTO.note,
-                  enable: true,
-                  onChange: (value) {
-                    note = value;
-                  },
-                  inputType: TextInputType.text,
-                  isObscureText: false,
-                  textAlign: TextAlign.center,
-                  fontSize: 14,
-                  fillColor: AppColor.TRANSPARENT,
-                  contentPadding: EdgeInsets.zero,
+                    color: AppColor.BANK_CARD_COLOR_3,
+                    borderRadius: BorderRadius.circular(30)),
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: AppColor.WHITE,
+                  size: 18,
                 ),
               ),
-              const SizedBox(
-                height: 16,
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Container(
+              width: 400,
+              height: 600,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(10),
               ),
-              InkWell(
-                onTap: () {
-                  if (note.isNotEmpty) {
-                    Map<String, dynamic> body = {
-                      'note': note,
-                      'id': provider2.transactionMerchantDTO.id,
-                    };
-                    transactionUserBloc.add(UpdateNoteEvent(body));
-                  }
-                  provider2.updateTransactionDto(listTransaction[indexOfList],
-                      init: false);
-
-                  note = '';
-                  indexOfList++;
-                },
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: AppColor.BLUE_TEXT)),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Tiếp theo',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        Transform.rotate(
-                          angle: 0,
-                          child: const Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 16,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      const Center(
+                          child: Text(
+                        'Ghi chú',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          height: 520,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Thông tin giao dịch',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              _buildInfoItem('Tài khoản:',
+                                  '${dto.bankShortName} -${provider2.transactionMerchantDTO.bankAccount}'),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              _buildInfoItem(
+                                  'Số tiền:',
+                                  provider2.transactionMerchantDTO.transType ==
+                                          'D'
+                                      ? '- ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND'
+                                      : '+ ${StringUtils.formatNumber(provider2.transactionMerchantDTO.amount)} VND',
+                                  contentColor: provider2.transactionMerchantDTO
+                                      .getAmountColor(),
+                                  contentFontWeight: FontWeight.bold),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              _buildInfoItem(
+                                  'Mã Giao dịch:',
+                                  provider2
+                                      .transactionMerchantDTO.referenceNumber),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              _buildInfoItem(
+                                  'Thời gian tạo:',
+                                  TimeUtils.instance.formatTimeDateFromInt(
+                                      provider2
+                                          .transactionMerchantDTO.timeCreated,
+                                      oneLine: true)),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              _buildInfoItem(
+                                  'Thời gian TT:',
+                                  TimeUtils.instance.formatTimeDateFromInt(
+                                      provider2.transactionMerchantDTO.timePaid,
+                                      oneLine: true)),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              _buildInfoItem('Nội dung:',
+                                  provider2.transactionMerchantDTO.content),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              const Text(
+                                'Ghi chú',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Container(
+                                height: 108,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 12),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: AppColor.GREY_BUTTON)),
+                                child: MTextFieldCustom(
+                                  autoFocus: true,
+                                  focusNode: focusNodeNote,
+                                  hintText: 'Nhập nội dung ghi chú tại đây',
+                                  keyboardAction: TextInputAction.done,
+                                  controller: noteController,
+                                  enable: true,
+                                  onChange: (value) {
+                                    note = value;
+                                  },
+                                  inputType: TextInputType.text,
+                                  isObscureText: false,
+                                  maxLines: 5,
+                                  textAlign: TextAlign.left,
+                                  fontSize: 14,
+                                  onSubmitted: (value) {
+                                    Navigator.pop(context);
+                                    onSaveNote(provider2);
+                                  },
+                                  fillColor: AppColor.TRANSPARENT,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Ghi chú',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                        child: _buildListHasTag(
+                                            provider2.hasTag,
+                                            provider2.transactionMerchantDTO
+                                                        .transType ==
+                                                    'D'
+                                                ? hasTagOutCome
+                                                : hasTagInCome, onTab: (value) {
+                                      provider2.changeHasTag(value);
+                                    }))
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ButtonWidget(
+                                    text: 'Hủy',
+                                    width: 120,
+                                    textColor: AppColor.BLUE_TEXT,
+                                    bgColor:
+                                        AppColor.BLUE_TEXT.withOpacity(0.3),
+                                    function: () {
+                                      Navigator.pop(context);
+                                    },
+                                    borderRadius: 5,
+                                    height: 40,
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  ButtonWidget(
+                                    text: 'Lưu',
+                                    width: 120,
+                                    textColor: AppColor.WHITE,
+                                    bgColor: AppColor.BLUE_TEXT,
+                                    function: () {
+                                      Navigator.pop(context);
+                                      onSaveNote(provider2);
+                                    },
+                                    borderRadius: 5,
+                                    height: 40,
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 25,
+                        height: 25,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: Theme.of(context).canvasColor,
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: AppColor.BLACK,
+                          size: 15,
+                        ),
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            InkWell(
+              onTap: () {
+                onSaveNote(provider2);
+                indexPre = indexOfList;
+                provider2.updateTransactionDto(listTransaction[indexOfList],
+                    init: false);
+
+                note = '';
+                if (indexOfList == listTransaction.length - 1) {
+                  indexOfList = 0;
+                } else {
+                  indexOfList++;
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    color: AppColor.BANK_CARD_COLOR_3,
+                    borderRadius: BorderRadius.circular(30)),
+                child: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: AppColor.WHITE,
+                  size: 18,
                 ),
               ),
-              const SizedBox(
-                height: 80,
-              ),
-              ButtonWidget(
-                text: 'Lưu',
-                textColor: AppColor.WHITE,
-                bgColor: AppColor.BLUE_TEXT,
-                function: () {
-                  Navigator.pop(context);
-                  if (note.isNotEmpty) {
-                    Map<String, dynamic> body = {
-                      'note': note,
-                      'id': provider2.transactionMerchantDTO.id,
-                    };
-                    transactionUserBloc.add(UpdateNoteEvent(body));
-                  }
-                },
-                borderRadius: 5,
-                height: 40,
-              )
-            ],
-          ),
+            ),
+          ],
         );
       }),
+    );
+  }
+
+  Widget _buildListHasTag(String value, List<String> hasTag,
+      {required Function(String) onTab}) {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 6,
+      children: hasTag.map((e) {
+        return InkWell(
+          onTap: () {
+            onTab(e);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: e == value ? AppColor.BLUE_TEXT : AppColor.WHITE),
+                borderRadius: BorderRadius.circular(30),
+                color: AppColor.GREY_BUTTON),
+            child: Text(
+              e,
+              style: const TextStyle(fontSize: 11),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildInfoItem(String title, String content,
+      {Color? contentColor, FontWeight contentFontWeight = FontWeight.normal}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+            child: Text(
+          title,
+          style: const TextStyle(fontSize: 12),
+        )),
+        Expanded(
+            flex: 3,
+            child: Text(
+              content,
+              style: TextStyle(
+                  color: contentColor,
+                  fontWeight: contentFontWeight,
+                  fontSize: 12),
+            )),
+      ],
     );
   }
 
@@ -646,6 +933,10 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                     onChanged: (FilterTransaction? value) {
                       provider.changeFilter(value!);
                       if (value.id.type == TypeFilter.ALL) {
+                        onSearch(provider);
+                      }
+                      if (value.id.type == TypeFilter.BANK_NUMBER) {
+                        provider.changeBankAccount(provider.bankAccounts.first);
                         onSearch(provider);
                       }
                     },
@@ -854,6 +1145,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                         underline: const SizedBox.shrink(),
                         onChanged: (BankAccountDTO? value) {
                           provider.changeBankAccount(value!);
+                          onSearch(provider);
                         },
                         items: provider.bankAccounts
                             .map<DropdownMenuItem<BankAccountDTO>>(

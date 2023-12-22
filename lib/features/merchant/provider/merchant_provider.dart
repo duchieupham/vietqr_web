@@ -62,10 +62,16 @@ class MerchantProvider with ChangeNotifier {
 
   int get currentPage => _currentPage;
   List<BankAccountDTO> bankAccounts = [];
+  String hasTag = '';
+  changeHasTag(String value) {
+    hasTag = value;
+    notifyListeners();
+  }
 
   TransactionMerchantDTO transactionMerchantDTO = TransactionMerchantDTO();
   updateTransactionDto(TransactionMerchantDTO dto, {bool init = true}) {
     transactionMerchantDTO = dto;
+    hasTag = '';
     if (!init) {
       notifyListeners();
     }

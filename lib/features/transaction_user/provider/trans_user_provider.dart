@@ -63,11 +63,18 @@ class TransUserProvider with ChangeNotifier {
   ScrollController scrollControllerList = ScrollController();
   final homeRepository = const HomeRepository();
   TransactionMerchantDTO transactionMerchantDTO = TransactionMerchantDTO();
+  String hasTag = '';
 
   List<BankAccountDTO> bankAccounts = [];
 
+  changeHasTag(String value) {
+    hasTag = value;
+    notifyListeners();
+  }
+
   updateTransactionDto(TransactionMerchantDTO dto, {bool init = true}) {
     transactionMerchantDTO = dto;
+    hasTag = '';
     if (!init) {
       notifyListeners();
     }

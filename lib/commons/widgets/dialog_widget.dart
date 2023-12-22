@@ -337,60 +337,7 @@ class DialogWidget {
           return Material(
             color: AppColor.TRANSPARENT,
             child: Center(
-              child: Container(
-                width: width,
-                height: 400,
-                alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Center(
-                            child: Text(
-                          title,
-                          style: const TextStyle(fontSize: 16),
-                        )),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        child,
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: 25,
-                          height: 25,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Theme.of(context).canvasColor,
-                          ),
-                          child: const Icon(
-                            Icons.close_rounded,
-                            color: AppColor.BLACK,
-                            size: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              child: child,
             ),
           );
         });
