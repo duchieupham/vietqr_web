@@ -427,11 +427,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
       if (note.isNotEmpty) {
         String valueNote = '';
         if (provider.hasTag.isNotEmpty) {
-          if (note.contains(provider.hasTag)) {
-            valueNote = note;
-          } else {
-            valueNote = '$note ${provider.hasTag}';
-          }
+          valueNote = '$note ${provider.hasTag}';
         } else {
           valueNote = note;
         }
@@ -444,13 +440,8 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
         if (provider.transactionMerchantDTO.note.isNotEmpty) {
           if (provider.hasTag.isNotEmpty) {
             String valueNote = '';
-            if (provider.transactionMerchantDTO.note
-                .contains(provider.hasTag)) {
-              valueNote = provider.transactionMerchantDTO.note;
-            } else {
-              valueNote =
-                  '${provider.transactionMerchantDTO.note} ${provider.hasTag}';
-            }
+            valueNote =
+                '${provider.transactionMerchantDTO.note} ${provider.hasTag}';
 
             Map<String, dynamic> body = {
               'note': valueNote,
@@ -469,8 +460,15 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
         focusNodeNote.requestFocus();
         if (provider2.transactionMerchantDTO.note.isNotEmpty) {
           noteController.text = provider2.transactionMerchantDTO.note;
+          if (provider2.hasTag.isNotEmpty) {
+            noteController.text = '${noteController.text} ${provider2.hasTag}';
+          }
         } else {
-          noteController.text = note;
+          if (provider2.hasTag.isNotEmpty) {
+            noteController.text = '${noteController.text} ${provider2.hasTag}';
+          } else {
+            noteController.text = note;
+          }
         }
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -795,7 +793,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
         Expanded(
             flex: 3,
             child: Text(
-              content,
+              content.isNotEmpty ? content : '-',
               style: TextStyle(
                   color: contentColor,
                   fontWeight: contentFontWeight,
