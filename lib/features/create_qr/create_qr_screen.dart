@@ -89,6 +89,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               context
                   .read<CreateQRProvider>()
                   .updateBankAccountDto(bankAccounts.first);
+              createQRBloc
+                  .add(BankEventGetDetail(bankId: bankAccounts.first.id));
             }
           }
           if (state is BankDetailSuccessState) {
@@ -482,7 +484,6 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     if (provider.money.isNotEmpty) {
                       amount = provider.money.replaceAll(',', '');
                     }
-
                     if (provider.bankAccountDTO.id.isNotEmpty) {
                       QRCreateDTO qrCreateDTO = QRCreateDTO(
                         bankId: bankDetailDTO.id,
