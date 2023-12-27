@@ -97,10 +97,14 @@ class MerchantRequestProvider with ChangeNotifier {
   getListBankAccount() async {
     List<BankAccountDTO> result = await homeRepository
         .getListBankAccount(UserInformationHelper.instance.getUserId());
+    result.sort((a, b) {
+      if (b.isAuthenticated) {
+        return 1;
+      }
+      return -1;
+    });
     bankAccounts = result
-        .where((e) =>
-            e.isAuthenticated &&
-            e.userId == UserInformationHelper.instance.getUserId())
+        .where((e) => e.userId == UserInformationHelper.instance.getUserId())
         .toList();
   }
 

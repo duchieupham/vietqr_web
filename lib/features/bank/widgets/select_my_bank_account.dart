@@ -174,18 +174,19 @@ class SelectMyBankAccountWidget extends StatelessWidget {
                   const SizedBox(
                     width: 4,
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                      color: AppColor.BLUE_TEXT,
+                  if (dto.isAuthenticated)
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                        color: AppColor.BLUE_TEXT,
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: AppColor.WHITE,
+                        size: 8,
+                      ),
                     ),
-                    child: const Icon(
-                      Icons.check,
-                      color: AppColor.WHITE,
-                      size: 8,
-                    ),
-                  ),
                 ],
               ),
             ),
