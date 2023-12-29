@@ -40,7 +40,7 @@ class CreateQRLoginFrame extends StatelessWidget {
             end: Alignment.topRight,
           ),
         ),
-        child: (PlatformUtils.instance.resizeWhen(width, 750))
+        child: (PlatformUtils.instance.resizeWhen(width, 850))
             ? Column(
                 children: [
                   Container(
@@ -64,7 +64,7 @@ class CreateQRLoginFrame extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: 640,
+                                width: 740,
                                 child: widget1,
                               ),
                               Expanded(

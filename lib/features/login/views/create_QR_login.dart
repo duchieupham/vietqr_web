@@ -285,149 +285,190 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                             return _buildListBank();
                           }),
                           const Padding(padding: EdgeInsets.only(top: 12)),
-                          const Text(
-                            'Số tài khoản *',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 8)),
-                          BorderLayout(
-                            height: 50,
-                            isError: provider.bankAccountErr,
-                            bgColor: AppColor.WHITE,
-                            borderColor: AppColor.BLACK_BUTTON.withOpacity(0.3),
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: TextFieldWidget(
-                              isObscureText: false,
-                              maxLines: 1,
-                              hintText: 'Nhập số tài khoản',
-                              fontSize: 14,
-                              controller: bankAccountController,
-                              inputType: TextInputType.number,
-                              focusNode: _focusNode,
-                              keyboardAction: TextInputAction.next,
-                              onTapOutside: (value) {
-                                if (_focusNode.hasFocus) {
-                                  _focusNode.unfocus();
-                                  _focusNode.unfocus();
-                                }
-                              },
-                              onChange: (value) {
-                                provider.updateBankAccountErr(
-                                  (bankAccountController.text.isEmpty ||
-                                      !StringUtils.instance.isNumeric(
-                                          bankAccountController.text)),
-                                );
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 5)),
-                          Visibility(
-                            visible: provider.bankAccountErr,
-                            child: const Text(
-                              'Số tài khoản không hợp lệ',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColor.RED_TEXT,
-                              ),
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 12)),
-                          const Text(
-                            'Tên chủ tài khoản *',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 8)),
-                          BorderLayout(
-                            height: 50,
-                            isError: provider.nameErr,
-                            bgColor: AppColor.WHITE,
-                            borderColor: AppColor.BLACK_BUTTON.withOpacity(0.3),
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: TextFieldWidget(
-                              isObscureText: false,
-                              maxLines: 1,
-                              fontSize: 14,
-                              hintText: 'Nhập tên chủ tài khoản',
-                              controller: nameController,
-                              inputType: TextInputType.text,
-                              keyboardAction: TextInputAction.done,
-                              onSubmitted: (value) {
-                                if (provider.bankType.bankCode.isNotEmpty) {
-                                  provider.updateBankAccountErr(
-                                    (bankAccountController.text.isEmpty ||
-                                        !StringUtils.instance.isNumeric(
-                                            bankAccountController.text)),
-                                  );
-                                  provider.updateNameErr(
-                                    nameController.text.isEmpty,
-                                  );
-                                  if (provider.isValidUnauthenticateForm()) {
-                                    Map<String, dynamic> data = {};
-                                    data['bankAccount'] =
-                                        bankAccountController.text;
-                                    data['userBankName'] = nameController.text;
-                                    data['bankCode'] =
-                                        provider.bankType.bankCode;
-                                    qrCodeUnUTBloc
-                                        .add(QRCodeUnUTCreateQR(data: data));
-                                  }
-                                } else {
-                                  DialogWidget.instance.openMsgDialog(
-                                    title: 'Không thể tạo',
-                                    msg: 'Vui lòng chọn ngân hàng thụ hưởng',
-                                  );
-                                }
-                              },
-                              onChange: (vavlue) {
-                                provider.updateNameErr(
-                                  nameController.text.isEmpty,
-                                );
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 5)),
-                          Visibility(
-                            visible: provider.nameErr,
-                            child: const Text(
-                              'Chủ tài khoản không hợp lệ',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColor.RED_TEXT,
-                              ),
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 12)),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Spacer(),
-                              InkWell(
-                                onTap: () {
-                                  provider.updateShowMoreOption(
-                                      !provider.showMoreOption);
-                                },
-                                child: Text(
-                                  provider.showMoreOption
-                                      ? 'Đóng tùy chọn'
-                                      : 'Tùy chọn thêm',
-                                  style: const TextStyle(
-                                      fontSize: 12, color: AppColor.BLUE_TEXT),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Số tài khoản *',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(top: 8)),
+                                    BorderLayout(
+                                      height: 50,
+                                      isError: provider.bankAccountErr,
+                                      bgColor: AppColor.WHITE,
+                                      borderColor: AppColor.BLACK_BUTTON
+                                          .withOpacity(0.3),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: TextFieldWidget(
+                                        isObscureText: false,
+                                        maxLines: 1,
+                                        hintText: 'Nhập số tài khoản',
+                                        fontSize: 14,
+                                        controller: bankAccountController,
+                                        inputType: TextInputType.number,
+                                        focusNode: _focusNode,
+                                        keyboardAction: TextInputAction.next,
+                                        onTapOutside: (value) {
+                                          if (_focusNode.hasFocus) {
+                                            _focusNode.unfocus();
+                                            _focusNode.unfocus();
+                                          }
+                                        },
+                                        onChange: (value) {
+                                          provider.updateBankAccountErr(
+                                            (bankAccountController
+                                                    .text.isEmpty ||
+                                                !StringUtils.instance.isNumeric(
+                                                    bankAccountController
+                                                        .text)),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(top: 5)),
+                                    Visibility(
+                                      visible: provider.bankAccountErr,
+                                      child: const Text(
+                                        'Số tài khoản không hợp lệ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColor.RED_TEXT,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(
-                                width: 4,
+                                width: 12,
                               ),
-                              Transform.rotate(
-                                  angle: provider.showMoreOption
-                                      ? math.pi / 2
-                                      : -math.pi / 2,
-                                  child: const Icon(
-                                    Icons.arrow_back_ios_new,
-                                    size: 12,
-                                    color: AppColor.BLUE_TEXT,
-                                  ))
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Tên chủ tài khoản *',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(top: 8)),
+                                    BorderLayout(
+                                      height: 50,
+                                      isError: provider.nameErr,
+                                      bgColor: AppColor.WHITE,
+                                      borderColor: AppColor.BLACK_BUTTON
+                                          .withOpacity(0.3),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: TextFieldWidget(
+                                        isObscureText: false,
+                                        maxLines: 1,
+                                        fontSize: 14,
+                                        hintText: 'Nhập tên chủ tài khoản',
+                                        controller: nameController,
+                                        inputType: TextInputType.text,
+                                        keyboardAction: TextInputAction.done,
+                                        onSubmitted: (value) {
+                                          if (provider
+                                              .bankType.bankCode.isNotEmpty) {
+                                            provider.updateBankAccountErr(
+                                              (bankAccountController
+                                                      .text.isEmpty ||
+                                                  !StringUtils.instance
+                                                      .isNumeric(
+                                                          bankAccountController
+                                                              .text)),
+                                            );
+                                            provider.updateNameErr(
+                                              nameController.text.isEmpty,
+                                            );
+                                            if (provider
+                                                .isValidUnauthenticateForm()) {
+                                              Map<String, dynamic> data = {};
+                                              data['bankAccount'] =
+                                                  bankAccountController.text;
+                                              data['userBankName'] =
+                                                  nameController.text;
+                                              data['bankCode'] =
+                                                  provider.bankType.bankCode;
+                                              qrCodeUnUTBloc.add(
+                                                  QRCodeUnUTCreateQR(
+                                                      data: data));
+                                            }
+                                          } else {
+                                            DialogWidget.instance.openMsgDialog(
+                                              title: 'Không thể tạo',
+                                              msg:
+                                                  'Vui lòng chọn ngân hàng thụ hưởng',
+                                            );
+                                          }
+                                        },
+                                        onChange: (vavlue) {
+                                          provider.updateNameErr(
+                                            nameController.text.isEmpty,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const Padding(
+                                        padding: EdgeInsets.only(top: 5)),
+                                    Visibility(
+                                      visible: provider.nameErr,
+                                      child: const Text(
+                                        'Chủ tài khoản không hợp lệ',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColor.RED_TEXT,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                          if (provider.showMoreOption) ...[
+                          // const Padding(padding: EdgeInsets.only(top: 12)),
+                          // Row(
+                          //   children: [
+                          //     const Spacer(),
+                          //     InkWell(
+                          //       onTap: () {
+                          //         provider.updateShowMoreOption(
+                          //             !provider.showMoreOption);
+                          //       },
+                          //       child: Text(
+                          //         provider.showMoreOption
+                          //             ? 'Đóng tùy chọn'
+                          //             : 'Tùy chọn thêm',
+                          //         style: const TextStyle(
+                          //             fontSize: 12, color: AppColor.BLUE_TEXT),
+                          //       ),
+                          //     ),
+                          //     const SizedBox(
+                          //       width: 4,
+                          //     ),
+                          //     Transform.rotate(
+                          //         angle: provider.showMoreOption
+                          //             ? math.pi / 2
+                          //             : -math.pi / 2,
+                          //         child: const Icon(
+                          //           Icons.arrow_back_ios_new,
+                          //           size: 12,
+                          //           color: AppColor.BLUE_TEXT,
+                          //         ))
+                          //   ],
+                          // ),
+                          if (!provider.showMoreOption) ...[
                             const Padding(padding: EdgeInsets.only(top: 12)),
                             const Text(
                               'Số tiền',
@@ -445,7 +486,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                               child: TextFieldWidget(
                                 isObscureText: false,
                                 maxLines: 1,
-                                hintText: 'Nhập số tiền',
+                                hintText: 'Nhập số tiền (không bắt buộc)',
                                 fontSize: 14,
                                 controller: amountController,
                                 inputType: TextInputType.number,
@@ -532,7 +573,8 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                                 isObscureText: false,
                                 maxLines: 1,
                                 fontSize: 14,
-                                hintText: 'Nội dung không được quá 50 kí tự',
+                                hintText:
+                                    'Nội dung không được quá 50 kí tự (không bắt buộc)',
                                 controller: contentController,
                                 inputType: TextInputType.number,
                                 keyboardAction: TextInputAction.done,
