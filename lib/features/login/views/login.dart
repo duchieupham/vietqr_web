@@ -393,27 +393,27 @@ class _Login extends State<Login> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 12),
-                child: InkWell(
-                  onTap: () {
-                    DialogWidget.instance.openMsgDialog(
-                      title: 'Tính năng bảo trì',
-                      msg:
-                          'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
-                    );
-                  },
-                  child: const Text(
-                    'Quên mật khẩu?',
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: AppColor.BLUE_TEXT),
-                  ),
-                ),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10, bottom: 12),
+            //     child: InkWell(
+            //       onTap: () {
+            //         DialogWidget.instance.openMsgDialog(
+            //           title: 'Tính năng bảo trì',
+            //           msg:
+            //               'Chúng tôi đang thực hiện bảo trì tính năng này. Vui lòng thử lại sau.',
+            //         );
+            //       },
+            //       child: const Text(
+            //         'Quên mật khẩu?',
+            //         style: TextStyle(
+            //             decoration: TextDecoration.underline,
+            //             color: AppColor.BLUE_TEXT),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             ButtonWidget(
               width: width,
               height: 40,

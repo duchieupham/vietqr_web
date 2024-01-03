@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PinCodeInput extends StatelessWidget {
@@ -45,9 +46,11 @@ class PinCodeInput extends StatelessWidget {
 
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       // inputFormatters: [TextInputMask(mask: '999999')],
       enableActiveFill: true,
       controller: controller,
+
       onChanged: onChanged != null ? onChanged! : _onChanged,
       cursorColor: cursorColor,
       scrollPadding: EdgeInsets.zero,
