@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
@@ -141,10 +143,49 @@ class MenuLogin extends StatelessWidget {
                   ),
                 ),
               ),
+              _buildInfoTelegram(),
+              const SizedBox(
+                width: 12,
+              )
             ],
           );
         });
       },
+    );
+  }
+
+  Widget _buildInfoTelegram() {
+    return InkWell(
+      onTap: () {
+        html.window.open('https://t.me/vietqrdev', 'new tab');
+      },
+      child: Container(
+        height: 40,
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColor.WHITE.withOpacity(0.5)),
+        child: Row(
+          children: [
+            const Text(
+              'My VietQR',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.BLACK,
+                  fontSize: 12),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.logoTelegram),
+              width: 16,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
