@@ -49,3 +49,14 @@ class QRGenerateSuccessState extends CreateQRState {
 }
 
 class QRGenerateFailedState extends CreateQRState {}
+
+class QRGenerateUnAuthenLoadingState extends CreateQRState {}
+
+class CreateUnAuthenSuccessfulState extends CreateQRState {
+  final QRGeneratedDTO dto;
+
+  const CreateUnAuthenSuccessfulState({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}

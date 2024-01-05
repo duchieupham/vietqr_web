@@ -109,6 +109,14 @@ class MenuLeft extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ItemMenuHome(
+                title: 'Tạo mã VietQR',
+                iconId: AppImages.icVietQrSmall,
+                isSelect: currentType == MenuHomeType.CREATE_QR,
+                onTap: () {
+                  context.go('/create-qr');
+                },
+              ),
+              ItemMenuHome(
                 title: 'Trang chủ',
                 iconId: AppImages.icMenuHome,
                 isSelect: currentType == MenuHomeType.HOME,
@@ -163,14 +171,7 @@ class MenuLeft extends StatelessWidget {
               //     DialogWidget.instance.openMsgQRInstallApp();
               //   },
               // ),
-              ItemMenuHome(
-                title: 'Tạo mã VietQR',
-                iconId: AppImages.icVietQrSmall,
-                isSelect: currentType == MenuHomeType.CREATE_QR,
-                onTap: () {
-                  context.go('/create-qr');
-                },
-              ),
+
               ItemMenuHome(
                 title: 'Ví QR',
                 isSelect: currentType == MenuHomeType.WALLET_QR,
@@ -235,6 +236,17 @@ class MenuLeft extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           ItemMenuHome(
+            title: 'Tạo mã VietQR',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuQR,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.CREATE_QR,
+            onTap: () {
+              provider.updateShowMenu(true);
+              context.go('/create-qr');
+            },
+          ),
+          ItemMenuHome(
             title: 'Trang chủ',
             isOnlyIcon: true,
             paddingIcon: const EdgeInsets.all(4),
@@ -291,17 +303,6 @@ class MenuLeft extends StatelessWidget {
                 title: 'Tính năng đang bảo trì',
                 msg: 'Vui lòng thử lại sau',
               );
-            },
-          ),
-          ItemMenuHome(
-            title: 'Tạo mã VietQR',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuQR,
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.CREATE_QR,
-            onTap: () {
-              provider.updateShowMenu(true);
-              context.go('/create-qr');
             },
           ),
           ItemMenuHome(

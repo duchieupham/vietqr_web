@@ -9,13 +9,13 @@ import 'package:flutter/material.dart';
 class CreateQRFrame extends StatefulWidget {
   final Widget widget1;
   final Widget widget2;
-  // final Widget widget3;
+  final Widget widget3;
 
   const CreateQRFrame({
     super.key,
     required this.widget1,
     required this.widget2,
-    // required this.widget3,
+    required this.widget3,
   });
 
   @override
@@ -79,12 +79,12 @@ class _HomeFrameState extends State<CreateQRFrame> {
                                     child: Row(
                                   children: [
                                     const SizedBox(width: 16),
-                                    Expanded(flex: 2, child: widget.widget1),
+                                    Expanded(child: widget.widget1),
                                     const SizedBox(width: 30),
-                                    Expanded(flex: 2, child: widget.widget2),
+                                    Expanded(child: widget.widget2),
                                     const SizedBox(width: 30),
-                                    const Spacer()
-
+                                    Expanded(child: widget.widget3),
+                                    const SizedBox(width: 16),
                                     // Expanded(flex: 2, child: widget.widget3),
                                     // const SizedBox(width: 16),
                                   ],

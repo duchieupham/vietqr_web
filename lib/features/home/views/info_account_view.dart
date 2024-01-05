@@ -21,6 +21,7 @@ class InfoDetailBankAccount extends StatelessWidget {
   final AccountBankDetailDTO dto;
   final QRGeneratedDTO qrGeneratedDTO;
   final String bankId;
+  final bool showTitle;
   final GestureTapCallback? onChangePage;
 
   InfoDetailBankAccount({
@@ -30,6 +31,7 @@ class InfoDetailBankAccount extends StatelessWidget {
     required this.qrGeneratedDTO,
     required this.bankId,
     this.onChangePage,
+    this.showTitle = true,
   }) : super(key: key);
 
   String get userId => UserInformationHelper.instance.getUserId();
@@ -64,20 +66,25 @@ class InfoDetailBankAccount extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Thông tin tài khoản',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-                fontSize: 15,
+        if (showTitle)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Thông tin tài khoản',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.underline,
+                  fontSize: 15,
+                ),
               ),
             ),
+          )
+        else
+          const SizedBox(
+            height: 20,
           ),
-        ),
         Expanded(
           child: RefreshIndicator(
             onRefresh: refresh,
@@ -179,33 +186,36 @@ class InfoDetailBankAccount extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
-                  ButtonIconWidget(
-                    width: 360,
-                    height: 40,
-                    icon: Icons.add_rounded,
-                    textSize: 12,
-                    title: 'Tạo QR giao dịch',
-                    function: () {
-                      context.go('/create-qr/${dto.id}');
-                    },
-                    textColor: AppColor.BLUE_TEXT,
-                    bgColor: AppColor.WHITE.withOpacity(0.4),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10),
-                  ),
-                  ButtonIconWidget(
-                    width: 360,
-                    height: 40,
-                    icon: Icons.info_outline,
-                    textSize: 12,
-                    title: 'Chi tiết TK ngân hàng',
-                    function: () {
-                      DialogWidget.instance.openMsgQRInstallApp();
-                    },
-                    textColor: AppColor.BLUE_TEXT,
-                    bgColor: AppColor.WHITE.withOpacity(0.4),
-                  ),
+                  if(showTitle)...[
+                    ButtonIconWidget(
+                      width: 360,
+                      height: 40,
+                      icon: Icons.add_rounded,
+                      textSize: 12,
+                      title: 'Tạo QR giao dịch',
+                      function: () {
+                        context.go('/create-qr/${dto.id}');
+                      },
+                      textColor: AppColor.BLUE_TEXT,
+                      bgColor: AppColor.WHITE.withOpacity(0.4),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                    ),
+                    ButtonIconWidget(
+                      width: 360,
+                      height: 40,
+                      icon: Icons.info_outline,
+                      textSize: 12,
+                      title: 'Chi tiết TK ngân hàng',
+                      function: () {
+                        DialogWidget.instance.openMsgQRInstallApp();
+                      },
+                      textColor: AppColor.BLUE_TEXT,
+                      bgColor: AppColor.WHITE.withOpacity(0.4),
+                    ),
+                  ],
+
                   const SizedBox(height: 24),
                 ],
               ),
