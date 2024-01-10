@@ -73,6 +73,10 @@ class TransactionMerchantDTO {
         }
 
         return AppColor.BLUE_TEXT;
+      } else if (status == 3) {
+        return AppColor.YELLOW_TEXT;
+      } else if (status == 4) {
+        return AppColor.PURPLE_TEXT;
       } else {
         return AppColor.GREY_TEXT;
       }
@@ -86,6 +90,10 @@ class TransactionMerchantDTO {
       return 'Chờ thanh toán';
     } else if (status == 1) {
       return 'Thành công';
+    } else if (status == 3) {
+      return 'Đang xử lý';
+    } else if (status == 4) {
+      return 'Lỗi';
     } else {
       return 'Đã huỷ';
     }

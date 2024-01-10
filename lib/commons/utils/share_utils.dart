@@ -72,8 +72,6 @@ class ShareUtils {
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      print('----------------------------------$pngBytes');
       await WebImageDownloader.downloadImageFromUInt8List(
           uInt8List: pngBytes, name: 'vietqr');
       // await ImageGallerySaver.saveImage(
