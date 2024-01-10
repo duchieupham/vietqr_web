@@ -63,6 +63,7 @@ dependencies:
   rive: ^0.10.1
   syncfusion_flutter_charts: ^20.4.38
   web_socket_channel: ^2.4.0
+  image_downloader_web: ^2.0.0
   just_audio: ^0.9.32
   #  audioplayers: ^4.0.1
   fluttertoast: ^8.2.1

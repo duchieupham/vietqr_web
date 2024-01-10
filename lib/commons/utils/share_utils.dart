@@ -8,7 +8,7 @@ import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_downloader_web/image_downloader_web.dart';
 
 class ShareUtils {
   const ShareUtils._privateConsrtructor();
@@ -72,10 +72,14 @@ class ShareUtils {
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      await ImageGallerySaver.saveImage(
-        pngBytes,
-        quality: 100,
-      );
+
+      print('----------------------------------$pngBytes');
+      await WebImageDownloader.downloadImageFromUInt8List(
+          uInt8List: pngBytes, name: 'vietqr');
+      // await ImageGallerySaver.saveImage(
+      //   pngBytes,
+      //   quality: 100,
+      // );
     } catch (e) {
       LOG.error(e.toString());
     }
