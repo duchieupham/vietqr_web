@@ -39,20 +39,21 @@ class InfoDetailBankAccount extends StatelessWidget {
   final globalKey = GlobalKey();
 
   void onSaveImage(BuildContext context) async {
-    DialogWidget.instance.openLoadingDialog();
     await Future.delayed(
       const Duration(milliseconds: 200),
       () async {
         await ShareUtils.instance.saveImageToGallery(globalKey).then(
           (value) {
-            Navigator.pop(context);
             Fluttertoast.showToast(
               msg: 'Đã lưu ảnh',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
               backgroundColor: Theme.of(context).cardColor,
-              textColor: Theme.of(context).cardColor,
+              textColor: Theme.of(context).hintColor,
               fontSize: 15,
+              webBgColor: 'rgba(255, 255, 255)',
+              webPosition: 'center',
             );
           },
         );
@@ -137,15 +138,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                             pathIcon: AppImages.icEditAvatarSetting,
                             title: '',
                             function: () {
-                              String paramData =
-                                  Session.instance.formatDataParamUrl(
-                                qrGeneratedDTO,
-                                action: 'SAVE',
-                              );
-                              html.window.open(
-                                  Uri.base.toString().replaceFirst(
-                                      '/home', '/qr_generate$paramData'),
-                                  'new tab');
+                              onSaveImage(context);
                             },
                             textColor: AppColor.BLUE_TEXT,
                             bgColor: AppColor.WHITE.withOpacity(0.4),
@@ -186,7 +179,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
-                  if(showTitle)...[
+                  if (showTitle) ...[
                     ButtonIconWidget(
                       width: 360,
                       height: 40,
@@ -215,7 +208,6 @@ class InfoDetailBankAccount extends StatelessWidget {
                       bgColor: AppColor.WHITE.withOpacity(0.4),
                     ),
                   ],
-
                   const SizedBox(height: 24),
                 ],
               ),

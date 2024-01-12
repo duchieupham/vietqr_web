@@ -53,6 +53,10 @@
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
+    window.onbeforeprint = function() {
+      window.flutterWebRenderer = "html";
+      window.print()
+    }
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       entrypointUrl: "/main.dart.js",
