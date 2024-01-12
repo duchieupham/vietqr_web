@@ -1326,12 +1326,58 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
         }
 
         return (qrGeneratedDTO.qrCode.isEmpty)
-            ? const SizedBox(
-                width: 360,
+            ? UnconstrainedBox(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 46,
+                    ),
+                    const Text(
+                      'Mã QR của bạn',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 32,
+                    ),
+                    Container(
+                      width: 280,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: AppColor.BLACK.withOpacity(0.2))),
+                      child: Opacity(
+                        opacity: 0.5,
+                        child: QrImage(
+                          data: 'https://vietqr.vn',
+                          size: 260,
+                          foregroundColor: AppColor.BLACK,
+                          embeddedImage: ImageUtils.instance
+                              .getImageNetWork(AppImages.icVietQrSmall),
+                          embeddedImageStyle: QrEmbeddedImageStyle(
+                            size: const Size(30, 30),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               )
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  const SizedBox(
+                    height: 42,
+                  ),
+                  const Text(
+                    'Mã QR của bạn',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   SizedBox(
                     width: 360,
                     child: VietQRWidget(
