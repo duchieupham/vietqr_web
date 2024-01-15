@@ -37,7 +37,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = '2097312321';
+    var serviceWorkerVersion = '1334942720';
   </script>
   <!-- This script adds the flutter initialization JS code -->
 <!--  <script src="flutter.js" defer></script>-->
@@ -50,8 +50,12 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
         navigator.serviceWorker.register('flutter_service_worker.js?v=1417913520');
-        navigator.serviceWorker.register('flutter_service_worker.js?v=2097312321');
+        navigator.serviceWorker.register('flutter_service_worker.js?v=1334942720');
       });
+    }
+    window.onbeforeprint = function() {
+      window.flutterWebRenderer = "html";
+      window.print()
     }
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
