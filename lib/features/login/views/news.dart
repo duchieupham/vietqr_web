@@ -63,6 +63,7 @@ class _NewsViewState extends State<NewsView> {
   Widget build(BuildContext context) {
     double sizeText = 14;
     final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return (PlatformUtils.instance.resizeWhen(width, 750))
         ? Scaffold(
             appBar: AppBar(toolbarHeight: 0),
@@ -137,8 +138,8 @@ class _NewsViewState extends State<NewsView> {
                       children: [
                         if (openMenuDrawer)
                           Container(
-                            height: double.infinity,
-                            width: double.infinity,
+                            height: height,
+                            width: width,
                             color: AppColor.BLACK.withOpacity(0.1),
                           ),
                         _iframWidget,
