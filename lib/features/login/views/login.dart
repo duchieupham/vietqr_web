@@ -8,11 +8,14 @@ import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
+import 'package:VietQR/commons/widgets/header/menu_drawer.dart';
 import 'package:VietQR/commons/widgets/header/menu_login.dart';
+import 'package:VietQR/commons/widgets/pin_code_input.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/events/login_event.dart';
 import 'package:VietQR/features/login/frames/login_frame.dart';
+import 'package:VietQR/features/login/frames/login_mobile_frame.dart';
 import 'package:VietQR/features/login/provider/login_provider.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
@@ -42,17 +45,20 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   static final TextEditingController phoneNoController =
       TextEditingController();
-
+  final TextEditingController _passwordController = TextEditingController();
   final LoginBloc _loginBloc = LoginBloc();
   static String code = '';
   AESConvert des = AESConvert();
   InfoUserDTO _userDTO = InfoUserDTO();
   String qrValue = '';
-
+  late PageController pageController = PageController();
+  List<InfoUserDTO> _listInfoUsers = [];
+  bool isMobileWeb = false;
   @override
   void initState() {
     super.initState();
-
+    _listInfoUsers = UserInformationHelper.instance.getLoginAccount();
+    pageController = PageController(initialPage: 1);
     String loginID = des.getLoginID();
     String randomKey = des.getRandomKey();
     String encrypted = des.getEncryptedString(loginID, randomKey);
@@ -74,6 +80,12 @@ class _Login extends State<Login> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    if (width < 750) {
+      isMobileWeb = true;
+    } else {
+      isMobileWeb = false;
+    }
 
     return Scaffold(
       body: ChangeNotifierProvider<LoginProvider>(
@@ -138,8 +150,17 @@ class _Login extends State<Login> {
                 if (state is ExistPhoneState) {
                   Navigator.of(context).pop();
                   _userDTO = state.infoUserDTO;
-
-                  openPinDialog(context);
+                  if (isMobileWeb) {
+                    setState(() {
+                      pageController.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOutQuart,
+                      );
+                    });
+                  } else {
+                    openPinDialog(context);
+                  }
                 }
                 if (state is NotExistPhoneState) {
                   Navigator.of(context).pop();
@@ -162,17 +183,25 @@ class _Login extends State<Login> {
                   );
                 }
               }),
-              child: LoginFrame(
-                width: width,
-                height: height,
-                menuTop: const MenuLogin(),
-                widget1: _buildWidget1(
-                    width: width,
-                    isResized: PlatformUtils.instance.resizeWhen(width, 750),
-                    height: 604,
-                    provider: provider),
-                widget2: _buildQrLogin(),
-              ),
+              child: (PlatformUtils.instance.resizeWhen(width, 750))
+                  ? LoginFrame(
+                      width: width,
+                      height: height,
+                      menuTop: const MenuLogin(),
+                      widget1: _buildWidget1(
+                          width: width,
+                          isResized:
+                              PlatformUtils.instance.resizeWhen(width, 750),
+                          height: 604,
+                          provider: provider),
+                      widget2: _buildQrLogin(),
+                    )
+                  : LoginMobileFrame(
+                      width: width,
+                      height: height,
+                      menuTop: const MenuDrawer(),
+                      widget1: _buildLoginMobileWeb(provider),
+                    ),
             );
           }),
         ),
@@ -431,6 +460,111 @@ class _Login extends State<Login> {
     );
   }
 
+  Widget _buildFormLogin(
+      {required bool isResized,
+      required double width,
+      required double height,
+      required LoginProvider provider}) {
+    return SizedBox(
+      height: height,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: [
+            Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+              width: 170,
+            ),
+            if (provider.listInfoUsers.isNotEmpty)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Đăng nhập gần đây',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  const Text(
+                    'Chọn ảnh đại diện để đăng nhập lại',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: provider.listInfoUsers.map((e) {
+                        int index = provider.listInfoUsers.indexOf(e);
+                        return Expanded(child: _buildItemUser(e, index));
+                      }).toList(),
+                    ),
+                  ),
+                  DividerWidget(
+                    width: width,
+                    color: AppColor.BLACK_BUTTON.withOpacity(0.3),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              )
+            else
+              const SizedBox(),
+            SizedBox(
+              height: provider.listInfoUsers.isNotEmpty ? 20 : 60,
+            ),
+            BorderLayout(
+              width: width,
+              borderColor: AppColor.BLACK_BUTTON.withOpacity(0.5),
+              isError: false,
+              child: TextFieldWidget(
+                height: 46,
+                width: width,
+                isObscureText: false,
+                autoFocus: true,
+                hintText: 'Số điện thoại hoặc email',
+                fontSize: 14,
+                controller: phoneNoController,
+                inputType: TextInputType.text,
+                keyboardAction: TextInputAction.done,
+                inputFormatter: [
+                  LengthLimitingTextInputFormatter(10),
+                ],
+                onSubmitted: (value) {
+                  _loginBloc.add(
+                      CheckExistPhone(phone: phoneNoController.text.trim()));
+                },
+                onChange: (value) {},
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 24)),
+            Row(
+              children: [
+                Expanded(
+                  child: ButtonWidget(
+                    width: width,
+                    height: 40,
+                    text: 'Tiếp tục',
+                    borderRadius: 5,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
+                    function: () {
+                      _loginBloc
+                          .add(CheckExistPhone(phone: phoneNoController.text));
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const Padding(padding: EdgeInsets.only(top: 40)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildButtonSignIn({
     String urlIcon = '',
     String assetsIcon = '',
@@ -557,6 +691,387 @@ class _Login extends State<Login> {
           style: const TextStyle(color: AppColor.GREY_TEXT),
         ),
       ],
+    );
+  }
+
+  Widget _buildFormLoginMobileWeb() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        height: 480,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+                width: 160,
+              ),
+            ),
+            BorderLayout(
+              bgColor: AppColor.WHITE,
+              borderColor: AppColor.WHITE,
+              isError: false,
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('+84'),
+                  ),
+                  Container(
+                    width: 1,
+                    color: AppColor.BLACK.withOpacity(0.3),
+                    height: 42,
+                  ),
+                  Expanded(
+                    child: TextFieldWidget(
+                      height: 42,
+                      isObscureText: false,
+                      autoFocus: true,
+                      hintText: 'Nhập số điện thoại',
+                      contentPadding:
+                          const EdgeInsets.only(bottom: 6, left: 12),
+                      fontSize: 14,
+                      controller: phoneNoController,
+                      inputType: TextInputType.text,
+                      keyboardAction: TextInputAction.done,
+                      inputFormatter: [
+                        LengthLimitingTextInputFormatter(10),
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      onSubmitted: (value) {
+                        if (value.toString().isNotEmpty) {
+                          _loginBloc.add(CheckExistPhone(
+                              phone: phoneNoController.text.trim()));
+                        }
+                      },
+                      onChange: (value) {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 24)),
+            Row(
+              children: [
+                Expanded(
+                  child: ButtonWidget(
+                    height: 40,
+                    text: 'Tiếp tục',
+                    borderRadius: 5,
+                    textColor: AppColor.WHITE,
+                    bgColor: AppColor.BLUE_TEXT,
+                    function: () {
+                      if (phoneNoController.text.isNotEmpty) {
+                        _loginBloc.add(
+                            CheckExistPhone(phone: phoneNoController.text));
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginMobileWeb(LoginProvider provider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: SizedBox(
+        height: 500,
+        child: PageView(
+          controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            _buildFormLoginMobileWeb(),
+            _buildListAccountMobileWeb(provider),
+            _buildInputPassLoginMobileWeb(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListAccountMobileWeb(LoginProvider provider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40),
+            child: Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+              width: 160,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: provider.listInfoUsers.map((e) {
+                int index = provider.listInfoUsers.indexOf(e);
+                return _buildItemUserLoginMobileWeb(e, index);
+              }).toList(),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              pageController.animateToPage(
+                0,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOutQuart,
+              );
+            },
+            child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: AppColor.BLUE_TEXT)),
+              child: const Text(
+                'Đăng nhập bằng tài khoản khác',
+                style: TextStyle(color: AppColor.BLUE_TEXT),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          InkWell(
+            onTap: () {
+              pageController.animateToPage(
+                0,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOutQuart,
+              );
+            },
+            child: const Text(
+              'Đăng nhập bằng tài khoản trước đó',
+              style: TextStyle(
+                  color: AppColor.BLUE_TEXT,
+                  decoration: TextDecoration.underline),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputPassLoginMobileWeb() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 32,
+          ),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Xin chào, ${_userDTO.fullName}!',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  Text(
+                    _userDTO.phoneNo,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              const Spacer(),
+              Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+                width: 80,
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+          const Text('Vui lòng nhập mật khẩu để đăng nhập'),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            height: 40,
+            child: PinCodeInput(
+              obscureText: true,
+              autoFocus: true,
+              fillWidth: 40,
+              clBorderErr: AppColor.BLUE_TEXT,
+              inactiveFillColor: AppColor.TRANSPARENT,
+              selectedFillColor: AppColor.TRANSPARENT,
+              onCompleted: (data) {
+                AccountLoginDTO dto = AccountLoginDTO(
+                  phoneNo: _userDTO.phoneNo,
+                  email: '',
+                  password: EncryptUtils.instance.encrypted(
+                    phoneNoController.text,
+                    data,
+                  ),
+                  device: '',
+                  fcmToken: '',
+                  platform: '',
+                );
+
+                _loginBloc.add(
+                  LoginEventByPhone(dto: dto),
+                );
+              },
+              onChanged: (value) {
+                _passwordController.text = value;
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    pageController.animateToPage(
+                      0,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeInOutQuart,
+                    );
+                  },
+                  child: const Text(
+                    'Đổi số điện thoại',
+                    style: TextStyle(color: AppColor.BLUE_TEXT, fontSize: 13),
+                  )),
+              const Spacer(),
+            ],
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: ButtonWidget(
+                  height: 40,
+                  text: 'Đăng nhập',
+                  borderRadius: 5,
+                  textColor: AppColor.WHITE,
+                  bgColor: AppColor.BLUE_TEXT,
+                  function: () {
+                    if (_passwordController.text.isNotEmpty) {
+                      AccountLoginDTO dto = AccountLoginDTO(
+                        phoneNo: _userDTO.phoneNo,
+                        email: '',
+                        password: EncryptUtils.instance.encrypted(
+                          phoneNoController.text,
+                          _passwordController.text,
+                        ),
+                        device: '',
+                        fcmToken: '',
+                        platform: '',
+                      );
+
+                      _loginBloc.add(
+                        LoginEventByPhone(dto: dto),
+                      );
+                    } else {
+                      DialogWidget.instance.openMsgDialog(
+                          title: 'Nhập mật khẩu',
+                          msg: 'Bạn vui lòng nhập mật khẩu trước để đăng nhập');
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          InkWell(
+            onTap: () {
+              pageController.animateToPage(
+                1,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOutQuart,
+              );
+            },
+            child: const Text(
+              'Đăng nhập bằng tài khoản trước đó',
+              style: TextStyle(
+                  color: AppColor.BLUE_TEXT,
+                  decoration: TextDecoration.underline),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemUserLoginMobileWeb(InfoUserDTO infoUserDTO, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _userDTO = infoUserDTO;
+        });
+
+        phoneNoController.text = infoUserDTO.phoneNo;
+        pageController.animateToPage(
+          2,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOutQuart,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5), color: AppColor.WHITE),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.GREY_BUTTON),
+                  borderRadius: BorderRadius.circular(30),
+                  image: DecorationImage(
+                      image: ImageUtils.instance
+                          .getImageNetWork(infoUserDTO.imgId),
+                      fit: BoxFit.cover)),
+            ),
+            const SizedBox(
+              width: 16,
+            ),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  infoUserDTO.fullName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  infoUserDTO.phoneNo,
+                  style: const TextStyle(color: AppColor.GREY_TEXT),
+                ),
+              ],
+            )),
+            const Icon(
+              Icons.arrow_forward,
+              size: 18,
+              color: AppColor.BLUE_TEXT,
+            )
+          ],
+        ),
+      ),
     );
   }
 }

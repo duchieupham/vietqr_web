@@ -84,6 +84,12 @@ class AppImages {
   static String icUncheck = 'a0519565-1065-4f3a-97fc-903a05a02a37';
   static String icCard = '614c1189-fb1b-4b07-8931-43a78d0fe664';
   static String logoGooglePlay = '19dbafd7-861c-48d5-ade5-523f76d842fc';
+
+  static String logoFB = '91ab5d68-4062-4af3-ae15-68d5c4450b41';
+  static String logoTele = '3a7d0b39-0b26-4cc8-bd3c-6b53e62eab4d';
+  static String logoYTB = 'eb04e717-990d-4ea2-987a-5829f1e5b1d4';
+  static String logoZL = '99b7ff2f-0b32-49a1-ae42-1475655752a5';
+
   static String logoAppStore = '2a52f63d-3810-42bb-8d4f-a201e446b6b1';
   static String qrContactOtherWhite = '189635ff-d4ab-41ba-bbfd-c68a1bf69953';
   static String personalRelation = '78d3c977-25c8-452c-8022-0bdc2e4aa54c';

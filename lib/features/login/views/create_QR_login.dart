@@ -4,18 +4,21 @@ import 'dart:math' as math;
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/footer_web.dart';
+import 'package:VietQR/commons/widgets/header/menu_drawer.dart';
 import 'package:VietQR/commons/widgets/header/menu_login.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
+import 'package:VietQR/features/login/frames/create_qr_mobile_frame.dart';
 import 'package:VietQR/features/login/provider/create_qr_login_provider.dart';
 import 'package:VietQR/features/login/provider/menu_login_provider.dart';
 import 'package:VietQR/features/login/states/qrcode_un_authen_state.dart';
@@ -105,24 +108,43 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
     final double height = MediaQuery.of(context).size.height;
     return ChangeNotifierProvider<CreateQRLoginProvider>(
       create: (context) => CreateQRLoginProvider(),
-      child: CreateQRLoginFrame(
-        width: width,
-        height: height,
-        controller: _controllerScroll,
-        widget1: _buildFormInput(),
-        widget2: _buildQRCode(),
-        menuTop: const MenuLogin(),
-        bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
-            listener: (context, state) {
-          if (state is BankTypeGetListSuccessfulState) {
-            bankTypes = state.list;
-          }
-        }, builder: (context, state) {
-          return const FooterWeb(
-            showListBank: true,
-          );
-        }),
-      ),
+      child: (PlatformUtils.instance.resizeWhen(width, 750))
+          ? CreateQRLoginFrame(
+              width: width,
+              height: height,
+              controller: _controllerScroll,
+              widget1: _buildFormInput(),
+              widget2: _buildQRCode(),
+              menuTop: const MenuLogin(),
+              bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
+                  listener: (context, state) {
+                if (state is BankTypeGetListSuccessfulState) {
+                  bankTypes = state.list;
+                }
+              }, builder: (context, state) {
+                return const FooterWeb(
+                  showListBank: true,
+                );
+              }),
+            )
+          : CreateQRMobileFrame(
+              width: width,
+              height: height,
+              controller: _controllerScroll,
+              widget1: _buildFormInput(),
+              widget2: _buildQRCode(),
+              menuTop: const MenuDrawer(),
+              bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
+                  listener: (context, state) {
+                if (state is BankTypeGetListSuccessfulState) {
+                  bankTypes = state.list;
+                }
+              }, builder: (context, state) {
+                return const FooterWeb(
+                  showListBank: true,
+                );
+              }),
+            ),
     );
   }
 

@@ -19,6 +19,8 @@ class PinCodeInput extends StatelessWidget {
     this.length,
     this.size,
     this.fillWidth,
+    this.inactiveFillColor,
+    this.selectedFillColor,
   }) : super(key: key);
 
   final ValueChanged<String>? onChanged;
@@ -32,6 +34,8 @@ class PinCodeInput extends StatelessWidget {
   final bool autoFocus;
   final TextStyle? textStyle;
   final int? length;
+  final Color? inactiveFillColor;
+  final Color? selectedFillColor;
   final double? size;
   final double? fillWidth;
 
@@ -72,8 +76,8 @@ class PinCodeInput extends StatelessWidget {
         activeFillColor: AppColor.WHITE,
         selectedColor: activeColor,
         errorBorderColor: AppColor.GREY_444B56,
-        inactiveFillColor: AppColor.WHITE,
-        selectedFillColor: AppColor.WHITE,
+        inactiveFillColor: inactiveFillColor ?? AppColor.WHITE,
+        selectedFillColor: selectedFillColor ?? AppColor.WHITE,
         inactiveColor: inactiveColor,
         disabledColor: AppColor.GREY_TEXT,
       ),
@@ -162,11 +166,6 @@ class PinCodeInput extends StatelessWidget {
   }
 
 //màu border khi chưa chọn
-
-//màu ô input khi chưa chọn
-  Color get inactiveFillColor {
-    return Colors.transparent;
-  }
 
 //màu border khi chọn
 

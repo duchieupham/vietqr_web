@@ -253,6 +253,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               refresh: () async {},
               dto: bankDetailDTO,
               showTitle: false,
+        fromUrl: '/create-qr',
               qrGeneratedDTO: qrGeneratedDTO,
               bankId: provider.bankAccountDTO.id,
             )

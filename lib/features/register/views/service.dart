@@ -2,6 +2,8 @@ import 'dart:html' as html;
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/widgets/footer_web.dart';
+import 'package:VietQR/commons/widgets/footer_web_mobile.dart';
+import 'package:VietQR/commons/widgets/header/menu_drawer.dart';
 import 'package:VietQR/commons/widgets/header/menu_login.dart';
 import 'package:VietQR/features/login/provider/menu_login_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,77 +12,152 @@ import 'package:provider/provider.dart';
 class ServiceView extends StatelessWidget {
   const ServiceView({super.key});
 
+  getTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Tạo mã QR';
+      case 1:
+        return 'Tài liệu kết nối';
+      case 2:
+        return 'Tin tức';
+      case 3:
+        return 'Giới thiệu';
+      case 4:
+        return 'Liên hệ';
+      case 5:
+        return 'Đăng nhập';
+      case 6:
+        return 'Đăng ký';
+      default:
+        return 'VietQR';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double sizeText = 14;
     context.read<MenuLoginProvider>().changePage(1);
 
-    return Scaffold(
-      appBar: AppBar(toolbarHeight: 0),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColor.WHITE,
-              AppColor.BLUE_LIGHT,
-            ],
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColor.WHITE,
+            AppColor.BLUE_LIGHT,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
         ),
-        child: LayoutBuilder(builder: (context, constraints) {
-          return Column(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: AppColor.BLUE_TEXT.withOpacity(0.2),
+      ),
+      child: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth >= 750) {
+          return Scaffold(
+            body: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppColor.BLUE_TEXT.withOpacity(0.2),
+                  ),
+                  child: const MenuLogin(),
                 ),
-                child: const MenuLogin(),
-              ),
-              Expanded(
-                child: ListView(
-                  children: [
-                    SizedBox(
-                      height: constraints.maxWidth >= 700 ? 80 : 40,
-                    ),
-                    const Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Tài liệu kỹ thuật',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      const SizedBox(
+                        height: 80,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    if (constraints.maxWidth < 750)
-                      Expanded(
-                          child: _buildFormForMobile(
-                              constraints.maxWidth < 750 ? 12 : 14))
-                    else
+                      const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Tài liệu kỹ thuật',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       Align(
                           alignment: Alignment.center,
-                          child: _buildFormForWeb(
-                              constraints.maxWidth < 750 ? 12 : 14))
-                  ],
+                          child: _buildFormForWeb(14))
+                    ],
+                  ),
                 ),
-              ),
-              if (constraints.maxWidth < 750)
-                const FooterWeb(
-                  showListBank: false,
-                  bgColor: AppColor.WHITE,
-                )
-              else
                 const FooterWeb(
                   showListBank: true,
                 )
-            ],
+              ],
+            ),
           );
-        }),
-      ),
+        } else {
+          return Scaffold(
+            drawerEnableOpenDragGesture: false,
+            backgroundColor: AppColor.TRANSPARENT,
+            appBar: AppBar(
+              backgroundColor: AppColor.TRANSPARENT,
+              title: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Consumer<MenuLoginProvider>(
+                    builder: (context, provider, child) {
+                  return Text(
+                    getTitle(provider.page),
+                    style: const TextStyle(color: AppColor.BLACK),
+                  );
+                }),
+              ),
+              leading: Builder(builder: (context) {
+                return InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(top: 16, left: 16),
+                        decoration: BoxDecoration(
+                            color: AppColor.WHITE.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(30)),
+                        child: const Icon(
+                          Icons.menu,
+                          size: 20,
+                          color: AppColor.BLACK,
+                        )));
+              }),
+            ),
+            drawer: const MenuDrawer(),
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    children: [
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Tài liệu kỹ thuật',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Expanded(
+                          child: _buildFormForMobile(
+                              constraints.maxWidth < 750 ? 12 : 14)),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      const FooterMobileWeb(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      }),
     );
   }
 

@@ -467,6 +467,7 @@ class _HomeScreenState extends State<_HomeScreen> {
     return InfoDetailBankAccount(
       refresh: () async {},
       dto: dto,
+      fromUrl: '/home',
       qrGeneratedDTO: qrDTO,
       bankId: bankId,
     );

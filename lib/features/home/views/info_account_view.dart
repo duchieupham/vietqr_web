@@ -22,6 +22,7 @@ class InfoDetailBankAccount extends StatelessWidget {
   final QRGeneratedDTO qrGeneratedDTO;
   final String bankId;
   final bool showTitle;
+  final String fromUrl;
   final GestureTapCallback? onChangePage;
 
   InfoDetailBankAccount({
@@ -31,6 +32,7 @@ class InfoDetailBankAccount extends StatelessWidget {
     required this.qrGeneratedDTO,
     required this.bankId,
     this.onChangePage,
+    this.fromUrl = '',
     this.showTitle = true,
   }) : super(key: key);
 
@@ -122,7 +124,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                               );
                               html.window.open(
                                   Uri.base.toString().replaceFirst(
-                                      '/home', '/qr-generate/print$paramData'),
+                                      fromUrl, '/qr-generate/print$paramData'),
                                   'new tab');
                             },
                             textColor: AppColor.BLUE_TEXT,
