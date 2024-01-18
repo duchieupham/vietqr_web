@@ -66,6 +66,7 @@ class AppImages {
   static String icCardBlue = 'c9a0b773-f495-458d-8340-d2220728a96d';
   static String icContactAllWhite = '81e94e98-bad2-4dfe-a61a-88f194249f7a';
   static String icContactBankWhite = '85f938a7-ad1b-4649-b3a6-7a7522fd58d4';
+  static String icContactBankBlue = '9c78e7b7-594c-468b-aa2c-ed337a64ee30';
   static String icContactSuggestWhite = '60c4cfa3-bf71-440c-8f5e-aa5ef5294a88';
   static String icContactVietqrIdWhite = '9939664d-843d-4bca-9287-b690954f8b90';
   static String icCopy = '96aecca2-80f4-4b03-a79d-0d73c1513e1f';

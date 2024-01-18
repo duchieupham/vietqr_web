@@ -253,12 +253,12 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                   },
                   textSize: 12,
                   iconPathColor:
-                      provider.page == 1 ? AppColor.WHITE : AppColor.BLACK,
+                      provider.page == 1 ? AppColor.WHITE : AppColor.BLUE_TEXT,
                   bgColor:
                       provider.page == 1 ? AppColor.BLUE_TEXT : AppColor.WHITE,
                   textColor:
                       provider.page == 1 ? AppColor.WHITE : AppColor.BLACK,
-                  pathIcon: AppImages.icContactBankWhite,
+                  pathIcon: AppImages.icContactBankBlue,
                 )
               ],
             ),
