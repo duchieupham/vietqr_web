@@ -58,7 +58,10 @@ class _Login extends State<Login> {
   void initState() {
     super.initState();
     _listInfoUsers = UserInformationHelper.instance.getLoginAccount();
-    pageController = PageController(initialPage: 1);
+    if (_listInfoUsers.isNotEmpty) {
+      pageController = PageController(initialPage: 1);
+    }
+
     String loginID = des.getLoginID();
     String randomKey = des.getRandomKey();
     String encrypted = des.getEncryptedString(loginID, randomKey);

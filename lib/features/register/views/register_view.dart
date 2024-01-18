@@ -196,181 +196,188 @@ class RegisterView extends StatelessWidget {
                     }),
                     child: Consumer<RegisterProvider>(
                       builder: (context, value, child) {
-                        return SizedBox(
-                          width: 500,
-                          height: height - 200,
-                          child: Center(
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: constraints.maxWidth < 750
-                                            ? 20
-                                            : 60,
-                                      ),
-                                      const Text(
-                                        'Thông tin đăng ký',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                        return ListView(
+                          children: [
+                            UnconstrainedBox(
+                              child: SizedBox(
+                                width: constraints.maxWidth >= 750
+                                    ? 500
+                                    : constraints.maxWidth * 0.9,
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: constraints.maxWidth < 750
+                                              ? 20
+                                              : 60,
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      _buildLaBle('Số điện thoại',
-                                          'Số điện thoại được dùng để đăng nhập vào hệ thống VietQR VN'),
-                                      BorderLayout(
-                                        width: width,
-                                        bgColor: AppColor.WHITE,
-                                        isError: value.phoneErr,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: TextFieldWidget(
-                                          height: 40,
-                                          width: width,
-                                          isObscureText: false,
-
-                                          contentPadding: const EdgeInsets.only(
-                                              bottom: 8, left: 10),
-                                          maxLines: 1,
-                                          // textfieldType: TextfieldType.LABEL,
-                                          // title: 'Số điện thoại',
-                                          // titleWidth: 100,
-                                          hintText: 'Nhập số điện thoại',
-                                          fontSize: 14,
-                                          controller: _phoneNoController,
-                                          inputType: TextInputType.number,
-                                          keyboardAction: TextInputAction.next,
-                                          onChange: (vavlue) {
-                                            // _isChangePhone = true;
-                                          },
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: value.phoneErr,
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10, top: 5, right: 30),
-                                          child: Text(
-                                            'Số điện thoại không đúng định dạng.',
-                                            style: TextStyle(
-                                                color: AppColor.RED_TEXT,
-                                                fontSize: 13),
+                                        const Text(
+                                          'Thông tin đăng ký',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(top: 20)),
-                                      _buildLaBle('Mật khẩu',
-                                          'Mật khẩu bao gồm 6 ký tự, không bao gồm chữ và ký tự đặc biệt'),
-                                      SizedBox(
-                                        height: 40,
-                                        child: PinCodeInput(
-                                          obscureText: true,
-                                          fillWidth: 60,
-                                          onCompleted: (data) {
-                                            value.focusNodeConfirmPass(context);
-                                          },
-                                          onChanged: (value) {
-                                            _passwordController.text = value;
-                                          },
+                                        const SizedBox(
+                                          height: 20,
                                         ),
-                                      ),
-                                      Visibility(
-                                        visible: value.passwordErr,
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10, top: 5, right: 30),
-                                          child: Text(
-                                            'Mật khẩu bao gồm 6 số.',
-                                            style: TextStyle(
-                                                color: AppColor.RED_TEXT,
-                                                fontSize: 13),
-                                          ),
-                                        ),
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(top: 20)),
-                                      _buildLaBle('Xác nhận lại mật khẩu',
-                                          'Nhập lại mật khẩu ở trên để xác nhận'),
-                                      SizedBox(
-                                        height: 40,
-                                        child: PinCodeInput(
-                                          obscureText: true,
-                                          focusNode: value.confirmPassFocus,
-                                          fillWidth: 60,
-                                          onChanged: (value) {
-                                            _confirmPassController.text = value;
-                                          },
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: value.confirmPassErr,
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 10, top: 5, right: 30),
-                                          child: Text(
-                                            'Xác nhận Mật khẩu không trùng khớp.',
-                                            style: TextStyle(
-                                                color: AppColor.RED_TEXT,
-                                                fontSize: 13),
-                                          ),
-                                        ),
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(top: 20)),
-                                      if (shareCode.isNotEmpty)
-                                        _buildFiledShareCode(width)
-                                      else ...[
-                                        _buildLaBle(
-                                            'Thông tin người giới thiệu',
-                                            'Mã giới thiệu của bạn bè đã chia sẻ cho bạn trước đó, nếu có.',
-                                            required: false),
+                                        _buildLaBle('Số điện thoại',
+                                            'Số điện thoại được dùng để đăng nhập vào hệ thống VietQR VN'),
                                         BorderLayout(
                                           width: width,
                                           bgColor: AppColor.WHITE,
+                                          isError: value.phoneErr,
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10),
-                                          isError: false,
                                           child: TextFieldWidget(
                                             height: 40,
                                             width: width,
+                                            isObscureText: false,
+
                                             contentPadding:
                                                 const EdgeInsets.only(
                                                     bottom: 8, left: 10),
                                             maxLines: 1,
+                                            // textfieldType: TextfieldType.LABEL,
+                                            // title: 'Số điện thoại',
+                                            // titleWidth: 100,
+                                            hintText: 'Nhập số điện thoại',
                                             fontSize: 14,
-                                            hintText:
-                                                'Nhập mã giới thiệu (không bắt buộc)',
-                                            controller: _shareCodeController,
-                                            inputType: TextInputType.text,
+                                            controller: _phoneNoController,
+                                            inputType: TextInputType.number,
                                             keyboardAction:
                                                 TextInputAction.next,
-                                            onChange: (vavlue) {},
-                                            isObscureText: false,
+                                            onChange: (vavlue) {
+                                              // _isChangePhone = true;
+                                            },
                                           ),
                                         ),
+                                        Visibility(
+                                          visible: value.phoneErr,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5, right: 30),
+                                            child: Text(
+                                              'Số điện thoại không đúng định dạng.',
+                                              style: TextStyle(
+                                                  color: AppColor.RED_TEXT,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 20)),
+                                        _buildLaBle('Mật khẩu',
+                                            'Mật khẩu bao gồm 6 ký tự, không bao gồm chữ và ký tự đặc biệt'),
+                                        SizedBox(
+                                          height: 40,
+                                          child: PinCodeInput(
+                                            obscureText: true,
+                                            fillWidth: 50,
+                                            onCompleted: (data) {
+                                              value.focusNodeConfirmPass(
+                                                  context);
+                                            },
+                                            onChanged: (value) {
+                                              _passwordController.text = value;
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: value.passwordErr,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5, right: 30),
+                                            child: Text(
+                                              'Mật khẩu bao gồm 6 số.',
+                                              style: TextStyle(
+                                                  color: AppColor.RED_TEXT,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 20)),
+                                        _buildLaBle('Xác nhận lại mật khẩu',
+                                            'Nhập lại mật khẩu ở trên để xác nhận'),
+                                        SizedBox(
+                                          height: 40,
+                                          child: PinCodeInput(
+                                            obscureText: true,
+                                            focusNode: value.confirmPassFocus,
+                                            fillWidth: 50,
+                                            onChanged: (value) {
+                                              _confirmPassController.text =
+                                                  value;
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: value.confirmPassErr,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5, right: 30),
+                                            child: Text(
+                                              'Xác nhận Mật khẩu không trùng khớp.',
+                                              style: TextStyle(
+                                                  color: AppColor.RED_TEXT,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 20)),
+                                        if (shareCode.isNotEmpty)
+                                          _buildFiledShareCode(width)
+                                        else ...[
+                                          _buildLaBle(
+                                              'Thông tin người giới thiệu',
+                                              'Mã giới thiệu của bạn bè đã chia sẻ cho bạn trước đó, nếu có.',
+                                              required: false),
+                                          BorderLayout(
+                                            width: width,
+                                            bgColor: AppColor.WHITE,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            isError: false,
+                                            child: TextFieldWidget(
+                                              height: 40,
+                                              width: width,
+                                              contentPadding:
+                                                  const EdgeInsets.only(
+                                                      bottom: 8, left: 10),
+                                              maxLines: 1,
+                                              fontSize: 14,
+                                              hintText:
+                                                  'Nhập mã giới thiệu (không bắt buộc)',
+                                              controller: _shareCodeController,
+                                              inputType: TextInputType.text,
+                                              keyboardAction:
+                                                  TextInputAction.next,
+                                              onChange: (vavlue) {},
+                                              isObscureText: false,
+                                            ),
+                                          ),
+                                        ],
+                                        const SizedBox(
+                                          height: 60,
+                                        ),
+                                        _buildButtonSubmit(context, width),
+                                        const Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 40)),
                                       ],
-                                      const SizedBox(
-                                        height: 60,
-                                      ),
-                                      _buildButtonSubmit(context, width),
-                                      const Padding(
-                                          padding: EdgeInsets.only(bottom: 40)),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                                if (constraints.maxWidth < 750)
-                                  const FooterMobileWeb()
-                              ],
+                              ),
                             ),
-                          ),
+                            if (constraints.maxWidth < 750)
+                              const FooterMobileWeb()
+                          ],
                         );
                       },
                     ),
