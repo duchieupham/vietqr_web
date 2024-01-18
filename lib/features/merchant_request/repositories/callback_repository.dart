@@ -44,7 +44,8 @@ class CallBackRepository {
   Future<List<BankAccountDTO>> getListBank(String id) async {
     List<BankAccountDTO> result = [];
     try {
-      String url = '$baseUrl/admin/account-bank/list?customerSyncId=$id';
+      String url =
+          '$baseUrl/admin/account-bank/list?customerSyncId=$id&offset=0';
       print(
           '--------------------------------------------$url---------------------');
       final response = await BaseAPIClient.getAPI(
