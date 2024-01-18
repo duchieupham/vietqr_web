@@ -166,10 +166,13 @@ class _Login extends State<Login> {
                   Navigator.of(context).pop();
 
                   //show msg dialog
-                  DialogWidget.instance.openMsgDialog(
-                    title: 'Đăng nhập không thành công',
-                    msg: 'Tài khoản không tồn tại',
-                  );
+
+                  context.go('/register?phone_number=${phoneNoController.text}',
+                      extra: phoneNoController.text);
+                  // DialogWidget.instance.openMsgDialog(
+                  //   title: 'Đăng nhập không thành công',
+                  //   msg: 'Tài khoản không tồn tại',
+                  // );
                 }
                 if (state is LoginFailedState) {
                   FocusManager.instance.primaryFocus?.unfocus();

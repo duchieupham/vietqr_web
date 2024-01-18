@@ -41,9 +41,8 @@ class RegisterView extends StatelessWidget {
   // static bool _isChangePhone = false;
   static bool _isChangePass = false;
   String shareCode = '';
-
-  RegisterView({super.key});
-
+  RegisterView({super.key, this.phoneNumber = ''});
+  final String phoneNumber;
   final focus = FocusNode();
   void initialServices(BuildContext context) {
     context.read<MenuLoginProvider>().changePage(6);
@@ -57,6 +56,8 @@ class RegisterView extends StatelessWidget {
       shareCode = Uri.base.queryParameters['share_code'] ?? '';
     }
     _shareCodeController.text = shareCode;
+
+    _phoneNoController.text = phoneNumber;
 
     // if (!_isChangePhone) {
     //   if (StringUtils.instance.isNumeric(phoneNo)) {

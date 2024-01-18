@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
@@ -258,26 +260,42 @@ class _FooterWebState extends State<FooterMobileWeb> {
         ),
         Row(
           children: [
-            Image(
-              image: ImageUtils.instance.getImageNetWork(AppImages.logoFB),
-              width: 28,
-              height: 28,
+            GestureDetector(
+              onTap: () {
+                html.window
+                    .open('https://www.facebook.com/vietqr.vn', 'new tab');
+              },
+              child: Image(
+                image: ImageUtils.instance.getImageNetWork(AppImages.logoFB),
+                width: 28,
+                height: 28,
+              ),
             ),
             const SizedBox(
               width: 12,
             ),
-            Image(
-              image: ImageUtils.instance.getImageNetWork(AppImages.logoTele),
-              width: 28,
-              height: 28,
+            GestureDetector(
+              onTap: () {
+                html.window.open('https://t.me/vietqrdev', 'new tab');
+              },
+              child: Image(
+                image: ImageUtils.instance.getImageNetWork(AppImages.logoTele),
+                width: 28,
+                height: 28,
+              ),
             ),
             const SizedBox(
               width: 12,
             ),
-            Image(
-              image: ImageUtils.instance.getImageNetWork(AppImages.logoYTB),
-              width: 28,
-              height: 28,
+            GestureDetector(
+              onTap: () {
+                html.window.open('https://www.youtube.com/@VietQR ', 'new tab');
+              },
+              child: Image(
+                image: ImageUtils.instance.getImageNetWork(AppImages.logoYTB),
+                width: 28,
+                height: 28,
+              ),
             ),
             const SizedBox(
               width: 12,

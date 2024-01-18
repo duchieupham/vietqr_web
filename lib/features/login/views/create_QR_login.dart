@@ -1282,7 +1282,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                               action: 'PRINT',
                             );
                             html.window.open(
-                                Uri.base.toString().replaceFirst('/qr-wallet',
+                                Uri.base.toString().replaceFirst('/create-qr',
                                     '/qr-generate/print$paramData'),
                                 'new tab');
                           },
@@ -1304,7 +1304,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                             );
                             html.window.open(
                                 Uri.base.toString().replaceFirst(
-                                    '/qr-wallet', '/qr_generate$paramData'),
+                                    '/create-qr', '/qr_generate$paramData'),
                                 'new tab');
                           },
                           bgColor: AppColor.WHITE.withOpacity(0.4),
@@ -1437,7 +1437,8 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                                                 ? 1
                                                 : 0);
                                 html.window.open(
-                                    Uri.base.toString().replaceFirst('/login',
+                                    Uri.base.toString().replaceFirst(
+                                        '/create-qr',
                                         '/qr-generate/print$paramData'),
                                     'new tab');
                               },

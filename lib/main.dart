@@ -225,17 +225,38 @@ final GoRouter _router = GoRouter(
         redirect: (context, state) {
           Map<String, String> params = state.queryParams;
           String shareCode = '';
+          if (params['phone_number'] != null && params['phone_number'] != '') {
+            String phoneNumber = params['phone_number'].toString();
+            return '/register?phone_number=$phoneNumber';
+          }
+
           if (params['share_code'] != null && params['share_code'] != 'null') {
             shareCode = params['share_code'].toString();
           }
           return '/register?share_code=$shareCode';
         },
-        builder: (BuildContext context, GoRouterState state) => RegisterView(),
+        builder: (BuildContext context, GoRouterState state) {
+          String phoneNumber = '';
+          Map<String, String> params = state.queryParams;
+          if (params['phone_number'] != null) {
+            phoneNumber = params['phone_number'] as String;
+          }
+          return RegisterView(
+            phoneNumber: phoneNumber,
+          );
+        },
         pageBuilder: (BuildContext context, GoRouterState state) {
+          String phoneNumber = '';
+          Map<String, String> params = state.queryParams;
+          if (params['phone_number'] != null) {
+            phoneNumber = params['phone_number'] as String;
+          }
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: RegisterView(),
+            child: RegisterView(
+              phoneNumber: phoneNumber,
+            ),
           );
         }),
     GoRoute(
