@@ -10,6 +10,7 @@ class ContactDetailDTO {
   final String bankShortName;
   final String bankName;
   final String imgId;
+  final String bankCode;
   final String bankAccount;
   final int colorType;
   final int relation;
@@ -37,6 +38,7 @@ class ContactDetailDTO {
     this.company = '',
     this.website = '',
     this.phoneNo = '',
+    this.bankCode = '',
   });
 
   factory ContactDetailDTO.fromJson(Map<String, dynamic> json) =>
@@ -58,6 +60,7 @@ class ContactDetailDTO {
         company: json["company"] ?? '',
         website: json["website"] ?? '',
         phoneNo: json["phoneNo"] ?? '',
+        bankCode: json["bankCode"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

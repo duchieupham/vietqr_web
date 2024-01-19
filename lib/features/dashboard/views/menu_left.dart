@@ -179,15 +179,15 @@ class MenuLeft extends StatelessWidget {
                   context.go('/qr-wallet');
                 },
               ),
-              ItemMenuHome(
-                title: 'Chia sẻ BĐSD',
-                isSelect: currentType == MenuHomeType.BUSINESS,
-                onTap: () {
-                  // onTab(MenuHomeType.BUSINESS);
-
-                  context.go('/business');
-                },
-              ),
+              // ItemMenuHome(
+              //   title: 'Chia sẻ BĐSD',
+              //   isSelect: currentType == MenuHomeType.BUSINESS,
+              //   onTap: () {
+              //     // onTab(MenuHomeType.BUSINESS);
+              //
+              //     context.go('/business');
+              //   },
+              // ),
               ItemMenuHome(
                 title: 'Giới thiệu VietQR VN',
                 pathImage: AppImages.icMenuIntroVietQrVN,
@@ -316,18 +316,18 @@ class MenuLeft extends StatelessWidget {
               context.go('/qr-wallet');
             },
           ),
-          ItemMenuHome(
-            title: 'Chia sẻ BĐSD',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuShareBDSD,
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.BUSINESS,
-            onTap: () {
-              // onTab(MenuHomeType.BUSINESS);
-              provider.updateShowMenu(true);
-              context.go('/business');
-            },
-          ),
+          // ItemMenuHome(
+          //   title: 'Chia sẻ BĐSD',
+          //   paddingIcon: const EdgeInsets.all(4),
+          //   iconId: AppImages.icMenuShareBDSD,
+          //   isOnlyIcon: true,
+          //   isSelect: currentType == MenuHomeType.BUSINESS,
+          //   onTap: () {
+          //     // onTab(MenuHomeType.BUSINESS);
+          //     provider.updateShowMenu(true);
+          //     context.go('/business');
+          //   },
+          // ),
           ItemMenuHome(
             title: 'Giới thiệu VietQR VN',
             iconId: AppImages.icVietQrSmall,

@@ -51,7 +51,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   QRGeneratedDTO getQrDTO(ContactDetailDTO dto) {
     return QRGeneratedDTO(
-      bankCode: dto.bankShortName,
+      bankCode: dto.bankCode,
       bankName: dto.bankName,
       bankAccount: dto.bankAccount,
       userBankName: dto.nickname,
