@@ -12,7 +12,6 @@ import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
-import 'package:VietQR/features/notification/views/notification_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
@@ -159,18 +158,22 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             message: 'Thông báo',
             child: InkWell(
               onTap: () {
-                DialogWidget.instance.openNotificationDialog(
-                    child: NotificationView(
-                      notificationBloc: _notificationBloc,
-                    ),
-                    height: 800,
-                    onTapBarrier: () {
-                      _notificationBloc.add(
-                        NotificationUpdateStatusEvent(
-                          userId: UserInformationHelper.instance.getUserId(),
-                        ),
-                      );
-                    });
+                DialogWidget.instance.openMsgDialog(
+                    title: 'Bảo trì',
+                    msg:
+                        'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                // DialogWidget.instance.openNotificationDialog(
+                //     child: NotificationView(
+                //       notificationBloc: _notificationBloc,
+                //     ),
+                //     height: 800,
+                //     onTapBarrier: () {
+                //       _notificationBloc.add(
+                //         NotificationUpdateStatusEvent(
+                //           userId: UserInformationHelper.instance.getUserId(),
+                //         ),
+                //       );
+                //     });
               },
               child: SizedBox(
                 width: 40,

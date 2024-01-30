@@ -264,8 +264,12 @@ class MenuLeft extends StatelessWidget {
             isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.TRANSACTION,
             onTap: () {
-              context.go('/transaction');
-              provider.updateShowMenu(true);
+              DialogWidget.instance.openMsgDialog(
+                  title: 'Bảo trì',
+                  msg:
+                      'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+              // context.go('/transaction');
+              // provider.updateShowMenu(true);
             },
           ),
           if (provider.isAccountIsMerchant)
@@ -276,8 +280,12 @@ class MenuLeft extends StatelessWidget {
               isOnlyIcon: true,
               isSelect: currentType == MenuHomeType.MERCHANT,
               onTap: () {
-                context.go('/merchant/report');
-                provider.updateShowMenu(true);
+                DialogWidget.instance.openMsgDialog(
+                    title: 'Bảo trì',
+                    msg:
+                        'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                // context.go('/merchant/report');
+                // provider.updateShowMenu(true);
               },
             ),
           ItemMenuHome(
