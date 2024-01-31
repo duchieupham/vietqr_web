@@ -360,6 +360,21 @@ final GoRouter _router = GoRouter(
       },
     ),
     GoRoute(
+      path: '/qr-generate/show',
+      redirect: (context, state) {
+        Map<String, String> params = state.queryParams;
+        return '/qr-generate/show?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+      },
+      builder: (BuildContext context, GoRouterState state) {
+        Map<String, String> params = state.queryParams;
+
+        return QrPrint(
+          params: params,
+          openPrint: false,
+        );
+      },
+    ),
+    GoRoute(
       path: '/naptk',
       redirect: (context, state) => '/naptk',
       builder: (BuildContext context, GoRouterState state) =>

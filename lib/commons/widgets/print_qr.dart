@@ -18,7 +18,8 @@ import '../../commons/widgets/repaint_boundary_widget.dart';
 
 class QrPrint extends StatefulWidget {
   final Map<String, String> params;
-  const QrPrint({super.key, required this.params});
+  final bool openPrint;
+  const QrPrint({super.key, required this.params, this.openPrint = true});
 
   @override
   State<QrPrint> createState() => _QrGenerateState();
@@ -72,8 +73,11 @@ class _QrGenerateState extends State<QrPrint> {
             listener: (context, state) {
           if (state is CreateSuccessfulState) {
             qrGeneratedDTO = state.dto;
+
             Future.delayed(const Duration(seconds: 2), () {
-              html.window.print();
+              if (widget.openPrint) {
+                html.window.print();
+              }
             });
           }
         }, builder: (context, state) {
