@@ -2,6 +2,7 @@ import 'dart:html' as html;
 
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
+import 'package:VietQR/commons/utils/month_calculator.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -16,7 +17,6 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:provider/provider.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
@@ -33,7 +33,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
   late TransactionUserBloc transactionUserBloc;
 
   List<TransactionMerchantDTO> listTransaction = [];
-
+  MonthCalculator monthCalculator = MonthCalculator();
   final noteController = TextEditingController();
 
   List<String> hasTagOutCome = [
@@ -57,12 +57,19 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
   ];
 
   init() {
+    DateTime now = DateTime.now();
+    DateTime fromDate = DateTime(now.year, now.month, now.day);
+    DateTime endDate = fromDate.subtract(const Duration(days: 7));
+
+    fromDate = fromDate
+        .add(const Duration(days: 1))
+        .subtract(const Duration(seconds: 1));
     Map<String, dynamic> paramInit = {};
     paramInit['userId'] = UserInformationHelper.instance.getUserId();
     paramInit['type'] = 9;
     paramInit['value'] = '';
-    paramInit['from'] = 0;
-    paramInit['to'] = 0;
+    paramInit['from'] = TimeUtils.instance.getCurrentDate(endDate);
+    paramInit['to'] = TimeUtils.instance.getCurrentDate(fromDate);
     paramInit['offset'] = 0;
     transactionUserBloc
         .add(GetListTransactionByEvent(param: paramInit, isLoadingPage: true));
@@ -97,8 +104,10 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                   if (state is GetListTransactionByUserSuccessfulState) {
                     if (state.isLoadMore) {
                       listTransaction.addAll(state.list);
-                      Provider.of<TransUserProvider>(context, listen: false)
-                          .updateCallLoadMore(true);
+                      if (state.list.isNotEmpty) {
+                        Provider.of<TransUserProvider>(context, listen: false)
+                            .updateCallLoadMore(true);
+                      }
                     } else {
                       if (!state.isLoadingPage) {
                         Navigator.pop(context);
@@ -347,7 +356,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                     bottom: BorderSide(color: AppColor.GREY_BUTTON),
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             child: Text(
-              dto.type == 0 ? 'Mã VietQR' : 'Khác',
+              dto.getTitleType(),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 12,
@@ -956,162 +965,150 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                 ],
               ),
             ),
-            if (provider.valueFilter.id.type == TypeFilter.ALL ||
-                provider.valueFilter.id.type == TypeFilter.BANK_NUMBER ||
-                provider.valueFilter.id.type == TypeFilter.CODE_SALE) ...[
-              Container(
-                width: 200,
-                height: 40,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColor.GREY_BG,
-                  border: Border.all(color: AppColor.GREY_LIGHT),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Row(
-                  children: [
-                    const Text(
-                      'Thời gian',
-                      style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    DropdownButton<FilterTimeTransaction>(
-                      value: provider.valueTimeFilter,
-                      icon: const RotatedBox(
-                        quarterTurns: 5,
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 12,
-                        ),
+            Container(
+              width: 200,
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColor.GREY_BG,
+                border: Border.all(color: AppColor.GREY_LIGHT),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Row(
+                children: [
+                  const Text(
+                    'Thời gian',
+                    style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  DropdownButton<FilterTimeTransaction>(
+                    value: provider.valueTimeFilter,
+                    icon: const RotatedBox(
+                      quarterTurns: 5,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
                       ),
-                      underline: const SizedBox.shrink(),
-                      onChanged: (FilterTimeTransaction? value) {
-                        provider.changeTimeFilter(value!);
-                        if (value.id != TypeTimeFilter.PERIOD.id &&
-                            provider.valueFilter.id.type !=
-                                TypeFilter.CODE_SALE) {
-                          onSearch(provider);
-                        }
-                      },
-                      items: provider.listTimeFilter
-                          .map<DropdownMenuItem<FilterTimeTransaction>>(
-                              (FilterTimeTransaction value) {
-                        return DropdownMenuItem<FilterTimeTransaction>(
-                          value: value,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: Text(
-                              value.title,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        );
-                      }).toList(),
                     ),
-                  ],
+                    underline: const SizedBox.shrink(),
+                    onChanged: (FilterTimeTransaction? value) {
+                      provider.changeTimeFilter(value!);
+                      if (value.id != TypeTimeFilter.PERIOD.id &&
+                          provider.valueFilter.id.type !=
+                              TypeFilter.CODE_SALE) {
+                        onSearch(provider);
+                      }
+                    },
+                    items: provider.listTimeFilter
+                        .map<DropdownMenuItem<FilterTimeTransaction>>(
+                            (FilterTimeTransaction value) {
+                      return DropdownMenuItem<FilterTimeTransaction>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: Text(
+                            value.title,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+            if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id) ...[
+              InkWell(
+                onTap: () async {
+                  DateTime? date = await showDateTimePicker(
+                    context: context,
+                    initialDate: provider.fromDate,
+                    firstDate: DateTime(2021, 6),
+                    lastDate: DateTime.now(),
+                  );
+
+                  int numberOfMonths = monthCalculator.calculateMonths(
+                      date ?? DateTime.now(), provider.toDate);
+
+                  if (numberOfMonths > 3) {
+                    DialogWidget.instance.openMsgDialog(
+                        title: 'Cảnh báo',
+                        msg:
+                            'Vui lòng nhập khoảng thời gian tối đa là 3 tháng.');
+                  } else if ((date ?? DateTime.now())
+                      .isAfter(provider.fromDate)) {
+                    DialogWidget.instance.openMsgDialog(
+                        title: 'Cảnh báo',
+                        msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
+                  } else {
+                    provider.updateFromDate(date ?? DateTime.now());
+                  }
+                },
+                child: Container(
+                  width: 210,
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColor.GREY_BG,
+                    border: Border.all(color: AppColor.GREY_LIGHT),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Từ ngày',
+                        style:
+                            TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        TimeUtils.instance
+                            .formatDateToString(provider.fromDate),
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        size: 12,
+                      )
+                    ],
+                  ),
                 ),
               ),
-              if (provider.valueTimeFilter.id == TypeTimeFilter.PERIOD.id) ...[
-                InkWell(
-                  onTap: () async {
-                    DateTime? date = await showDateTimePicker(
-                      context: context,
-                      initialDate: provider.fromDate,
-                      firstDate:
-                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
-                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
-                    );
-                    provider.updateFromDate(date ?? DateTime.now());
-                  },
-                  child: Container(
-                    width: 210,
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColor.GREY_BG,
-                      border: Border.all(color: AppColor.GREY_LIGHT),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'Từ ngày',
-                          style: TextStyle(
-                              fontSize: 11, color: AppColor.GREY_TEXT),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          TimeUtils.instance
-                              .formatDateToString(provider.fromDate),
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        const Icon(
-                          Icons.calendar_month_outlined,
-                          size: 12,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    DateTime? date = await showDateTimePicker(
-                      context: context,
-                      initialDate: provider.toDate,
-                      firstDate:
-                          Jiffy(DateTime.now()).subtract(months: 5).dateTime,
-                      lastDate: Jiffy(DateTime.now()).add(months: 5).dateTime,
-                    );
+              InkWell(
+                onTap: () async {
+                  DateTime? date = await showDateTimePicker(
+                    context: context,
+                    initialDate: provider.toDate,
+                    firstDate: DateTime(2021, 6),
+                    lastDate: DateTime.now(),
+                  );
+                  int numberOfMonths = monthCalculator.calculateMonths(
+                      provider.fromDate, date ?? DateTime.now());
+
+                  if (numberOfMonths > 3) {
+                    DialogWidget.instance.openMsgDialog(
+                        title: 'Cảnh báo',
+                        msg:
+                            'Vui lòng nhập khoảng thời gian tối đa là 3 tháng.');
+                  } else if ((date ?? DateTime.now())
+                      .isBefore(provider.fromDate)) {
+                    DialogWidget.instance.openMsgDialog(
+                        title: 'Cảnh báo',
+                        msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
+                  } else {
                     provider.updateToDate(date ?? DateTime.now());
-                  },
-                  child: Container(
-                    width: 220,
-                    height: 40,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColor.GREY_BG,
-                      border: Border.all(color: AppColor.GREY_LIGHT),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'Đến ngày',
-                          style: TextStyle(
-                              fontSize: 11, color: AppColor.GREY_TEXT),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          TimeUtils.instance
-                              .formatDateToString(provider.toDate),
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        const Icon(
-                          Icons.calendar_month_outlined,
-                          size: 12,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-              if (provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
-                Container(
+                  }
+                },
+                child: Container(
                   width: 220,
                   height: 40,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -1124,46 +1121,81 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
                   child: Row(
                     children: [
                       const Text(
-                        'Số tài khoản',
+                        'Đến ngày',
                         style:
                             TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
                       ),
                       const SizedBox(
                         width: 20,
                       ),
-                      DropdownButton<BankAccountDTO>(
-                        value: provider.bankAccountDTO,
-                        icon: const RotatedBox(
-                          quarterTurns: 5,
-                          child: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 12,
-                          ),
-                        ),
-                        underline: const SizedBox.shrink(),
-                        onChanged: (BankAccountDTO? value) {
-                          provider.changeBankAccount(value!);
-                          onSearch(provider);
-                        },
-                        items: provider.bankAccounts
-                            .map<DropdownMenuItem<BankAccountDTO>>(
-                                (BankAccountDTO value) {
-                          return DropdownMenuItem<BankAccountDTO>(
-                            value: value,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Text(
-                                value.bankAccount,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          );
-                        }).toList(),
+                      Text(
+                        TimeUtils.instance.formatDateToString(provider.toDate),
+                        style: const TextStyle(fontSize: 11),
                       ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      const Icon(
+                        Icons.calendar_month_outlined,
+                        size: 12,
+                      )
                     ],
                   ),
                 ),
-              ]
+              ),
+            ],
+            if (provider.valueFilter.id.type == TypeFilter.BANK_NUMBER) ...[
+              Container(
+                width: 220,
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColor.GREY_BG,
+                  border: Border.all(color: AppColor.GREY_LIGHT),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Số tài khoản',
+                      style: TextStyle(fontSize: 11, color: AppColor.GREY_TEXT),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    DropdownButton<BankAccountDTO>(
+                      value: provider.bankAccountDTO,
+                      icon: const RotatedBox(
+                        quarterTurns: 5,
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
+                        ),
+                      ),
+                      underline: const SizedBox.shrink(),
+                      onChanged: (BankAccountDTO? value) {
+                        provider.changeBankAccount(value!);
+                        onSearch(provider);
+                      },
+                      items: provider.bankAccounts
+                          .map<DropdownMenuItem<BankAccountDTO>>(
+                              (BankAccountDTO value) {
+                        return DropdownMenuItem<BankAccountDTO>(
+                          value: value,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Text(
+                              value.bankAccount,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
             ],
             if (provider.valueFilter.id.type != TypeFilter.ALL &&
                 provider.valueFilter.id.type != TypeFilter.BANK_NUMBER)
@@ -1248,16 +1280,18 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
       provider.updateOffset(0);
       param['type'] = provider.valueFilter.id;
       param['userId'] = UserInformationHelper.instance.getUserId();
-      if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
-          (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
-              provider.valueFilter.id.type != TypeFilter.ALL &&
-              provider.valueFilter.id.type != TypeFilter.CODE_SALE)) {
-        param['from'] = '0';
-        param['to'] = '0';
-      } else {
-        param['from'] = TimeUtils.instance.getCurrentDate(provider.fromDate);
-        param['to'] = TimeUtils.instance.getCurrentDate(provider.toDate);
-      }
+      // if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||
+      //     (provider.valueFilter.id.type != TypeFilter.BANK_NUMBER &&
+      //         provider.valueFilter.id.type != TypeFilter.ALL &&
+      //         provider.valueFilter.id.type != TypeFilter.CODE_SALE)) {
+      //   param['from'] = '0';
+      //   param['to'] = '0';
+      // } else {
+      //   param['from'] = TimeUtils.instance.getCurrentDate(provider.fromDate);
+      //   param['to'] = TimeUtils.instance.getCurrentDate(provider.toDate);
+      // }
+      param['from'] = TimeUtils.instance.getCurrentDate(provider.fromDate);
+      param['to'] = TimeUtils.instance.getCurrentDate(provider.toDate);
       param['value'] = provider.keywordSearch;
 
       param['offset'] = provider.offset;

@@ -68,10 +68,11 @@ class TransactionMerchantDTO {
       if (status == 0) {
         return AppColor.ORANGE;
       } else if (status == 1) {
-        if (type == 0) {
+        if (type == 0 || type == 1 || type == 4 || type == 5) {
           return AppColor.GREEN;
+        } else if (type == 2) {
+          return AppColor.BLUE_TEXT;
         }
-
         return AppColor.BLUE_TEXT;
       } else if (status == 3) {
         return AppColor.YELLOW_TEXT;
@@ -106,6 +107,16 @@ class TransactionMerchantDTO {
       return AppColor.BLUE_TEXT;
     } else {
       return AppColor.BLACK;
+    }
+  }
+
+  String getTitleType() {
+    if (type == 0) {
+      return 'VietQR động';
+    } else if (type == 1) {
+      return 'VietQR tĩnh';
+    } else {
+      return 'Khác';
     }
   }
 }

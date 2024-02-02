@@ -131,11 +131,7 @@ class MenuLeft extends StatelessWidget {
                 listItemDrop: subMenuTransactionUser,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
-                  DialogWidget.instance.openMsgDialog(
-                      title: 'Bảo trì',
-                      msg:
-                          'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-                  // context.go('/transaction');
+                  context.go('/transaction');
                 },
               ),
               if (UserInformationHelper.instance.getAccountIsMerchant())
@@ -146,11 +142,11 @@ class MenuLeft extends StatelessWidget {
                   listItemDrop: subMenuMerchant,
                   isSelect: currentType == MenuHomeType.MERCHANT,
                   onTap: () {
-                    DialogWidget.instance.openMsgDialog(
-                        title: 'Bảo trì',
-                        msg:
-                            'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-                    // context.go('/merchant/report');
+                    // DialogWidget.instance.openMsgDialog(
+                    //     title: 'Bảo trì',
+                    //     msg:
+                    //         'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                    context.go('/merchant/report');
                   },
                 ),
               ItemMenuHome(
