@@ -1368,6 +1368,7 @@ class _ListTransactionState extends State<ListTransaction> {
   void onSearch(MerchantProvider provider) {
     if (provider.fromDate.millisecondsSinceEpoch <=
         provider.toDate.millisecondsSinceEpoch) {
+      provider.updateCallLoadMore(true);
       Map<String, dynamic> param = {};
       param['type'] = provider.valueFilter.id;
       // if (provider.valueTimeFilter.id == TypeTimeFilter.ALL.id ||

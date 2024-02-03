@@ -1276,6 +1276,7 @@ class _ListTransactionUserState extends State<ListTransactionUser> {
   void onSearch(TransUserProvider provider) {
     if (provider.fromDate.millisecondsSinceEpoch <=
         provider.toDate.millisecondsSinceEpoch) {
+      provider.updateCallLoadMore(true);
       Map<String, dynamic> param = {};
       provider.updateOffset(0);
       param['type'] = provider.valueFilter.id;
