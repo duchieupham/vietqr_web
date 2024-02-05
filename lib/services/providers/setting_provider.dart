@@ -1,3 +1,4 @@
+import 'package:VietQR/features/home/repositories/home_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,11 @@ class SettingProvider with ChangeNotifier {
 
   List<String> get bankIds => _bankIds;
 
+  BankAccountDTO _bankAccountDTO = BankAccountDTO();
+
+  BankAccountDTO get bankAccountDTO => _bankAccountDTO;
+  List<BankAccountDTO> bankAccounts = [];
+
   BankAccountDTO _bankAccountSelected = BankAccountDTO(
       bankAccount: '',
       id: '',
@@ -35,6 +41,23 @@ class SettingProvider with ChangeNotifier {
       isAuthenticated: false);
 
   BankAccountDTO get bankAccountSelected => _bankAccountSelected;
+
+  final homeRepository = const HomeRepository();
+  getListBankAccount() async {
+    List<BankAccountDTO> result = await homeRepository
+        .getListBankAccount(UserInformationHelper.instance.getUserId());
+    result.sort((a, b) {
+      if (b.isAuthenticated) {
+        return 1;
+      }
+      return -1;
+    });
+    bankAccounts = result
+        .where((e) =>
+            e.userId == UserInformationHelper.instance.getUserId() &&
+            e.isAuthenticated)
+        .toList();
+  }
 
   void updateBankAccountSelected(BankAccountDTO value) {
     _bankAccountSelected = value;

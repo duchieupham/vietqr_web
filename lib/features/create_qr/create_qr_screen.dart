@@ -28,6 +28,7 @@ import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/qr_create_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -83,6 +84,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
     createQRBloc = CreateQRBloc()..add(GetListBankAccount());
     bankTypeBloc = BlocProvider.of(context);
     bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
+    Session.instance.fetchAccountSetting();
     super.initState();
   }
 
@@ -253,7 +255,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               refresh: () async {},
               dto: bankDetailDTO,
               showTitle: false,
-        fromUrl: '/create-qr',
+              fromUrl: '/create-qr',
               qrGeneratedDTO: qrGeneratedDTO,
               bankId: provider.bankAccountDTO.id,
             )

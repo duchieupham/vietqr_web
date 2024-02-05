@@ -867,7 +867,8 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => SearchProvider()),
             ChangeNotifierProvider(create: (context) => AddBankProvider()),
             ChangeNotifierProvider(create: (context) => ActionShareProvider()),
-            ChangeNotifierProvider(create: (context) => SettingProvider()),
+            ChangeNotifierProvider(
+                create: (context) => SettingProvider()..getListBankAccount()),
             ChangeNotifierProvider(create: (context) => MenuLoginProvider()),
             ChangeNotifierProvider(create: (context) => WalletHomeProvider()),
           ],

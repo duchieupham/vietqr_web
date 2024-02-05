@@ -102,7 +102,7 @@ class _HomeScreenState extends State<_HomeScreen> {
     });
 
     Session.instance.fetchWallet();
-    Session.instance.fetchAccountSetting();
+    // Session.instance.fetchAccountSetting();
     bankTypeBloc = ListBankBloc()..add(const BankTypeEventGetList());
   }
 
