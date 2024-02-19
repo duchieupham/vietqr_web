@@ -1,5 +1,5 @@
 import 'package:VietQR/models/account_is_merchant.dart';
-import 'package:VietQR/models/active_fee_dto.dart';
+import 'package:VietQR/models/service_charge_dto.dart';
 import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -29,7 +29,7 @@ class MerchantCheckAccountIsMerchantSuccessfulState extends MerchantState {
 }
 
 class MerchantGetMerchantFeeSuccessfulState extends MerchantState {
-  final List<ActiveFeeDTO> list;
+  final List<ServiceChargeDTO> list;
   final bool isLoadingPage;
 
   const MerchantGetMerchantFeeSuccessfulState(

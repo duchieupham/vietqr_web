@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
@@ -10,7 +12,6 @@ import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
-import 'package:VietQR/features/notification/views/notification_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
@@ -135,6 +136,10 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           //   bgColor: AppColor.WHITE.withOpacity(0.7),
           //   textColor: AppColor.BLUE_TEXT,
           // ),
+          _buildInfoTelegram(),
+          const SizedBox(
+            width: 12,
+          ),
           _buildWallet(),
           const SizedBox(
             width: 12,
@@ -143,8 +148,8 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
               margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColor.WHITE.withOpacity(0.5)),
+                borderRadius: BorderRadius.circular(5),
+              ),
               child: const ClockWidget()),
           const SizedBox(
             width: 12,
@@ -153,18 +158,22 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             message: 'Thông báo',
             child: InkWell(
               onTap: () {
-                DialogWidget.instance.openNotificationDialog(
-                    child: NotificationView(
-                      notificationBloc: _notificationBloc,
-                    ),
-                    height: 800,
-                    onTapBarrier: () {
-                      _notificationBloc.add(
-                        NotificationUpdateStatusEvent(
-                          userId: UserInformationHelper.instance.getUserId(),
-                        ),
-                      );
-                    });
+                DialogWidget.instance.openMsgDialog(
+                    title: 'Bảo trì',
+                    msg:
+                        'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                // DialogWidget.instance.openNotificationDialog(
+                //     child: NotificationView(
+                //       notificationBloc: _notificationBloc,
+                //     ),
+                //     height: 800,
+                //     onTapBarrier: () {
+                //       _notificationBloc.add(
+                //         NotificationUpdateStatusEvent(
+                //           userId: UserInformationHelper.instance.getUserId(),
+                //         ),
+                //       );
+                //     });
               },
               child: SizedBox(
                 width: 40,
@@ -266,6 +275,40 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                 : ImageUtils.instance
                     .getImageNetWork(AppImages.personalRelation),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoTelegram() {
+    return InkWell(
+      onTap: () {
+        html.window.open('https://t.me/vietqrdev', 'new tab');
+      },
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: AppColor.WHITE.withOpacity(0.5)),
+        child: Row(
+          children: [
+            const Text(
+              'My VietQR',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColor.BLACK,
+                  fontSize: 12),
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.logoTelegram),
+              width: 16,
+            ),
+          ],
         ),
       ),
     );

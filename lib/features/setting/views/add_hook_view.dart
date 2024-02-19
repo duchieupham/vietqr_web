@@ -5,7 +5,7 @@ import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
-import 'package:VietQR/features/setting/widgets/select_bank_account_popup.dart';
+import 'package:VietQR/features/bank/widgets/select_my_bank_account.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/services/providers/setting_provider.dart';
@@ -234,8 +234,9 @@ class AddHookView extends StatelessWidget {
                 return InkWell(
                     onTap: () {
                       DialogWidget.instance.openPopup(
-                        child: SelectBankAccountPopup(
-                          onSelect: (dto) {
+                        child: SelectMyBankAccountWidget(
+                          bankAccounts: provider.bankAccounts,
+                          chooseBank: (dto) {
                             provider.updateBankAccountSelected(dto);
                           },
                         ),
@@ -243,7 +244,8 @@ class AddHookView extends StatelessWidget {
                         height: 500,
                       );
                     },
-                    child: provider.bankAccountSelected.userId!.isEmpty
+                    child: (provider.bankAccountSelected.userId?.isEmpty ??
+                            true)
                         ? BorderLayout(
                             height: 40,
                             isError: false,

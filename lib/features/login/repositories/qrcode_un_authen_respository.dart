@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/transaction_qr_dto.dart';
+import 'package:VietQR/models/vcard_generated_dto.dart';
 
 class QRCodeUnUTRepository {
   const QRCodeUnUTRepository();
@@ -30,6 +31,24 @@ class QRCodeUnUTRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = QRGeneratedDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<VcardGenerateDto> vcardGenerateQR(Map<String, dynamic> data) async {
+    VcardGenerateDto result = const VcardGenerateDto();
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}vcard/generate';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        body: data,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        result = VcardGenerateDto.fromJson(data);
       }
     } catch (e) {
       LOG.error(e.toString());

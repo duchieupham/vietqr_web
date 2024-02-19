@@ -7,7 +7,7 @@ class AESConvert {
     final key = Key.fromUtf8(keyAES);
     final iv = IV.fromLength(16);
 
-    final encrypter = Encrypter(AES(key));
+    final encrypter = Encrypter(AES(key, mode: AESMode.ecb));
 
     final encrypted = encrypter.encrypt(value, iv: iv);
     print('Encrypted: ${encrypted.base64}');

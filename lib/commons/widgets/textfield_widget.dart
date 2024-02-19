@@ -33,6 +33,8 @@ class TextFieldWidget extends StatefulWidget {
   final TextStyle? textStyle;
   final List<TextInputFormatter>? inputFormatter;
   final Color? fillColor;
+  final Widget? prefixIcon;
+  final bool disableBorder;
   final double height;
   const TextFieldWidget(
       {Key? key,
@@ -63,6 +65,8 @@ class TextFieldWidget extends StatefulWidget {
       this.value,
       this.inputFormatter,
       this.height = 50,
+      this.prefixIcon,
+      this.disableBorder = false,
       this.fillColor})
       : super(key: key);
 
@@ -159,11 +163,12 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                     decoration: InputDecoration(
                       fillColor: widget.fillColor,
                       hintText: widget.hintText,
+                      icon: widget.prefixIcon,
                       counterText: '',
                       border: InputBorder.none,
                       hintStyle: TextStyle(
                         fontSize:
-                            (widget.fontSize != null) ? widget.fontSize : 16,
+                            (widget.fontSize != null) ? widget.fontSize : 14,
                         color: (widget.title != null)
                             ? AppColor.GREY_TEXT
                             : Theme.of(context).hintColor,
@@ -203,10 +208,11 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               inputFormatters: widget.inputFormatter,
               decoration: InputDecoration(
                 hintText: widget.hintText,
+                icon: widget.prefixIcon,
                 counterText: '',
                 border: InputBorder.none,
                 hintStyle: TextStyle(
-                  fontSize: (widget.fontSize != null) ? widget.fontSize : 16,
+                  fontSize: (widget.fontSize != null) ? widget.fontSize : 14,
                   color: AppColor.GREY_TEXT,
                 ),
                 contentPadding: widget.contentPadding,

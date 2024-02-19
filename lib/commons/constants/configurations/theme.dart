@@ -18,6 +18,8 @@ class AppColor {
   static const Color RED_TEXT = Color(0xFFFF0A0A);
   static const Color RED_EC1010 = Color(0xffEC1010);
   static const Color BLUE_TEXT = Color(0xFF0A7AFF);
+  static const Color YELLOW_TEXT = Color(0xFFFFDA00);
+  static const Color PURPLE_TEXT = Color(0xFF800080);
   static const Color BLUE_CARD = Color(0xFF0A7AFF);
   static const Color RED_CALENDAR = Color(0xFFF5233C);
   static const Color TRANSPARENT = Color(0x00000000);
@@ -41,6 +43,7 @@ class AppColor {
   static const Color HOT_COLOR = Color(0xFFE4BE4A);
   static const Color WARM_COLOR = Color(0xFF75F181);
   static const Color COOL_COLOR = Color(0xFF7EE4A7);
+  static const Color ORANGE_DARK = Color(0xFFff5c01);
   static const Color COLD_COLOR = Color(0xFF52B5D3);
   static const Color WINTER_COLOR = Color(0xFF338AED);
   static const Color RED_NOTI_1 = Color(0xFFFAC4DF);

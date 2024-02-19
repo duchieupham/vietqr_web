@@ -16,6 +16,15 @@ class QRCodeUnUTCreateQR extends QRCodeUnUTEvent {
   List<Object?> get props => [data];
 }
 
+class QRVCardCreateQR extends QRCodeUnUTEvent {
+  final Map<String, dynamic> data;
+
+  const QRVCardCreateQR({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
 class GetTransactionQRBytToken extends QRCodeUnUTEvent {
   final String token;
 

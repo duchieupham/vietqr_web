@@ -78,9 +78,9 @@ class SelectBankTypeWidget extends StatelessWidget {
           ),
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
-        UnconstrainedBox(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: BoxLayout(
-            width: 500 - 40,
             height: 50,
             borderRadius: 50,
             bgColor: Theme.of(context).canvasColor,
@@ -225,8 +225,7 @@ class SelectBankTypeWidget extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 12,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ),
           ],

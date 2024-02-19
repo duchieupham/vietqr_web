@@ -5,9 +5,9 @@ import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
-import 'package:VietQR/models/active_fee_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
+import 'package:VietQR/models/service_charge_dto.dart';
 import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/models/transaction_merchant_dto.dart';
 
@@ -58,12 +58,12 @@ class MerchantRepository {
     return result;
   }
 
-  Future<List<ActiveFeeDTO>> getMerchantFee(
-      String customerSyncId, String month) async {
-    List<ActiveFeeDTO> result = [];
+  Future<List<ServiceChargeDTO>> getMerchantFee(
+      String customerSyncId, String year, int status) async {
+    List<ServiceChargeDTO> result = [];
     try {
       final String url =
-          '${EnvConfig.getBaseUrl()}bank/service-fee/transaction?customerSyncId=$customerSyncId&month=$month';
+          '${EnvConfig.getBaseUrl()}bank/service-fee?merchantId=$customerSyncId&status=$status&year=$year';
       final response = await BaseAPIClient.getAPI(
         url: url,
         type: AuthenticationType.SYSTEM,
@@ -71,7 +71,7 @@ class MerchantRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<ActiveFeeDTO>((json) => ActiveFeeDTO.fromJson(json))
+            .map<ServiceChargeDTO>((json) => ServiceChargeDTO.fromJson(json))
             .toList();
       }
     } catch (e) {

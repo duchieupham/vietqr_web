@@ -30,7 +30,7 @@ class ClockWidget extends StatelessWidget {
                       const TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
                 ),
                 Text(
-                  DateFormat('MM/dd/yyyy').format(DateTime.now()),
+                  DateFormat('MM-dd-yyyy').format(DateTime.now()),
                   style:
                       const TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
                 ),

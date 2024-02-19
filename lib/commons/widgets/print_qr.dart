@@ -18,7 +18,8 @@ import '../../commons/widgets/repaint_boundary_widget.dart';
 
 class QrPrint extends StatefulWidget {
   final Map<String, String> params;
-  const QrPrint({super.key, required this.params});
+  final bool openPrint;
+  const QrPrint({super.key, required this.params, this.openPrint = true});
 
   @override
   State<QrPrint> createState() => _QrGenerateState();
@@ -65,14 +66,18 @@ class _QrGenerateState extends State<QrPrint> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.GREY_BG,
-      body: Center(
+      backgroundColor: AppColor.WHITE,
+      body: Padding(
+        padding: const EdgeInsets.only(left: 120),
         child: BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
             listener: (context, state) {
           if (state is CreateSuccessfulState) {
             qrGeneratedDTO = state.dto;
+
             Future.delayed(const Duration(seconds: 2), () {
-              html.window.print();
+              if (widget.openPrint) {
+                html.window.print();
+              }
             });
           }
         }, builder: (context, state) {
@@ -106,14 +111,10 @@ class _QrGenerateState extends State<QrPrint> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 32, bottom: 20),
-                child: Text(
-                  'Quét mã qua ứng dụng Ngân hàng/Ví điện tử',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
+                padding: EdgeInsets.only(top: 60),
               ),
               SizedBox(
-                width: 400,
+                width: 500,
                 child: RepaintBoundaryWidget(
                     globalKey: globalKey,
                     builder: (key) {

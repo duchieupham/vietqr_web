@@ -2,11 +2,13 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
+import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
 import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/provider/synthesis_repor_provider.dart';
 import 'package:VietQR/features/merchant/states/merchant_state.dart';
+import 'package:VietQR/features/merchant/widget/line_chart_static.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -24,9 +26,9 @@ class SynthesisReport extends StatefulWidget {
 
 class _SaleReportState extends State<SynthesisReport> {
   late MerchantBloc merchantBloc;
-
+  int maxValueAmount = 0;
   List<SynthesisReportDTO> listSynthesisReport = [];
-
+  List<SynthesisReportDTO> listSynthesisFilter = [];
   @override
   void initState() {
     super.initState();
@@ -53,6 +55,24 @@ class _SaleReportState extends State<SynthesisReport> {
                 }
 
                 listSynthesisReport = state.list;
+                if (listSynthesisReport.length > 1) {
+                  List<SynthesisReportDTO> listFilter = listSynthesisReport
+                      .sublist(1, listSynthesisReport.length);
+                  listSynthesisFilter.clear();
+                  listSynthesisFilter.addAll(listFilter.reversed);
+                  SynthesisReportDTO statisticDTOIn = listFilter.reduce(
+                      (curr, next) =>
+                          curr.totalCredit > next.totalCredit ? curr : next);
+                  SynthesisReportDTO statisticDTOOut = listFilter.reduce(
+                      (curr, next) =>
+                          curr.totalDebit > next.totalDebit ? curr : next);
+
+                  if (statisticDTOIn.totalCredit > statisticDTOOut.totalDebit) {
+                    maxValueAmount = statisticDTOIn.totalCredit;
+                  } else {
+                    maxValueAmount = statisticDTOOut.totalDebit;
+                  }
+                }
               }
             }, builder: (context, state) {
               if (state is MerchantLoadingInitState) {
@@ -69,25 +89,102 @@ class _SaleReportState extends State<SynthesisReport> {
                 } else {
                   return Consumer<SynthesisReportProvider>(
                       builder: (context, provider, child) {
-                    return SingleChildScrollView(
-                      child: ScrollConfiguration(
-                        behavior: MyCustomScrollBehavior(),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: AppColor.BLUE_DARK,
+                                        width: 0.5))),
                             width: provider.valueFilter.id == 1 ? 1090 : 970,
-                            child: Column(
-                              children: [
-                                _buildTitleItem(provider.valueFilter.id == 1),
-                                ...listSynthesisReport.map((e) {
-                                  int i = listSynthesisReport.indexOf(e);
-                                  return _buildItem(i, e, provider);
-                                }).toList()
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 12, left: 16),
+                              child: Row(
+                                children: [
+                                  ButtonWidget(
+                                      text: 'Biểu đồ',
+                                      height: 32,
+                                      width: 120,
+                                      textColor: provider.page == 0
+                                          ? AppColor.WHITE
+                                          : AppColor.BLUE_DARK,
+                                      bgColor: provider.page == 0
+                                          ? AppColor.BLUE_DARK
+                                          : AppColor.WHITE,
+                                      borderRadius: 0,
+                                      function: () {
+                                        provider.changePage(0);
+                                      }),
+                                  ButtonWidget(
+                                      text: 'Danh sách',
+                                      textColor: provider.page == 1
+                                          ? AppColor.WHITE
+                                          : AppColor.BLUE_DARK,
+                                      height: 32,
+                                      width: 120,
+                                      bgColor: provider.page == 1
+                                          ? AppColor.BLUE_DARK
+                                          : AppColor.WHITE,
+                                      borderRadius: 0,
+                                      function: () {
+                                        provider.changePage(1);
+                                      })
+                                ],
+                              ),
+                            )),
+                        if (provider.page == 0)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: SizedBox(
+                              width: provider.valueFilter.id == 1 ? 1090 : 970,
+                              height: 500,
+                              child: LineChart(
+                                listData: listSynthesisFilter,
+                                maxValueAmount: maxValueAmount,
+                                state: state,
+                                typeDate: provider.valueTimeFilter.id,
+                                time: provider.valueTimeFilter.id == 0
+                                    ? provider.year.toString()
+                                    : TimeUtils.instance.formatMonthToString(
+                                        provider.timeCurrent),
+                              ),
+                            ),
+                          )
+                        else ...[
+                          SizedBox(
+                              width: provider.valueFilter.id == 1 ? 1090 : 970,
+                              child: Column(
+                                children: [
+                                  _buildTitleItem(provider.valueFilter.id == 1),
+                                  _buildItemTotal(
+                                      0, listSynthesisReport.first, provider),
+                                ],
+                              )),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: ScrollConfiguration(
+                                behavior: MyCustomScrollBehavior(),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: SizedBox(
+                                    width: provider.valueFilter.id == 1
+                                        ? 1090
+                                        : 970,
+                                    child: Column(
+                                      children: listSynthesisReport.map((e) {
+                                        int i = listSynthesisReport.indexOf(e);
+                                        return _buildItem(i, e, provider);
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        ]
+                      ],
                     );
                   });
                 }
@@ -101,40 +198,97 @@ class _SaleReportState extends State<SynthesisReport> {
 
   Widget _buildItem(
       int index, SynthesisReportDTO dto, SynthesisReportProvider provider) {
+    if (index > 0) {
+      return Container(
+        color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
+        alignment: Alignment.center,
+        child: Row(
+          children: [
+            _buildBoxItem('${index + 1}',
+                width: 50,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            if (provider.valueFilter.id == 1)
+              _buildBoxItem(
+                  '${provider.bankAccountDTO.bankShortName}\n${provider.bankAccountDTO.bankAccount}',
+                  width: 120,
+                  textAlign: TextAlign.start,
+                  fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            if (provider.valueTimeFilter.id == 1)
+              _buildBoxItem(TimeUtils.instance.formatDate(dto.time),
+                  width: 120,
+                  fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal)
+            else
+              _buildBoxItem(TimeUtils.instance.formatMonthYear(dto.time),
+                  width: 120,
+                  fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem(dto.totalTrans.toString(),
+                width: 120,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem('${StringUtils.formatNumber(dto.totalAmount)} VND',
+                width: 160,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem(dto.totalTransC.toString(),
+                width: 100,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem('${StringUtils.formatNumber(dto.totalCredit)} VND',
+                width: 160,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem(dto.totalTransD.toString(),
+                width: 100,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+            _buildBoxItem('${StringUtils.formatNumber(dto.totalDebit)} VND',
+                width: 160,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          ],
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildItemTotal(
+      int index, SynthesisReportDTO dto, SynthesisReportProvider provider) {
     return Container(
       color: index % 2 == 0 ? AppColor.GREY_BG : AppColor.WHITE,
       alignment: Alignment.center,
       child: Row(
         children: [
-          _buildBoxItem('${index + 1}', width: 50),
+          _buildBoxItem('${index + 1}',
+              width: 50,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           if (provider.valueFilter.id == 1)
             _buildBoxItem(
                 '${provider.bankAccountDTO.bankShortName}\n${provider.bankAccountDTO.bankAccount}',
                 width: 120,
-                textAlign: TextAlign.start),
+                textAlign: TextAlign.start,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           if (provider.valueTimeFilter.id == 1)
-            _buildBoxItem(TimeUtils.instance.formatDate(dto.time), width: 120)
+            _buildBoxItem(TimeUtils.instance.formatDate(dto.time),
+                width: 120,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal)
           else
             _buildBoxItem(TimeUtils.instance.formatMonthYear(dto.time),
-                width: 120),
-          _buildBoxItem(
-            dto.totalTrans.toString(),
-            width: 120,
-          ),
+                width: 120,
+                fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          _buildBoxItem(dto.totalTrans.toString(),
+              width: 120,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalAmount)} VND',
-              width: 160),
-          _buildBoxItem(
-            dto.totalTransC.toString(),
-            width: 100,
-          ),
-          _buildBoxItem(
-            dto.totalTransD.toString(),
-            width: 100,
-          ),
+              width: 160,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          _buildBoxItem(dto.totalTransC.toString(),
+              width: 100,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalCredit)} VND',
-              width: 160),
+              width: 160,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
+          _buildBoxItem(dto.totalTransD.toString(),
+              width: 100,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
           _buildBoxItem('${StringUtils.formatNumber(dto.totalDebit)} VND',
-              width: 160),
+              width: 160,
+              fontWeight: index == 0 ? FontWeight.bold : FontWeight.normal),
         ],
       ),
     );
@@ -143,6 +297,7 @@ class _SaleReportState extends State<SynthesisReport> {
   Widget _buildBoxItem(String value,
       {double width = 100,
       Color? valueColor,
+      FontWeight? fontWeight,
       TextAlign textAlign = TextAlign.center}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -156,7 +311,8 @@ class _SaleReportState extends State<SynthesisReport> {
       child: SelectableText(
         value,
         textAlign: textAlign,
-        style: TextStyle(fontSize: 12, color: valueColor),
+        style:
+            TextStyle(fontSize: 12, color: valueColor, fontWeight: fontWeight),
       ),
     );
   }
@@ -179,10 +335,10 @@ class _SaleReportState extends State<SynthesisReport> {
               width: 160, padding: const EdgeInsets.symmetric(horizontal: 4)),
           _buildItemTitle('GD vào',
               width: 100, padding: const EdgeInsets.symmetric(horizontal: 4)),
-          _buildItemTitle('GD ra',
-              width: 100, padding: const EdgeInsets.symmetric(horizontal: 4)),
           _buildItemTitle('Tổng tiền vào',
               width: 160, padding: const EdgeInsets.symmetric(horizontal: 4)),
+          _buildItemTitle('GD ra',
+              width: 100, padding: const EdgeInsets.symmetric(horizontal: 4)),
           _buildItemTitle('Tổng tiền ra',
               width: 160, padding: const EdgeInsets.symmetric(horizontal: 4)),
         ],
@@ -462,7 +618,7 @@ class _SaleReportState extends State<SynthesisReport> {
                       width: 20,
                     ),
                     DropdownButton<int>(
-                      value: DateTime.now().year,
+                      value: provider.year,
                       icon: const RotatedBox(
                         quarterTurns: 5,
                         child: Icon(
@@ -472,6 +628,7 @@ class _SaleReportState extends State<SynthesisReport> {
                       ),
                       underline: const SizedBox.shrink(),
                       onChanged: (int? value) {
+                        provider.updateYear(value ?? DateTime.now().year);
                         merchantBloc.add(GetSynthesisReportEvent(
                             customerSyncId: Session
                                 .instance.accountIsMerchantDTO.customerSyncId,

@@ -18,6 +18,7 @@ class CreateQRBloc extends Bloc<CreateQREvent, CreateQRState> {
     on<GetListBankAccount>(_getBankAccounts);
     on<BankEventGetDetail>(_getDetail);
     on<QREventGenerate>(_generateQR);
+    on<QRCodeUnUTCreateQR>(_createQR);
   }
 }
 
@@ -82,6 +83,20 @@ void _generateQR(CreateQREvent event, Emitter emit) async {
       emit(QRGenerateSuccessState(dto: result));
     }
   } catch (e) {
+    LOG.error(e.toString());
+  }
+}
+
+void _createQR(CreateQREvent event, Emitter emit) async {
+  try {
+    if (event is QRCodeUnUTCreateQR) {
+      emit(QRGenerateUnAuthenLoadingState());
+      final QRGeneratedDTO result =
+          await createQRRepository.generateQRUnAuthen(event.data);
+      emit(CreateUnAuthenSuccessfulState(dto: result));
+    }
+  } catch (e) {
+    emit(QRGenerateFailedState());
     LOG.error(e.toString());
   }
 }

@@ -1,5 +1,6 @@
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/models/transaction_qr_dto.dart';
+import 'package:VietQR/models/vcard_generated_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class QRCodeUnUTState extends Equatable {
@@ -13,10 +14,21 @@ class CreateInitialState extends QRCodeUnUTState {}
 
 class CreateQRLoadingState extends QRCodeUnUTState {}
 
+class CreateVcardLoadingState extends QRCodeUnUTState {}
+
 class CreateSuccessfulState extends QRCodeUnUTState {
   final QRGeneratedDTO dto;
 
   const CreateSuccessfulState({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}
+
+class CreateVcardSuccessfulState extends QRCodeUnUTState {
+  final VcardGenerateDto dto;
+
+  const CreateVcardSuccessfulState({required this.dto});
 
   @override
   List<Object?> get props => [dto];

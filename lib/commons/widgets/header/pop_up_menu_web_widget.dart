@@ -166,7 +166,7 @@ class PopupMenuWebWidget {
                     Session.instance.updateUserECOMId('');
                     context.push('/ecom');
                   } else {
-                    context.push('/login');
+                    context.pushReplacement('/login');
                   }
                 }
                 if (state is LogoutFailedState) {

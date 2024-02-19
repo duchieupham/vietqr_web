@@ -326,12 +326,10 @@ class DialogWidget {
         });
   }
 
-  openContentDialog(
-    VoidCallback? onClose,
-    Widget child,
-  ) {
+  openContentDialog(VoidCallback? onClose, String title,
+      {required Widget child, double? width}) {
     BuildContext context = NavigationService.navigatorKey.currentContext!;
-    final double width = MediaQuery.of(context).size.width;
+
     return showDialog(
         barrierDismissible: false,
         context: context,
@@ -339,19 +337,7 @@ class DialogWidget {
           return Material(
             color: AppColor.TRANSPARENT,
             child: Center(
-              child: Container(
-                width: width,
-                height: 400,
-                alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: child,
-              ),
+              child: child,
             ),
           );
         });
@@ -470,7 +456,7 @@ class DialogWidget {
         });
   }
 
-  void openLoadingDialog() async {
+  void openLoadingDialog({String msg = ''}) async {
     if (!isPopLoading) {
       isPopLoading = true;
       return await showDialog(
@@ -494,19 +480,26 @@ class DialogWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            CircularProgressIndicator(
+                          children: [
+                            const CircularProgressIndicator(
                               color: AppColor.BLUE_TEXT,
                             ),
-                            Padding(padding: EdgeInsets.only(top: 30)),
-                            Text(
-                              'Đang tải',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            const Padding(padding: EdgeInsets.only(top: 30)),
+                            if (msg.isNotEmpty) ...[
+                              const Padding(padding: EdgeInsets.only(top: 30)),
+                              Text(
+                                msg,
+                                textAlign: TextAlign.center,
                               ),
-                            ),
+                            ] else
+                              const Text(
+                                'Đang tải',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                           ],
                         ),
                       )
@@ -532,7 +525,9 @@ class DialogWidget {
       {required String title,
       required String msg,
       VoidCallback? function,
-      BuildContext? context}) {
+      BuildContext? context,
+      Color? titleColor,
+      Color? msgColor}) {
     return showDialog(
         barrierDismissible: false,
         context: context ?? NavigationService.navigatorKey.currentContext!,
@@ -567,10 +562,10 @@ class DialogWidget {
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: titleColor),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   SizedBox(
@@ -581,7 +576,8 @@ class DialogWidget {
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
+                        color: msgColor,
                         fontSize: 13,
                       ),
                     ),
@@ -796,7 +792,7 @@ class DialogWidget {
   openMsgSuccessDialog(
       {required String title,
       String? msg,
-      VoidCallback? function,
+      VoidCallback? onTapClose,
       BuildContext? context}) {
     return showDialog(
         barrierDismissible: false,
@@ -850,11 +846,10 @@ class DialogWidget {
                     textColor: AppColor.WHITE,
                     bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
-                    function: (function != null)
-                        ? function
-                        : () {
-                            Navigator.pop(context);
-                          },
+                    function: () {
+                      Navigator.pop(context);
+                      onTapClose;
+                    },
                   ),
                   // const Padding(padding: EdgeInsets.only(top: 10)),
                 ],
@@ -893,7 +888,8 @@ class DialogWidget {
     );
   }
 
-  openWidgetDialog({required Widget child}) {
+  openWidgetDialog(
+      {required Widget child, double width = 800, double height = 600}) {
     final BuildContext context = NavigationService.navigatorKey.currentContext!;
     return showDialog(
       barrierDismissible: false,
@@ -903,8 +899,8 @@ class DialogWidget {
           color: AppColor.TRANSPARENT,
           child: Center(
               child: Container(
-            width: 800,
-            height: 600,
+            width: width,
+            height: height,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,

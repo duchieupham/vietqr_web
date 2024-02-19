@@ -7,11 +7,14 @@ import 'package:VietQR/features/login/states/qrcode_un_authen_state.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/transaction_qr_dto.dart';
+import 'package:VietQR/models/vcard_generated_dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class QRCodeUnUTBloc extends Bloc<QRCodeUnUTEvent, QRCodeUnUTState> {
   QRCodeUnUTBloc() : super(CreateInitialState()) {
     on<QRCodeUnUTCreateQR>(_createQR);
+    on<QRVCardCreateQR>(_createVcardQR);
+
     on<GetTransactionQRBytToken>(_createTransactionQR);
     on<QRGenerateCancelEvent>(_cancelQR);
   }
@@ -50,6 +53,19 @@ void _createQR(QRCodeUnUTEvent event, Emitter emit) async {
   } catch (e) {
     print('Error at login - LoginBloc: $e');
     emit(LoginFailedState());
+  }
+}
+
+void _createVcardQR(QRCodeUnUTEvent event, Emitter emit) async {
+  VcardGenerateDto result = const VcardGenerateDto();
+  try {
+    if (event is QRVCardCreateQR) {
+      emit(CreateVcardLoadingState());
+      result = await _repository.vcardGenerateQR(event.data);
+      emit(CreateVcardSuccessfulState(dto: result));
+    }
+  } catch (e) {
+    emit(CreateVcardSuccessfulState(dto: result));
   }
 }
 

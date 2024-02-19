@@ -10,6 +10,7 @@ import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/features/setting/widgets/popup_setting.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,9 +18,18 @@ import 'package:provider/provider.dart';
 
 class MenuLeft extends StatelessWidget {
   final MenuHomeType currentType;
+  final List<Widget> subMenuMerchant;
+  final List<Widget> subMenuTransactionUser;
+  final List<Widget> subMenuMerchantRequest;
   final Function(int)? onSelectMenu;
 
-  const MenuLeft({super.key, required this.currentType, this.onSelectMenu});
+  const MenuLeft(
+      {super.key,
+      required this.currentType,
+      this.onSelectMenu,
+      this.subMenuTransactionUser = const [],
+      this.subMenuMerchantRequest = const [],
+      this.subMenuMerchant = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +65,7 @@ class MenuLeft extends StatelessWidget {
           } else {
             width = 50;
           }
-          print('------------------- $width');
+
           return Container(
             width: width,
             color: AppColor.BLUE_TEXT.withOpacity(0.2),
@@ -99,6 +109,14 @@ class MenuLeft extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ItemMenuHome(
+                title: 'Tạo mã VietQR',
+                iconId: AppImages.icVietQrSmall,
+                isSelect: currentType == MenuHomeType.CREATE_QR,
+                onTap: () {
+                  context.go('/create-qr');
+                },
+              ),
+              ItemMenuHome(
                 title: 'Trang chủ',
                 iconId: AppImages.icMenuHome,
                 isSelect: currentType == MenuHomeType.HOME,
@@ -109,20 +127,46 @@ class MenuLeft extends StatelessWidget {
               ItemMenuHome(
                 title: 'Giao dịch',
                 iconId: AppImages.icMenuTransaction,
+                enableDropDownList: true,
+                listItemDrop: subMenuTransactionUser,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
                   context.go('/transaction');
                 },
               ),
-              if (provider.isAccountIsMerchant)
+              if (UserInformationHelper.instance.getAccountIsMerchant())
                 ItemMenuHome(
                   title: 'Đại lý',
                   iconId: AppImages.icMenuBank,
+                  enableDropDownList: true,
+                  listItemDrop: subMenuMerchant,
                   isSelect: currentType == MenuHomeType.MERCHANT,
                   onTap: () {
-                    context.go('/merchant');
+                    // DialogWidget.instance.openMsgDialog(
+                    //     title: 'Bảo trì',
+                    //     msg:
+                    //         'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                    context.go('/merchant/report');
                   },
                 ),
+              ItemMenuHome(
+                title: 'Tích hợp và kết nối',
+                iconId: AppImages.icMenuBank,
+                enableDropDownList: true,
+                listItemDrop: subMenuMerchantRequest,
+                isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+                onTap: () {
+                  context.go('/merchant/request');
+                },
+              ),
+              // ItemMenuHome(
+              //   title: 'Kết nối máy bán hàng',
+              //   iconId: AppImages.icMenuBank,
+              //   isSelect: currentType == MenuHomeType.MBH,
+              //   onTap: () {
+              //     context.go('/merchant/request/mbh');
+              //   },
+              // ),
               // ItemMenuHome(
               //   title: 'TK ngân hàng',
               //   iconId: AppImages.icMenuContact,
@@ -131,14 +175,7 @@ class MenuLeft extends StatelessWidget {
               //     DialogWidget.instance.openMsgQRInstallApp();
               //   },
               // ),
-              ItemMenuHome(
-                title: 'Tạo mã VietQR',
-                iconId: AppImages.icVietQrSmall,
-                isSelect: currentType == MenuHomeType.CREATE_QR,
-                onTap: () {
-                  context.go('/create-qr');
-                },
-              ),
+
               ItemMenuHome(
                 title: 'Ví QR',
                 isSelect: currentType == MenuHomeType.WALLET_QR,
@@ -146,15 +183,15 @@ class MenuLeft extends StatelessWidget {
                   context.go('/qr-wallet');
                 },
               ),
-              ItemMenuHome(
-                title: 'Chia sẻ BĐSD',
-                isSelect: currentType == MenuHomeType.BUSINESS,
-                onTap: () {
-                  // onTab(MenuHomeType.BUSINESS);
-
-                  context.go('/business');
-                },
-              ),
+              // ItemMenuHome(
+              //   title: 'Chia sẻ BĐSD',
+              //   isSelect: currentType == MenuHomeType.BUSINESS,
+              //   onTap: () {
+              //     // onTab(MenuHomeType.BUSINESS);
+              //
+              //     context.go('/business');
+              //   },
+              // ),
               ItemMenuHome(
                 title: 'Giới thiệu VietQR VN',
                 pathImage: AppImages.icMenuIntroVietQrVN,
@@ -203,6 +240,17 @@ class MenuLeft extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           ItemMenuHome(
+            title: 'Tạo mã VietQR',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuQR,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.CREATE_QR,
+            onTap: () {
+              provider.updateShowMenu(true);
+              context.go('/create-qr');
+            },
+          ),
+          ItemMenuHome(
             title: 'Trang chủ',
             isOnlyIcon: true,
             paddingIcon: const EdgeInsets.all(4),
@@ -220,8 +268,12 @@ class MenuLeft extends StatelessWidget {
             isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.TRANSACTION,
             onTap: () {
-              context.go('/transaction');
-              provider.updateShowMenu(true);
+              DialogWidget.instance.openMsgDialog(
+                  title: 'Bảo trì',
+                  msg:
+                      'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+              // context.go('/transaction');
+              // provider.updateShowMenu(true);
             },
           ),
           if (provider.isAccountIsMerchant)
@@ -232,10 +284,25 @@ class MenuLeft extends StatelessWidget {
               isOnlyIcon: true,
               isSelect: currentType == MenuHomeType.MERCHANT,
               onTap: () {
-                context.go('/merchant');
-                provider.updateShowMenu(true);
+                DialogWidget.instance.openMsgDialog(
+                    title: 'Bảo trì',
+                    msg:
+                        'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                // context.go('/merchant/report');
+                // provider.updateShowMenu(true);
               },
             ),
+          ItemMenuHome(
+            title: 'Tích hợp và kết nối',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuMerchantRequest,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+            onTap: () {
+              context.go('/merchant/request');
+              provider.updateShowMenu(true);
+            },
+          ),
           ItemMenuHome(
             title: 'TK ngân hàng',
             paddingIcon: const EdgeInsets.all(4),
@@ -251,17 +318,6 @@ class MenuLeft extends StatelessWidget {
             },
           ),
           ItemMenuHome(
-            title: 'Tạo mã VietQR',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuQR,
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.CREATE_QR,
-            onTap: () {
-              provider.updateShowMenu(true);
-              context.go('/create-qr');
-            },
-          ),
-          ItemMenuHome(
             title: 'Ví QR',
             iconId: AppImages.icMenuWallet,
             paddingIcon: const EdgeInsets.all(4),
@@ -272,18 +328,18 @@ class MenuLeft extends StatelessWidget {
               context.go('/qr-wallet');
             },
           ),
-          ItemMenuHome(
-            title: 'Chia sẻ BĐSD',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuShareBDSD,
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.BUSINESS,
-            onTap: () {
-              // onTab(MenuHomeType.BUSINESS);
-              provider.updateShowMenu(true);
-              context.go('/business');
-            },
-          ),
+          // ItemMenuHome(
+          //   title: 'Chia sẻ BĐSD',
+          //   paddingIcon: const EdgeInsets.all(4),
+          //   iconId: AppImages.icMenuShareBDSD,
+          //   isOnlyIcon: true,
+          //   isSelect: currentType == MenuHomeType.BUSINESS,
+          //   onTap: () {
+          //     // onTab(MenuHomeType.BUSINESS);
+          //     provider.updateShowMenu(true);
+          //     context.go('/business');
+          //   },
+          // ),
           ItemMenuHome(
             title: 'Giới thiệu VietQR VN',
             iconId: AppImages.icVietQrSmall,

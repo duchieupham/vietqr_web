@@ -57,6 +57,30 @@ class UserInformationHelper {
     return sharedPrefs.getString('USER_ID')!;
   }
 
+  Future<void> setCustomerSyncId(String userId) async {
+    await sharedPrefs.setString('Customer_SyncId', userId);
+  }
+
+  Future<void> setCustomerSyncTestId(String userId) async {
+    await sharedPrefs.setString('Customer_Sync_Test_Id', userId);
+  }
+
+  String getCustomerSyncId() {
+    return sharedPrefs.getString('Customer_SyncId')!;
+  }
+
+  String getCustomerSyncTestId() {
+    return sharedPrefs.getString('Customer_Sync_Test_Id')!;
+  }
+
+  Future<void> setAccountIsMerchant(bool value) async {
+    await sharedPrefs.setBool('Account_Is_Merchant', value);
+  }
+
+  bool getAccountIsMerchant() {
+    return sharedPrefs.getBool('Account_Is_Merchant') ?? false;
+  }
+
   String getUserFullname() {
     return ('${getAccountInformation().lastName} ${getAccountInformation().middleName} ${getAccountInformation().firstName}')
         .trim();

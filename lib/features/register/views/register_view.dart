@@ -1,10 +1,13 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/user_information_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/footer_web.dart';
+import 'package:VietQR/commons/widgets/footer_web_mobile.dart';
+import 'package:VietQR/commons/widgets/header/menu_drawer.dart';
 import 'package:VietQR/commons/widgets/header/menu_login.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/login/provider/menu_login_provider.dart';
@@ -38,9 +41,8 @@ class RegisterView extends StatelessWidget {
   // static bool _isChangePhone = false;
   static bool _isChangePass = false;
   String shareCode = '';
-
-  RegisterView({super.key});
-
+  RegisterView({super.key, this.phoneNumber = ''});
+  final String phoneNumber;
   final focus = FocusNode();
   void initialServices(BuildContext context) {
     context.read<MenuLoginProvider>().changePage(6);
@@ -55,6 +57,8 @@ class RegisterView extends StatelessWidget {
     }
     _shareCodeController.text = shareCode;
 
+    _phoneNoController.text = phoneNumber;
+
     // if (!_isChangePhone) {
     //   if (StringUtils.instance.isNumeric(phoneNo)) {
     //     _phoneNoController.value =
@@ -63,252 +67,330 @@ class RegisterView extends StatelessWidget {
     // }
   }
 
+  getTitle(int index) {
+    switch (index) {
+      case 0:
+        return 'Tạo mã QR';
+      case 1:
+        return 'Tài liệu kết nối';
+      case 2:
+        return 'Tin tức';
+      case 3:
+        return 'Giới thiệu';
+      case 4:
+        return 'Liên hệ';
+      case 5:
+        return 'Đăng nhập';
+      case 6:
+        return 'Đăng ký';
+      default:
+        return 'VietQR';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     initialServices(context);
-    return Scaffold(
-      appBar: AppBar(toolbarHeight: 0),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColor.WHITE,
-              AppColor.BLUE_LIGHT,
-            ],
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColor.WHITE,
+            AppColor.BLUE_LIGHT,
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
         ),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColor.BLUE_TEXT.withOpacity(0.2),
-              ),
-              child: const MenuLogin(),
-            ),
-            Expanded(
-              child: BlocProvider<RegisterBloc>(
-                create: (BuildContext context) => RegisterBloc(),
-                child: BlocListener<RegisterBloc, RegisterState>(
-                  bloc: _registerBloc,
-                  listener: ((context, state) {
-                    if (state is RegisterFailedState) {
-                      //pop loading dialog
-                      Navigator.pop(context);
-                      //
-                      DialogWidget.instance.openMsgDialog(
-                        title: 'Không thể đăng ký',
-                        msg: state.msg,
-                      );
-                    }
-                    if (state is RegisterSuccessState) {
-                      //pop loading dialog
-                      Navigator.of(context).pop();
-                      //pop to login page
-
-                      DialogWidget.instance.openMsgSuccessDialog(
-                          title: 'Thông báo',
-                          msg: 'Đăng ký thành công',
-                          function: () {
-                            Navigator.of(context).pop();
-                            _registerBloc
-                                .add(LoginEventByPhone(dto: state.dto));
-                          });
-                    }
-                    if (state is LoginSuccessState) {
-                      toHome(context);
-                    }
-                    if (state is LoginFailedState) {
-                      //pop loading dialog
-                      Navigator.pop(context);
-                      //
-                      DialogWidget.instance.openMsgDialog(
-                        title: 'Đã có lỗi xảy ra',
-                        msg: 'Bạn vui lòng login từ màn login',
-                      );
-                    }
+      ),
+      child: Scaffold(
+        drawerEnableOpenDragGesture: false,
+        backgroundColor: AppColor.TRANSPARENT,
+        appBar: (PlatformUtils.instance.resizeWhen(width, 750))
+            ? AppBar(
+                toolbarHeight: 0,
+              )
+            : AppBar(
+                backgroundColor: AppColor.TRANSPARENT,
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Consumer<MenuLoginProvider>(
+                      builder: (context, provider, child) {
+                    return Text(
+                      getTitle(provider.page),
+                      style: const TextStyle(color: AppColor.BLACK),
+                    );
                   }),
-                  child: Consumer<RegisterProvider>(
-                    builder: (context, value, child) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: SizedBox(
-                          width: 500,
-                          height: height - 200,
-                          child: Center(
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              children: [
-                                const SizedBox(
-                                  height: 60,
-                                ),
-                                const Text(
-                                  'Thông tin đăng ký',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                _buildLaBle('Số điện thoại',
-                                    'Số điện thoại được dùng để đăng nhập vào hệ thống VietQR VN'),
-                                BorderLayout(
-                                  width: width,
-                                  bgColor: AppColor.WHITE,
-                                  isError: value.phoneErr,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: TextFieldWidget(
-                                    height: 40,
-                                    width: width,
-                                    isObscureText: false,
+                ),
+                leading: Builder(builder: (context) {
+                  return InkWell(
+                      onTap: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child: Container(
+                          margin: const EdgeInsets.only(top: 16, left: 16),
+                          decoration: BoxDecoration(
+                              color: AppColor.WHITE.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: const Icon(
+                            Icons.menu,
+                            size: 20,
+                            color: AppColor.BLACK,
+                          )));
+                }),
+              ),
+        drawer: const MenuDrawer(),
+        body: LayoutBuilder(builder: (context, constraints) {
+          return Column(
+            children: [
+              if (constraints.maxWidth >= 750)
+                Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppColor.BLUE_TEXT.withOpacity(0.2),
+                  ),
+                  child: const MenuLogin(),
+                ),
+              Expanded(
+                child: BlocProvider<RegisterBloc>(
+                  create: (BuildContext context) => RegisterBloc(),
+                  child: BlocListener<RegisterBloc, RegisterState>(
+                    bloc: _registerBloc,
+                    listener: ((context, state) {
+                      if (state is RegisterFailedState) {
+                        //pop loading dialog
+                        Navigator.pop(context);
+                        //
+                        DialogWidget.instance.openMsgDialog(
+                          title: 'Không thể đăng ký',
+                          msg: state.msg,
+                        );
+                      }
+                      if (state is RegisterSuccessState) {
+                        //pop loading dialog
+                        Navigator.of(context).pop();
+                        //pop to login page
 
-                                    contentPadding: const EdgeInsets.only(
-                                        bottom: 8, left: 10),
-                                    maxLines: 1,
-                                    // textfieldType: TextfieldType.LABEL,
-                                    // title: 'Số điện thoại',
-                                    // titleWidth: 100,
-                                    hintText: 'Nhập số điện thoại',
-                                    fontSize: 14,
-                                    controller: _phoneNoController,
-                                    inputType: TextInputType.number,
-                                    keyboardAction: TextInputAction.next,
-                                    onChange: (vavlue) {
-                                      // _isChangePhone = true;
-                                    },
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: value.phoneErr,
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 10, top: 5, right: 30),
-                                    child: Text(
-                                      'Số điện thoại không đúng định dạng.',
-                                      style: TextStyle(
-                                          color: AppColor.RED_TEXT,
-                                          fontSize: 13),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 20)),
-                                _buildLaBle('Mật khẩu',
-                                    'Mật khẩu bao gồm 6 ký tự, không bao gồm chữ và ký tự đặc biệt'),
-                                SizedBox(
-                                  height: 40,
-                                  child: PinCodeInput(
-                                    obscureText: true,
-                                    fillWidth: 60,
-                                    onCompleted: (data) {
-                                      value.focusNodeConfirmPass(context);
-                                    },
-                                    onChanged: (value) {
-                                      _passwordController.text = value;
-                                    },
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: value.passwordErr,
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 10, top: 5, right: 30),
-                                    child: Text(
-                                      'Mật khẩu bao gồm 6 số.',
-                                      style: TextStyle(
-                                          color: AppColor.RED_TEXT,
-                                          fontSize: 13),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 20)),
-                                _buildLaBle('Xác nhận lại mật khẩu',
-                                    'Nhập lại mật khẩu ở trên để xác nhận'),
-                                SizedBox(
-                                  height: 40,
-                                  child: PinCodeInput(
-                                    obscureText: true,
-                                    focusNode: value.confirmPassFocus,
-                                    fillWidth: 60,
-                                    onChanged: (value) {
-                                      _confirmPassController.text = value;
-                                    },
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: value.confirmPassErr,
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 10, top: 5, right: 30),
-                                    child: Text(
-                                      'Xác nhận Mật khẩu không trùng khớp.',
-                                      style: TextStyle(
-                                          color: AppColor.RED_TEXT,
-                                          fontSize: 13),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 20)),
-                                if (shareCode.isNotEmpty)
-                                  _buildFiledShareCode(width)
-                                else ...[
-                                  _buildLaBle('Thông tin người giới thiệu',
-                                      'Mã giới thiệu của bạn bè đã chia sẻ cho bạn trước đó, nếu có.',
-                                      required: false),
-                                  BorderLayout(
-                                    width: width,
-                                    bgColor: AppColor.WHITE,
+                        DialogWidget.instance.openMsgSuccessDialog(
+                            title: 'Thông báo',
+                            msg: 'Đăng ký thành công',
+                            onTapClose: () {
+                              _registerBloc
+                                  .add(LoginEventByPhone(dto: state.dto));
+                            });
+                      }
+                      if (state is LoginSuccessState) {
+                        toHome(context);
+                      }
+                      if (state is LoginFailedState) {
+                        //pop loading dialog
+                        Navigator.pop(context);
+                        //
+                        DialogWidget.instance.openMsgDialog(
+                          title: 'Đã có lỗi xảy ra',
+                          msg: 'Bạn vui lòng login từ màn login',
+                        );
+                      }
+                    }),
+                    child: Consumer<RegisterProvider>(
+                      builder: (context, value, child) {
+                        return ListView(
+                          children: [
+                            UnconstrainedBox(
+                              child: SizedBox(
+                                width: constraints.maxWidth >= 750
+                                    ? 500
+                                    : constraints.maxWidth * 0.9,
+                                child: Center(
+                                  child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    isError: false,
-                                    child: TextFieldWidget(
-                                      height: 40,
-                                      width: width,
-                                      contentPadding: const EdgeInsets.only(
-                                          bottom: 8, left: 10),
-                                      maxLines: 1,
-                                      fontSize: 14,
-                                      hintText:
-                                          'Nhập mã giới thiệu (không bắt buộc)',
-                                      controller: _shareCodeController,
-                                      inputType: TextInputType.text,
-                                      keyboardAction: TextInputAction.next,
-                                      onChange: (vavlue) {},
-                                      isObscureText: false,
+                                        horizontal: 16),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: constraints.maxWidth < 750
+                                              ? 20
+                                              : 60,
+                                        ),
+                                        const Text(
+                                          'Thông tin đăng ký',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        _buildLaBle('Số điện thoại',
+                                            'Số điện thoại được dùng để đăng nhập vào hệ thống VietQR VN'),
+                                        BorderLayout(
+                                          width: width,
+                                          bgColor: AppColor.WHITE,
+                                          isError: value.phoneErr,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: TextFieldWidget(
+                                            height: 40,
+                                            width: width,
+                                            isObscureText: false,
+
+                                            contentPadding:
+                                                const EdgeInsets.only(
+                                                    bottom: 8, left: 10),
+                                            maxLines: 1,
+                                            // textfieldType: TextfieldType.LABEL,
+                                            // title: 'Số điện thoại',
+                                            // titleWidth: 100,
+                                            hintText: 'Nhập số điện thoại',
+                                            fontSize: 14,
+                                            controller: _phoneNoController,
+                                            inputType: TextInputType.number,
+                                            keyboardAction:
+                                                TextInputAction.next,
+                                            onChange: (vavlue) {
+                                              // _isChangePhone = true;
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: value.phoneErr,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5, right: 30),
+                                            child: Text(
+                                              'Số điện thoại không đúng định dạng.',
+                                              style: TextStyle(
+                                                  color: AppColor.RED_TEXT,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 20)),
+                                        _buildLaBle('Mật khẩu',
+                                            'Mật khẩu bao gồm 6 ký tự, không bao gồm chữ và ký tự đặc biệt'),
+                                        SizedBox(
+                                          height: 40,
+                                          child: PinCodeInput(
+                                            obscureText: true,
+                                            fillWidth: 50,
+                                            onCompleted: (data) {
+                                              value.focusNodeConfirmPass(
+                                                  context);
+                                            },
+                                            onChanged: (value) {
+                                              _passwordController.text = value;
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: value.passwordErr,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5, right: 30),
+                                            child: Text(
+                                              'Mật khẩu bao gồm 6 số.',
+                                              style: TextStyle(
+                                                  color: AppColor.RED_TEXT,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 20)),
+                                        _buildLaBle('Xác nhận lại mật khẩu',
+                                            'Nhập lại mật khẩu ở trên để xác nhận'),
+                                        SizedBox(
+                                          height: 40,
+                                          child: PinCodeInput(
+                                            obscureText: true,
+                                            focusNode: value.confirmPassFocus,
+                                            fillWidth: 50,
+                                            onChanged: (value) {
+                                              _confirmPassController.text =
+                                                  value;
+                                            },
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: value.confirmPassErr,
+                                          child: const Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5, right: 30),
+                                            child: Text(
+                                              'Xác nhận Mật khẩu không trùng khớp.',
+                                              style: TextStyle(
+                                                  color: AppColor.RED_TEXT,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 20)),
+                                        if (shareCode.isNotEmpty)
+                                          _buildFiledShareCode(width)
+                                        else ...[
+                                          _buildLaBle(
+                                              'Thông tin người giới thiệu',
+                                              'Mã giới thiệu của bạn bè đã chia sẻ cho bạn trước đó, nếu có.',
+                                              required: false),
+                                          BorderLayout(
+                                            width: width,
+                                            bgColor: AppColor.WHITE,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            isError: false,
+                                            child: TextFieldWidget(
+                                              height: 40,
+                                              width: width,
+                                              contentPadding:
+                                                  const EdgeInsets.only(
+                                                      bottom: 8, left: 10),
+                                              maxLines: 1,
+                                              fontSize: 14,
+                                              hintText:
+                                                  'Nhập mã giới thiệu (không bắt buộc)',
+                                              controller: _shareCodeController,
+                                              inputType: TextInputType.text,
+                                              keyboardAction:
+                                                  TextInputAction.next,
+                                              onChange: (vavlue) {},
+                                              isObscureText: false,
+                                            ),
+                                          ),
+                                        ],
+                                        const SizedBox(
+                                          height: 60,
+                                        ),
+                                        _buildButtonSubmit(context, width),
+                                        const Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 40)),
+                                      ],
                                     ),
                                   ),
-                                ],
-                                const SizedBox(
-                                  height: 60,
                                 ),
-                                _buildButtonSubmit(context, width),
-                                const Padding(
-                                    padding: EdgeInsets.only(bottom: 20)),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
+                            if (constraints.maxWidth < 750)
+                              const FooterMobileWeb()
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            const FooterWeb(
-              showListBank: true,
-            )
-          ],
-        ),
+              if (constraints.maxWidth >= 750)
+                const FooterWeb(
+                  showListBank: true,
+                )
+            ],
+          );
+        }),
       ),
     );
   }

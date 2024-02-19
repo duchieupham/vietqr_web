@@ -49,13 +49,15 @@ class TimeUtils {
     return formatted;
   }
 
-  String formatTimeDateFromInt(num time) {
+  String formatTimeDateFromInt(num time, {bool oneLine = false}) {
     String result = '';
     try {
       if (time != 0) {
         DateTime timeConverted =
             DateTime.fromMillisecondsSinceEpoch(time.toInt() * 1000);
-        DateFormat format = DateFormat('HH:mm:ss \ndd/MM/yyyy ');
+        DateFormat format = oneLine
+            ? DateFormat('HH:mm:ss dd/MM/yyyy ')
+            : DateFormat('HH:mm:ss \ndd/MM/yyyy ');
         result = format.format(timeConverted).toString();
       }
     } catch (e) {
@@ -85,6 +87,10 @@ class TimeUtils {
   }
 
   String formatDate(String date) {
+    if (!date.contains('-')) {
+      return date;
+    }
+
     String result = '';
     DateFormat format = DateFormat('dd/MM/yyyy');
 
@@ -96,6 +102,10 @@ class TimeUtils {
   }
 
   String formatMonthYear(String date) {
+    if (!date.contains('-')) {
+      return date;
+    }
+
     String result = '';
     List<String> splitDate = date.split('-');
 
@@ -360,5 +370,12 @@ class TimeUtils {
       final formattedTime = formatter.format(time);
       return formattedTime;
     }
+  }
+
+  String convertDateString(String dateString) {
+    String day = dateString.substring(0, 2);
+    String month = dateString.substring(2, 4);
+    String year = dateString.substring(4, 8);
+    return '$day/$month/$year';
   }
 }

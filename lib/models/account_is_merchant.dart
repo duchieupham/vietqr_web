@@ -1,6 +1,7 @@
 class AccountIsMerchantDTO {
   final String customerSyncId;
   final String merchantName;
+  final String customerSyncTestId;
   final String ip;
   final String port;
   final String callBackVietQRAPI;
@@ -12,16 +13,18 @@ class AccountIsMerchantDTO {
   final String platform;
 
   const AccountIsMerchantDTO({
-     this.customerSyncId = '',
-    this.merchantName ='',
-     this.ip ='',
-     this.port ='',
-     this.callBackVietQRAPI = '',
-     this.isActive = false,
-     this.url = '',
-     this.isMasterMerchant,
-    this.accountId ='',
-    this.platform = '', this.refId = '',
+    this.customerSyncId = '',
+    this.merchantName = '',
+    this.ip = '',
+    this.port = '',
+    this.customerSyncTestId = '',
+    this.callBackVietQRAPI = '',
+    this.isActive = false,
+    this.url = '',
+    this.isMasterMerchant,
+    this.accountId = '',
+    this.platform = '',
+    this.refId = '',
   });
 
   factory AccountIsMerchantDTO.fromJson(Map<String, dynamic> json) {
@@ -36,9 +39,8 @@ class AccountIsMerchantDTO {
       isMasterMerchant: json['isMasterMerchant'],
       accountId: json['accountId'] ?? '',
       refId: json['refId'] ?? '',
+      customerSyncTestId: json['customerSyncTestId'],
       platform: json['platform'] ?? '',
     );
   }
-
-
 }

@@ -7,6 +7,9 @@ import '../../../models/bank_account_dto.dart';
 class CreateQRProvider with ChangeNotifier {
   bool _isAmountErr = false;
   bool _isValidCreate = false;
+  bool _isBankAccountErr = false;
+  bool _isNameErr = false;
+
   String _transactionAmount = '0';
   String _currencyFormatted = '0';
   String money = StringUtils.formatNumber(0);
@@ -18,6 +21,9 @@ class CreateQRProvider with ChangeNotifier {
   String get transactionAmount => _transactionAmount;
   String get currencyFormatted => _currencyFormatted;
 
+  bool get nameErr => _isNameErr;
+  bool get bankAccountErr => _isBankAccountErr;
+
   BankAccountDTO _bankAccountDTO = BankAccountDTO();
   BankAccountDTO get bankAccountDTO => _bankAccountDTO;
 
@@ -26,8 +32,25 @@ class CreateQRProvider with ChangeNotifier {
   String _formatNumber(String s) =>
       NumberFormat.decimalPattern(_locale).format(int.tryParse(s) ?? '0');
 
+  bool showFormBankAccountOther = false;
+
   void updateValidCreate(bool value) {
     _isValidCreate = value;
+    notifyListeners();
+  }
+
+  void updateNameErr(bool value) {
+    _isNameErr = value;
+    notifyListeners();
+  }
+
+  void updateBankAccountErr(bool value) {
+    _isBankAccountErr = value;
+    notifyListeners();
+  }
+
+  void updateForm(bool value) {
+    showFormBankAccountOther = value;
     notifyListeners();
   }
 
@@ -46,6 +69,8 @@ class CreateQRProvider with ChangeNotifier {
 
   void updateBankAccountDto(BankAccountDTO value) {
     _bankAccountDTO = value;
+    showFormBankAccountOther = false;
+
     voidChooseBank(_bankAccountDTO.id);
   }
 

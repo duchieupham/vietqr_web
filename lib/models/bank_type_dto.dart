@@ -8,13 +8,13 @@ class BankTypeDTO {
   final int status;
 
   const BankTypeDTO({
-    required this.id,
-    required this.bankCode,
-    required this.bankName,
-    required this.bankShortName,
-    required this.imageId,
-    required this.caiValue,
-    required this.status,
+    this.id = '',
+    this.bankCode = '',
+    this.bankName = '',
+    this.bankShortName = '',
+    this.imageId = '',
+    this.caiValue = '',
+    this.status = 0,
   });
 
   factory BankTypeDTO.fromJson(Map<String, dynamic> json) {

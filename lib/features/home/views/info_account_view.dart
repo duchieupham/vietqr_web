@@ -21,6 +21,8 @@ class InfoDetailBankAccount extends StatelessWidget {
   final AccountBankDetailDTO dto;
   final QRGeneratedDTO qrGeneratedDTO;
   final String bankId;
+  final bool showTitle;
+  final String fromUrl;
   final GestureTapCallback? onChangePage;
 
   InfoDetailBankAccount({
@@ -30,6 +32,8 @@ class InfoDetailBankAccount extends StatelessWidget {
     required this.qrGeneratedDTO,
     required this.bankId,
     this.onChangePage,
+    this.fromUrl = '',
+    this.showTitle = true,
   }) : super(key: key);
 
   String get userId => UserInformationHelper.instance.getUserId();
@@ -37,20 +41,21 @@ class InfoDetailBankAccount extends StatelessWidget {
   final globalKey = GlobalKey();
 
   void onSaveImage(BuildContext context) async {
-    DialogWidget.instance.openLoadingDialog();
     await Future.delayed(
       const Duration(milliseconds: 200),
       () async {
         await ShareUtils.instance.saveImageToGallery(globalKey).then(
           (value) {
-            Navigator.pop(context);
             Fluttertoast.showToast(
               msg: 'Đã lưu ảnh',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
               backgroundColor: Theme.of(context).cardColor,
-              textColor: Theme.of(context).cardColor,
+              textColor: Theme.of(context).hintColor,
               fontSize: 15,
+              webBgColor: 'rgba(255, 255, 255)',
+              webPosition: 'center',
             );
           },
         );
@@ -64,20 +69,25 @@ class InfoDetailBankAccount extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Thông tin tài khoản',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-                fontSize: 15,
+        if (showTitle)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Thông tin tài khoản',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.underline,
+                  fontSize: 15,
+                ),
               ),
             ),
+          )
+        else
+          const SizedBox(
+            height: 20,
           ),
-        ),
         Expanded(
           child: RefreshIndicator(
             onRefresh: refresh,
@@ -114,7 +124,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                               );
                               html.window.open(
                                   Uri.base.toString().replaceFirst(
-                                      '/home', '/qr-generate/print$paramData'),
+                                      fromUrl, '/qr-generate/print$paramData'),
                                   'new tab');
                             },
                             textColor: AppColor.BLUE_TEXT,
@@ -130,15 +140,7 @@ class InfoDetailBankAccount extends StatelessWidget {
                             pathIcon: AppImages.icEditAvatarSetting,
                             title: '',
                             function: () {
-                              String paramData =
-                                  Session.instance.formatDataParamUrl(
-                                qrGeneratedDTO,
-                                action: 'SAVE',
-                              );
-                              html.window.open(
-                                  Uri.base.toString().replaceFirst(
-                                      '/home', '/qr_generate$paramData'),
-                                  'new tab');
+                              onSaveImage(context);
                             },
                             textColor: AppColor.BLUE_TEXT,
                             bgColor: AppColor.WHITE.withOpacity(0.4),
@@ -179,33 +181,35 @@ class InfoDetailBankAccount extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
-                  ButtonIconWidget(
-                    width: 360,
-                    height: 40,
-                    icon: Icons.add_rounded,
-                    textSize: 12,
-                    title: 'Tạo QR giao dịch',
-                    function: () {
-                      context.go('/create-qr/${dto.id}');
-                    },
-                    textColor: AppColor.BLUE_TEXT,
-                    bgColor: AppColor.WHITE.withOpacity(0.4),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10),
-                  ),
-                  ButtonIconWidget(
-                    width: 360,
-                    height: 40,
-                    icon: Icons.info_outline,
-                    textSize: 12,
-                    title: 'Chi tiết TK ngân hàng',
-                    function: () {
-                      DialogWidget.instance.openMsgQRInstallApp();
-                    },
-                    textColor: AppColor.BLUE_TEXT,
-                    bgColor: AppColor.WHITE.withOpacity(0.4),
-                  ),
+                  if (showTitle) ...[
+                    ButtonIconWidget(
+                      width: 360,
+                      height: 40,
+                      icon: Icons.add_rounded,
+                      textSize: 12,
+                      title: 'Tạo QR giao dịch',
+                      function: () {
+                        context.go('/create-qr/${dto.id}');
+                      },
+                      textColor: AppColor.BLUE_TEXT,
+                      bgColor: AppColor.WHITE.withOpacity(0.4),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10),
+                    ),
+                    ButtonIconWidget(
+                      width: 360,
+                      height: 40,
+                      icon: Icons.info_outline,
+                      textSize: 12,
+                      title: 'Chi tiết TK ngân hàng',
+                      function: () {
+                        DialogWidget.instance.openMsgQRInstallApp();
+                      },
+                      textColor: AppColor.BLUE_TEXT,
+                      bgColor: AppColor.WHITE.withOpacity(0.4),
+                    ),
+                  ],
                   const SizedBox(height: 24),
                 ],
               ),

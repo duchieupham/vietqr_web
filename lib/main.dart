@@ -27,20 +27,31 @@ import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
 import 'package:VietQR/features/information_user/views/user_information_view.dart';
 import 'package:VietQR/features/login/blocs/qrcode_un_authen_bloc.dart';
+import 'package:VietQR/features/login/views/contact.dart';
 import 'package:VietQR/features/login/views/create_QR_login.dart';
+import 'package:VietQR/features/login/views/introduce.dart';
 import 'package:VietQR/features/login/views/login.dart';
+import 'package:VietQR/features/login/views/news.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
-import 'package:VietQR/features/merchant/views/merchant.dart';
+import 'package:VietQR/features/merchant/views/merchant_bill.dart';
+import 'package:VietQR/features/merchant/views/merchant_fee.dart';
+import 'package:VietQR/features/merchant/views/merchant_report.dart';
+import 'package:VietQR/features/merchant/views/merchant_transaction.dart';
+import 'package:VietQR/features/merchant_request/views/call_back_page.dart';
+import 'package:VietQR/features/merchant_request/views/merchant_request.dart';
+import 'package:VietQR/features/mobile_recharge/mobile_recharge_screen.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/qr/blocs/qr_bloc.dart';
 import 'package:VietQR/features/qr/views/create_qr_un_authen.dart';
 import 'package:VietQR/features/register/views/register_view.dart';
 import 'package:VietQR/features/register/views/service.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
+import 'package:VietQR/features/setting/get_key_page.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction_user/views/transaction_user_screen.dart';
+import 'package:VietQR/features/vhitek/vhitek_screen_page.dart';
 import 'package:VietQR/features/wallet/wallet_card_generate.dart';
 import 'package:VietQR/features/wallet/wallet_screen.dart';
 import 'package:VietQR/services/providers/action_share_provider.dart';
@@ -74,6 +85,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'features/create_qr/provider/create_qr_provider.dart';
 import 'features/login/provider/menu_login_provider.dart';
+import 'features/vhitek/vhitek_screen.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
 
@@ -177,24 +189,26 @@ final GoRouter _router = GoRouter(
       path: '/',
       redirect: (context, state) {
         return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-            ? '/home'
+            ? '/create-qr'
             : '/login';
       },
     ),
     GoRoute(
-        path: '/login',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/home'
-                : '/login',
-        builder: (BuildContext context, GoRouterState state) => const Login(),
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithoutAnimation(
-            context: context,
-            state: state,
-            child: const Login(),
-          );
-        }),
+      path: '/login',
+      redirect: (context, state) =>
+          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+              ? '/create-qr'
+              : '/login',
+      builder: (BuildContext context, GoRouterState state) {
+        Map<String, dynamic> param = {};
+        if (state.extra != null) {
+          param = state.extra as Map<String, dynamic>;
+        }
+        return Login(
+          pathHistory: param['pathHistory'] ?? '',
+        );
+      },
+    ),
     GoRoute(
         path: '/service',
         builder: (BuildContext context, GoRouterState state) =>
@@ -211,17 +225,38 @@ final GoRouter _router = GoRouter(
         redirect: (context, state) {
           Map<String, String> params = state.queryParams;
           String shareCode = '';
+          if (params['phone_number'] != null && params['phone_number'] != '') {
+            String phoneNumber = params['phone_number'].toString();
+            return '/register?phone_number=$phoneNumber';
+          }
+
           if (params['share_code'] != null && params['share_code'] != 'null') {
             shareCode = params['share_code'].toString();
           }
           return '/register?share_code=$shareCode';
         },
-        builder: (BuildContext context, GoRouterState state) => RegisterView(),
+        builder: (BuildContext context, GoRouterState state) {
+          String phoneNumber = '';
+          Map<String, String> params = state.queryParams;
+          if (params['phone_number'] != null) {
+            phoneNumber = params['phone_number'] as String;
+          }
+          return RegisterView(
+            phoneNumber: phoneNumber,
+          );
+        },
         pageBuilder: (BuildContext context, GoRouterState state) {
+          String phoneNumber = '';
+          Map<String, String> params = state.queryParams;
+          if (params['phone_number'] != null) {
+            phoneNumber = params['phone_number'] as String;
+          }
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: RegisterView(),
+            child: RegisterView(
+              phoneNumber: phoneNumber,
+            ),
           );
         }),
     GoRoute(
@@ -325,6 +360,21 @@ final GoRouter _router = GoRouter(
       },
     ),
     GoRoute(
+      path: '/qr-generate/show',
+      redirect: (context, state) {
+        Map<String, String> params = state.queryParams;
+        return '/qr-generate/show?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
+      },
+      builder: (BuildContext context, GoRouterState state) {
+        Map<String, String> params = state.queryParams;
+
+        return QrPrint(
+          params: params,
+          openPrint: false,
+        );
+      },
+    ),
+    GoRoute(
       path: '/naptk',
       redirect: (context, state) => '/naptk',
       builder: (BuildContext context, GoRouterState state) =>
@@ -375,18 +425,115 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
-        path: '/merchant',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant'
-                : '/login',
+        path: '/merchant/transaction',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/transaction'
+            : '/home',
         builder: (BuildContext context, GoRouterState state) =>
-            const MerchantView(),
+            const MerchantTransaction(),
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const MerchantView(),
+            child: const MerchantTransaction(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/report',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/report'
+            : '/home',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantReport(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantReport(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/fee',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/fee'
+            : '/home',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantFee(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantFee(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/bill',
+        redirect: (context, state) => (UserInformationHelper.instance
+                .getCustomerSyncId()
+                .trim()
+                .isNotEmpty)
+            ? '/merchant/bill'
+            : '/home',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantBill(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantBill(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/request',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/request'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantRequest(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantRequest(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/request/ecommerce',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/request/ecommerce'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) => GetKeyPage(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const GetKeyPage(),
+          );
+        }),
+    GoRoute(
+        path: '/merchant/callback',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/merchant/callback'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const CallbackPage(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const CallbackPage(),
           );
         }),
     GoRoute(
@@ -422,6 +569,90 @@ final GoRouter _router = GoRouter(
               bankAccountId: state.params['id'] ?? '',
             ),
           );
+        }),
+    GoRoute(
+        path: '/service/vhitek/active',
+        builder: (BuildContext context, GoRouterState state) {
+          return VhitekScreen(
+            mid: state.queryParams['mid'] ?? '',
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context,
+              state: state,
+              child: VhitekScreen(
+                mid: params['mid'] ?? '',
+              ));
+        }),
+    GoRoute(
+        path: '/service/may-ban-hang/active',
+        builder: (BuildContext context, GoRouterState state) {
+          return VhitekScreen(
+            mid: state.queryParams['mid'] ?? '',
+            path: '/service/may-ban-hang/active',
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context,
+              state: state,
+              child: VhitekScreen(
+                mid: params['mid'] ?? '',
+                path: '/service/may-ban-hang/active',
+              ));
+        }),
+    GoRoute(
+        path: '/merchant/request/mbh',
+        builder: (BuildContext context, GoRouterState state) {
+          return const VhitekPage(
+            path: '/merchant/request/mbh',
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+              context: context,
+              state: state,
+              child: const VhitekPage(
+                path: '/merchant/request/mbh',
+              ));
+        }),
+    GoRoute(
+        path: '/tin-tuc',
+        builder: (BuildContext context, GoRouterState state) {
+          return const NewsView();
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context, state: state, child: const NewsView());
+        }),
+    GoRoute(
+        path: '/lien-he',
+        builder: (BuildContext context, GoRouterState state) {
+          return const ContactView();
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context, state: state, child: const ContactView());
+        }),
+    GoRoute(
+        path: '/gioi-thieu',
+        builder: (BuildContext context, GoRouterState state) {
+          return const IntroduceView();
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+
+          return buildPageWithoutAnimation(
+              context: context, state: state, child: const IntroduceView());
         }),
     GoRoute(
         path: '/create-qr',
@@ -531,6 +762,21 @@ final GoRouter _router = GoRouter(
             child: const AddBankStep3(),
           );
         }),
+    GoRoute(
+        path: '/naptien',
+        redirect: (context, state) =>
+            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
+                ? '/naptien'
+                : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            MobileRechargeScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: MobileRechargeScreen(),
+          );
+        }),
   ],
 );
 
@@ -621,7 +867,8 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => SearchProvider()),
             ChangeNotifierProvider(create: (context) => AddBankProvider()),
             ChangeNotifierProvider(create: (context) => ActionShareProvider()),
-            ChangeNotifierProvider(create: (context) => SettingProvider()),
+            ChangeNotifierProvider(
+                create: (context) => SettingProvider()..getListBankAccount()),
             ChangeNotifierProvider(create: (context) => MenuLoginProvider()),
             ChangeNotifierProvider(create: (context) => WalletHomeProvider()),
           ],

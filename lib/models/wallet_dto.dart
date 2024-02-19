@@ -6,7 +6,7 @@ class WalletDTO {
   final bool enableService;
 
   const WalletDTO({
-    this.amount = '',
+    this.amount = '0',
     this.enableService = false,
     this.point = '',
     this.sharingCode = '',

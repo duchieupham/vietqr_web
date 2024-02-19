@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/vietqr/aid.dart';
 import 'package:VietQR/commons/constants/vietqr/viet_qr_id.dart';
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/viet_qr_scanned_dto.dart';
 
@@ -62,5 +63,37 @@ class QRScannerUtils {
     }
 
     return result;
+  }
+
+  Future<TypeQR> checkScan(String code) async {
+    VietQRScannedDTO vietQRScannedDTO =
+        QRScannerUtils.instance.getBankAccountFromQR(code);
+    if (vietQRScannedDTO.caiValue.isNotEmpty &&
+        vietQRScannedDTO.bankAccount.isNotEmpty) {
+      return TypeQR.QR_BANK;
+    } else if (code.contains('|')) {
+      return TypeQR.QR_CMT;
+    } else if (code.trim().contains('VQRID')) {
+      return TypeQR.QR_ID;
+    } else if (code.trim().contains('http') || code.trim().contains('https')) {
+      return TypeQR.QR_LINK;
+    } else if (code.trim().contains('VCARD')) {
+      return TypeQR.QR_VCARD;
+    } else if (code.toUpperCase().trim().contains('VHI') ||
+        code.toUpperCase().trim().contains('TSE') ||
+        code.toUpperCase().trim().contains('VTS')) {
+      return TypeQR.QR_SALE;
+    } else {
+      // if (code.trim().endsWith('=')) {
+      //   String dec = AESConvert.decrypt(code);
+      //   if (dec.contains(AESConvert.accessKey)) {
+      //     if (UserInformationHelper.instance.getUserId().isEmpty) {
+      //       return TypeQR.NEGATIVE_TWO;
+      //     }
+      //     return TypeQR.LOGIN_WEB;
+      //   }
+      // }
+    }
+    return TypeQR.OTHER;
   }
 }

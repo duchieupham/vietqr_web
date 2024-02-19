@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PinCodeInput extends StatelessWidget {
@@ -18,6 +19,8 @@ class PinCodeInput extends StatelessWidget {
     this.length,
     this.size,
     this.fillWidth,
+    this.inactiveFillColor,
+    this.selectedFillColor,
   }) : super(key: key);
 
   final ValueChanged<String>? onChanged;
@@ -31,6 +34,8 @@ class PinCodeInput extends StatelessWidget {
   final bool autoFocus;
   final TextStyle? textStyle;
   final int? length;
+  final Color? inactiveFillColor;
+  final Color? selectedFillColor;
   final double? size;
   final double? fillWidth;
 
@@ -45,9 +50,11 @@ class PinCodeInput extends StatelessWidget {
 
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       // inputFormatters: [TextInputMask(mask: '999999')],
       enableActiveFill: true,
       controller: controller,
+
       onChanged: onChanged != null ? onChanged! : _onChanged,
       cursorColor: cursorColor,
       scrollPadding: EdgeInsets.zero,
@@ -69,8 +76,8 @@ class PinCodeInput extends StatelessWidget {
         activeFillColor: AppColor.WHITE,
         selectedColor: activeColor,
         errorBorderColor: AppColor.GREY_444B56,
-        inactiveFillColor: AppColor.WHITE,
-        selectedFillColor: AppColor.WHITE,
+        inactiveFillColor: inactiveFillColor ?? AppColor.WHITE,
+        selectedFillColor: selectedFillColor ?? AppColor.WHITE,
         inactiveColor: inactiveColor,
         disabledColor: AppColor.GREY_TEXT,
       ),
@@ -159,11 +166,6 @@ class PinCodeInput extends StatelessWidget {
   }
 
 //màu border khi chưa chọn
-
-//màu ô input khi chưa chọn
-  Color get inactiveFillColor {
-    return Colors.transparent;
-  }
 
 //màu border khi chọn
 

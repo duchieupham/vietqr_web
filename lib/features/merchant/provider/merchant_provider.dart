@@ -5,6 +5,7 @@ import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction_merchant_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class MerchantProvider with ChangeNotifier {
     const FilterTimeTransaction(id: 5, title: 'Khoảng thời gian'),
   ];
   FilterTimeTransaction _valueTimeFilter =
-      const FilterTimeTransaction(id: 0, title: 'Tất cả');
+      const FilterTimeTransaction(id: 2, title: '7 ngày gần nhất');
 
   FilterTimeTransaction get valueTimeFilter => _valueTimeFilter;
   DateTime _toDate = DateTime.now();
@@ -61,6 +62,20 @@ class MerchantProvider with ChangeNotifier {
 
   int get currentPage => _currentPage;
   List<BankAccountDTO> bankAccounts = [];
+  String hasTag = '';
+  changeHasTag(String value) {
+    hasTag = value;
+    notifyListeners();
+  }
+
+  TransactionMerchantDTO transactionMerchantDTO = TransactionMerchantDTO();
+  updateTransactionDto(TransactionMerchantDTO dto, {bool init = true}) {
+    transactionMerchantDTO = dto;
+    hasTag = '';
+    if (!init) {
+      notifyListeners();
+    }
+  }
 
   init(MerchantBloc merchantBloc) {
     getListBankAccount();

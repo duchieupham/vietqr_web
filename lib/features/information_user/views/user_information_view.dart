@@ -164,10 +164,7 @@ class UserInformationView extends StatelessWidget {
           textColor: AppColor.BLUE_TEXT,
           bgColor: Theme.of(context).cardColor,
           function: () async {
-            DialogWidget.instance.openMsgDialog(
-              title: 'Tính năng đang bảo trì',
-              msg: 'Vui lòng thử lại sau',
-            );
+            DialogWidget.instance.openMsgQRInstallApp();
             // Provider.of<AddBusinessProvider>(context, listen: false)
             //     .openImagePicker(upload: (byteData) async {
             //   await Future.delayed(const Duration(milliseconds: 200), () {

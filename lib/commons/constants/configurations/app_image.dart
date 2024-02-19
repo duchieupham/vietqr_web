@@ -2,6 +2,7 @@ class AppImages {
   // Icons menu
   static String icMenuAddBank = 'assets/icons_menu/ic-menu-add-bank.png';
   static String icMenuBank = '28c5553d-156e-4d34-b1c2-f5f74dfd92cb';
+  static String icMenuMerchantRequest = '4fb47c94-cae9-49d5-a157-4319e402763a';
   static String icMenuWallet = '43e7650b-d591-48f6-abcb-640b7426b3ed';
   static String icMenuContact = 'aea13c59-f430-4411-a285-74e900fcc53e';
   static String icMenuHome = '5607f58e-ee6c-493c-9e17-8cc4130f13d2';
@@ -18,6 +19,7 @@ class AppImages {
   static String icMenuScanCCCD = 'assets/icons_menu/ic-menu-scan-cccd.png';
   static String icMenuSetting = 'assets/icons_menu/ic-menu-setting.png';
 
+  static String iconPartnerVhitek = '7e9655f5-9d2d-4d3e-b0b2-d906c0b7bdd1';
   static String icSuccessGreen = 'edf87221-86e7-4396-aa50-f17bf7638557';
   static String avtVietqr = 'fdb25744-a258-4892-9c0d-3e63f9b02a0d';
   static String icBusiness3D = 'b569de96-c37b-4f1f-a195-b3bc11358fa7';
@@ -25,6 +27,7 @@ class AppImages {
   static String icMb = '47e29769-d499-438c-ae6d-e4994ec503bf';
   static String icPersonalCard = '145ecd19-66c2-461d-bace-91a938b12fea';
   static String icSuccess = 'a8a40f57-c23a-4f6f-aeba-4af1c0734d9d';
+  static String ic3dMerchant = '444f972e-e264-4ac0-be7d-b853b04c0c28';
   static String icVqr3DUnit = 'f17a2bc0-b046-43ee-8a35-657722c97b6c';
   static String logoVietgrPayment = '9ec4c849-0286-445f-b531-07c34e7fe86d';
   static String logoFacebook = '686bfdfa-2841-4b7a-9cc2-19fcb0d0c10a';
@@ -63,6 +66,7 @@ class AppImages {
   static String icCardBlue = 'c9a0b773-f495-458d-8340-d2220728a96d';
   static String icContactAllWhite = '81e94e98-bad2-4dfe-a61a-88f194249f7a';
   static String icContactBankWhite = '85f938a7-ad1b-4649-b3a6-7a7522fd58d4';
+  static String icContactBankBlue = '9c78e7b7-594c-468b-aa2c-ed337a64ee30';
   static String icContactSuggestWhite = '60c4cfa3-bf71-440c-8f5e-aa5ef5294a88';
   static String icContactVietqrIdWhite = '9939664d-843d-4bca-9287-b690954f8b90';
   static String icCopy = '96aecca2-80f4-4b03-a79d-0d73c1513e1f';
@@ -81,6 +85,12 @@ class AppImages {
   static String icUncheck = 'a0519565-1065-4f3a-97fc-903a05a02a37';
   static String icCard = '614c1189-fb1b-4b07-8931-43a78d0fe664';
   static String logoGooglePlay = '19dbafd7-861c-48d5-ade5-523f76d842fc';
+
+  static String logoFB = '91ab5d68-4062-4af3-ae15-68d5c4450b41';
+  static String logoTele = '3a7d0b39-0b26-4cc8-bd3c-6b53e62eab4d';
+  static String logoYTB = 'eb04e717-990d-4ea2-987a-5829f1e5b1d4';
+  static String logoZL = '99b7ff2f-0b32-49a1-ae42-1475655752a5';
+
   static String logoAppStore = '2a52f63d-3810-42bb-8d4f-a201e446b6b1';
   static String qrContactOtherWhite = '189635ff-d4ab-41ba-bbfd-c68a1bf69953';
   static String personalRelation = '78d3c977-25c8-452c-8022-0bdc2e4aa54c';
