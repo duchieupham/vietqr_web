@@ -93,24 +93,26 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    return ChangeNotifierProvider<CreateQRLoginProvider>(
-      create: (context) => CreateQRLoginProvider(),
-      child: CreateQRLoginFrame(
-        width: width,
-        height: height,
-        widget1: _buildFormInput(),
-        widget2: _buildQRCode(),
-        menuTop: const MenuLogin(),
-        bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
-            listener: (context, state) {
-          if (state is BankTypeGetListSuccessfulState) {
-            bankTypes = state.list;
-          }
-        }, builder: (context, state) {
-          return const FooterWeb(
-            showListBank: true,
-          );
-        }),
+    return Center(
+      child: ChangeNotifierProvider<CreateQRLoginProvider>(
+        create: (context) => CreateQRLoginProvider(),
+        child: CreateQRLoginFrame(
+          width: width,
+          height: height,
+          widget1: _buildFormInput(),
+          widget2: _buildQRCode(),
+          menuTop: const MenuLogin(),
+          bottom: BlocConsumer<BankTypeBloc, BankTypeState>(
+              listener: (context, state) {
+            if (state is BankTypeGetListSuccessfulState) {
+              bankTypes = state.list;
+            }
+          }, builder: (context, state) {
+            return const FooterWeb(
+              showListBank: true,
+            );
+          }),
+        ),
       ),
     );
   }
