@@ -22,6 +22,8 @@ import 'package:VietQR/features/create_qr/qr_generate.dart';
 import 'package:VietQR/features/dashboard/dashboard_screen.dart';
 import 'package:VietQR/features/dashboard/qr_generate_un_authen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
+import 'package:VietQR/features/enterprise/enterprise_screen.dart';
+import 'package:VietQR/features/enterprise/page/store_screen.dart';
 import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/information_user/blocs/information_user_bloc.dart';
@@ -129,7 +131,7 @@ class NavigationService {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 }
 
-// final isLoggedIn = UserInformationHelper.instance.getUserId().trim().isNotEmpty;
+// final isLoggedIn = userId.isNotEmpty;
 // final String authenticatedRedirect = (isLoggedIn) ? '/home' : '/login';
 CustomTransitionPage<Widget> buildPageWithoutAnimation({
   required BuildContext context,
@@ -142,6 +144,8 @@ CustomTransitionPage<Widget> buildPageWithoutAnimation({
       transitionsBuilder: (context, animation, secondaryAnimation, child) =>
           child);
 }
+
+String get userId => UserInformationHelper.instance.getUserId().trim();
 
 final GoRouter _router = GoRouter(
   navigatorKey: NavigationService.navigatorKey,
@@ -188,17 +192,13 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       redirect: (context, state) {
-        return (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-            ? '/create-qr'
-            : '/login';
+        return (userId.isNotEmpty) ? '/create-qr' : '/login';
       },
     ),
     GoRoute(
       path: '/login',
       redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/create-qr'
-              : '/login',
+          (userId.isNotEmpty) ? '/create-qr' : '/login',
       builder: (BuildContext context, GoRouterState state) {
         Map<String, dynamic> param = {};
         if (state.extra != null) {
@@ -261,10 +261,7 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/home',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/home'
-                : '/login',
+        redirect: (context, state) => (userId.isNotEmpty) ? '/home' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const HomeScreen(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -277,27 +274,19 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/dashboard',
       redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/dashboard'
-              : '/login',
+          (userId.isNotEmpty) ? '/dashboard' : '/login',
       builder: (BuildContext context, GoRouterState state) =>
           const DashboardScreen(),
     ),
     GoRoute(
       path: '/user_information',
       redirect: (context, state) =>
-          (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-              ? '/user_information'
-              : '/login',
+          (userId.isNotEmpty) ? '/user_information' : '/login',
       builder: (BuildContext context, GoRouterState state) =>
           UserInformationView(),
     ),
     GoRoute(
       path: '/qr-generated',
-      // redirect: (context, state) {
-      //   Map<String, String> params = state.queryParams;
-      //   return '/qr_generate?bankCode=${params['bankCode']}&account=${params['account']}&name=${params['name']}&amount=${params['amount']}&content=${params['content']}&showBankAccount=${params['showBankAccount'] ?? '1'}';
-      // },
       builder: (context, GoRouterState state) {
         Map<String, String> params = state.queryParams;
         bool isAuthen = false;
@@ -412,9 +401,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/business',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/business'
-                : '/login',
+            (userId.isNotEmpty) ? '/business' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const BusinessManagerView(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -422,6 +409,66 @@ final GoRouter _router = GoRouter(
             context: context,
             state: state,
             child: const BusinessManagerView(),
+          );
+        }),
+    GoRoute(
+        path: '/enterprise',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/enterprise' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const EnterpriseScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const EnterpriseScreen(),
+          );
+        }),
+    GoRoute(
+        path: '/enterprise/store',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/enterprise/store' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const StoreScreen(type: StoreType.STORE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const StoreScreen(type: StoreType.STORE),
+          );
+        }),
+    GoRoute(
+        path: '/enterprise/store/detail',
+        redirect: (context, state) {
+          Map<String, String> params = state.queryParams;
+          return (userId.isNotEmpty)
+              ? '/enterprise/store/detail?id=${params['id']}'
+              : '/login';
+        },
+        builder: (BuildContext context, GoRouterState state) => StoreScreen(
+            type: StoreType.DETAIL, terminalId: state.params['id'] ?? ''),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: StoreScreen(
+              type: StoreType.DETAIL,
+              terminalId: params['id'] ?? '',
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/enterprise/overview',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/enterprise/overview' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const StoreScreen(type: StoreType.STORE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const StoreScreen(type: StoreType.STORE),
           );
         }),
     GoRoute(
@@ -495,9 +542,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/merchant/request',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/request'
-                : '/login',
+            (userId.isNotEmpty) ? '/merchant/request' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const MerchantRequest(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -510,10 +555,9 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/merchant/request/ecommerce',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/request/ecommerce'
-                : '/login',
-        builder: (BuildContext context, GoRouterState state) => GetKeyPage(),
+            (userId.isNotEmpty) ? '/merchant/request/ecommerce' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const GetKeyPage(),
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
@@ -524,9 +568,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/merchant/callback',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/merchant/callback'
-                : '/login',
+            (userId.isNotEmpty) ? '/merchant/callback' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const CallbackPage(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -539,9 +581,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/transaction',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/transaction'
-                : '/login',
+            (userId.isNotEmpty) ? '/transaction' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const TransactionUserScreen(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -553,10 +593,9 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/create-qr/:id',
-        redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/create-qr/${state.params['id'] ?? ''}'
-                : '/login',
+        redirect: (context, state) => (userId.isNotEmpty)
+            ? '/create-qr/${state.params['id'] ?? ''}'
+            : '/login',
         builder: (BuildContext context, GoRouterState state) => CreateQrScreen(
               bankAccountId: state.params['id'] ?? '',
             ),
@@ -657,7 +696,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/create-qr',
         builder: (BuildContext context, GoRouterState state) {
-          if (UserInformationHelper.instance.getUserId().trim().isNotEmpty) {
+          if (userId.isNotEmpty) {
             return const CreateQrScreen();
           } else {
             return const CreateQRLogin();
@@ -668,7 +707,7 @@ final GoRouter _router = GoRouter(
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: UserInformationHelper.instance.getUserId().trim().isNotEmpty
+            child: userId.isNotEmpty
                 ? const CreateQrScreen()
                 : const CreateQRLogin(),
           );
@@ -676,9 +715,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/qr-wallet',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/qr-wallet'
-                : '/login',
+            (userId.isNotEmpty) ? '/qr-wallet' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const WalletScreen(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -713,9 +750,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/add-bank/step1',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/add-bank/step1'
-                : '/login',
+            (userId.isNotEmpty) ? '/add-bank/step1' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const AddBankStep1(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -750,9 +785,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/add-bank/step3',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/add-bank/step3'
-                : '/login',
+            (userId.isNotEmpty) ? '/add-bank/step3' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const AddBankStep3(),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -765,9 +798,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
         path: '/naptien',
         redirect: (context, state) =>
-            (UserInformationHelper.instance.getUserId().trim().isNotEmpty)
-                ? '/naptien'
-                : '/login',
+            (userId.isNotEmpty) ? '/naptien' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             MobileRechargeScreen(),
         pageBuilder: (BuildContext context, GoRouterState state) {

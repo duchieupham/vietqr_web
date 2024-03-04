@@ -5,12 +5,12 @@ import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:flutter/material.dart';
 
-class MerchantRequestFrame extends StatelessWidget {
+class EnterpriseFrame extends StatelessWidget {
   final Widget title;
   final Widget menu;
   final Widget widget1;
 
-  const MerchantRequestFrame({
+  const EnterpriseFrame({
     super.key,
     required this.title,
     required this.menu,
@@ -35,7 +35,7 @@ class MerchantRequestFrame extends StatelessWidget {
             end: Alignment.topRight,
           ),
         ),
-        child: (PlatformUtils.instance.resizeWhen(width, 1000))
+        child: (PlatformUtils.instance.resizeWhen(width, 650))
             ? Column(
                 children: [
                   const HeaderWidget(),
@@ -49,9 +49,7 @@ class MerchantRequestFrame extends StatelessWidget {
                             child: Column(
                               children: [
                                 title,
-                                const SizedBox(
-                                  height: 20,
-                                ),
+                                const SizedBox(height: 20),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(

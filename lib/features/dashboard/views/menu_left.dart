@@ -21,6 +21,7 @@ class MenuLeft extends StatelessWidget {
   final List<Widget> subMenuMerchant;
   final List<Widget> subMenuTransactionUser;
   final List<Widget> subMenuMerchantRequest;
+  final List<Widget> subMenuEnterprise;
   final Function(int)? onSelectMenu;
 
   const MenuLeft(
@@ -29,6 +30,7 @@ class MenuLeft extends StatelessWidget {
       this.onSelectMenu,
       this.subMenuTransactionUser = const [],
       this.subMenuMerchantRequest = const [],
+      this.subMenuEnterprise = const [],
       this.subMenuMerchant = const []});
 
   @override
@@ -132,6 +134,16 @@ class MenuLeft extends StatelessWidget {
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
                   context.go('/transaction');
+                },
+              ),
+              ItemMenuHome(
+                title: 'Doanh nghiệp',
+                iconId: AppImages.icMenuHome,
+                enableDropDownList: true,
+                listItemDrop: subMenuEnterprise,
+                isSelect: currentType == MenuHomeType.ENTERPRISE,
+                onTap: () {
+                  context.go('/enterprise');
                 },
               ),
               if (UserInformationHelper.instance.getAccountIsMerchant())
@@ -274,6 +286,15 @@ class MenuLeft extends StatelessWidget {
                       'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
               // context.go('/transaction');
               // provider.updateShowMenu(true);
+            },
+          ),
+          ItemMenuHome(
+            title: 'Doanh nghiệp',
+            iconId: AppImages.icMenuHome,
+            isSelect: currentType == MenuHomeType.ENTERPRISE,
+            isOnlyIcon: true,
+            onTap: () {
+              context.go('/enterprise');
             },
           ),
           if (provider.isAccountIsMerchant)

@@ -17,6 +17,11 @@ class BankAccountDTO {
   final String? userId;
   final String bankShortName;
   final String customerBankName;
+
+  // Dùng cho detail store
+  final String qrCode;
+  final String terminalId;
+
   Color? bankColor;
 
   // final String branchCode;
@@ -24,6 +29,8 @@ class BankAccountDTO {
 
   BankAccountDTO({
     this.id = '',
+    this.terminalId = '',
+    this.qrCode = '',
     this.bankAccount = '',
     this.userBankName = '',
     this.bankCode = '',
@@ -51,6 +58,8 @@ class BankAccountDTO {
   factory BankAccountDTO.fromJson(Map<String, dynamic> json, {Color? color}) {
     return BankAccountDTO(
       id: json['id'] ?? '',
+      terminalId: json['terminalId'] ?? '',
+      qrCode: json['qrCode'] ?? '',
       bankAccount: json['bankAccount'] ?? '',
       userBankName: json['userBankName'] ?? '',
       bankCode: json['bankCode'] ?? '',

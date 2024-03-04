@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:VietQR/commons/enums/text_data.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 class StringUtils {
-  const StringUtils._privateConsrtructor();
+  const StringUtils._privateConstructor();
 
-  static const StringUtils _instance = StringUtils._privateConsrtructor();
+  static const StringUtils _instance = StringUtils._privateConstructor();
+
   static StringUtils get instance => _instance;
 
   final String _transactionContentWithoutVietnamesePattern =
@@ -14,6 +16,11 @@ class StringUtils {
   final String _transactionContentPattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9.,!@#$&*/? ]+$';
   final String _fullNamePattern = r'^[a-zA-ZÀ-ỹẠ-ỵ0-9 ]+$';
   final String _phonePattern = r'^(?:[+0]9)?[0-9]{10}$';
+
+  static const bool isWeb = kIsWeb;
+  static final bool isAndroid =
+      (defaultTargetPlatform == TargetPlatform.android);
+  static final bool isIOS = (defaultTargetPlatform == TargetPlatform.iOS);
 
   bool isNumeric(String text) {
     return int.tryParse(text) != null;

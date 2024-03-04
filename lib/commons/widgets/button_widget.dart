@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
   final double? width;
+
   //height default 50
   final String text;
   final Color textColor;
@@ -13,6 +14,7 @@ class ButtonWidget extends StatelessWidget {
   final EdgeInsets padding;
 
   final BorderRadius? bdRadius;
+  final BoxBorder? border;
 
   const ButtonWidget(
       {Key? key,
@@ -25,6 +27,7 @@ class ButtonWidget extends StatelessWidget {
       this.textSize = 14,
       this.borderRadius,
       this.bdRadius,
+      this.border,
       this.padding = EdgeInsets.zero})
       : super(key: key);
 
@@ -42,6 +45,7 @@ class ButtonWidget extends StatelessWidget {
               BorderRadius.circular(
                   (borderRadius != null) ? borderRadius! : 15),
           color: bgColor,
+          border: border,
         ),
         child: Text(
           text,
