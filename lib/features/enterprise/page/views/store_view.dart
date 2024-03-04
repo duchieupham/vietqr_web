@@ -94,7 +94,6 @@ class _StoreViewState extends State<StoreView> {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Container(
-                        color: Colors.yellow,
                         child: Column(
                           children: const [
                             Icon(Icons.keyboard_arrow_up_outlined, size: 14),
