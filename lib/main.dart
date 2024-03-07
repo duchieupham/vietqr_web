@@ -194,6 +194,7 @@ final GoRouter _router = GoRouter(
       path: '/',
       redirect: (context, state) {
         return (userId.isNotEmpty) ? '/create-qr' : '/login';
+        // return '/test/qr-generated?token=ZDFlMzc4ZDAtOGY4MC00OTRiLWIyMDMtMmVmZDkxYWNkYWUz';
       },
     ),
     GoRoute(
