@@ -36,16 +36,15 @@ import '../../commons/widgets/repaint_boundary_widget.dart';
 import '../bank/events/bank_type_event.dart';
 import '../login/states/qrcode_un_authen_state.dart';
 
-class QrGenerate extends StatelessWidget {
+class QrGenerateDev extends StatelessWidget {
   final Map<String, String> params;
   final bool isAuthen;
-  final bool isDev;
 
-  const QrGenerate(
-      {super.key,
-      required this.params,
-      required this.isAuthen,
-      this.isDev = false});
+  const QrGenerateDev({
+    super.key,
+    required this.params,
+    required this.isAuthen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +53,6 @@ class QrGenerate extends StatelessWidget {
       child: _QrGenerate(
         params: params,
         isAuthen: isAuthen,
-        isDev: isDev,
       ),
     );
   }
@@ -63,13 +61,12 @@ class QrGenerate extends StatelessWidget {
 class _QrGenerate extends StatefulWidget {
   final Map<String, String> params;
   final bool isAuthen;
-  final bool isDev;
 
-  const _QrGenerate(
-      {super.key,
-      required this.params,
-      this.isAuthen = false,
-      this.isDev = false});
+  const _QrGenerate({
+    super.key,
+    required this.params,
+    this.isAuthen = false,
+  });
 
   @override
   State<_QrGenerate> createState() => _QrGenerateState();
@@ -104,7 +101,9 @@ class _QrGenerateState extends State<_QrGenerate> {
     qrCodeUnUTBloc = BlocProvider.of(context);
     bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
     data['token'] = widget.params['token'] ?? '';
-    qrCodeUnUTBloc.add(GetTransactionQRBytToken(token: data['token']));
+    print(data['token']);
+    qrCodeUnUTBloc
+        .add(GetTransactionQRBytToken(token: data['token'], isDev: true));
     Future.delayed(const Duration(seconds: 1), () {
       WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
         setState(() {
@@ -113,7 +112,7 @@ class _QrGenerateState extends State<_QrGenerate> {
       }, () {
         Provider.of<TransactionQRProvider>(context, listen: false)
             .updateTimeExpires(true);
-      });
+      }, isDev: true);
     });
   }
 

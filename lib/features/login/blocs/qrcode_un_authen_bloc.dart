@@ -70,12 +70,11 @@ void _createVcardQR(QRCodeUnUTEvent event, Emitter emit) async {
 }
 
 void _createTransactionQR(QRCodeUnUTEvent event, Emitter emit) async {
-  TransactionQRDTO result = const TransactionQRDTO();
   try {
     if (event is GetTransactionQRBytToken) {
       emit(CreateQRLoadingState());
       final TransactionQRDTO result =
-          await _repository.getTransactionQR(event.token);
+          await _repository.getTransactionQR(event.token, isDev: event.isDev);
       emit(CreateTransactionQRSuccessfulState(dto: result));
     }
   } catch (e) {

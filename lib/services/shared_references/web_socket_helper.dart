@@ -115,13 +115,18 @@ class WebSocketHelper {
   }
 
   void listenTransactionQRSocket(
-      String id, Function transactionSuccess, Function transactionCancel) {
+      String id, Function transactionSuccess, Function transactionCancel,
+      {bool isDev = false}) {
     late Uri wsUrl;
     try {
       setListenTransactionQRWS(true);
       if (EnvConfig.getEnv() == EnvType.PROD) {
         wsUrl = Uri.parse('wss://api.vietqr.org/vqr/socket?refId=$id');
       } else {
+        wsUrl = Uri.parse('wss://dev.vietqr.org/vqr/socket?refId=$id');
+      }
+
+      if (isDev) {
         wsUrl = Uri.parse('wss://dev.vietqr.org/vqr/socket?refId=$id');
       }
 

@@ -84,14 +84,16 @@ class QRCodeUnUTRepository {
     return result;
   }
 
-  Future<TransactionQRDTO> getTransactionQR(String id) async {
+  Future<TransactionQRDTO> getTransactionQR(String id,
+      {bool isDev = false}) async {
     TransactionQRDTO result = const TransactionQRDTO();
     try {
-      final String url =
-          '${EnvConfig.getBaseUrl()}transactions/qr-link?refId=$id';
-      final response = await BaseAPIClient.getAPI(
-        url: url,
-      );
+      String url = '${EnvConfig.getBaseUrl()}transactions/qr-link?refId=$id';
+
+      if (isDev) {
+        url = 'https://dev.vietqr.org/vqr/api/transactions/qr-link?refId=$id';
+      }
+      final response = await BaseAPIClient.getAPI(url: url);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = TransactionQRDTO.fromJson(data);

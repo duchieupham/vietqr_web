@@ -29,6 +29,7 @@ import '../login/states/qrcode_un_authen_state.dart';
 class QrGenerateUnAuthen extends StatefulWidget {
   final Map<String, String> params;
   final bool isAuthen;
+
   const QrGenerateUnAuthen(
       {super.key, required this.params, this.isAuthen = false});
 
@@ -43,6 +44,7 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
   final GlobalKey globalKey = GlobalKey();
   final WaterMarkProvider _waterMarkProvider = WaterMarkProvider(false);
   bool showBgNapas = true;
+
   @override
   void initState() {
     getData();

@@ -27,11 +27,12 @@ class QRVCardCreateQR extends QRCodeUnUTEvent {
 
 class GetTransactionQRBytToken extends QRCodeUnUTEvent {
   final String token;
+  final bool isDev;
 
-  const GetTransactionQRBytToken({required this.token});
+  const GetTransactionQRBytToken({required this.token, this.isDev = false});
 
   @override
-  List<Object?> get props => [token];
+  List<Object?> get props => [token, isDev];
 }
 
 class QRGenerateCancelEvent extends QRCodeUnUTEvent {

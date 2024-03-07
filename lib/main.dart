@@ -19,6 +19,7 @@ import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
 import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/create_qr/create_qr_screen.dart';
 import 'package:VietQR/features/create_qr/qr_generate.dart';
+import 'package:VietQR/features/create_qr/qr_generate_dev.dart';
 import 'package:VietQR/features/dashboard/dashboard_screen.dart';
 import 'package:VietQR/features/dashboard/qr_generate_un_authen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
@@ -327,7 +328,7 @@ final GoRouter _router = GoRouter(
             isAuthen: isAuthen,
           );
         }
-        return QrGenerate(
+        return QrGenerateDev(
           params: params,
           isAuthen: true,
         );
