@@ -42,9 +42,7 @@ class StoreModel {
         "merchantName": merchantName,
         "merchantAddress": merchantAddress,
         "totalTerminals": totalTerminals,
-        "terminals": terminals == null
-            ? []
-            : List<dynamic>.from(terminals!.map((x) => x.toJson())),
+        "terminals": List<dynamic>.from(terminals.map((x) => x.toJson())),
       };
 }
 
@@ -79,17 +77,17 @@ class Terminal {
   });
 
   factory Terminal.fromJson(Map<String, dynamic> json) => Terminal(
-        terminalId: json["terminalId"],
-        terminalName: json["terminalName"],
-        terminalAddress: json["terminalAddress"],
+        terminalId: json["terminalId"] ?? '-',
+        terminalName: json["terminalName"] ?? '-',
+        terminalAddress: json["terminalAddress"] ?? '-',
         totalTrans: json["totalTrans"],
         totalAmount: json["totalAmount"],
         totalMember: json["totalMember"],
         terminalCode: json["terminalCode"],
-        bankName: json["bankName"],
-        bankAccount: json["bankAccount"],
-        bankShortName: json["bankShortName"],
-        bankAccountName: json["bankAccountName"],
+        bankName: json["bankName"] ?? '-',
+        bankAccount: json["bankAccount"] ?? '-',
+        bankShortName: json["bankShortName"] ?? '-',
+        bankAccountName: json["bankAccountName"] ?? '-',
       );
 
   Map<String, dynamic> toJson() => {

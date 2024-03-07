@@ -38,7 +38,44 @@ class GetMemberStoreEvent extends EnterpriseEvent {
   });
 
   @override
-  List<Object?> get props => [loadMore, offset, keySearch, terminalId, type];
+  List<Object?> get props => [
+        loadMore,
+        offset,
+        keySearch,
+        terminalId,
+        type,
+      ];
+}
+
+class GetTransStoreEvent extends EnterpriseEvent {
+  final bool loadMore;
+  final int offset;
+  final String keySearch;
+  final String terminalId;
+  final int type;
+  final String fromDate;
+  final String toDate;
+
+  GetTransStoreEvent({
+    this.loadMore = false,
+    this.offset = 0,
+    this.keySearch = '',
+    this.terminalId = '',
+    this.type = 0,
+    this.fromDate = '',
+    this.toDate = '',
+  });
+
+  @override
+  List<Object?> get props => [
+        loadMore,
+        offset,
+        keySearch,
+        terminalId,
+        type,
+        fromDate,
+        toDate,
+      ];
 }
 
 class GetStoreDetailEvent extends EnterpriseEvent {

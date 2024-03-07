@@ -1,30 +1,34 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/models/store_model.dart';
+import 'package:VietQR/models/transaction_store_dto.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class TableStoreWidget extends StatefulWidget {
-  final List<Terminal> terminals;
+class TableTransactionStoreWidget extends StatefulWidget {
+  final List<TransactionStoreDTO> trans;
   final int offset;
 
-  const TableStoreWidget(
-      {super.key, required this.terminals, required this.offset});
+  const TableTransactionStoreWidget({
+    super.key,
+    required this.trans,
+    required this.offset,
+  });
 
   @override
-  State<TableStoreWidget> createState() => _TableStoreWidgetState();
+  State<TableTransactionStoreWidget> createState() =>
+      _TableTransactionStoreWidgetState();
 }
 
-class _TableStoreWidgetState extends State<TableStoreWidget> {
+class _TableTransactionStoreWidgetState
+    extends State<TableTransactionStoreWidget> {
   final List<TableData> list = [
     TableData(title: 'STT'.toUpperCase(), padding: 0),
-    TableData(title: 'TÊN CỬA HÀNG'.toUpperCase()),
-    TableData(title: 'Giao dich\nhôm nay'.toUpperCase()),
-    TableData(title: 'Doanh thu\nhôm nay (VND)'.toUpperCase()),
-    TableData(title: 'Thành viên'.toUpperCase()),
+    TableData(title: 'Mã đơn hàng'.toUpperCase()),
     TableData(title: 'Mã điểm bán'.toUpperCase()),
-    TableData(title: 'Tk ngân hàng'.toUpperCase()),
-    TableData(title: 'Địa chỉ'.toUpperCase(), width: 150),
-    TableData(title: ''),
+    TableData(title: 'Trạng thái'.toUpperCase()),
+    TableData(title: 'Loại GD'.toUpperCase()),
+    TableData(title: 'Thời gian\ntạo GD'.toUpperCase()),
+    TableData(title: 'Nội dung'.toUpperCase(), width: 200),
+    TableData(title: 'Tk ngân nhận'.toUpperCase()),
+    TableData(title: 'Ghi chú'.toUpperCase(), width: 220),
   ];
 
   @override
@@ -58,9 +62,9 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
                 );
               }),
               rows: List.generate(
-                widget.terminals.length,
+                widget.trans.length,
                 (index) {
-                  Terminal model = widget.terminals[index];
+                  TransactionStoreDTO model = widget.trans[index];
                   return DataRow(
                     color: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
@@ -76,40 +80,48 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
                         ),
                       ),
 
-                      /// Tên cửa hàng
-                      DataCell(_buildContent(title: model.terminalName ?? '-')),
+                      /// Mã đơn hàng
+                      DataCell(_buildContent(title: model.orderId ?? '-')),
 
-                      /// Giao dịch hôm nay
+                      /// Mã điểm bán
                       DataCell(
                         _buildContent(
-                          title: '${model.totalTrans ?? 0}',
-                          textAlign: TextAlign.right,
+                          title: model.terminalCode ?? '-',
+                          textAlign: TextAlign.left,
                         ),
                       ),
 
-                      /// Doanh thu hôm nay
+                      /// Trạng thái
                       DataCell(
                         _buildContent(
-                          title: model.amount,
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-
-                      /// Thành viên
-                      DataCell(
-                        _buildContent(
-                          title: '${model.totalMember ?? 0}',
+                          title: model.statusType,
                           textAlign: TextAlign.center,
                         ),
                       ),
 
-                      /// Mã điểm bán
+                      /// Loại GD
+                      DataCell(
+                        _buildContent(
+                          title: model.transactionType,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+
+                      /// Time tạo
                       DataCell(_buildContent(
-                        title: model.terminalCode ?? '-',
-                        textAlign: TextAlign.left,
+                        title: model.timeCreate,
+                        textAlign: TextAlign.right,
                       )),
 
-                      /// TK ngân hàng
+                      /// Nội dung
+                      DataCell(
+                        SizedBox(
+                          width: 200,
+                          child: _buildContent(title: model.content ?? '-'),
+                        ),
+                      ),
+
+                      /// TK nhận
                       DataCell(
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,22 +141,31 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
                         ),
                       ),
 
-                      /// Địa chỉ
-                      DataCell(
-                        _buildContent(title: model.terminalAddress ?? '-'),
-                      ),
+                      /// Ghi chú
 
-                      /// Chi tiết
                       DataCell(
-                        _buildContent(
-                            title: 'Chi tiết',
-                            isShowIcon: true,
-                            textColor: AppColor.BLUE_TEXT,
-                            fontSize: 10,
-                            onTap: () {
-                              context.push(
-                                  '/enterprise/store/detail?id=${model.terminalId}');
-                            }),
+                        SizedBox(
+                          width: 220,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _buildContent(title: model.note ?? '-'),
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: AppColor.BLUE_TEXT.withOpacity(0.25),
+                                  ),
+                                  child: const Icon(Icons.edit,
+                                      size: 14, color: AppColor.BLUE_TEXT),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -193,7 +214,7 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
           ],
           Expanded(
             child: Text(
-              title,
+              title.isNotEmpty ? title : '-',
               maxLines: 2,
               textAlign: textAlign,
               style: TextStyle(

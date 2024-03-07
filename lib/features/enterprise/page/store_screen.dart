@@ -54,13 +54,13 @@ class _StoreScreenState extends State<StoreScreen> {
                         MenuLeft(
                           currentType: MenuHomeType.ENTERPRISE,
                           subMenuEnterprise: [
-                            ItemMenuHome(
-                              title: 'Tổng quan',
-                              isSelect: false,
-                              onTap: () {
-                                context.go('/enterprise/overview');
-                              },
-                            ),
+                            // ItemMenuHome(
+                            //   title: 'Tổng quan',
+                            //   isSelect: false,
+                            //   onTap: () {
+                            //     context.go('/enterprise/overview');
+                            //   },
+                            // ),
                             ItemMenuHome(
                               title: 'Cửa hàng',
                               isSelect: true,

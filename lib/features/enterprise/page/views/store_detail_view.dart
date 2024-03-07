@@ -1,9 +1,11 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
-import 'package:VietQR/features/enterprise/page/views/info_store_view.dart';
 import 'package:VietQR/features/enterprise/page/views/member_store_view.dart';
+import 'package:VietQR/features/enterprise/page/views/transaction_store_view.dart';
 import 'package:VietQR/features/enterprise/page/widgets/sub_tab_detail_store_widget.dart';
 import 'package:flutter/material.dart';
+
+import 'info_store_view.dart';
 
 class StoreDetailView extends StatefulWidget {
   final String terminalId;
@@ -39,7 +41,7 @@ class _StoreDetailViewState extends State<StoreDetailView> {
                 ? InfoStoreView(terminalId: widget.terminalId)
                 : tab == 1
                     ? MemberStoreView(terminalId: widget.terminalId)
-                    : const SizedBox(),
+                    : TransactionStoreView(terminalId: widget.terminalId),
           ),
         if (isKWeb)
           _buildWeb(
@@ -47,26 +49,26 @@ class _StoreDetailViewState extends State<StoreDetailView> {
                 ? InfoStoreView(terminalId: widget.terminalId)
                 : tab == 1
                     ? MemberStoreView(terminalId: widget.terminalId)
-                    : const SizedBox(),
+                    : TransactionStoreView(terminalId: widget.terminalId),
           ),
       ],
     );
   }
 
+  BorderSide get _borderSize =>
+      BorderSide(color: AppColor.GREY_TEXT.withOpacity(0.3));
+
   Widget _buildMobile(Widget child) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: AppColor.GREY_TEXT))),
+        decoration: BoxDecoration(border: Border(top: _borderSize)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(
-                    border:
-                        Border(right: BorderSide(color: AppColor.GREY_TEXT))),
+                decoration: BoxDecoration(border: Border(right: _borderSize)),
                 child: Column(
                   children: [
                     const SizedBox(height: 24),
@@ -119,15 +121,12 @@ class _StoreDetailViewState extends State<StoreDetailView> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: AppColor.GREY_TEXT))),
+        decoration: BoxDecoration(border: Border(top: _borderSize)),
         child: Row(
           children: [
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(
-                    border:
-                        Border(right: BorderSide(color: AppColor.GREY_TEXT))),
+                decoration: BoxDecoration(border: Border(right: _borderSize)),
                 child: Column(
                   children: [
                     const SizedBox(height: 24),
@@ -206,6 +205,7 @@ class _StoreDetailViewState extends State<StoreDetailView> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       height: 40,
+      width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: Row(
         children: const [
@@ -227,7 +227,6 @@ class _StoreDetailViewState extends State<StoreDetailView> {
             'Chi tiết cửa hàng',
             style: TextStyle(decoration: TextDecoration.underline),
           ),
-          Spacer(),
         ],
       ),
     );

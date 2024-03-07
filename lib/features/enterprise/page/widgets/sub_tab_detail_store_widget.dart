@@ -37,9 +37,11 @@ class _SubTabDetailStoreWidgetState extends State<SubTabDetailStoreWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            alignment: Alignment.center,
-            child: const Text('Chi tiết cửa hàng',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            alignment: Alignment.centerLeft,
+            child: const Text(
+              'Chi tiết cửa hàng',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(width: 60),
           Container(

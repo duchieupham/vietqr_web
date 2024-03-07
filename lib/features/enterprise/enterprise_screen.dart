@@ -3,7 +3,6 @@ import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/enterprise/enterprise.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
-import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,14 +26,14 @@ class _EnterpriseScreenState extends State<EnterpriseScreen> {
       menu: MenuLeft(
         currentType: MenuHomeType.ENTERPRISE,
         subMenuEnterprise: [
-          ItemMenuHome(
-            title: 'Tổng quan',
-            isSelect: true,
-            onTap: () {},
-          ),
+          // ItemMenuHome(
+          //   title: 'Tổng quan',
+          //   isSelect: true,
+          //   onTap: () {},
+          // ),
           ItemMenuHome(
             title: 'Cửa hàng',
-            isSelect: false,
+            isSelect: true,
             onTap: () {
               context.go('/enterprise/store');
             },

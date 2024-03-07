@@ -69,8 +69,8 @@ class FormInfoStoreWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.add),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -163,8 +163,10 @@ class FormInfoStoreWidget extends StatelessWidget {
                   content,
                   maxLines: 2,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis),
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),

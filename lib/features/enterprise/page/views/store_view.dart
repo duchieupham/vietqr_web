@@ -93,13 +93,11 @@ class _StoreViewState extends State<StoreView> {
                         state.storeModel.merchantName,
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Container(
-                        child: Column(
-                          children: const [
-                            Icon(Icons.keyboard_arrow_up_outlined, size: 14),
-                            Icon(Icons.keyboard_arrow_down_outlined, size: 14),
-                          ],
-                        ),
+                      Column(
+                        children: const [
+                          Icon(Icons.keyboard_arrow_up_outlined, size: 14),
+                          Icon(Icons.keyboard_arrow_down_outlined, size: 14),
+                        ],
                       ),
                     ],
                   ),
@@ -128,6 +126,7 @@ class _StoreViewState extends State<StoreView> {
   Widget _buildBody(BuildContext context, EnterpriseState state) {
     return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: TableStoreWidget(

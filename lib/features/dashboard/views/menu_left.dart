@@ -143,7 +143,7 @@ class MenuLeft extends StatelessWidget {
                 listItemDrop: subMenuEnterprise,
                 isSelect: currentType == MenuHomeType.ENTERPRISE,
                 onTap: () {
-                  context.go('/enterprise');
+                  context.go('/enterprise/store');
                 },
               ),
               if (UserInformationHelper.instance.getAccountIsMerchant())
@@ -294,7 +294,7 @@ class MenuLeft extends StatelessWidget {
             isSelect: currentType == MenuHomeType.ENTERPRISE,
             isOnlyIcon: true,
             onTap: () {
-              context.go('/enterprise');
+              context.go('/enterprise/store');
             },
           ),
           if (provider.isAccountIsMerchant)

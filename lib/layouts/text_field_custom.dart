@@ -16,7 +16,6 @@ class MTextFieldCustom extends StatefulWidget {
   final TextInputType inputType;
   final bool isObscureText;
   final double? fontSize;
-  final double? hintSize;
   final TextfieldType? textFieldType;
   final String? title;
   final String? unTitle;
@@ -28,20 +27,23 @@ class MTextFieldCustom extends StatefulWidget {
   final TextAlign? textAlign;
   final Function(PointerDownEvent)? onTapOutside;
   final bool isShowToast;
+  final TextStyle? styles;
   final TextStyle? errorStyle;
   final Function(String? error)? showToast;
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatter;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Widget? child;
   final String? value;
+  final bool showBorder;
 
   //Border textfield
   final bool isRequired;
   final Color? fillColor;
   final Color? hintColor;
-
   final EdgeInsetsGeometry? contentPadding;
+  final InputDecoration? decoration;
 
   const MTextFieldCustom({
     Key? key,
@@ -53,10 +55,10 @@ class MTextFieldCustom extends StatefulWidget {
     required this.inputType,
     required this.isObscureText,
     this.fontSize,
-    this.hintSize,
     this.textFieldType,
     this.title,
     this.unTitle,
+    this.styles,
     this.autoFocus,
     this.focusNode,
     this.maxLines,
@@ -76,7 +78,10 @@ class MTextFieldCustom extends StatefulWidget {
     this.isRequired = false,
     this.value,
     this.hintColor,
+    this.child,
     this.contentPadding,
+    this.showBorder = false,
+    this.decoration,
   }) : super(key: key);
 
   @override
@@ -132,27 +137,27 @@ class _TextFieldWidgetState extends State<MTextFieldCustom> {
       autofocus: widget.autoFocus ?? false,
       focusNode: widget.focusNode,
       keyboardType: widget.inputType,
+      style: widget.styles,
       maxLines: (widget.maxLines == null) ? 1 : widget.maxLines,
       textInputAction: widget.keyboardAction,
-      style: TextStyle(
-        fontSize: (widget.fontSize != null) ? widget.fontSize : 14,
-      ),
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        border: InputBorder.none,
-        hintStyle: TextStyle(
-          fontSize: (widget.hintSize != null) ? widget.hintSize : 14,
-          color: widget.hintColor ?? AppColor.GREY_TEXT,
-        ),
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
-        contentPadding:
-            widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16),
-        fillColor: widget.fillColor,
-        suffixIconConstraints: const BoxConstraints(),
-        prefixIconConstraints: const BoxConstraints(),
-        filled: true,
-      ),
+      decoration: widget.decoration ??
+          InputDecoration(
+            hintText: widget.hintText,
+            counterText: '',
+            constraints: const BoxConstraints(minHeight: 40, maxHeight: 40),
+            counter: const SizedBox(),
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+              fontSize: (widget.fontSize != null) ? widget.fontSize : 14,
+              color: widget.hintColor ?? AppColor.GREY_TEXT,
+            ),
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: widget.suffixIcon,
+            contentPadding: widget.contentPadding ??
+                const EdgeInsets.symmetric(horizontal: 16),
+            fillColor: widget.fillColor ?? AppColor.WHITE,
+            filled: true,
+          ),
     );
 
     return Column(
@@ -198,10 +203,18 @@ class _TextFieldWidgetState extends State<MTextFieldCustom> {
         ],
         Container(
           alignment: Alignment.centerLeft,
+          height: 40,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              textFiledTypeLabel,
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: widget.showBorder
+                          ? Border.all(
+                              color: AppColor.GREY_LIGHT.withOpacity(0.5))
+                          : null),
+                  child: widget.child ?? textFiledTypeLabel),
               if (_msgError != null && !widget.isShowToast)
                 Container(
                   width: double.infinity,

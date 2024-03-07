@@ -411,19 +411,19 @@ final GoRouter _router = GoRouter(
             child: const BusinessManagerView(),
           );
         }),
-    GoRoute(
-        path: '/enterprise',
-        redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/enterprise' : '/login',
-        builder: (BuildContext context, GoRouterState state) =>
-            const EnterpriseScreen(),
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithoutAnimation(
-            context: context,
-            state: state,
-            child: const EnterpriseScreen(),
-          );
-        }),
+    // GoRoute(
+    //     path: '/enterprise/store',
+    //     redirect: (context, state) =>
+    //         (userId.isNotEmpty) ? '/enterprise/store' : '/login',
+    //     builder: (BuildContext context, GoRouterState state) =>
+    //         const EnterpriseScreen(),
+    //     pageBuilder: (BuildContext context, GoRouterState state) {
+    //       return buildPageWithoutAnimation(
+    //         context: context,
+    //         state: state,
+    //         child: const EnterpriseScreen(),
+    //       );
+    //     }),
     GoRoute(
         path: '/enterprise/store',
         redirect: (context, state) =>

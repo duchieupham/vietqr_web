@@ -6,6 +6,7 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/member_store_dto.dart';
 import 'package:VietQR/models/store_detail_dto.dart';
 import 'package:VietQR/models/store_model.dart';
+import 'package:VietQR/models/transaction_store_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,11 +17,14 @@ class EnterpriseBloc extends Bloc<EnterpriseEvent, EnterpriseState> {
           storeDetailModel: StoreDetailDTO(bank: BankAccountDTO()),
           storeMaps: const {},
           membersMap: const {},
+          transactionsMap: const {},
           members: const [],
+          transactions: const [],
         )) {
     on<GetStoreEvent>(_getStore);
     on<GetStoreDetailEvent>(_getStoreDetail);
     on<GetMemberStoreEvent>(_getMemberStore);
+    on<GetTransStoreEvent>(_getTransStore);
   }
 
   String get userId => UserInformationHelper.instance.getUserId();
@@ -52,9 +56,7 @@ class EnterpriseBloc extends Bloc<EnterpriseEvent, EnterpriseState> {
           terminals = [...model.terminals];
         }
 
-        if (model.terminals.isNotEmpty) {
-          maps['$offset'] = model.terminals;
-        }
+        maps['$offset'] = model.terminals;
 
         model.terminals = terminals;
 
@@ -104,9 +106,7 @@ class EnterpriseBloc extends Bloc<EnterpriseEvent, EnterpriseState> {
           members = [...result];
         }
 
-        if (result.isNotEmpty) {
-          maps['$offset'] = result;
-        }
+        maps['$offset'] = result;
 
         emit(
           state.copyWith(
@@ -125,14 +125,65 @@ class EnterpriseBloc extends Bloc<EnterpriseEvent, EnterpriseState> {
     }
   }
 
+  void _getTransStore(EnterpriseEvent event, Emitter emit) async {
+    try {
+      if (event is GetTransStoreEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: EnterpriseType.NONE));
+
+        bool isLoadMore = true;
+        int offset = event.offset;
+        List<TransactionStoreDTO> trans = [...state.transactions];
+        Map<String, List<TransactionStoreDTO>> maps = {};
+        maps.addAll(state.transactionsMap);
+
+        List<TransactionStoreDTO> result =
+            await createQRRepository.getTransStore(
+                event.terminalId,
+                event.type,
+                event.keySearch,
+                event.offset * limit,
+                event.fromDate,
+                event.toDate,
+                userId);
+
+        if (result.isEmpty || result.length < limit) {
+          isLoadMore = false;
+        }
+
+        if (event.loadMore && result.isNotEmpty) {
+          trans = [...trans, ...result];
+        } else {
+          trans = [...result];
+        }
+
+        maps['$offset'] = result;
+
+        emit(
+          state.copyWith(
+            status: BlocStatus.NONE,
+            request: EnterpriseType.GET_TRANS,
+            transactions: trans,
+            transactionsMap: maps,
+            offset: offset,
+            isEmpty: result.isEmpty,
+            isLoadMore: isLoadMore,
+          ),
+        );
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+  }
+
   void _getStoreDetail(EnterpriseEvent event, Emitter emit) async {
     try {
       if (event is GetStoreDetailEvent) {
         emit(state.copyWith(
             status: BlocStatus.LOADING, request: EnterpriseType.NONE));
 
-        StoreDetailDTO model = await createQRRepository.getStoreDetail(
-            event.terminalId, userId);
+        StoreDetailDTO model =
+            await createQRRepository.getStoreDetail(event.terminalId, userId);
 
         emit(
           state.copyWith(

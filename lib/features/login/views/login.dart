@@ -24,6 +24,7 @@ import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/info_user_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +37,7 @@ import '../widgets/login_by_card_widget.dart';
 
 class Login extends StatefulWidget {
   final String pathHistory;
+
   const Login({Key? key, this.pathHistory = ''}) : super(key: key);
 
   @override
@@ -54,12 +56,18 @@ class _Login extends State<Login> {
   late PageController pageController = PageController();
   List<InfoUserDTO> _listInfoUsers = [];
   bool isMobileWeb = false;
+
   @override
   void initState() {
     super.initState();
     _listInfoUsers = UserInformationHelper.instance.getLoginAccount();
     if (_listInfoUsers.isNotEmpty) {
       pageController = PageController(initialPage: 1);
+    }
+
+    if (kDebugMode) {
+      phoneNoController.text = '0373568944';
+      _passwordController.text = '181101';
     }
 
     String loginID = des.getLoginID();

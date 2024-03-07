@@ -8,6 +8,7 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/member_store_dto.dart';
 import 'package:VietQR/models/store_detail_dto.dart';
 import 'package:VietQR/models/store_model.dart';
+import 'package:VietQR/models/transaction_store_dto.dart';
 
 class EnterpriseRepository {
   const EnterpriseRepository();
@@ -71,6 +72,39 @@ class EnterpriseRepository {
         if (data != null) {
           result = data
               .map<MemberStoreModel>((json) => MemberStoreModel.fromJson(json))
+              .toList();
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<List<TransactionStoreDTO>> getTransStore(
+    String terminalId,
+    int type,
+    String value,
+    int offset,
+    String fromDate,
+    String toDate,
+    String userId,
+  ) async {
+    List<TransactionStoreDTO> result = [];
+    try {
+      String url =
+          '${EnvConfig.getBaseUrl()}terminal/web/transaction-detail/$terminalId?type=$type'
+          '&value=$value&fromDate=$fromDate&toDate=$toDate&offset=$offset&userId=$userId';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          result = data
+              .map<TransactionStoreDTO>(
+                  (json) => TransactionStoreDTO.fromJson(json))
               .toList();
         }
       }

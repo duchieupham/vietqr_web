@@ -2,94 +2,136 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/features/enterprise/enterprise.dart';
-import 'package:VietQR/features/enterprise/page/widgets/dialog_filter_member.dart';
-import 'package:VietQR/features/enterprise/page/widgets/table_member_widget.dart';
+import 'package:VietQR/features/enterprise/page/widgets/dialog_filter_trans_widget.dart';
+import 'package:VietQR/features/enterprise/page/widgets/table_transaction_store_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
-class MemberStoreView extends StatefulWidget {
+class TransactionStoreView extends StatefulWidget {
   final String terminalId;
 
-  const MemberStoreView({super.key, this.terminalId = ''});
+  const TransactionStoreView({super.key, required this.terminalId});
 
   @override
-  State<MemberStoreView> createState() => _MemberStoreViewState();
+  State<TransactionStoreView> createState() => _TransactionStoreViewState();
 }
 
-class _MemberStoreViewState extends State<MemberStoreView> {
+class _TransactionStoreViewState extends State<TransactionStoreView> {
   double get width => MediaQuery.of(context).size.width;
 
   bool get isKWeb => (PlatformUtils.instance.resizeWhen(width, 1360));
 
   late EnterpriseBloc bloc;
   final searchController = TextEditingController();
-  String keySearch = '';
-  int type = 0;
+  int typeFilter = 9;
+  int statusFilter = 0;
+  int typeTime = 1;
+  String _value = '';
 
-  // keySearch = '' là get all, 0 theo sđt , 1 theo họ tên
+  DateTime _fromDate = DateTime.now();
+  DateTime _toDate = DateTime.now();
+
+  DateFormat get _dateFormat => DateFormat('yyyy-MM-dd HH:mm:ss');
+
+  DateFormat get _dateFormatShow => DateFormat('dd-MM-yyyy HH:mm:ss');
+
+  DateTime get now => DateTime.now();
+
+  DateTime _formatFromDate(DateTime now) {
+    DateTime fromDate = DateTime(now.year, now.month, now.day);
+    return fromDate;
+  }
+
+  DateTime _endDate(DateTime now) {
+    DateTime fromDate = _formatFromDate(now);
+    return fromDate
+        .add(const Duration(days: 1))
+        .subtract(const Duration(seconds: 1));
+  }
 
   @override
   void initState() {
     super.initState();
     bloc = EnterpriseBloc();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bloc.add(
-        GetMemberStoreEvent(
-            type: type, keySearch: keySearch, terminalId: widget.terminalId),
-      );
+      _fromDate = _formatFromDate(now);
+      _toDate = _endDate(now);
+
+      bloc.add(GetTransStoreEvent(
+        type: typeFilter,
+        terminalId: widget.terminalId,
+        fromDate: _dateFormat.format(_fromDate),
+        toDate: _dateFormat.format(_toDate),
+        keySearch: _value,
+      ));
     });
   }
 
   void loadMore(int offset) {
-    bloc.add(GetMemberStoreEvent(
-      type: type,
-      keySearch: keySearch,
+    if (typeFilter == 5) {
+      _value = '$statusFilter';
+    }
+    bloc.add(GetTransStoreEvent(
+      type: typeFilter,
       terminalId: widget.terminalId,
-      loadMore: true,
+      fromDate: _dateFormat.format(_fromDate),
+      toDate: _dateFormat.format(_toDate),
+      keySearch: _value,
       offset: offset,
+      loadMore: true,
     ));
   }
 
   void _onSearch() {
-    bloc.add(GetMemberStoreEvent(
-        type: type,
-        keySearch: keySearch,
-        terminalId: widget.terminalId,
-        loadMore: false,
-        offset: 0));
+    if (typeFilter == 5) {
+      _value = '$statusFilter';
+    }
+    bloc.add(GetTransStoreEvent(
+      type: typeFilter,
+      terminalId: widget.terminalId,
+      fromDate: _dateFormat.format(_fromDate),
+      toDate: _dateFormat.format(_toDate),
+      keySearch: _value,
+    ));
   }
 
   void _onClear() {
+    _value = '';
     searchController.clear();
-    keySearch = '';
-    type = 9;
     setState(() {});
-    bloc.add(GetMemberStoreEvent(
-        type: type,
-        keySearch: keySearch,
-        terminalId: widget.terminalId,
-        loadMore: false,
-        offset: 0));
   }
 
   void _onFilter() async {
-    final data = await showDialog(
+    await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return DialogFilterView(type: type);
+        return DialogFilterTransWidget(
+          typeFilter: typeFilter,
+          status: statusFilter,
+          typeTime: typeTime,
+          fromDate: _fromDate,
+          toDate: _toDate,
+          callBack: _onReceive,
+        );
       },
     );
+  }
 
-    if (type != data) {
-      searchController.text = '';
-    }
-
+  _onReceive(
+      int type, int status, int time, DateTime fromDate, DateTime toDate) {
     setState(() {
-      type = data;
+      typeFilter = type;
+      statusFilter = status;
+      typeTime = time;
+      _fromDate = fromDate;
+      _toDate = toDate;
     });
 
-    _onSearch();
+    if (type == 9 || type == 5) {
+      _onSearch();
+    }
   }
 
   @override
@@ -120,14 +162,13 @@ class _MemberStoreViewState extends State<MemberStoreView> {
 
   Widget _buildHeaderWeb(BuildContext context, EnterpriseState state) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Danh sách nhân viên',
+          children: const [
+            Text('Danh sách giao dịch',
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('${state.members.length} nhân viên'),
+            Text('0 giao dịch'),
           ],
         ),
         const SizedBox(width: 24),
@@ -157,22 +198,19 @@ class _MemberStoreViewState extends State<MemberStoreView> {
           child: TextField(
             style: const TextStyle(fontSize: 12),
             controller: searchController,
+            enabled: typeFilter != 5,
             onChanged: (value) {
               setState(() {
-                keySearch = value;
+                _value = value;
               });
             },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(bottom: 18),
               border: InputBorder.none,
-              hintText: type == 1
-                  ? 'Tìm kiếm nhân viên theo tên'
-                  : type == 0
-                      ? 'Tìm kiếm nhân viên theo SDT'
-                      : 'Tìm kiếm tất cả nhân viên',
+              hintText: hinText,
               hintStyle:
                   const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-              suffixIcon: keySearch.isNotEmpty
+              suffixIcon: searchController.text.isNotEmpty
                   ? GestureDetector(
                       onTap: _onClear,
                       child: const Icon(Icons.close, size: 18),
@@ -194,7 +232,33 @@ class _MemberStoreViewState extends State<MemberStoreView> {
             child: const Icon(Icons.search, color: AppColor.WHITE),
           ),
         ),
-        const Expanded(child: SizedBox()),
+        const SizedBox(width: 24),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Lọc theo:',
+                style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                children: [
+                  if (typeFilter == 9) _buildFilterWith('Tất cả (mặc định)'),
+                  _buildFilterWith('Thời gian: $timeValue'),
+                  if (typeFilter == 1)
+                    _buildFilterWith('Mã giao dịch: ${searchController.text}'),
+                  if (typeFilter == 3)
+                    _buildFilterWith('Nội dung: ${searchController.text}'),
+                  if (typeFilter == 5)
+                    _buildFilterWith('Trạng thái: $statusValue'),
+                  if (typeFilter == 2)
+                    _buildFilterWith('Mã đơn hàng: ${searchController.text}'),
+                ],
+              ),
+            ],
+          ),
+        ),
         ButtonWidget(
           text: 'Xuất Excel',
           width: 120,
@@ -207,20 +271,44 @@ class _MemberStoreViewState extends State<MemberStoreView> {
           borderRadius: 5,
           height: 40,
         ),
-        const SizedBox(width: 16),
-        ButtonWidget(
-          text: 'Thêm cửa hàng',
-          width: 120,
-          textColor: AppColor.WHITE,
-          bgColor: AppColor.BLUE_TEXT,
-          function: () {
-            Navigator.pop(context);
-          },
-          borderRadius: 5,
-          height: 40,
-        ),
         const SizedBox(width: 24),
       ],
+    );
+  }
+
+  String get statusValue => statusFilter == 0
+      ? 'Thành công'
+      : statusFilter == 1
+          ? 'Chờ thanh toán'
+          : 'Đã huỷ';
+
+  String get timeValue {
+    if (typeTime == 1) return 'Hôm nay (mặc định)';
+    if (typeTime == 2) return '7 ngày gần nhất';
+    if (typeTime == 3) return '1 tháng gần đây';
+    if (typeTime == 4) return '3 tháng gần đây';
+    return 'Từ ${_dateFormatShow.format(_fromDate)} - đến ${_dateFormatShow.format(_toDate)}';
+  }
+
+  String get hinText {
+    if (typeFilter == 1) return 'Tìm kiếm theo mã giao dịch';
+    if (typeTime == 2) return 'Tìm kiếm theo mã đơn hàng';
+    if (typeTime == 3) return 'Tìm kiếm theo nội dung';
+    return 'Tìm kiếm giao dịch';
+  }
+
+  Widget _buildFilterWith(String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      margin: const EdgeInsets.only(right: 8, bottom: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: AppColor.BLUE_TEXT.withOpacity(0.3),
+      ),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 12, color: AppColor.BLUE_TEXT),
+      ),
     );
   }
 
@@ -228,82 +316,84 @@ class _MemberStoreViewState extends State<MemberStoreView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Danh sách nhân viên',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('${state.members.length} nhân viên'),
-              ],
-            ),
-            const SizedBox(width: 24),
-            GestureDetector(
-              onTap: _onFilter,
-              child: Container(
-                width: 40,
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Danh sách giao dịch',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('${state.transactions.length} giao dịch'),
+                ],
+              ),
+              const SizedBox(width: 24),
+              GestureDetector(
+                onTap: _onFilter,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: AppColor.BLUE_TEXT.withOpacity(0.25),
+                  ),
+                  child: const Icon(Icons.filter_list, color: AppColor.WHITE),
+                ),
+              ),
+              Container(
                 height: 40,
+                margin: const EdgeInsets.only(left: 12, right: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                width: 200,
+                alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: AppColor.BLUE_TEXT.withOpacity(0.25),
+                  color: AppColor.GREY_BG,
+                  border: Border.all(color: AppColor.GREY_LIGHT),
+                  borderRadius: BorderRadius.circular(5),
                 ),
-                child: const Icon(Icons.filter_list, color: AppColor.WHITE),
-              ),
-            ),
-            Container(
-              height: 40,
-              margin: const EdgeInsets.only(left: 12, right: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              width: 200,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColor.GREY_BG,
-                border: Border.all(color: AppColor.GREY_LIGHT),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextField(
-                style: const TextStyle(fontSize: 12),
-                controller: searchController,
-                onChanged: (value) {
-                  setState(() {
-                    keySearch = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.only(bottom: 18),
-                  border: InputBorder.none,
-                  hintText: type == 1
-                      ? 'Tìm kiếm nhân viên theo tên'
-                      : type == 0
-                          ? 'Tìm kiếm nhân viên theo SDT'
-                          : 'Tìm kiếm tất cả nhân viên',
-                  hintStyle:
-                      const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-                  suffixIcon: keySearch.isNotEmpty
-                      ? GestureDetector(
-                          onTap: _onClear,
-                          child: const Icon(Icons.close, size: 18),
-                        )
-                      : null,
-                  suffixIconConstraints: const BoxConstraints(),
+                child: TextField(
+                  style: const TextStyle(fontSize: 12),
+                  controller: searchController,
+                  enabled: typeFilter != 5,
+                  onChanged: (value) {
+                    setState(() {
+                      _value = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(bottom: 18),
+                    border: InputBorder.none,
+                    enabled: typeFilter != 5,
+                    hintText: hinText,
+                    hintStyle: const TextStyle(
+                        fontSize: 12, color: AppColor.GREY_TEXT),
+                    suffixIcon: searchController.text.isNotEmpty
+                        ? GestureDetector(
+                            onTap: _onClear,
+                            child: const Icon(Icons.close, size: 18),
+                          )
+                        : null,
+                    suffixIconConstraints: const BoxConstraints(),
+                  ),
                 ),
               ),
-            ),
-            GestureDetector(
-              onTap: _onSearch,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: AppColor.BLUE_TEXT,
+              GestureDetector(
+                onTap: _onSearch,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: AppColor.BLUE_TEXT,
+                  ),
+                  child: const Icon(Icons.search, color: AppColor.WHITE),
                 ),
-                child: const Icon(Icons.search, color: AppColor.WHITE),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 16),
         Row(
@@ -314,18 +404,6 @@ class _MemberStoreViewState extends State<MemberStoreView> {
               border: Border.all(color: AppColor.GREEN),
               textColor: AppColor.GREEN,
               bgColor: AppColor.TRANSPARENT,
-              function: () {
-                Navigator.pop(context);
-              },
-              borderRadius: 5,
-              height: 40,
-            ),
-            const SizedBox(width: 16),
-            ButtonWidget(
-              text: 'Thêm cửa hàng',
-              width: 120,
-              textColor: AppColor.WHITE,
-              bgColor: AppColor.BLUE_TEXT,
               function: () {
                 Navigator.pop(context);
               },
@@ -345,8 +423,8 @@ class _MemberStoreViewState extends State<MemberStoreView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: TableMemberWidget(
-                  members: state.membersMap['${state.offset}'] ?? [],
+              child: TableTransactionStoreWidget(
+                  trans: state.transactionsMap['${state.offset}'] ?? [],
                   offset: state.offset)),
           Container(
             padding: const EdgeInsets.only(top: 16),
@@ -414,8 +492,8 @@ class _MemberStoreViewState extends State<MemberStoreView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TableMemberWidget(
-            members: state.membersMap['${state.offset}'] ?? [],
+        TableTransactionStoreWidget(
+            trans: state.transactionsMap['${state.offset}'] ?? [],
             offset: state.offset),
         Container(
           padding: const EdgeInsets.only(top: 16),

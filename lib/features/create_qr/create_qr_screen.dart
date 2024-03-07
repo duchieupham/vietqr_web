@@ -79,6 +79,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
   bool showDialog = false;
   int indexBankAccount = 0;
   bool focusAmount = false;
+
   @override
   void initState() {
     createQRBloc = CreateQRBloc()..add(GetListBankAccount());
@@ -165,10 +166,6 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                         '/test/qr-generated?token=${state.dto.transactionRefId}'),
                     'new tab');
               }
-
-              // context.go(
-              //     '/test/qr-generated?token=${state.dto.transactionRefId}',
-              //     extra: true);
             }
           }
           if (state is CreateUnAuthenSuccessfulState) {

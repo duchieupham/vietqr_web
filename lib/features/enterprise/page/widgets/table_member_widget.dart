@@ -3,24 +3,24 @@ import 'package:VietQR/models/member_store_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class TableInfoMemberWidget extends StatefulWidget {
+class TableMemberWidget extends StatefulWidget {
   final List<MemberStoreModel> members;
   final int offset;
 
-  const TableInfoMemberWidget(
+  const TableMemberWidget(
       {super.key, required this.members, required this.offset});
 
   @override
-  State<TableInfoMemberWidget> createState() => _TableStoreWidgetState();
+  State<TableMemberWidget> createState() => _TableStoreWidgetState();
 }
 
-class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
+class _TableStoreWidgetState extends State<TableMemberWidget> {
   final List<TableData> list = [
-    TableData(title: 'STT'),
+    TableData(title: 'STT', padding: 0),
     TableData(title: 'Họ tên'.toUpperCase()),
     TableData(title: 'Số điện thoại'.toUpperCase()),
     TableData(title: 'Vai trò'.toUpperCase()),
-    TableData(title: ''),
+    // TableData(title: ''),
   ];
 
   @override
@@ -32,15 +32,23 @@ class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
               headingRowHeight: 40,
+              dataRowHeight: 40,
+              horizontalMargin: 10,
+              columnSpacing: 16,
               headingRowColor: MaterialStateProperty.resolveWith<Color?>(
                   (Set<MaterialState> states) {
                 return AppColor.BLUE_TEXT.withOpacity(0.35);
               }),
-              border: TableBorder.all(width: 0.5, color: AppColor.GREY_TEXT),
+              border: TableBorder.all(
+                  width: 0.5, color: AppColor.GREY_TEXT.withOpacity(0.6)),
               columns: List.generate(list.length, (index) {
                 TableData e = list[index];
                 return DataColumn(
-                  label: _buildTitle(title: e.title, isShowIcon: e.isIcon),
+                  label: _buildTitle(
+                      title: e.title,
+                      isShowIcon: e.isIcon,
+                      width: e.width,
+                      padding: e.padding),
                 );
               }),
               rows: List.generate(
@@ -65,17 +73,17 @@ class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
                       ),
                       DataCell(_buildContent(title: model.phoneNo ?? '-')),
                       DataCell(_buildContent(title: model.role ?? '-')),
-                      DataCell(
-                        _buildContent(
-                            title: 'Xoá',
-                            isShowIcon: true,
-                            textColor: AppColor.RED_EC1010,
-                            iconColor: AppColor.RED_EC1010,
-                            icon: Icons.remove_circle_outline,
-                            onTap: () {
-                              context.push('/enterprise/store/detail');
-                            }),
-                      ),
+                      // DataCell(
+                      //   _buildContent(
+                      //       title: 'Xoá',
+                      //       isShowIcon: true,
+                      //       textColor: AppColor.RED_EC1010,
+                      //       iconColor: AppColor.RED_EC1010,
+                      //       icon: Icons.remove_circle_outline,
+                      //       onTap: () {
+                      //         context.push('/enterprise/store/detail');
+                      //       }),
+                      // ),
                     ],
                   );
                 },
@@ -87,13 +95,20 @@ class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
     );
   }
 
-  _buildTitle({bool isShowIcon = false, required String title}) {
+  _buildTitle(
+      {bool isShowIcon = false,
+      required String title,
+      double? width,
+      double? padding}) {
     return Container(
       height: 40,
+      width: width,
+      padding: EdgeInsets.symmetric(horizontal: padding ?? 40),
       alignment: Alignment.center,
       child: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
       ),
     );
   }
@@ -105,6 +120,8 @@ class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
     bool isShowIcon = false,
     GestureTapCallback? onTap,
     IconData? icon,
+    double? fontSize,
+    TextAlign? textAlign,
   }) {
     return GestureDetector(
       onTap: onTap,
@@ -118,9 +135,11 @@ class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
             child: Text(
               title,
               maxLines: 2,
+              textAlign: textAlign,
               style: TextStyle(
                 color: textColor ?? AppColor.GREY_TEXT,
                 overflow: TextOverflow.ellipsis,
+                fontSize: fontSize ?? 12,
               ),
             ),
           ),
@@ -133,6 +152,9 @@ class _TableStoreWidgetState extends State<TableInfoMemberWidget> {
 class TableData {
   final String title;
   final bool isIcon;
+  final double? width;
+  final double? padding;
 
-  TableData({required this.title, this.isIcon = false});
+  TableData(
+      {required this.title, this.isIcon = false, this.width, this.padding});
 }
