@@ -21,14 +21,13 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
   final List<TableData> list = [
     TableData(title: 'STT'.toUpperCase(), padding: 0),
     TableData(title: 'TÊN CỬA HÀNG'.toUpperCase()),
-    TableData(
-        title: 'Giao dich\nhôm nay'.toUpperCase(), width: 100, padding: 0),
+    TableData(title: 'Giao dich\nhôm nay'.toUpperCase(), width: 80, padding: 0),
     TableData(
         title: 'Doanh thu\nhôm nay (VND)'.toUpperCase(),
         width: 100,
         padding: 0),
-    TableData(title: 'Thành viên'.toUpperCase(), width: 100, padding: 0),
-    TableData(title: 'Mã điểm bán'.toUpperCase()),
+    TableData(title: 'Thành viên'.toUpperCase(), width: 80, padding: 0),
+    TableData(title: 'Mã điểm bán'.toUpperCase(), width: 100, padding: 0),
     TableData(title: 'Tk ngân hàng'.toUpperCase()),
     TableData(title: 'Địa chỉ'.toUpperCase(), width: 150),
     TableData(title: ''),
