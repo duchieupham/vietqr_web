@@ -64,7 +64,9 @@ class _StoreScreenState extends State<StoreScreen> {
                             ItemMenuHome(
                               title: 'Cửa hàng',
                               isSelect: true,
-                              onTap: () {},
+                              onTap: () {
+                                context.go('/enterprise/store');
+                              },
                             ),
                           ],
                         ),

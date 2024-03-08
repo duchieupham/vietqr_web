@@ -21,159 +21,178 @@ class _TableTransactionStoreWidgetState
     extends State<TableTransactionStoreWidget> {
   final List<TableData> list = [
     TableData(title: 'STT'.toUpperCase(), padding: 0),
-    TableData(title: 'Mã đơn hàng'.toUpperCase()),
-    TableData(title: 'Mã điểm bán'.toUpperCase()),
-    TableData(title: 'Trạng thái'.toUpperCase()),
+    TableData(title: 'Mã đơn hàng'.toUpperCase(), width: 100, padding: 0),
+    TableData(title: 'Mã điểm bán'.toUpperCase(), width: 100, padding: 0),
+    TableData(title: 'Trạng thái'.toUpperCase(), width: 120, padding: 0),
     TableData(title: 'Loại GD'.toUpperCase()),
-    TableData(title: 'Thời gian\ntạo GD'.toUpperCase()),
+    TableData(title: 'Thời gian\ntạo GD'.toUpperCase(), width: 100, padding: 0),
     TableData(title: 'Nội dung'.toUpperCase(), width: 200),
     TableData(title: 'Tk ngân nhận'.toUpperCase()),
     TableData(title: 'Ghi chú'.toUpperCase(), width: 220),
   ];
 
+  final ScrollController _horizontal = ScrollController();
+  final ScrollController _vertical = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              headingRowHeight: 40,
-              dataRowHeight: 40,
-              horizontalMargin: 10,
-              columnSpacing: 16,
-              headingRowColor: MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) {
-                return AppColor.BLUE_TEXT.withOpacity(0.35);
-              }),
-              border: TableBorder.all(
-                width: 0.5,
-                color: AppColor.GREY_TEXT.withOpacity(0.6),
-              ),
-              columns: List.generate(list.length, (index) {
-                TableData e = list[index];
-                return DataColumn(
-                  label: _buildTitle(
-                      title: e.title,
-                      isShowIcon: e.isIcon,
-                      width: e.width,
-                      padding: e.padding),
-                );
-              }),
-              rows: List.generate(
-                widget.trans.length,
-                (index) {
-                  TransactionStoreDTO model = widget.trans[index];
-                  return DataRow(
-                    color: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
-                      return Colors.transparent;
-                    }),
-                    cells: [
-                      /// STT
-                      DataCell(
-                        _buildContent(
-                          title:
-                              '${(widget.offset * 20) + (widget.offset + index) + 1}',
-                          textAlign: TextAlign.center,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: RawScrollbar(
+        controller: _vertical,
+        thumbVisibility: true,
+        trackVisibility: true,
+        thumbColor: Colors.grey.withOpacity(0.6),
+        child: RawScrollbar(
+          controller: _horizontal,
+          thumbVisibility: true,
+          trackVisibility: true,
+          thumbColor: Colors.grey.withOpacity(0.6),
+          notificationPredicate: (notif) => notif.depth == 1,
+          child: SingleChildScrollView(
+            controller: _vertical,
+            child: SingleChildScrollView(
+              controller: _horizontal,
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                headingRowHeight: 40,
+                dataRowHeight: 40,
+                horizontalMargin: 10,
+                columnSpacing: 16,
+                headingRowColor: MaterialStateProperty.resolveWith<Color?>(
+                    (Set<MaterialState> states) {
+                  return AppColor.BLUE_TEXT.withOpacity(0.35);
+                }),
+                border: TableBorder.all(
+                  width: 0.5,
+                  color: AppColor.GREY_TEXT.withOpacity(0.6),
+                ),
+                columns: List.generate(list.length, (index) {
+                  TableData e = list[index];
+                  return DataColumn(
+                    label: _buildTitle(
+                        title: e.title,
+                        isShowIcon: e.isIcon,
+                        width: e.width,
+                        padding: e.padding),
+                  );
+                }),
+                rows: List.generate(
+                  widget.trans.length,
+                  (index) {
+                    TransactionStoreDTO model = widget.trans[index];
+                    return DataRow(
+                      color: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                        return Colors.transparent;
+                      }),
+                      cells: [
+                        /// STT
+                        DataCell(
+                          _buildContent(
+                            title:
+                                '${(widget.offset * 20) + (widget.offset + index) + 1}',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
 
-                      /// Mã đơn hàng
-                      DataCell(_buildContent(title: model.orderId ?? '-')),
+                        /// Mã đơn hàng
+                        DataCell(_buildContent(title: model.orderId ?? '-')),
 
-                      /// Mã điểm bán
-                      DataCell(
-                        _buildContent(
-                          title: model.terminalCode ?? '-',
-                          textAlign: TextAlign.left,
+                        /// Mã điểm bán
+                        DataCell(
+                          _buildContent(
+                            title: model.terminalCode ?? '-',
+                            textAlign: TextAlign.left,
+                          ),
                         ),
-                      ),
 
-                      /// Trạng thái
-                      DataCell(
-                        _buildContent(
-                          title: model.statusType,
-                          textAlign: TextAlign.center,
+                        /// Trạng thái
+                        DataCell(
+                          _buildContent(
+                            title: model.statusType,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
 
-                      /// Loại GD
-                      DataCell(
-                        _buildContent(
-                          title: model.transactionType,
-                          textAlign: TextAlign.center,
+                        /// Loại GD
+                        DataCell(
+                          _buildContent(
+                            title: model.transactionType,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
 
-                      /// Time tạo
-                      DataCell(_buildContent(
-                        title: model.timeCreate,
-                        textAlign: TextAlign.right,
-                      )),
+                        /// Time tạo
+                        DataCell(_buildContent(
+                          title: model.timeCreate,
+                          textAlign: TextAlign.right,
+                        )),
 
-                      /// Nội dung
-                      DataCell(
-                        SizedBox(
-                          width: 200,
-                          child: _buildContent(title: model.content ?? '-'),
+                        /// Nội dung
+                        DataCell(
+                          SizedBox(
+                            width: 200,
+                            child: _buildContent(title: model.content ?? '-'),
+                          ),
                         ),
-                      ),
 
-                      /// TK nhận
-                      DataCell(
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              model.bankAccount ?? '-',
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            Text(
-                              model.bankShortName ?? '-',
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      /// Ghi chú
-
-                      DataCell(
-                        SizedBox(
-                          width: 220,
-                          child: Row(
+                        /// TK nhận
+                        DataCell(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: _buildContent(title: model.note ?? '-'),
+                              Text(
+                                model.bankAccount ?? '-',
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(fontSize: 12),
                               ),
-                              GestureDetector(
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: AppColor.BLUE_TEXT.withOpacity(0.25),
-                                  ),
-                                  child: const Icon(Icons.edit,
-                                      size: 14, color: AppColor.BLUE_TEXT),
-                                ),
-                              )
+                              Text(
+                                model.bankShortName ?? '-',
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                },
+
+                        /// Ghi chú
+
+                        DataCell(
+                          SizedBox(
+                            width: 220,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child:
+                                      _buildContent(title: model.note ?? '-'),
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color:
+                                          AppColor.BLUE_TEXT.withOpacity(0.25),
+                                    ),
+                                    child: const Icon(Icons.edit,
+                                        size: 14, color: AppColor.BLUE_TEXT),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
