@@ -153,34 +153,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with BaseManager {
 
   void _updateEvent(HomeEvent event, Emitter emit) {}
 
-  final otd = BankAccountDTO(
-    id: '',
-    bankAccount: '',
-    userBankName: '',
-    bankCode: '',
-    bankName: '',
-    imgId: '',
-    type: 0,
-    branchId: '',
-    businessId: '',
-    branchName: '',
-    isAuthenticated: false,
-    businessName: '',
-    bankColor: Colors.white,
-  );
-  final otd2 = BankAccountDTO(
-    id: '',
-    bankAccount: 'MB',
-    userBankName: '',
-    bankCode: '',
-    bankName: '',
-    imgId: '',
-    type: 0,
-    branchId: '',
-    businessId: '',
-    branchName: '',
-    isAuthenticated: false,
-    businessName: '',
-    bankColor: Colors.black26,
-  );
+  final otd = BankAccountDTO();
+  final otd2 = BankAccountDTO();
 }

@@ -687,7 +687,7 @@ class InforCustomer extends StatelessWidget {
           height: 500,
         );
       },
-      child: (provider.bankAccountDTO.id.isEmpty)
+      child: (provider.bankAccountDTO.bankId.isEmpty)
           ? BoxLayout(
               bgColor: AppColor.WHITE,
               height: 50,

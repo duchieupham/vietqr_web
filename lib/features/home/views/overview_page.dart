@@ -11,7 +11,6 @@ import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/features/bank/states/bank_state.dart';
 import 'package:VietQR/features/bank/views/add_bank_mb_view.dart';
 import 'package:VietQR/features/bank/views/add_bank_view.dart';
-import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/frames/overview_frame.dart';
 import 'package:VietQR/features/home/home_screen.dart';
@@ -98,14 +97,14 @@ class _OverViewPageState extends State<OverViewPage> {
 
   List<Widget> _getPage() {
     List<Widget> pages = [
-      HomeScreen(),
+      const HomeScreen(),
       AddBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
       AddMBBankView(
         userId: UserInformationHelper.instance.getUserId(),
       ),
-      const BusinessManagerView(),
+      // const BusinessManagerView(),
     ];
     return pages;
   }
@@ -159,12 +158,13 @@ class _OverViewPageState extends State<OverViewPage> {
             cardColors.addAll(state.colors);
             if (state.list.isNotEmpty) {
               TransactionInputDTO transactionInputDTO = TransactionInputDTO(
-                bankId: bankAccounts.first.id,
+                bankId: bankAccounts.first.bankId,
                 offset: 0,
               );
-              _bankBloc.add(BankEventGetDetail(bankId: bankAccounts.first.id));
+              _bankBloc
+                  .add(BankEventGetDetail(bankId: bankAccounts.first.bankId));
               _transactionBloc
-                  .add(TransactionEventGetList(dto: transactionInputDTO));
+                  .add(GetTransOwnerEvent(dto: transactionInputDTO));
             }
           }
         }
@@ -276,16 +276,17 @@ class _OverViewPageState extends State<OverViewPage> {
                                             provider.updateShowMenu(false);
                                             provider.updateIndex(index);
                                             _bankBloc.add(BankEventGetDetail(
-                                                bankId:
-                                                    bankAccounts[index].id));
+                                                bankId: bankAccounts[index]
+                                                    .bankId));
                                             TransactionInputDTO
                                                 transactionInputDTO =
                                                 TransactionInputDTO(
-                                              bankId: bankAccounts[index].id,
+                                              bankId:
+                                                  bankAccounts[index].bankId,
                                               offset: 0,
                                             );
                                             _transactionBloc.add(
-                                                TransactionEventGetList(
+                                                GetTransOwnerEvent(
                                                     dto: transactionInputDTO));
                                             // Provider.of<MenuProvider>(context,
                                             //         listen: false)

@@ -22,6 +22,7 @@ class MenuLeft extends StatelessWidget {
   final List<Widget> subMenuTransactionUser;
   final List<Widget> subMenuMerchantRequest;
   final List<Widget> subMenuEnterprise;
+  final List<Widget> subMenuTransaction;
   final Function(int)? onSelectMenu;
 
   const MenuLeft(
@@ -31,6 +32,7 @@ class MenuLeft extends StatelessWidget {
       this.subMenuTransactionUser = const [],
       this.subMenuMerchantRequest = const [],
       this.subMenuEnterprise = const [],
+      this.subMenuTransaction = const [],
       this.subMenuMerchant = const []});
 
   @override
@@ -130,10 +132,10 @@ class MenuLeft extends StatelessWidget {
                 title: 'Giao dịch',
                 iconId: AppImages.icMenuTransaction,
                 enableDropDownList: true,
-                listItemDrop: subMenuTransactionUser,
+                listItemDrop: subMenuTransaction,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
-                  context.go('/transaction');
+                  context.go('/transactions', extra: {'type': '0'});
                 },
               ),
               ItemMenuHome(

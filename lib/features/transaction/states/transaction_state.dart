@@ -1,78 +1,76 @@
-import 'package:VietQR/models/business_detail_dto.dart';
+// ignore_for_file: constant_identifier_names
+
+import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
-import 'package:VietQR/models/transaction_receive_dto.dart';
 import 'package:equatable/equatable.dart';
 
+enum TransType {
+  NONE,
+  GET_BANKS,
+  GET_TRANS_TRUE,
+  UPDATE_BANK,
+  ERROR,
+}
+
 class TransactionState extends Equatable {
-  const TransactionState();
+  final BlocStatus status;
+  final TransType request;
+  final String? msg;
+  final int offset;
+  final List<BankAccountDTO> listBanks;
+  final List<RelatedTransactionReceiveDTO> listTrans;
+  final BankAccountDTO? bankDTO;
+  final bool isLoadMore;
+  final Map<String, List<RelatedTransactionReceiveDTO>> tranMaps;
 
-  @override
-  List<Object?> get props => [];
-}
-
-class TransactionInitialState extends TransactionState {}
-
-class TransactionLoadingState extends TransactionState {}
-
-class TransactionGetListSuccessState extends TransactionState {
-  final List<RelatedTransactionReceiveDTO> list;
-
-  const TransactionGetListSuccessState({
-    required this.list,
+  const TransactionState({
+    this.status = BlocStatus.NONE,
+    this.request = TransType.NONE,
+    this.msg,
+    this.offset = 0,
+    required this.listBanks,
+    required this.listTrans,
+    this.bankDTO,
+    required this.tranMaps,
+    this.isLoadMore = true,
   });
 
-  @override
-  List<Object?> get props => [list];
-}
-
-class TransactionGetListFailedState extends TransactionState {}
-
-class TransactionFetchSuccessState extends TransactionState {
-  final List<RelatedTransactionReceiveDTO> list;
-
-  const TransactionFetchSuccessState({
-    required this.list,
-  });
-
-  @override
-  List<Object?> get props => [list];
-}
-
-class TransactionFetchFailedState extends TransactionState {}
-
-class TransactionDetailLoadingState extends TransactionState {}
-
-class TransactionDetailSuccessState extends TransactionState {
-  final TransactionReceiveDTO dto;
-
-  const TransactionDetailSuccessState({
-    required this.dto,
-  });
+  TransactionState copyWith({
+    BlocStatus? status,
+    String? msg,
+    TransType? request,
+    List<BankAccountDTO>? listBanks,
+    List<RelatedTransactionReceiveDTO>? listTrans,
+    BankAccountDTO? bankDTO,
+    bool? isLoadMore,
+    bool? isEmpty,
+    int? offset,
+    Map<String, List<RelatedTransactionReceiveDTO>>? tranMaps,
+  }) {
+    return TransactionState(
+      status: status ?? this.status,
+      msg: msg ?? this.msg,
+      request: request ?? this.request,
+      offset: offset ?? this.offset,
+      listBanks: listBanks ?? this.listBanks,
+      listTrans: listTrans ?? this.listTrans,
+      bankDTO: bankDTO ?? this.bankDTO,
+      isLoadMore: isLoadMore ?? this.isLoadMore,
+      tranMaps: tranMaps ?? this.tranMaps,
+    );
+  }
 
   @override
-  List<Object?> get props => [dto];
-}
-
-class TransactionDetailFailedState extends TransactionState {}
-
-class TransactionGetListBranchSuccessState extends TransactionState {
-  final List<BusinessTransactionDTO> list;
-
-  const TransactionGetListBranchSuccessState({
-    required this.list,
-  });
-
-  @override
-  List<Object?> get props => [list];
-}
-
-class TransactionFetchBranchSuccessState extends TransactionState {
-  final List<BusinessTransactionDTO> list;
-
-  const TransactionFetchBranchSuccessState({
-    required this.list,
-  });
-
-  @override
-  List<Object?> get props => [list];
+  List<Object?> get props => [
+        status,
+        request,
+        msg,
+        offset,
+        listBanks,
+        listTrans,
+        bankDTO,
+        isLoadMore,
+        tranMaps,
+      ];
 }

@@ -66,45 +66,49 @@ class _StoreViewState extends State<StoreView> {
         },
         builder: (context, state) {
           return Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  height: 40,
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Doanh nghiệp',
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text('/'),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Cửa hàng',
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      ),
-                      const Spacer(),
-                      Text(
-                        state.storeModel.merchantName,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Column(
-                        children: const [
-                          Icon(Icons.keyboard_arrow_up_outlined, size: 14),
-                          Icon(Icons.keyboard_arrow_down_outlined, size: 14),
-                        ],
-                      ),
-                    ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    height: 40,
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Doanh nghiệp',
+                          style:
+                              TextStyle(decoration: TextDecoration.underline),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text('/'),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Cửa hàng',
+                          style:
+                              TextStyle(decoration: TextDecoration.underline),
+                        ),
+                        const Spacer(),
+                        Text(
+                          state.storeModel.merchantName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Column(
+                          children: const [
+                            Icon(Icons.keyboard_arrow_up_outlined, size: 14),
+                            Icon(Icons.keyboard_arrow_down_outlined, size: 14),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Divider(thickness: 2),
-                Expanded(
-                  child: Container(
+                  const Divider(thickness: 2),
+                  Container(
                     padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                     child: Column(
                       children: [
@@ -114,8 +118,8 @@ class _StoreViewState extends State<StoreView> {
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -124,75 +128,70 @@ class _StoreViewState extends State<StoreView> {
   }
 
   Widget _buildBody(BuildContext context, EnterpriseState state) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: TableStoreWidget(
-              terminals: state.storeMaps['${state.offset}'] ?? [],
-              offset: state.offset,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 16),
-            child: Row(
-              children: [
-                Text('Trang ${state.offset + 1}'),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    int offset = state.offset;
-                    if (offset <= 0) return;
-                    offset = offset - 1;
-                    loadMore(offset);
-                  },
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    padding: const EdgeInsets.only(left: 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                          color:
-                              state.offset <= 0 ? Colors.grey : Colors.black),
-                    ),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 14,
-                      color: state.offset <= 0 ? Colors.grey : Colors.black,
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TableStoreWidget(
+          terminals: state.storeMaps['${state.offset}'] ?? [],
+          offset: state.offset,
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 16),
+          child: Row(
+            children: [
+              Text('Trang ${state.offset + 1}'),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () {
+                  int offset = state.offset;
+                  if (offset <= 0) return;
+                  offset = offset - 1;
+                  loadMore(offset);
+                },
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  padding: const EdgeInsets.only(left: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                        color: state.offset <= 0 ? Colors.grey : Colors.black),
+                  ),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 14,
+                    color: state.offset <= 0 ? Colors.grey : Colors.black,
                   ),
                 ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    if (!state.isLoadMore) return;
-                    int offset = state.offset;
-                    offset = offset + 1;
-                    loadMore(offset);
-                  },
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        color: !state.isLoadMore ? Colors.grey : Colors.black,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () {
+                  if (!state.isLoadMore) return;
+                  int offset = state.offset;
+                  offset = offset + 1;
+                  loadMore(offset);
+                },
+                child: Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
                       color: !state.isLoadMore ? Colors.grey : Colors.black,
                     ),
                   ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: !state.isLoadMore ? Colors.grey : Colors.black,
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

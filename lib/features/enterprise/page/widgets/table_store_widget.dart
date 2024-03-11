@@ -30,150 +30,210 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
     TableData(title: 'Mã điểm bán'.toUpperCase(), width: 100, padding: 0),
     TableData(title: 'Tk ngân hàng'.toUpperCase()),
     TableData(title: 'Địa chỉ'.toUpperCase(), width: 150),
-    TableData(title: ''),
+    TableData(title: '', padding: 0, width: 80),
   ];
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: RawScrollbar(
-        controller: _vertical,
-        thumbVisibility: true,
-        trackVisibility: true,
-        thumbColor: Colors.grey.withOpacity(0.6),
-        child: RawScrollbar(
-          controller: _horizontal,
-          thumbVisibility: true,
-          trackVisibility: true,
-          thumbColor: Colors.grey.withOpacity(0.6),
-          notificationPredicate: (notif) => notif.depth == 1,
-          child: SingleChildScrollView(
-            controller: _vertical,
-            child: SingleChildScrollView(
+      child: Stack(
+        children: [
+          SizedBox(
+            width: 1025,
+            child: RawScrollbar(
               controller: _horizontal,
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                headingRowHeight: 40,
-                dataRowHeight: 40,
-                horizontalMargin: 10,
-                columnSpacing: 16,
-                headingRowColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                  return AppColor.BLUE_TEXT.withOpacity(0.35);
-                }),
-                border: TableBorder.all(
-                  width: 0.5,
-                  color: AppColor.GREY_TEXT.withOpacity(0.6),
-                ),
-                columns: List.generate(list.length, (index) {
-                  TableData e = list[index];
-                  return DataColumn(
-                    label: _buildTitle(
-                        title: e.title,
-                        isShowIcon: e.isIcon,
-                        width: e.width,
-                        padding: e.padding),
-                  );
-                }),
-                rows: List.generate(
-                  widget.terminals.length,
-                  (index) {
-                    Terminal model = widget.terminals[index];
-                    return DataRow(
-                      color: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                        return Colors.transparent;
-                      }),
-                      cells: [
-                        /// STT
-                        DataCell(
-                          _buildContent(
-                            title:
-                                '${(widget.offset * 20) + (widget.offset + index) + 1}',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-
-                        /// Tên cửa hàng
-                        DataCell(
-                            _buildContent(title: model.terminalName ?? '-')),
-
-                        /// Giao dịch hôm nay
-                        DataCell(
-                          _buildContent(
-                            title: '${model.totalTrans ?? 0}',
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-
-                        /// Doanh thu hôm nay
-                        DataCell(
-                          _buildContent(
-                            title: model.amount,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-
-                        /// Thành viên
-                        DataCell(
-                          _buildContent(
-                            title: '${model.totalMember ?? 0}',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-
-                        /// Mã điểm bán
-                        DataCell(_buildContent(
-                          title: model.terminalCode ?? '-',
-                          textAlign: TextAlign.left,
-                        )),
-
-                        /// TK ngân hàng
-                        DataCell(
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                model.bankAccount ?? '-',
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                model.bankShortName ?? '-',
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// Địa chỉ
-                        DataCell(
-                          _buildContent(title: model.terminalAddress ?? '-'),
-                        ),
-
-                        /// Chi tiết
-                        DataCell(
-                          _buildContent(
-                              title: 'Chi tiết',
-                              isShowIcon: true,
-                              textColor: AppColor.BLUE_TEXT,
-                              fontSize: 10,
-                              onTap: () {
-                                context.push(
-                                    '/enterprise/store/detail?id=${model.terminalId}');
-                              }),
-                        ),
-                      ],
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: _horizontal,
+                child: DataTable(
+                  headingRowHeight: 40,
+                  dataRowHeight: 40,
+                  horizontalMargin: 10,
+                  columnSpacing: 16,
+                  headingRowColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                    return AppColor.BLUE_TEXT.withOpacity(0.35);
+                  }),
+                  border: TableBorder.all(
+                    width: 0.5,
+                    color: AppColor.GREY_TEXT.withOpacity(0.6),
+                  ),
+                  columns: List.generate(list.length, (index) {
+                    TableData e = list[index];
+                    return DataColumn(
+                      label: _buildTitle(
+                          title: e.title,
+                          isShowIcon: e.isIcon,
+                          width: e.width,
+                          padding: e.padding),
                     );
-                  },
+                  }),
+                  rows: List.generate(
+                    widget.terminals.length,
+                    (index) {
+                      Terminal model = widget.terminals[index];
+                      return DataRow(
+                        color: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                          return Colors.transparent;
+                        }),
+                        cells: [
+                          /// STT
+                          DataCell(
+                            _buildContent(
+                              title:
+                                  '${(widget.offset * 20) + (widget.offset + index) + 1}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          /// Tên cửa hàng
+                          DataCell(
+                              _buildContent(title: model.terminalName ?? '-')),
+
+                          /// Giao dịch hôm nay
+                          DataCell(
+                            _buildContent(
+                              title: '${model.totalTrans ?? 0}',
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+
+                          /// Doanh thu hôm nay
+                          DataCell(
+                            _buildContent(
+                              title: model.amount,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+
+                          /// Thành viên
+                          DataCell(
+                            _buildContent(
+                              title: '${model.totalMember ?? 0}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          /// Mã điểm bán
+                          DataCell(_buildContent(
+                            title: model.terminalCode ?? '-',
+                            textAlign: TextAlign.left,
+                          )),
+
+                          /// TK ngân hàng
+                          DataCell(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  model.bankAccount ?? '-',
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  model.bankShortName ?? '-',
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          /// Địa chỉ
+                          DataCell(
+                            _buildContent(title: model.terminalAddress ?? '-'),
+                          ),
+
+                          /// Chi tiết
+                          const DataCell(
+                            SizedBox(width: 80),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+          SizedBox(
+            width: 1025,
+            child: Row(
+              children: [
+                const Expanded(child: SizedBox()),
+                Container(
+                  color: AppColor.GREY_BG,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 40,
+                        width: 100,
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        decoration: BoxDecoration(
+                          color: AppColor.BLUE_TEXT.withOpacity(0.35),
+                          border: Border.all(
+                            color: AppColor.GREY_TEXT.withOpacity(0.6),
+                          ),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          list.last.title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 11),
+                        ),
+                      ),
+                      Column(
+                        children: List.generate(
+                          widget.terminals.length,
+                          (index) {
+                            Terminal dto = widget.terminals[index];
+                            return GestureDetector(
+                              onTap: () {
+                                context.push(
+                                    '/enterprise/store/detail?id=${dto.terminalId}');
+                              },
+                              child: Container(
+                                width: 100,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColor.GREY_TEXT.withOpacity(0.6),
+                                    ),
+                                    color: Colors.transparent),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.info_outline,
+                                        color: AppColor.BLUE_TEXT, size: 18),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      'Chi tiết',
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        color: AppColor.BLUE_TEXT,
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -182,16 +242,18 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
       {bool isShowIcon = false,
       required String title,
       double? width,
-      double? padding}) {
+      double? padding,
+      Color? bgr}) {
     return Container(
       height: 40,
       width: width,
-      padding: EdgeInsets.symmetric(horizontal: padding ?? 40),
+      padding: EdgeInsets.symmetric(horizontal: padding ?? 30),
+      decoration: BoxDecoration(color: bgr),
       alignment: Alignment.center,
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
       ),
     );
   }

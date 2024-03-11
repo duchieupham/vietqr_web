@@ -94,4 +94,13 @@ class AppImages {
   static String logoAppStore = '2a52f63d-3810-42bb-8d4f-a201e446b6b1';
   static String qrContactOtherWhite = '189635ff-d4ab-41ba-bbfd-c68a1bf69953';
   static String personalRelation = '78d3c977-25c8-452c-8022-0bdc2e4aa54c';
+
+  ///trans
+  static String icFilterTrans = '79bfe524-ad11-4d81-93cb-64adc70dacd5';
+  static String icSearchTrans = '465f6556-9531-4519-ad1f-2089eb4f95f4';
+  static String icChooseBank = '53194060-d180-412c-8ed7-19075ddc89a2';
+  static String icChooseNext = 'c19bd841-508d-4c57-8410-0f0938511a6a';
+  static String icEditTrans = 'ef5c8434-343f-4da5-80cf-409e1cdc3ffa';
+  static String icRefundTrans = '20b5f79a-63c5-441c-9dd6-a557f05e9390';
+  static String icNoteTrans = '68a11915-aa24-415d-9f2a-43d097dd9f10';
 }

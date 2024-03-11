@@ -17,8 +17,13 @@ enum StoreType { STORE, DETAIL, OVERVIEW }
 class StoreScreen extends StatefulWidget {
   final StoreType type;
   final String terminalId;
+  final String terminalName;
 
-  const StoreScreen({super.key, required this.type, this.terminalId = ''});
+  const StoreScreen(
+      {super.key,
+      required this.type,
+      this.terminalId = '',
+      this.terminalName = ''});
 
   @override
   State<StoreScreen> createState() => _StoreScreenState();
@@ -74,8 +79,9 @@ class _StoreScreenState extends State<StoreScreen> {
                           const Expanded(child: StoreView()),
                         if (widget.type == StoreType.DETAIL)
                           Expanded(
-                              child: StoreDetailView(
-                                  terminalId: widget.terminalId)),
+                            child:
+                                StoreDetailView(terminalId: widget.terminalId),
+                          ),
                       ],
                     ),
                   ),

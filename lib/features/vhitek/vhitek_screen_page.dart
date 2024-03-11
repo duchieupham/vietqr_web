@@ -369,7 +369,7 @@ class _VhitekState extends State<_VhitekScreen> {
               param['userIdVhitek'] = provider.userIdVhitek;
               param['bankAccount'] = provider.bankAccountDTO.bankAccount;
               param['userBankName'] = provider.bankAccountDTO.userBankName;
-              param['bankId'] = provider.bankAccountDTO.id;
+              param['bankId'] = provider.bankAccountDTO.bankId;
               print(
                   '-------------------------------------${provider.bankAccountDTO.toJson()}');
               _vhitekBloc.add(ActiveEvent(param: param));

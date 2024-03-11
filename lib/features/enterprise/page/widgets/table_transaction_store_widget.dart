@@ -23,11 +23,11 @@ class _TableTransactionStoreWidgetState
     TableData(title: 'STT'.toUpperCase(), padding: 0),
     TableData(title: 'Mã đơn hàng'.toUpperCase(), width: 100, padding: 0),
     TableData(title: 'Mã điểm bán'.toUpperCase(), width: 100, padding: 0),
-    TableData(title: 'Trạng thái'.toUpperCase(), width: 120, padding: 0),
-    TableData(title: 'Loại GD'.toUpperCase()),
+    TableData(title: 'Trạng thái'.toUpperCase(), width: 80, padding: 0),
+    TableData(title: 'Loại GD'.toUpperCase(), width: 80, padding: 0),
     TableData(title: 'Thời gian\ntạo GD'.toUpperCase(), width: 100, padding: 0),
     TableData(title: 'Nội dung'.toUpperCase(), width: 200),
-    TableData(title: 'Tk ngân nhận'.toUpperCase()),
+    TableData(title: 'Tài khoản\nnhận'.toUpperCase()),
     TableData(title: 'Ghi chú'.toUpperCase(), width: 220),
   ];
 
@@ -205,12 +205,12 @@ class _TableTransactionStoreWidgetState
     return Container(
       height: 40,
       width: width,
-      padding: EdgeInsets.symmetric(horizontal: padding ?? 40),
+      padding: EdgeInsets.symmetric(horizontal: padding ?? 30),
       alignment: Alignment.center,
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
       ),
     );
   }
@@ -239,7 +239,7 @@ class _TableTransactionStoreWidgetState
               style: TextStyle(
                 color: textColor,
                 overflow: TextOverflow.ellipsis,
-                fontSize: fontSize ?? 12,
+                fontSize: fontSize ?? 11,
               ),
             ),
           ),

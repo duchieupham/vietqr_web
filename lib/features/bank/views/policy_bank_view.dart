@@ -1,5 +1,4 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
@@ -11,9 +10,7 @@ import 'package:VietQR/models/bank_card_insert_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
 import 'package:VietQR/models/register_authentication_dto.dart';
-import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -158,12 +155,8 @@ class PolicyBankView extends StatelessWidget {
               bankName: bankTypeDTO.bankName,
               bankAccount: bankAccountController.text,
               userBankName: nameController.text,
-              id: '',
+              bankId: '',
               type: Provider.of<AddBankProvider>(context, listen: false).type,
-              branchId: '',
-              branchName: '',
-              businessId: '',
-              businessName: '',
               isAuthenticated: false,
             );
             Navigator.pop(context);

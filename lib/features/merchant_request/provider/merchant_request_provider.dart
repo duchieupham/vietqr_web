@@ -218,7 +218,7 @@ class MerchantRequestProvider with ChangeNotifier {
   }
 
   checkValidate() {
-    if (_bankAccountDTO.id.isEmpty) {
+    if (_bankAccountDTO.bankId.isEmpty) {
       _errorUserBankName = true;
     }
     if (_username.isEmpty) {
@@ -230,7 +230,7 @@ class MerchantRequestProvider with ChangeNotifier {
     if (_address.isEmpty) {
       _errorAddress = true;
     }
-    if (_bankAccountDTO.id.isEmpty) {
+    if (_bankAccountDTO.bankId.isEmpty) {
       _errorBankAccount = true;
     }
     if (_merchant.isEmpty) {
@@ -243,7 +243,7 @@ class MerchantRequestProvider with ChangeNotifier {
     if (_username.isNotEmpty &&
         _password.isNotEmpty &&
         _address.isNotEmpty &&
-        _bankAccountDTO.id.isNotEmpty &&
+        _bankAccountDTO.bankId.isNotEmpty &&
         _merchant.isNotEmpty) {
       return true;
     } else {

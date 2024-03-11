@@ -15,15 +15,12 @@ import 'package:VietQR/features/add_bank/add_bank_step3.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
-import 'package:VietQR/features/business/blocs/business_information_bloc.dart';
-import 'package:VietQR/features/business/views/business_manager_view.dart';
 import 'package:VietQR/features/create_qr/create_qr_screen.dart';
 import 'package:VietQR/features/create_qr/qr_generate.dart';
 import 'package:VietQR/features/create_qr/qr_generate_dev.dart';
 import 'package:VietQR/features/dashboard/dashboard_screen.dart';
 import 'package:VietQR/features/dashboard/qr_generate_un_authen.dart';
 import 'package:VietQR/features/dkdv/dkdv.dart';
-import 'package:VietQR/features/enterprise/enterprise_screen.dart';
 import 'package:VietQR/features/enterprise/page/store_screen.dart';
 import 'package:VietQR/features/home/home_screen.dart';
 import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
@@ -53,6 +50,7 @@ import 'package:VietQR/features/setting/get_key_page.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
+import 'package:VietQR/features/transaction/transaction_screen.dart';
 import 'package:VietQR/features/transaction_user/views/transaction_user_screen.dart';
 import 'package:VietQR/features/vhitek/vhitek_screen_page.dart';
 import 'package:VietQR/features/wallet/wallet_card_generate.dart';
@@ -400,19 +398,6 @@ final GoRouter _router = GoRouter(
             child: const Introduction(),
           );
         }),
-    GoRoute(
-        path: '/business',
-        redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/business' : '/login',
-        builder: (BuildContext context, GoRouterState state) =>
-            const BusinessManagerView(),
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithoutAnimation(
-            context: context,
-            state: state,
-            child: const BusinessManagerView(),
-          );
-        }),
     // GoRoute(
     //     path: '/enterprise/store',
     //     redirect: (context, state) =>
@@ -426,6 +411,51 @@ final GoRouter _router = GoRouter(
     //         child: const EnterpriseScreen(),
     //       );
     //     }),
+
+    /// Giao dịch
+    GoRoute(
+        path: '/transactions',
+        redirect: (context, state) {
+          Map<String, String> params = state.queryParams;
+          final extra = state.extra;
+          if (extra != null && extra is Map) {
+            return (userId.isNotEmpty)
+                ? '/transactions?type=${extra['type']}'
+                : '/login';
+          }
+
+          return (userId.isNotEmpty)
+              ? '/transactions?type=${params['type']}'
+              : '/login';
+        },
+        builder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          final extra = state.extra;
+          if (extra != null && extra is Map<String, String>) {
+            params = extra;
+          }
+          return TransactionScreen(
+            bankId: params['bankId'] ?? '',
+            type: params['type'] ?? '',
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          Map<String, String> params = state.queryParams;
+          final extra = state.extra;
+          if (extra != null && extra is Map<String, String>) {
+            params = extra;
+          }
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: TransactionScreen(
+              bankId: params['bankId'] ?? '',
+              type: params['type'] ?? '',
+            ),
+          );
+        }),
+
+    /// Cửa hàng
     GoRoute(
         path: '/enterprise/store',
         redirect: (context, state) =>
@@ -580,19 +610,7 @@ final GoRouter _router = GoRouter(
             child: const CallbackPage(),
           );
         }),
-    GoRoute(
-        path: '/transaction',
-        redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/transaction' : '/login',
-        builder: (BuildContext context, GoRouterState state) =>
-            const TransactionUserScreen(),
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return buildPageWithoutAnimation(
-            context: context,
-            state: state,
-            child: const TransactionUserScreen(),
-          );
-        }),
+
     GoRoute(
         path: '/create-qr/:id',
         redirect: (context, state) => (userId.isNotEmpty)
@@ -843,9 +861,6 @@ class _VietQRApp extends State<VietQRApp> {
           BlocProvider<BankBloc>(
             create: (BuildContext context) => BankBloc(),
           ),
-          BlocProvider<TransactionBloc>(
-            create: (BuildContext context) => TransactionBloc(),
-          ),
           BlocProvider<QRBloc>(
             create: (BuildContext context) => QRBloc(),
           ),
@@ -872,9 +887,6 @@ class _VietQRApp extends State<VietQRApp> {
           ),
           BlocProvider<BranchBloc>(
             create: (BuildContext context) => BranchBloc(id: ''),
-          ),
-          BlocProvider<BusinessInformationBloc>(
-            create: (BuildContext context) => BusinessInformationBloc(),
           ),
         ],
         child: MultiProvider(

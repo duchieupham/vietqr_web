@@ -1,12 +1,9 @@
-import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
-import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/notification_dto.dart';
 import 'package:VietQR/models/notification_input_dto.dart';
@@ -126,16 +123,16 @@ class NotificationView extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: () {
-        if (dto.type == Stringify.NOTI_TYPE_NEW_TRANSACTION ||
-            dto.type == Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-          DialogWidget.instance.openPopup(
-            child: TransactionDetailView(
-              transactionId: dto.data,
-            ),
-            width: 500,
-            height: 500,
-          );
-        }
+        // if (dto.type == Stringify.NOTI_TYPE_NEW_TRANSACTION ||
+        //     dto.type == Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+        //   DialogWidget.instance.openPopup(
+        //     child: TransactionDetailView(
+        //       transactionId: dto.data,
+        //     ),
+        //     width: 500,
+        //     height: 500,
+        //   );
+        // }
       },
       child: Container(
         width: width,

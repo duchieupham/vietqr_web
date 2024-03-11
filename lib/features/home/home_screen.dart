@@ -4,7 +4,6 @@ import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/add_bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/add_bank/events/list_bank_event.dart';
 import 'package:VietQR/features/add_bank/states/list_bank_state.dart';
@@ -16,7 +15,6 @@ import 'package:VietQR/features/home/frames/home_frame.dart';
 import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/home/states/home_state.dart';
 import 'package:VietQR/features/home/views/info_account_view.dart';
-import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
@@ -91,6 +89,7 @@ class _HomeScreenState extends State<_HomeScreen> {
     caiValue: '',
   );
   bool focusKeyBroadListen = false;
+
   @override
   void initState() {
     super.initState();
@@ -114,11 +113,11 @@ class _HomeScreenState extends State<_HomeScreen> {
   updateBankAccount() {}
 
   void selectRow(String id) {
-    DialogWidget.instance.openPopup(
-      child: TransactionDetailView(transactionId: id),
-      width: 500,
-      height: 500,
-    );
+    // DialogWidget.instance.openPopup(
+    //   child: TransactionDetailView(transactionId: id),
+    //   width: 500,
+    //   height: 500,
+    // );
   }
 
   @override
@@ -155,9 +154,9 @@ class _HomeScreenState extends State<_HomeScreen> {
             if (state.listBanks.isNotEmpty) {
               context
                   .read<HomeProvider>()
-                  .onChangeBankId(state.listBanks.first.id);
+                  .onChangeBankId(state.listBanks.first.bankId);
               _bloc.add(
-                  BankCardGetDetailEvent(bankId: state.listBanks.first.id));
+                  BankCardGetDetailEvent(bankId: state.listBanks.first.bankId));
             } else {}
           }
         },
@@ -326,16 +325,16 @@ class _HomeScreenState extends State<_HomeScreen> {
                             BankAccountDTO dto = list[index];
                             return GestureDetector(
                               onTap: () async {
-                                provider.onChangeBankId(dto.id);
+                                provider.onChangeBankId(dto.bankId);
                                 _bloc.add(
-                                    BankCardGetDetailEvent(bankId: dto.id));
+                                    BankCardGetDetailEvent(bankId: dto.bankId));
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 10),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 12),
                                 decoration: BoxDecoration(
-                                  color: provider.bankId == dto.id
+                                  color: provider.bankId == dto.bankId
                                       ? colors[index]
                                       : AppColor.WHITE,
                                   borderRadius: BorderRadius.circular(5),
@@ -345,7 +344,7 @@ class _HomeScreenState extends State<_HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _buildTitleCard(dto, userId,
-                                        isSelect: provider.bankId == dto.id),
+                                        isSelect: provider.bankId == dto.bankId),
                                     if ((!dto.isAuthenticated &&
                                         dto.bankCode == 'MB' &&
                                         dto.userId == userId)) ...[

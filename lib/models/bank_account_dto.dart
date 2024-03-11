@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 
 class BankAccountDTO {
-  final String id;
+  final String bankId;
   final String bankAccount;
   final String userBankName;
+  final String bankShortName;
   final String bankCode;
   final String bankName;
   final String imgId;
-  final String bankId;
   final int type;
-  final String branchId;
-  final String businessId;
-  final String branchName;
-  final String businessName;
+  final String bankTypeId;
+  final String nationalId;
+  final String phoneAuthenticated;
+  final String userId;
+  final bool isOwner;
+  final int bankTypeStatus;
+  final String qrCode;
+  final String caiValue;
+  final String ewalletToken;
+  final int unlinkedType;
   final bool isAuthenticated;
-  final String? userId;
-  final String bankShortName;
-  final String customerBankName;
 
   // Dùng cho detail store
-  final String qrCode;
   final String terminalId;
 
   Color? bankColor;
@@ -28,27 +30,26 @@ class BankAccountDTO {
   // final String businessCode;
 
   BankAccountDTO({
-    this.id = '',
-    this.terminalId = '',
-    this.qrCode = '',
+    this.bankId = '',
     this.bankAccount = '',
     this.userBankName = '',
+    this.bankShortName = '',
     this.bankCode = '',
     this.bankName = '',
     this.imgId = '',
     this.type = 0,
-    this.branchId = '',
-    this.bankId = '',
-    this.businessId = '',
-    this.branchName = '',
-    this.businessName = '',
-    this.bankShortName = '',
-    this.customerBankName = '',
+    this.bankTypeId = '',
+    this.nationalId = '',
+    this.phoneAuthenticated = '',
+    this.userId = '',
+    this.isOwner = false,
+    this.bankTypeStatus = -1,
+    this.qrCode = '',
+    this.caiValue = "",
+    this.ewalletToken = '',
+    this.unlinkedType = -1,
     this.isAuthenticated = false,
-    this.userId,
-    this.bankColor,
-    // required this.branchCode,
-    // required this.businessCode,
+    this.terminalId = '',
   });
 
   setColor(value) {
@@ -57,45 +58,47 @@ class BankAccountDTO {
 
   factory BankAccountDTO.fromJson(Map<String, dynamic> json, {Color? color}) {
     return BankAccountDTO(
-      id: json['id'] ?? '',
-      terminalId: json['terminalId'] ?? '',
-      qrCode: json['qrCode'] ?? '',
-      bankAccount: json['bankAccount'] ?? '',
-      userBankName: json['userBankName'] ?? '',
-      bankCode: json['bankCode'] ?? '',
-      bankName: json['bankName'] ?? '',
-      imgId: json['imgId'] ?? '',
-      type: json['type'] ?? 0,
-      bankId: json['bankId'] ?? '',
-      bankShortName: json['bankShortName'] ?? '',
-      branchId: json['branchId'] ?? '',
-      businessId: json['businessId'] ?? '',
-      branchName: json['branchName'] ?? '',
-      businessName: json['businessName'] ?? '',
-      customerBankName: json['customerBankName'] ?? '',
-      isAuthenticated: json['authenticated'] ?? false,
-      userId: json['userId'] ?? '',
-      // branchCode: json['branchCode'],
-      // businessCode: json['businessCode'],
+      bankId: json["id"],
+      bankAccount: json["bankAccount"],
+      userBankName: json["userBankName"],
+      bankShortName: json["bankShortName"],
+      bankCode: json["bankCode"],
+      bankName: json["bankName"],
+      imgId: json["imgId"],
+      type: json["type"],
+      bankTypeId: json["bankTypeId"],
+      nationalId: json["nationalId"],
+      phoneAuthenticated: json["phoneAuthenticated"],
+      userId: json["userId"],
+      isOwner: json["isOwner"],
+      bankTypeStatus: json["bankTypeStatus"],
+      qrCode: json["qrCode"],
+      caiValue: json["caiValue"],
+      ewalletToken: json["ewalletToken"],
+      unlinkedType: json["unlinkedType"],
+      isAuthenticated: json["authenticated"],
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['id'] = id;
-    data['bankId'] = bankId;
-    data['bankAccount'] = bankAccount;
-    data['userBankName'] = userBankName;
-    data['bankCode'] = bankCode;
-    data['bankName'] = bankName;
-    data['imgId'] = imgId;
-    data['type'] = type;
-    data['branchId'] = branchId;
-    data['businessId'] = businessId;
-    data['branchName'] = branchName;
-    data['businessName'] = businessName;
-    data['authenticated'] = isAuthenticated;
-    data['userId'] = userId;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "id": bankId,
+    "bankAccount": bankAccount,
+    "userBankName": userBankName,
+    "bankShortName": bankShortName,
+    "bankCode": bankCode,
+    "bankName": bankName,
+    "imgId": imgId,
+    "type": type,
+    "bankTypeId": bankTypeId,
+    "nationalId": nationalId,
+    "phoneAuthenticated": phoneAuthenticated,
+    "userId": userId,
+    "isOwner": isOwner,
+    "bankTypeStatus": bankTypeStatus,
+    "qrCode": qrCode,
+    "caiValue": caiValue,
+    "ewalletToken": ewalletToken,
+    "unlinkedType": unlinkedType,
+    "authenticated": isAuthenticated,
+  };
 }

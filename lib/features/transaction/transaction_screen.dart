@@ -1,0 +1,66 @@
+import 'package:VietQR/commons/enums/type_menu_home.dart';
+import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_home.dart';
+import 'package:VietQR/features/transaction/views/transaction_fram_view.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'views/transaction_accounting_view.dart';
+import 'views/transaction_payment_view.dart';
+
+class TransactionScreen extends StatefulWidget {
+  final String bankId;
+  final String type;
+
+  const TransactionScreen(
+      {super.key, required this.bankId, required this.type});
+
+  @override
+  State<TransactionScreen> createState() => _TransactionScreenState();
+}
+
+class _TransactionScreenState extends State<TransactionScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TransactionFrame(
+      menu: MenuLeft(
+        currentType: MenuHomeType.TRANSACTION,
+        subMenuTransaction: [
+          ItemMenuHome(
+            title: 'Giao dịch thanh toán',
+            isSelect: widget.type == '0',
+            onTap: () {
+              context.push('/transactions?type=0');
+            },
+          ),
+          ItemMenuHome(
+            title: 'Giao dịch chưa hạch toán',
+            isSelect: widget.type == '1',
+            onTap: () {
+              context.push('/transactions?type=1');
+            },
+          ),
+          // ItemMenuHome(
+          //   title: 'Giao dịch hoàn tiền',
+          //   isSelect: false,
+          //   onTap: () {
+          //     context.push('/transactions?type=2&bankId=${widget.bankId}');
+          //   },
+          // ),
+        ],
+      ),
+      title: const SizedBox(),
+      child: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (widget.type == '0') return const TransactionPaymentView();
+    return const TransactionAccountingView();
+  }
+}

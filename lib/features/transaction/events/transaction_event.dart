@@ -1,3 +1,4 @@
+import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction_branch_input_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -9,43 +10,64 @@ class TransactionEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class TransactionEventGetList extends TransactionEvent {
+class GetTransOwnerEvent extends TransactionEvent {
   final TransactionInputDTO dto;
+  final bool isLoadMore;
 
-  const TransactionEventGetList({
+  const GetTransOwnerEvent({
     required this.dto,
+    this.isLoadMore = false,
   });
 
   @override
-  List<Object?> get props => [dto];
+  List<Object?> get props => [dto, isLoadMore];
 }
 
-class TransactionEventFetch extends TransactionEvent {
+class GetTransNotOwnerEvent extends TransactionEvent {
   final TransactionInputDTO dto;
+  final bool isLoadMore;
 
-  const TransactionEventFetch({
+  const GetTransNotOwnerEvent({
     required this.dto,
+    this.isLoadMore = false,
   });
 
   @override
-  List<Object?> get props => [dto];
+  List<Object?> get props => [dto, isLoadMore];
 }
 
-class TransactionEventGetDetail extends TransactionEvent {
-  final String id;
+class GetTransUnsettledNotOwnerEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final bool isLoadMore;
 
-  const TransactionEventGetDetail({required this.id});
+  const GetTransUnsettledNotOwnerEvent({
+    required this.dto,
+    this.isLoadMore = false,
+  });
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [dto, isLoadMore];
 }
 
-class TransactionEventGetListBranch extends TransactionEvent {
-  final TransactionBranchInputDTO dto;
+class GetTransUnsettledEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final bool isLoadMore;
 
-  const TransactionEventGetListBranch({
+  const GetTransUnsettledEvent({
     required this.dto,
+    this.isLoadMore = false,
   });
+
+  @override
+  List<Object?> get props => [dto, isLoadMore];
+}
+
+class GetListBankEvent extends TransactionEvent {}
+
+class UpdateBankAccountEvent extends TransactionEvent {
+  final BankAccountDTO dto;
+
+  const UpdateBankAccountEvent(this.dto);
 
   @override
   List<Object?> get props => [dto];

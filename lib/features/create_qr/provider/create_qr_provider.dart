@@ -71,7 +71,7 @@ class CreateQRProvider with ChangeNotifier {
     _bankAccountDTO = value;
     showFormBankAccountOther = false;
 
-    voidChooseBank(_bankAccountDTO.id);
+    voidChooseBank(_bankAccountDTO.bankId);
   }
 
   voidChooseBank(String id) {

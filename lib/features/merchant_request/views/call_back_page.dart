@@ -31,7 +31,7 @@ class _CallbackPageState extends State<CallbackPage> {
   final TextEditingController hostingController = TextEditingController();
   BankAccountDTO _bankAccountDTO = BankAccountDTO();
   List<CallBackDTO> listTrans = [];
-  ApiServiceDTO _apiServiceDTO = ApiServiceDTO();
+  ApiServiceDTO _apiServiceDTO = const ApiServiceDTO();
   CallBackDTO _callBackDTO = CallBackDTO();
   late RunCallbackBloc _bloc;
   @override
@@ -380,7 +380,7 @@ class _CallbackPageState extends State<CallbackPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _bankAccountDTO.customerBankName,
+                      _bankAccountDTO.userBankName,
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],

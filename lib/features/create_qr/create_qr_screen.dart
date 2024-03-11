@@ -110,7 +110,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               createQRBloc
                   .add(BankEventGetDetail(bankId: widget.bankAccountId));
               for (var bank in bankAccounts) {
-                if (bank.id == widget.bankAccountId) {
+                if (bank.bankId == widget.bankAccountId) {
                   context.read<CreateQRProvider>().updateBankAccountDto(bank);
                 }
               }
@@ -119,7 +119,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                   .read<CreateQRProvider>()
                   .updateBankAccountDto(bankAccounts.first);
               createQRBloc
-                  .add(BankEventGetDetail(bankId: bankAccounts.first.id));
+                  .add(BankEventGetDetail(bankId: bankAccounts.first.bankId));
             }
           }
           if (state is BankDetailSuccessState) {
@@ -195,7 +195,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       .read<CreateQRProvider>()
                       .updateBankAccountDto(bankAccounts[indexBankAccount]);
                   createQRBloc.add(BankEventGetDetail(
-                      bankId: bankAccounts[indexBankAccount].id));
+                      bankId: bankAccounts[indexBankAccount].bankId));
                 }
 
                 if (event.data.keyLabel == '-') {
@@ -210,7 +210,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       .read<CreateQRProvider>()
                       .updateBankAccountDto(bankAccounts[indexBankAccount]);
                   createQRBloc.add(BankEventGetDetail(
-                      bankId: bankAccounts[indexBankAccount].id));
+                      bankId: bankAccounts[indexBankAccount].bankId));
                 }
                 if (!focusAmount) {
                   if (event.logicalKey == LogicalKeyboardKey.enter) {
@@ -254,7 +254,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               showTitle: false,
               fromUrl: '/create-qr',
               qrGeneratedDTO: qrGeneratedDTO,
-              bankId: provider.bankAccountDTO.id,
+              bankId: provider.bankAccountDTO.bankId,
             )
           : const SizedBox.shrink();
     });
@@ -516,7 +516,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                             amount = provider.money.replaceAll(',', '');
                           }
 
-                          if (provider.bankAccountDTO.id.isEmpty) {
+                          if (provider.bankAccountDTO.bankId.isEmpty) {
                             if (showDialog) {
                               Navigator.pop(context);
                               showDialog = false;
@@ -526,7 +526,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                                   title: 'TK ngân hàng không hợp lệ',
                                   msg: 'Vui lòng chọn tài khoản ngân hàng');
                             }
-                          } else if (provider.bankAccountDTO.id.isNotEmpty) {
+                          } else if (provider
+                              .bankAccountDTO.bankId.isNotEmpty) {
                             QRCreateDTO qrCreateDTO = QRCreateDTO(
                               bankId: bankDetailDTO.id,
                               amount: amount,
@@ -689,7 +690,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       }
                     }
                   } else {
-                    if (provider.bankAccountDTO.id.isEmpty) {
+                    if (provider.bankAccountDTO.bankId.isEmpty) {
                       showDialog = true;
                       DialogWidget.instance.openMsgDialog(
                           title: 'TK ngân hàng không hợp lệ',
@@ -704,7 +705,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       if (provider.money.isNotEmpty) {
                         amount = provider.money.replaceAll(',', '');
                       }
-                      if (provider.bankAccountDTO.id.isNotEmpty) {
+                      if (provider.bankAccountDTO.bankId.isNotEmpty) {
                         QRCreateDTO qrCreateDTO = QRCreateDTO(
                           bankId: bankDetailDTO.id,
                           amount: amount,
@@ -843,7 +844,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       return GestureDetector(
                         onTap: () async {
                           provider.updateBankAccountDto(dto);
-                          createQRBloc.add(BankEventGetDetail(bankId: dto.id));
+                          createQRBloc
+                              .add(BankEventGetDetail(bankId: dto.bankId));
                           // _bloc.add(BankCardGetDetailEvent(bankId: dto.id));
                         },
                         child: Container(
@@ -851,7 +853,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 12),
                           decoration: BoxDecoration(
-                            color: provider.bankId == dto.id
+                            color: provider.bankId == dto.bankId
                                 ? colors[index]
                                 : AppColor.WHITE,
                             border: Border.all(color: AppColor.GREY_BUTTON),
@@ -862,7 +864,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildTitleCard(dto, userId,
-                                  isSelect: provider.bankId == dto.id),
+                                  isSelect: provider.bankId == dto.bankId),
                             ],
                           ),
                         ),

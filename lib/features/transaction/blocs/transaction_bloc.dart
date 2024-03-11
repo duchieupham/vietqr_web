@@ -1,59 +1,228 @@
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/repositories/transaction_repository.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
-import 'package:VietQR/models/transaction_receive_dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  TransactionBloc() : super(TransactionInitialState()) {
-    on<TransactionEventGetList>(_getTransactions);
-    on<TransactionEventFetch>(_fetchTransactions);
-    on<TransactionEventGetDetail>(_getDetail);
+  TransactionBloc()
+      : super(const TransactionState(
+          listBanks: [],
+          listTrans: [],
+          tranMaps: {},
+        )) {
+    on<GetTransOwnerEvent>(_getTransactions);
+    on<GetTransNotOwnerEvent>(_getTransactionsNotOwner);
+    on<GetListBankEvent>(_getBankAccounts);
+    on<UpdateBankAccountEvent>(_updateBankAccount);
+    on<GetTransUnsettledEvent>(_getTransactionsUnsettled);
   }
-}
 
-const TransactionRepository _transactionRepository = TransactionRepository();
+  final repository = TransactionRepository();
 
-void _getTransactions(TransactionEvent event, Emitter emit) async {
-  try {
-    if (event is TransactionEventGetList) {
-      emit(TransactionLoadingState());
-      final List<RelatedTransactionReceiveDTO> result =
-          await _transactionRepository.getTransactionByBankId(event.dto);
-      emit(TransactionGetListSuccessState(list: result));
+  void _getBankAccounts(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetListBankEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        List<BankAccountDTO> list = await repository.getListBankAccount();
+        BankAccountDTO? bankDTO;
+
+        if (list.isNotEmpty) {
+          List<BankAccountDTO> listLinked =
+              list.where((e) => e.isAuthenticated).toList();
+          List<BankAccountDTO> listNotLinked =
+              list.where((e) => !e.isAuthenticated).toList();
+
+          list = [...listLinked, ...listNotLinked];
+          bankDTO = list.first;
+        }
+
+        emit(state.copyWith(
+          request: TransType.GET_BANKS,
+          listBanks: list,
+          bankDTO: bankDTO,
+          status: BlocStatus.UNLOADING,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          msg: 'Không thể tải danh sách. Vui lòng kiểm tra lại kết nối'));
     }
-  } catch (e) {
-    LOG.error(e.toString());
-    emit(TransactionGetListFailedState());
+  }
+
+  void _getTransactionsNotOwner(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetTransNotOwnerEvent) {
+        bool isLoadMore = true;
+        int offset = event.dto.offset;
+        List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
+        Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
+        maps.addAll(state.tranMaps);
+
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        final List<RelatedTransactionReceiveDTO> result =
+            await repository.getTransNotOwner(event.dto);
+
+        if (result.isEmpty || result.length < 20) {
+          isLoadMore = false;
+        }
+
+        if (event.isLoadMore && result.isNotEmpty) {
+          trans = [...trans, ...result];
+        } else {
+          trans = [...result];
+        }
+
+        maps['$offset'] = result;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          tranMaps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(request: TransType.ERROR));
+    }
+  }
+
+  void _getTransactionsUnsettled(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetTransUnsettledEvent) {
+        bool isLoadMore = true;
+        int offset = event.dto.offset;
+        List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
+        Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
+        maps.addAll(state.tranMaps);
+
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        final List<RelatedTransactionReceiveDTO> result =
+            await repository.getTransUnsettled(event.dto);
+
+        if (result.isEmpty || result.length < 20) {
+          isLoadMore = false;
+        }
+
+        if (event.isLoadMore && result.isNotEmpty) {
+          trans = [...trans, ...result];
+        } else {
+          trans = [...result];
+        }
+
+        maps['$offset'] = result;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          tranMaps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(request: TransType.ERROR));
+    }
+  }
+
+  void _getTransactions(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetTransOwnerEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        bool isLoadMore = true;
+        int offset = event.dto.offset;
+        List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
+        Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
+        maps.addAll(state.tranMaps);
+
+        final List<RelatedTransactionReceiveDTO> result =
+            await repository.getTransactionByBankId(event.dto);
+
+        if (result.isEmpty || result.length < 20) {
+          isLoadMore = false;
+        }
+
+        if (event.isLoadMore && result.isNotEmpty) {
+          trans = [...trans, ...result];
+        } else {
+          trans = [...result];
+        }
+
+        maps['$offset'] = result;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          tranMaps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _updateBankAccount(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is UpdateBankAccountEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+
+        emit(state.copyWith(
+          request: TransType.UPDATE_BANK,
+          bankDTO: event.dto,
+          status: BlocStatus.UNLOADING,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
   }
 }
 
-void _fetchTransactions(TransactionEvent event, Emitter emit) async {
-  try {
-    if (event is TransactionEventFetch) {
-      emit(TransactionLoadingState());
-      final List<RelatedTransactionReceiveDTO> result =
-          await _transactionRepository.getTransactionByBankId(event.dto);
-      emit(TransactionFetchSuccessState(list: result));
-    }
-  } catch (e) {
-    LOG.error(e.toString());
-    emit(TransactionFetchFailedState());
-  }
-}
-
-void _getDetail(TransactionEvent event, Emitter emit) async {
-  try {
-    if (event is TransactionEventGetDetail) {
-      emit(TransactionDetailLoadingState());
-      TransactionReceiveDTO dto =
-          await _transactionRepository.getTransactionDetail(event.id);
-      emit(TransactionDetailSuccessState(dto: dto));
-    }
-  } catch (e) {
-    LOG.error(e.toString());
-    emit(TransactionDetailFailedState());
-  }
-}
+//
+// void _fetchTransactions(TransactionEvent event, Emitter emit) async {
+//   try {
+//     if (event is TransactionEventFetch) {
+//       emit(TransactionLoadingState());
+//       final List<RelatedTransactionReceiveDTO> result =
+//           await _transactionRepository.getTransactionByBankId(event.dto);
+//       emit(TransactionFetchSuccessState(list: result));
+//     }
+//   } catch (e) {
+//     LOG.error(e.toString());
+//     emit(TransactionFetchFailedState());
+//   }
+// }
+//
+// void _getDetail(TransactionEvent event, Emitter emit) async {
+//   try {
+//     if (event is TransactionEventGetDetail) {
+//       emit(TransactionDetailLoadingState());
+//       TransactionReceiveDTO dto =
+//           await _transactionRepository.getTransactionDetail(event.id);
+//       emit(TransactionDetailSuccessState(dto: dto));
+//     }
+//   } catch (e) {
+//     LOG.error(e.toString());
+//     emit(TransactionDetailFailedState());
+//   }
+//
+// }

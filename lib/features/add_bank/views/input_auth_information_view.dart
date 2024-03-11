@@ -82,12 +82,8 @@ class InputAuthInformationView extends StatelessWidget {
             bankName: bankTypeDTO.bankName,
             bankAccount: bankAccountController.text,
             userBankName: nameController.text,
-            id: '',
+            bankId: '',
             type: Provider.of<AddBankProvider>(context, listen: false).type,
-            branchId: '',
-            branchName: '',
-            businessId: '',
-            businessName: '',
             isAuthenticated: false,
           );
           phoneAuthenController.clear();

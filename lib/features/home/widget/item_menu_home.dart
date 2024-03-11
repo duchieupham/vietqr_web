@@ -8,13 +8,14 @@ class ItemMenuHome extends StatefulWidget {
   final String iconId;
   final String title;
   final Function onTap;
-  final bool isSelect, isLogout, enableDropDownList, enableMenuCard;
+  final bool isSelect, isLogout, enableDropDownList, enableMenuCard, isFirst;
   final String? pathImage;
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
   final double titleSize;
   final bool isOnlyIcon, isDefaultColor;
   final EdgeInsets paddingIcon;
+
   const ItemMenuHome(
       {Key? key,
       required this.title,
@@ -30,6 +31,7 @@ class ItemMenuHome extends StatefulWidget {
       this.enableMenuCard = false,
       this.isOnlyIcon = false,
       this.isDefaultColor = false,
+      this.isFirst = false,
       this.paddingIcon = EdgeInsets.zero})
       : super(key: key);
 
@@ -70,6 +72,11 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
       return AppColor.GREY_BUTTON;
     }
     return Colors.transparent;
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

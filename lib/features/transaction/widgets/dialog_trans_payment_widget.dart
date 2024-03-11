@@ -7,9 +7,9 @@ import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
-import 'dropdown_widget.dart';
+import 'drop_down_trans_widget.dart';
 
-class DialogFilterTransWidget extends StatefulWidget {
+class DialogTransPaymentWidget extends StatefulWidget {
   final int typeFilter;
   final int status;
   final int typeTime;
@@ -18,7 +18,7 @@ class DialogFilterTransWidget extends StatefulWidget {
   final String terminalName;
   final Function(int, int, int, DateTime, DateTime) callBack;
 
-  const DialogFilterTransWidget({
+  const DialogTransPaymentWidget({
     super.key,
     required this.typeFilter,
     required this.status,
@@ -30,17 +30,18 @@ class DialogFilterTransWidget extends StatefulWidget {
   });
 
   @override
-  State<DialogFilterTransWidget> createState() =>
-      _DialogFilterTransWidgetState();
+  State<DialogTransPaymentWidget> createState() =>
+      _DialogTransPaymentWidgetState();
 }
 
-class _DialogFilterTransWidgetState extends State<DialogFilterTransWidget> {
+class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
   MonthCalculator monthCalculator = MonthCalculator();
 
   List<DataFilter> listFilterBy = [
     const DataFilter(id: 9, name: 'Tất cả (mặc định)'),
     const DataFilter(id: 5, name: 'Trạng thái giao dịch'),
     const DataFilter(id: 1, name: 'Mã giao dịch'),
+    const DataFilter(id: 4, name: 'Mã điểm bán'),
     const DataFilter(id: 2, name: 'Mã đơn hàng (Order ID)'),
     const DataFilter(id: 3, name: 'Nội dung'),
   ];
@@ -219,7 +220,7 @@ class _DialogFilterTransWidgetState extends State<DialogFilterTransWidget> {
   }
 
   Widget _buildFilterByWidget() {
-    return DropdownWidget(
+    return DropdownTransWidget(
       title: 'Lọc theo',
       list: listFilterBy,
       filter: _filterBy,
@@ -232,7 +233,7 @@ class _DialogFilterTransWidgetState extends State<DialogFilterTransWidget> {
   }
 
   Widget _buildFilterByStatusWidget() {
-    return DropdownWidget(
+    return DropdownTransWidget(
       list: listFilterByStatus,
       filter: _filterByStatus,
       callBack: (value) {
@@ -244,7 +245,7 @@ class _DialogFilterTransWidgetState extends State<DialogFilterTransWidget> {
   }
 
   Widget _buildFilterByTimeWidget() {
-    return DropdownWidget(
+    return DropdownTransWidget(
       title: 'Thời gian',
       list: listFilterByTime,
       filter: _filterByTime,

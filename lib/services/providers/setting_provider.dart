@@ -21,28 +21,25 @@ class SettingProvider with ChangeNotifier {
 
   List<String> get bankIds => _bankIds;
 
-  BankAccountDTO _bankAccountDTO = BankAccountDTO();
+  final BankAccountDTO _bankAccountDTO = BankAccountDTO();
 
   BankAccountDTO get bankAccountDTO => _bankAccountDTO;
   List<BankAccountDTO> bankAccounts = [];
 
   BankAccountDTO _bankAccountSelected = BankAccountDTO(
       bankAccount: '',
-      id: '',
+      bankId: '',
       userBankName: '',
       bankCode: '',
       bankName: '',
       imgId: '',
       type: 0,
-      branchId: '',
-      businessId: '',
-      branchName: '',
-      businessName: '',
       isAuthenticated: false);
 
   BankAccountDTO get bankAccountSelected => _bankAccountSelected;
 
   final homeRepository = const HomeRepository();
+
   getListBankAccount() async {
     List<BankAccountDTO> result = await homeRepository
         .getListBankAccount(UserInformationHelper.instance.getUserId());

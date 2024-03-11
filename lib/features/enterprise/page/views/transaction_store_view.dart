@@ -58,6 +58,7 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
       _fromDate = _formatFromDate(now);
       _toDate = _endDate(now);
 
+      bloc.add(GetStoreDetailEvent(widget.terminalId));
       bloc.add(GetTransStoreEvent(
         type: typeFilter,
         terminalId: widget.terminalId,
@@ -102,7 +103,7 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
     setState(() {});
   }
 
-  void _onFilter() async {
+  void _onFilter(String terminalName) async {
     await showDialog(
       barrierDismissible: false,
       context: context,
@@ -113,6 +114,7 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
           typeTime: typeTime,
           fromDate: _fromDate,
           toDate: _toDate,
+          terminalName: terminalName,
           callBack: _onReceive,
         );
       },
@@ -173,7 +175,7 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
         ),
         const SizedBox(width: 24),
         GestureDetector(
-          onTap: _onFilter,
+          onTap: () => _onFilter(state.storeDetailModel.name),
           child: Container(
             width: 40,
             height: 40,
@@ -292,8 +294,8 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
 
   String get hinText {
     if (typeFilter == 1) return 'Tìm kiếm theo mã giao dịch';
-    if (typeTime == 2) return 'Tìm kiếm theo mã đơn hàng';
-    if (typeTime == 3) return 'Tìm kiếm theo nội dung';
+    if (typeFilter == 2) return 'Tìm kiếm theo mã đơn hàng';
+    if (typeFilter == 3) return 'Tìm kiếm theo nội dung';
     return 'Tìm kiếm giao dịch';
   }
 
@@ -331,7 +333,7 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
               ),
               const SizedBox(width: 24),
               GestureDetector(
-                onTap: _onFilter,
+                onTap: () => _onFilter(state.storeDetailModel.name),
                 child: Container(
                   width: 40,
                   height: 40,
