@@ -30,68 +30,36 @@ class _QrStoreWidgetState extends State<QrStoreWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (isMobile) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
         children: [
           _buildQr(widget.dto.bank),
-          const SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+            padding: const EdgeInsets.only(right: 24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTextButton(
                   title: 'Tạo mã VietQR giao dịch',
-                  isMobile: isMobile,
                   onTap: () {
                     context.go('/create-qr/${widget.dto.id}');
                   },
                 ),
                 _buildTextButton(
                   title: 'Lưu ảnh VietQR',
-                  isMobile: isMobile,
                   onTap: () => onSaveImage(context),
                 ),
                 _buildTextButton(
                   title: 'In mã VietQR',
                   isBorder: false,
-                  isMobile: isMobile,
                   onTap: onPrint,
                 ),
               ],
             ),
           ),
         ],
-      );
-    }
-    return Row(
-      children: [
-        _buildQr(widget.dto.bank),
-        Padding(
-          padding: const EdgeInsets.only(right: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildTextButton(
-                title: 'Tạo mã VietQR giao dịch',
-                onTap: () {
-                  context.go('/create-qr/${widget.dto.id}');
-                },
-              ),
-              _buildTextButton(
-                title: 'Lưu ảnh VietQR',
-                onTap: () => onSaveImage(context),
-              ),
-              _buildTextButton(
-                title: 'In mã VietQR',
-                isBorder: false,
-                onTap: onPrint,
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 

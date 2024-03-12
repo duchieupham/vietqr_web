@@ -13,6 +13,8 @@ enum EnterpriseType {
   GET_STORE_DETAIL,
   GET_MEMBERS,
   GET_TRANS,
+  UPDATE_NOTE,
+  ERROR,
 }
 
 enum EnterpriseMenuType { OVERVIEW, STORE }

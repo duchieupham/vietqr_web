@@ -21,13 +21,22 @@ class TransactionStoreDTO {
   final int? timePaid;
   final int? status;
   final int? type;
-  final String? note;
+  String? note;
   final String? referenceNumber;
   final String? orderId;
   final String? terminalCode;
 
   String get timeCreate => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(time ?? 0));
+      .format(DateTime.fromMillisecondsSinceEpoch((time ?? 0) * 1000));
+
+  String get timePayment => DateFormat('HH:mm:ss\ndd/MM/yyyy')
+      .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
+
+  String get timeCreateEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
+      .format(DateTime.fromMillisecondsSinceEpoch(time ?? 0 * 1000));
+
+  String get timePaymentEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
+      .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
 
   String get transactionType => type == 1
       ? 'QR cửa hàng'

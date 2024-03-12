@@ -541,7 +541,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
         GestureDetector(
           onTap: _onSearch,
           child: Container(

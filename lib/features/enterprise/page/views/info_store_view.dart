@@ -37,31 +37,24 @@ class _InfoStoreViewState extends State<InfoStoreView> {
       child: BlocConsumer<EnterpriseBloc, EnterpriseState>(
         listener: (context, state) {},
         builder: (context, state) {
-          if (isKWeb) return _buildWeb(state);
-          return _buildMobile(state);
+          return _buildWeb(state);
         },
       ),
     );
   }
 
-  Widget _buildMobile(EnterpriseState state) {
-    return Column(
-      children: [
-        FormInfoStoreWidget(dto: state.storeDetailModel),
-        const SizedBox(height: 24),
-        QrStoreWidget(dto: state.storeDetailModel),
-      ],
-    );
-  }
-
   Widget _buildWeb(EnterpriseState state) {
-    return SingleChildScrollView(
-      child: Row(
-        children: [
-          Expanded(child: FormInfoStoreWidget(dto: state.storeDetailModel)),
-          QrStoreWidget(dto: state.storeDetailModel),
-        ],
-      ),
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: FormInfoStoreWidget(dto: state.storeDetailModel),
+        ),
+        Expanded(
+          flex: 3,
+          child: QrStoreWidget(dto: state.storeDetailModel),
+        ),
+      ],
     );
   }
 }

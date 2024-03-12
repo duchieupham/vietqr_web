@@ -1,11 +1,16 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/features/enterprise/enterprise.dart';
+import 'package:VietQR/features/enterprise/page/widgets/dialog_edit_note_store_widget.dart';
 import 'package:VietQR/features/enterprise/page/widgets/dialog_filter_trans_widget.dart';
 import 'package:VietQR/features/enterprise/page/widgets/table_transaction_store_widget.dart';
+import 'package:VietQR/models/transaction_store_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class TransactionStoreView extends StatefulWidget {
@@ -136,26 +141,55 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
     }
   }
 
+  void _onChooseNote(int offset, TransactionStoreDTO dto) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogEditNoteStoreWidget(
+          dto: dto,
+          update: (value) {
+            bloc.add(UpdateNoteEvent(dto: value, offset: offset));
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<EnterpriseBloc>(
       create: (context) => bloc,
       child: BlocConsumer<EnterpriseBloc, EnterpriseState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.request == EnterpriseType.UPDATE_NOTE) {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+              msg: 'Cập nhật thành công',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Theme.of(context).cardColor,
+              textColor: Theme.of(context).hintColor,
+              fontSize: 15,
+              webBgColor: 'rgba(255, 255, 255)',
+              webPosition: 'center',
+            );
+          }
+        },
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isKWeb) ...[
-                _buildHeaderWeb(context, state),
-                const SizedBox(height: 40),
-                _buildBodyWeb(state),
-              ] else ...[
-                _buildHeaderMobile(context, state),
-                const SizedBox(height: 40),
-                _buildBodyMobile(state),
-              ],
-            ],
+          return SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeaderWeb(context, state),
+                  const SizedBox(height: 40),
+                  _buildBodyWeb(state),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -165,100 +199,121 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
   Widget _buildHeaderWeb(BuildContext context, EnterpriseState state) {
     return Row(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text('Danh sách giao dịch',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('0 giao dịch'),
-          ],
-        ),
-        const SizedBox(width: 24),
-        GestureDetector(
-          onTap: () => _onFilter(state.storeDetailModel.name),
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: AppColor.BLUE_TEXT.withOpacity(0.25),
-            ),
-            child: const Icon(Icons.filter_list, color: AppColor.WHITE),
-          ),
-        ),
-        Container(
-          height: 40,
-          margin: const EdgeInsets.only(left: 12, right: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          width: 200,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: AppColor.GREY_BG,
-            border: Border.all(color: AppColor.GREY_LIGHT),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: TextField(
-            style: const TextStyle(fontSize: 12),
-            controller: searchController,
-            enabled: typeFilter != 5,
-            onChanged: (value) {
-              setState(() {
-                _value = value;
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.only(bottom: 18),
-              border: InputBorder.none,
-              hintText: hinText,
-              hintStyle:
-                  const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-              suffixIcon: searchController.text.isNotEmpty
-                  ? GestureDetector(
-                      onTap: _onClear,
-                      child: const Icon(Icons.close, size: 18),
-                    )
-                  : null,
-              suffixIconConstraints: const BoxConstraints(),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: _onSearch,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: AppColor.BLUE_TEXT,
-            ),
-            child: const Icon(Icons.search, color: AppColor.WHITE),
-          ),
-        ),
-        const SizedBox(width: 24),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Lọc theo:',
-                style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-              ),
-              const SizedBox(height: 4),
-              Wrap(
-                children: [
-                  if (typeFilter == 9) _buildFilterWith('Tất cả (mặc định)'),
-                  _buildFilterWith('Thời gian: $timeValue'),
-                  if (typeFilter == 1)
-                    _buildFilterWith('Mã giao dịch: ${searchController.text}'),
-                  if (typeFilter == 3)
-                    _buildFilterWith('Nội dung: ${searchController.text}'),
-                  if (typeFilter == 5)
-                    _buildFilterWith('Trạng thái: $statusValue'),
-                  if (typeFilter == 2)
-                    _buildFilterWith('Mã đơn hàng: ${searchController.text}'),
-                ],
-              ),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Danh sách giao dịch',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('0 giao dịch'),
+                  ],
+                ),
+                const SizedBox(width: 24),
+                Container(
+                  width: 200,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: AppColor.GREY_BG,
+                    border: Border.all(color: AppColor.GREY_LIGHT),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: TextField(
+                    style: const TextStyle(fontSize: 12),
+                    controller: searchController,
+                    onChanged: (value) {
+                      setState(() {
+                        _value = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.only(
+                          bottom: 16, left: 12, right: 12),
+                      hintText: hinText,
+                      hintStyle: const TextStyle(
+                          fontSize: 12, color: AppColor.GREY_TEXT),
+                      suffixIcon: searchController.text.isNotEmpty
+                          ? GestureDetector(
+                              onTap: _onClear,
+                              child: const Padding(
+                                padding: EdgeInsets.only(right: 8.0),
+                                child: Icon(Icons.close, size: 18),
+                              ),
+                            )
+                          : null,
+                      suffixIconConstraints: const BoxConstraints(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () => _onFilter(state.storeDetailModel.name),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32),
+                      color: AppColor.BLUE_TEXT.withOpacity(0.25),
+                    ),
+                    child: Image(
+                      image: ImageUtils.instance
+                          .getImageNetWork(AppImages.icFilterTrans),
+                      width: 28,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: _onSearch,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(32),
+                      color: AppColor.BLUE_TEXT,
+                    ),
+                    child: Image(
+                      image: ImageUtils.instance
+                          .getImageNetWork(AppImages.icSearchTrans),
+                      width: 28,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Lọc theo:',
+                      style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+                    ),
+                    const SizedBox(height: 4),
+                    Wrap(
+                      children: [
+                        if (typeFilter == 9)
+                          _buildFilterWith('Tất cả (mặc định)'),
+                        _buildFilterWith('Thời gian: $timeValue'),
+                        if (typeFilter == 1)
+                          _buildFilterWith(
+                              'Mã giao dịch: ${searchController.text}'),
+                        if (typeFilter == 3)
+                          _buildFilterWith(
+                              'Nội dung: ${searchController.text}'),
+                        if (typeFilter == 5)
+                          _buildFilterWith('Trạng thái: $statusValue'),
+                        if (typeFilter == 2)
+                          _buildFilterWith(
+                              'Mã đơn hàng: ${searchController.text}'),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         ButtonWidget(
@@ -271,9 +326,8 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
             Navigator.pop(context);
           },
           borderRadius: 5,
-          height: 40,
+          height: 30,
         ),
-        const SizedBox(width: 24),
       ],
     );
   }
@@ -314,189 +368,15 @@ class _TransactionStoreViewState extends State<TransactionStoreView> {
     );
   }
 
-  Widget _buildHeaderMobile(BuildContext context, EnterpriseState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Danh sách giao dịch',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('${state.transactions.length} giao dịch'),
-                ],
-              ),
-              const SizedBox(width: 24),
-              GestureDetector(
-                onTap: () => _onFilter(state.storeDetailModel.name),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: AppColor.BLUE_TEXT.withOpacity(0.25),
-                  ),
-                  child: const Icon(Icons.filter_list, color: AppColor.WHITE),
-                ),
-              ),
-              Container(
-                height: 40,
-                margin: const EdgeInsets.only(left: 12, right: 12),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                width: 200,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColor.GREY_BG,
-                  border: Border.all(color: AppColor.GREY_LIGHT),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: TextField(
-                  style: const TextStyle(fontSize: 12),
-                  controller: searchController,
-                  enabled: typeFilter != 5,
-                  onChanged: (value) {
-                    setState(() {
-                      _value = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(bottom: 18),
-                    border: InputBorder.none,
-                    enabled: typeFilter != 5,
-                    hintText: hinText,
-                    hintStyle: const TextStyle(
-                        fontSize: 12, color: AppColor.GREY_TEXT),
-                    suffixIcon: searchController.text.isNotEmpty
-                        ? GestureDetector(
-                            onTap: _onClear,
-                            child: const Icon(Icons.close, size: 18),
-                          )
-                        : null,
-                    suffixIconConstraints: const BoxConstraints(),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: _onSearch,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: AppColor.BLUE_TEXT,
-                  ),
-                  child: const Icon(Icons.search, color: AppColor.WHITE),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            ButtonWidget(
-              text: 'Xuất Excel',
-              width: 120,
-              border: Border.all(color: AppColor.GREEN),
-              textColor: AppColor.GREEN,
-              bgColor: AppColor.TRANSPARENT,
-              function: () {
-                Navigator.pop(context);
-              },
-              borderRadius: 5,
-              height: 40,
-            ),
-            const SizedBox(width: 24),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildBodyWeb(EnterpriseState state) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-              child: TableTransactionStoreWidget(
-                  trans: state.transactionsMap['${state.offset}'] ?? [],
-                  offset: state.offset)),
-          Container(
-            padding: const EdgeInsets.only(top: 16),
-            child: Row(
-              children: [
-                Text('Trang ${state.offset + 1}'),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    int offset = state.offset;
-                    if (offset <= 0) return;
-                    offset = offset - 1;
-                    loadMore(offset);
-                  },
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    padding: const EdgeInsets.only(left: 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                          color:
-                              state.offset <= 0 ? Colors.grey : Colors.black),
-                    ),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      size: 14,
-                      color: state.offset <= 0 ? Colors.grey : Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    if (!state.isLoadMore) return;
-                    int offset = state.offset;
-                    offset = offset + 1;
-                    loadMore(offset);
-                  },
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        color: !state.isLoadMore ? Colors.grey : Colors.black,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
-                      color: !state.isLoadMore ? Colors.grey : Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBodyMobile(EnterpriseState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TableTransactionStoreWidget(
-            trans: state.transactionsMap['${state.offset}'] ?? [],
-            offset: state.offset),
+          trans: state.transactionsMap['${state.offset}'] ?? [],
+          offset: state.offset,
+          onEditNote: (value) => _onChooseNote(state.offset, value),
+        ),
         Container(
           padding: const EdgeInsets.only(top: 16),
           child: Row(

@@ -1,4 +1,6 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/features/enterprise/enterprise.dart';
@@ -131,24 +133,9 @@ class _MemberStoreViewState extends State<MemberStoreView> {
           ],
         ),
         const SizedBox(width: 24),
-        GestureDetector(
-          onTap: _onFilter,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: AppColor.BLUE_TEXT.withOpacity(0.25),
-            ),
-            child: const Icon(Icons.filter_list, color: AppColor.WHITE),
-          ),
-        ),
         Container(
-          height: 40,
-          margin: const EdgeInsets.only(left: 12, right: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           width: 200,
-          alignment: Alignment.center,
+          height: 34,
           decoration: BoxDecoration(
             color: AppColor.GREY_BG,
             border: Border.all(color: AppColor.GREY_LIGHT),
@@ -163,8 +150,9 @@ class _MemberStoreViewState extends State<MemberStoreView> {
               });
             },
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.only(bottom: 18),
               border: InputBorder.none,
+              contentPadding:
+                  const EdgeInsets.only(bottom: 16, left: 12, right: 12),
               hintText: type == 1
                   ? 'Tìm kiếm nhân viên theo tên'
                   : type == 0
@@ -172,26 +160,51 @@ class _MemberStoreViewState extends State<MemberStoreView> {
                       : 'Tìm kiếm tất cả nhân viên',
               hintStyle:
                   const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-              suffixIcon: keySearch.isNotEmpty
+              suffixIcon: searchController.text.isNotEmpty
                   ? GestureDetector(
                       onTap: _onClear,
-                      child: const Icon(Icons.close, size: 18),
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.close, size: 18),
+                      ),
                     )
                   : null,
               suffixIconConstraints: const BoxConstraints(),
             ),
           ),
         ),
+        const SizedBox(width: 12),
+        GestureDetector(
+          onTap: _onFilter,
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(32),
+              color: AppColor.BLUE_TEXT.withOpacity(0.25),
+            ),
+            child: Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.icFilterTrans),
+              width: 28,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
         GestureDetector(
           onTap: _onSearch,
           child: Container(
-            width: 40,
-            height: 40,
+            width: 30,
+            height: 30,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(32),
               color: AppColor.BLUE_TEXT,
             ),
-            child: const Icon(Icons.search, color: AppColor.WHITE),
+            child: Image(
+              image:
+                  ImageUtils.instance.getImageNetWork(AppImages.icSearchTrans),
+              width: 28,
+            ),
           ),
         ),
         const Expanded(child: SizedBox()),

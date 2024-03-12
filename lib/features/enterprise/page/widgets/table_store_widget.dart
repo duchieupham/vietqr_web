@@ -82,8 +82,7 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
                           /// STT
                           DataCell(
                             _buildContent(
-                              title:
-                                  '${(widget.offset * 20) + (widget.offset + index) + 1}',
+                              title: '${(widget.offset * 20) + index + 1}',
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -201,7 +200,8 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
                                 height: 40,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: AppColor.GREY_TEXT.withOpacity(0.6),
+                                      color:
+                                          AppColor.GREY_TEXT.withOpacity(0.6),
                                     ),
                                     color: Colors.transparent),
                                 child: Row(

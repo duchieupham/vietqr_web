@@ -1,3 +1,4 @@
+import 'package:VietQR/models/transaction_store_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class EnterpriseEvent extends Equatable {
@@ -85,4 +86,17 @@ class GetStoreDetailEvent extends EnterpriseEvent {
 
   @override
   List<Object?> get props => [terminalId];
+}
+
+class UpdateNoteEvent extends EnterpriseEvent {
+  final TransactionStoreDTO dto;
+  final int offset;
+
+  UpdateNoteEvent({
+    required this.dto,
+    this.offset = 0,
+  });
+
+  @override
+  List<Object?> get props => [dto, offset];
 }

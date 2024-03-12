@@ -1,9 +1,12 @@
+import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/features/enterprise/enterprise.dart';
 import 'package:VietQR/features/enterprise/responsitory/enterprise_repository.dart';
+import 'package:VietQR/features/transaction/repositories/transaction_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/member_store_dto.dart';
+import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/store_detail_dto.dart';
 import 'package:VietQR/models/store_model.dart';
 import 'package:VietQR/models/transaction_store_dto.dart';
@@ -25,10 +28,12 @@ class EnterpriseBloc extends Bloc<EnterpriseEvent, EnterpriseState> {
     on<GetStoreDetailEvent>(_getStoreDetail);
     on<GetMemberStoreEvent>(_getMemberStore);
     on<GetTransStoreEvent>(_getTransStore);
+    on<UpdateNoteEvent>(_updateNote);
   }
 
   String get userId => UserInformationHelper.instance.getUserId();
   final createQRRepository = const EnterpriseRepository();
+  final repository = TransactionRepository();
   int limit = 20;
 
   void _getStore(EnterpriseEvent event, Emitter emit) async {
@@ -195,6 +200,52 @@ class EnterpriseBloc extends Bloc<EnterpriseEvent, EnterpriseState> {
       }
     } catch (e) {
       LOG.error(e.toString());
+    }
+  }
+
+  void _updateNote(EnterpriseEvent event, Emitter emit) async {
+    try {
+      if (event is UpdateNoteEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: EnterpriseType.NONE));
+        String transactionId = event.dto.transactionId ?? '';
+        String note = event.dto.note ?? '';
+
+        ResponseMessageDTO result =
+            await repository.updateNote(transactionId, note);
+
+        if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+          Map<String, List<TransactionStoreDTO>> map = {};
+          map.addAll(state.transactionsMap);
+
+          List<TransactionStoreDTO> list = [...map['${event.offset}'] ?? []];
+
+          int index = list
+              .indexWhere((element) => element.transactionId == transactionId);
+
+          if (index != -1) {
+            list[index].note = note;
+            map['${event.offset}'] = list;
+          }
+
+          emit(state.copyWith(
+            request: EnterpriseType.UPDATE_NOTE,
+            status: BlocStatus.UNLOADING,
+            transactionsMap: map,
+            transactions: list,
+          ));
+        } else {
+          emit(state.copyWith(
+              request: EnterpriseType.ERROR,
+              status: BlocStatus.UNLOADING,
+              msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
     }
   }
 }

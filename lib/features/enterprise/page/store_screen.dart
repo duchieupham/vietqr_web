@@ -32,7 +32,7 @@ class StoreScreen extends StatefulWidget {
 class _StoreScreenState extends State<StoreScreen> {
   double get width => MediaQuery.of(context).size.width;
 
-  bool get isMobile => (PlatformUtils.instance.resizeWhen(width, 650));
+  bool get isMobile => (PlatformUtils.instance.resizeWhen(width, 850));
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +40,7 @@ class _StoreScreenState extends State<StoreScreen> {
       child: (!isMobile)
           ? const WebMobileBlankWidget()
           : Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColor.WHITE,
-                    AppColor.BLUE_LIGHT,
-                  ],
-                  begin: Alignment.bottomLeft,
-                  end: Alignment.topRight,
-                ),
-              ),
+              color: Colors.white,
               child: Column(
                 children: [
                   const HeaderWidget(),
@@ -59,13 +50,6 @@ class _StoreScreenState extends State<StoreScreen> {
                         MenuLeft(
                           currentType: MenuHomeType.ENTERPRISE,
                           subMenuEnterprise: [
-                            // ItemMenuHome(
-                            //   title: 'Tổng quan',
-                            //   isSelect: false,
-                            //   onTap: () {
-                            //     context.go('/enterprise/overview');
-                            //   },
-                            // ),
                             ItemMenuHome(
                               title: 'Cửa hàng',
                               isSelect: true,

@@ -34,7 +34,7 @@ class _SubTabDetailStoreWidgetState extends State<SubTabDetailStoreWidget> {
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             alignment: Alignment.centerLeft,

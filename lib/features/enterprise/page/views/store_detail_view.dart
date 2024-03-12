@@ -35,22 +35,13 @@ class _StoreDetailViewState extends State<StoreDetailView> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildHeader(context),
-        if (!isKWeb)
-          _buildMobile(
-            tab == 0
-                ? InfoStoreView(terminalId: widget.terminalId)
-                : tab == 1
-                    ? MemberStoreView(terminalId: widget.terminalId)
-                    : TransactionStoreView(terminalId: widget.terminalId),
-          ),
-        if (isKWeb)
-          _buildWeb(
-            tab == 0
-                ? InfoStoreView(terminalId: widget.terminalId)
-                : tab == 1
-                    ? MemberStoreView(terminalId: widget.terminalId)
-                    : TransactionStoreView(terminalId: widget.terminalId),
-          ),
+        _buildWeb(
+          tab == 0
+              ? InfoStoreView(terminalId: widget.terminalId)
+              : tab == 1
+                  ? MemberStoreView(terminalId: widget.terminalId)
+                  : TransactionStoreView(terminalId: widget.terminalId),
+        ),
       ],
     );
   }
@@ -81,32 +72,32 @@ class _StoreDetailViewState extends State<StoreDetailView> {
                       },
                     ),
                     const SizedBox(height: 30),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            child,
-                            ...[
-                              const SizedBox(height: 24),
-                              _buildTextButton(
-                                title: 'Cập nhật thông tin',
-                                isMobile: true,
-                              ),
-                              _buildTextButton(
-                                  title: 'Thống kê', isMobile: true),
-                              _buildTextButton(
-                                title: 'Xoá cửa hàng',
-                                isBorder: false,
-                                isMobile: true,
-                                textColor: AppColor.RED_EC1010,
-                                iconColor: AppColor.RED_EC1010,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: SingleChildScrollView(
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         child,
+                    //         ...[
+                    //           const SizedBox(height: 24),
+                    //           _buildTextButton(
+                    //             title: 'Cập nhật thông tin',
+                    //             isMobile: true,
+                    //           ),
+                    //           _buildTextButton(
+                    //               title: 'Thống kê', isMobile: true),
+                    //           _buildTextButton(
+                    //             title: 'Xoá cửa hàng',
+                    //             isBorder: false,
+                    //             isMobile: true,
+                    //             textColor: AppColor.RED_EC1010,
+                    //             iconColor: AppColor.RED_EC1010,
+                    //           ),
+                    //         ],
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -120,44 +111,21 @@ class _StoreDetailViewState extends State<StoreDetailView> {
   Widget _buildWeb(Widget child) {
     return Expanded(
       child: Container(
+        decoration: BoxDecoration(border: Border(right: _borderSize)),
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        decoration: BoxDecoration(border: Border(top: _borderSize)),
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(border: Border(right: _borderSize)),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 24),
-                    SubTabDetailStoreWidget(
-                      tab: tab,
-                      onSelectTab: (value) {
-                        setState(() {
-                          tab = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 30),
-                    Expanded(child: child),
-                  ],
-                ),
-              ),
+            const SizedBox(height: 24),
+            SubTabDetailStoreWidget(
+              tab: tab,
+              onSelectTab: (value) {
+                setState(() {
+                  tab = value;
+                });
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Column(
-                children: [
-                  _buildTextButton(title: 'Cập nhật thông tin'),
-                  _buildTextButton(title: 'Thống kê'),
-                  _buildTextButton(
-                    title: 'Xoá cửa hàng',
-                    isBorder: false,
-                    textColor: AppColor.RED_EC1010,
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: 30),
+            Expanded(child: child),
           ],
         ),
       ),
