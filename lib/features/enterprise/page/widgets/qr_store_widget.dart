@@ -143,7 +143,7 @@ class _QrStoreWidgetState extends State<QrStoreWidget> {
   }
 
   Widget _buildQr(BankAccountDTO bank) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Column(
         children: [

@@ -40,7 +40,7 @@ class _StoreScreenState extends State<StoreScreen> {
       child: (!isMobile)
           ? const WebMobileBlankWidget()
           : Container(
-              color: Colors.white,
+              color: AppColor.GREY_BG,
               child: Column(
                 children: [
                   const HeaderWidget(),
