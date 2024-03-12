@@ -3,6 +3,7 @@
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:equatable/equatable.dart';
 
 enum TransType {
@@ -10,6 +11,9 @@ enum TransType {
   GET_BANKS,
   GET_TRANS_TRUE,
   UPDATE_BANK,
+  LIST_TERMINAL,
+  UPDATE_TERMINAL,
+  UPDATE_NOTE,
   ERROR,
 }
 
@@ -23,6 +27,7 @@ class TransactionState extends Equatable {
   final BankAccountDTO? bankDTO;
   final bool isLoadMore;
   final Map<String, List<RelatedTransactionReceiveDTO>> tranMaps;
+  final List<TerminalQRDTO> listTerminals;
 
   const TransactionState({
     this.status = BlocStatus.NONE,
@@ -31,6 +36,7 @@ class TransactionState extends Equatable {
     this.offset = 0,
     required this.listBanks,
     required this.listTrans,
+    required this.listTerminals,
     this.bankDTO,
     required this.tranMaps,
     this.isLoadMore = true,
@@ -46,6 +52,7 @@ class TransactionState extends Equatable {
     bool? isLoadMore,
     bool? isEmpty,
     int? offset,
+    List<TerminalQRDTO>? listTerminals,
     Map<String, List<RelatedTransactionReceiveDTO>>? tranMaps,
   }) {
     return TransactionState(
@@ -58,6 +65,7 @@ class TransactionState extends Equatable {
       bankDTO: bankDTO ?? this.bankDTO,
       isLoadMore: isLoadMore ?? this.isLoadMore,
       tranMaps: tranMaps ?? this.tranMaps,
+      listTerminals: listTerminals ?? this.listTerminals,
     );
   }
 
@@ -72,5 +80,6 @@ class TransactionState extends Equatable {
         bankDTO,
         isLoadMore,
         tranMaps,
+        listTerminals,
       ];
 }

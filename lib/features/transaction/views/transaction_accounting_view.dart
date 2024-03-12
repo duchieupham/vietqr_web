@@ -1,21 +1,27 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.dart';
+import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
+import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_trans_payment_widget.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'dart:html' as html;
 
@@ -98,12 +104,13 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       type: typeFilter,
       status: statusFilter,
     );
+    bloc.add(GetTransUnsettledEvent(dto: dto));
 
-    if (_isOwner) {
-      bloc.add(GetTransUnsettledEvent(dto: dto, isLoadMore: true));
-    } else {
-      bloc.add(GetTransNotOwnerEvent(dto: dto, isLoadMore: true));
-    }
+    // if (_isOwner) {
+    //   bloc.add(GetTransOwnerEvent(dto: dto, isLoadMore: true));
+    // } else {
+    //   bloc.add(GetTransNotOwnerEvent(dto: dto, isLoadMore: true));
+    // }
   }
 
   void _onSearch() {
@@ -120,12 +127,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       type: typeFilter,
       status: statusFilter,
     );
+    bloc.add(GetTransUnsettledEvent(dto: dto));
 
-    if (_isOwner) {
-      bloc.add(GetTransOwnerEvent(dto: dto));
-    } else {
-      bloc.add(GetTransNotOwnerEvent(dto: dto));
-    }
+    // if (_isOwner) {
+    // } else {
+    //   bloc.add(GetTransNotOwnerEvent(dto: dto));
+    // }
   }
 
   void _onFilter() async {
@@ -140,6 +147,54 @@ class _StoreScreenState extends State<TransactionAccountingView> {
           fromDate: _fromDate,
           toDate: _toDate,
           callBack: _onReceive,
+        );
+      },
+    );
+  }
+
+  void _onChooseTerminal(
+    List<TerminalQRDTO> list,
+    int offset,
+    String transactionId,
+    String terminalCode,
+  ) async {
+    final data = await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogChooseTerminalWidget(
+          terminals: list,
+          terminalCode: terminalCode,
+          update: (dto) {
+            bloc.add(UpdateTerminalEvent(
+              transactionId: transactionId,
+              terminalCode: dto.terminalCode,
+              offset: offset,
+            ));
+          },
+        );
+      },
+    );
+  }
+
+  void _onChooseNote(
+    int offset,
+    String transactionId,
+    String note,
+  ) async {
+    final data = await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogUpdateNoteWidget(
+          note: note,
+          update: (value) {
+            bloc.add(UpdateNoteEvent(
+              transactionId: transactionId,
+              note: value,
+              offset: offset,
+            ));
+          },
         );
       },
     );
@@ -185,7 +240,33 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             ? const WebMobileBlankWidget()
             : BlocConsumer<TransactionBloc, TransactionState>(
                 listener: (context, state) {
+                  if (state.status == BlocStatus.LOADING) {
+                    DialogWidget.instance.openLoadingDialog();
+                  }
+
+                  if (state.status == BlocStatus.UNLOADING) {
+                    Navigator.pop(context);
+                  }
+
+                  if (state.request == TransType.UPDATE_TERMINAL ||
+                      state.request == TransType.UPDATE_NOTE) {
+                    Navigator.pop(context);
+                    Fluttertoast.showToast(
+                      msg: 'Cập nhật thành công',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Theme.of(context).cardColor,
+                      textColor: Theme.of(context).hintColor,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    );
+                  }
+
                   if (state.request == TransType.GET_BANKS) {
+                    bloc.add(GetTerminalsEvent(state.bankDTO?.bankId ?? ''));
+
                     setState(() {
                       _bankId = state.bankDTO?.bankId ?? '';
                       _isOwner = state.bankDTO?.isOwner ?? false;
@@ -193,8 +274,8 @@ class _StoreScreenState extends State<TransactionAccountingView> {
 
                     html.window.history.pushState(
                         null,
-                        '/transactions?type=1?bankId=$_bankId',
-                        '/transactions?type=1?bankId=$_bankId');
+                        '/transactions?type=0?bankId=$_bankId',
+                        '/transactions?type=0?bankId=$_bankId');
 
                     TransactionInputDTO dto = TransactionInputDTO(
                       bankId: _bankId,
@@ -207,16 +288,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                       status: 0,
                     );
 
-                    if (_isOwner) {
-                      bloc.add(GetTransUnsettledEvent(dto: dto));
-                    } else {
-                      bloc.add(GetTransNotOwnerEvent(dto: dto));
-                    }
+                    bloc.add(GetTransUnsettledEvent(dto: dto));
                   }
                 },
                 builder: (context, state) {
                   return TransHeaderWidget(
-                    title: 'Giao dịch thanh toán',
+                    title: 'Giao dịch chưa hạch toán',
                     dto: state.bankDTO,
                     onTap: () => _onChooseBank(state.listBanks),
                     child: Container(
@@ -269,8 +346,15 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                           _buildFilterWidget(),
                           const SizedBox(height: 24),
                           TableTransPaymentWidget(
-                              list: state.tranMaps['${state.offset}'] ?? [],
-                              offset: state.offset),
+                            list: state.tranMaps['${state.offset}'] ?? [],
+                            offset: state.offset,
+                            isOwner: state.bankDTO?.isOwner ?? false,
+                            onChooseTerminal: (transactionId, terminalCode) =>
+                                _onChooseTerminal(state.listTerminals,
+                                    state.offset, transactionId, terminalCode),
+                            onEditNote: (transactionId, note) => _onChooseNote(
+                                state.offset, transactionId, note),
+                          ),
                           Container(
                             padding: const EdgeInsets.only(top: 16),
                             child: Row(
@@ -528,7 +612,6 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             style: const TextStyle(
               color: AppColor.BLACK,
               fontSize: 11,
-              fontWeight: FontWeight.w600,
               height: 1.4,
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
@@ -5,6 +6,8 @@ import 'package:VietQR/features/transaction/repositories/transaction_repository.
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/response_message_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
@@ -12,13 +15,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       : super(const TransactionState(
           listBanks: [],
           listTrans: [],
+          listTerminals: [],
           tranMaps: {},
         )) {
     on<GetTransOwnerEvent>(_getTransactions);
     on<GetTransNotOwnerEvent>(_getTransactionsNotOwner);
     on<GetListBankEvent>(_getBankAccounts);
+    on<GetTerminalsEvent>(_getTerminals);
     on<UpdateBankAccountEvent>(_updateBankAccount);
     on<GetTransUnsettledEvent>(_getTransactionsUnsettled);
+    on<UpdateTerminalEvent>(_updateTerminal);
+    on<UpdateNoteEvent>(_updateNote);
   }
 
   final repository = TransactionRepository();
@@ -44,14 +51,126 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           request: TransType.GET_BANKS,
           listBanks: list,
           bankDTO: bankDTO,
-          status: BlocStatus.UNLOADING,
+          status: BlocStatus.NONE,
         ));
       }
     } catch (e) {
       LOG.error(e.toString());
       emit(state.copyWith(
           request: TransType.ERROR,
+          status: BlocStatus.NONE,
           msg: 'Không thể tải danh sách. Vui lòng kiểm tra lại kết nối'));
+    }
+  }
+
+  void _getTerminals(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetTerminalsEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE));
+        List<TerminalQRDTO> list = await repository.getTerminals(event.bankId);
+
+        list = [...list];
+
+        emit(state.copyWith(
+            request: TransType.LIST_TERMINAL,
+            listTerminals: list,
+            status: BlocStatus.NONE));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Không thể tải danh sách. Vui lòng kiểm tra lại kết nối'));
+    }
+  }
+
+  void _updateTerminal(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is UpdateTerminalEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
+        ResponseMessageDTO result = await repository.updateTerminal(
+            event.transactionId, event.terminalCode);
+
+        if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+          Map<String, List<RelatedTransactionReceiveDTO>> map = {};
+          map.addAll(state.tranMaps);
+
+          List<RelatedTransactionReceiveDTO> list = [
+            ...map['${event.offset}'] ?? []
+          ];
+
+          int index = list.indexWhere(
+              (element) => element.transactionId == event.transactionId);
+
+          if (index != -1) {
+            list[index].terminalCode = event.terminalCode;
+            map['${event.offset}'] = list;
+          }
+
+          emit(state.copyWith(
+            request: TransType.UPDATE_TERMINAL,
+            status: BlocStatus.UNLOADING,
+            tranMaps: map,
+            listTrans: list,
+          ));
+        } else {
+          emit(state.copyWith(
+              request: TransType.ERROR,
+              status: BlocStatus.UNLOADING,
+              msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+    }
+  }
+
+  void _updateNote(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is UpdateNoteEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
+        ResponseMessageDTO result =
+            await repository.updateNote(event.transactionId, event.note);
+
+        if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+          Map<String, List<RelatedTransactionReceiveDTO>> map = {};
+          map.addAll(state.tranMaps);
+
+          List<RelatedTransactionReceiveDTO> list = [
+            ...map['${event.offset}'] ?? []
+          ];
+
+          int index = list.indexWhere(
+              (element) => element.transactionId == event.transactionId);
+
+          if (index != -1) {
+            list[index].note = event.note;
+            map['${event.offset}'] = list;
+          }
+
+          emit(state.copyWith(
+            request: TransType.UPDATE_NOTE,
+            status: BlocStatus.UNLOADING,
+            tranMaps: map,
+            listTrans: list,
+          ));
+        } else {
+          emit(state.copyWith(
+              request: TransType.ERROR,
+              status: BlocStatus.UNLOADING,
+              msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
     }
   }
 
@@ -104,7 +223,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
         maps.addAll(state.tranMaps);
 
-        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
         final List<RelatedTransactionReceiveDTO> result =
             await repository.getTransUnsettled(event.dto);
 
@@ -131,14 +251,18 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       }
     } catch (e) {
       LOG.error(e.toString());
-      emit(state.copyWith(request: TransType.ERROR));
+      emit(state.copyWith(
+        request: TransType.ERROR,
+        status: BlocStatus.UNLOADING,
+      ));
     }
   }
 
   void _getTransactions(TransactionEvent event, Emitter emit) async {
     try {
       if (event is GetTransOwnerEvent) {
-        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
         bool isLoadMore = true;
         int offset = event.dto.offset;
         List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
@@ -173,6 +297,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       LOG.error(e.toString());
       emit(state.copyWith(
           request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
           msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
     }
   }

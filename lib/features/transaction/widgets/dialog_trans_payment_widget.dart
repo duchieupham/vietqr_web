@@ -141,12 +141,9 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.close,
-                        color: Colors.transparent, size: 14),
                     const Expanded(
                       child: Text(
                         'Bộ lọc giao dịch',
-                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 12),
                       ),

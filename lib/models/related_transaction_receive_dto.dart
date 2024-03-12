@@ -12,13 +12,13 @@ class RelatedTransactionReceiveDTO {
   final String transactionId;
   final int type;
   final String transType;
-  final String terminalCode;
-  final String note;
+  String terminalCode;
+  String note;
   final String referenceNumber;
   final String orderId;
   final String bankShortName;
 
-  const RelatedTransactionReceiveDTO({
+  RelatedTransactionReceiveDTO({
     required this.bankAccount,
     required this.amount,
     required this.status,
@@ -34,6 +34,11 @@ class RelatedTransactionReceiveDTO {
     this.orderId = '',
     this.bankShortName = '',
   });
+
+  // api update terminalCode (chỉ enable khi is_owner = true và type = 2, transType = C, status = 1):
+  bool get isEnableTerminal {
+    return type == 2 || transType.trim() == 'C' || status == 1;
+  }
 
   bool get isTimeTT {
     if (transType.trim() == 'D' ||
@@ -56,10 +61,10 @@ class RelatedTransactionReceiveDTO {
           : 'Khác';
 
   String get timeCreate => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(time));
+      .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
 
   String get timePayment => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(timePaid));
+      .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
 
   bool get isTimeCreate {
     if (transType.trim() == 'C' && (status == 2 || status == 0 || type == 0)) {
@@ -108,7 +113,11 @@ class RelatedTransactionReceiveDTO {
   factory RelatedTransactionReceiveDTO.fromJson(Map<String, dynamic> json) {
     return RelatedTransactionReceiveDTO(
       bankAccount: json['bankAccount'] ?? '',
-      amount: json['amount'] ?? '',
+      amount: json['amount'] != null
+          ? (json['amount'] is int)
+              ? json['amount'].toString()
+              : ''
+          : '',
       status: json['status'] ?? 0,
       time: json['time'] ?? 0,
       timePaid: json['timePaid'] ?? 0,

@@ -1,4 +1,5 @@
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_branch_input_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:equatable/equatable.dart';
@@ -71,4 +72,43 @@ class UpdateBankAccountEvent extends TransactionEvent {
 
   @override
   List<Object?> get props => [dto];
+}
+
+class GetTerminalsEvent extends TransactionEvent {
+  final String bankId;
+
+  const GetTerminalsEvent(this.bankId);
+
+  @override
+  List<Object?> get props => [bankId];
+}
+
+class UpdateTerminalEvent extends TransactionEvent {
+  final String transactionId;
+  final String terminalCode;
+  final int offset;
+
+  const UpdateTerminalEvent({
+    this.transactionId = '',
+    this.terminalCode = '',
+    this.offset = 0,
+  });
+
+  @override
+  List<Object?> get props => [transactionId, terminalCode, offset];
+}
+
+class UpdateNoteEvent extends TransactionEvent {
+  final String transactionId;
+  final String note;
+  final int offset;
+
+  const UpdateNoteEvent({
+    this.transactionId = '',
+    this.note = '',
+    this.offset = 0,
+  });
+
+  @override
+  List<Object?> get props => [transactionId, note, offset];
 }

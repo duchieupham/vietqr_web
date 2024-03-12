@@ -8,9 +8,18 @@ import 'package:flutter/material.dart';
 class TableTransPaymentWidget extends StatefulWidget {
   final List<RelatedTransactionReceiveDTO> list;
   final int offset;
+  final Function(String transactionId, String terminalCode) onChooseTerminal;
+  final Function(String transactionId, String note) onEditNote;
+  final bool isOwner;
 
-  const TableTransPaymentWidget(
-      {super.key, required this.list, required this.offset});
+  const TableTransPaymentWidget({
+    super.key,
+    required this.list,
+    required this.offset,
+    required this.onChooseTerminal,
+    required this.onEditNote,
+    this.isOwner = false,
+  });
 
   @override
   State<TableTransPaymentWidget> createState() =>
@@ -22,15 +31,16 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
 
   final List<TransData> list = [
     TransData(title: 'stt'.toUpperCase()),
-    TransData(title: 'Thời gian\nthanh toán'),
+    TransData(title: 'Thời gian\nthanh toán', width: 80),
     TransData(title: 'Số tiền (VND)', width: 100),
     TransData(title: 'Mã giao dịch', width: 100),
     TransData(title: 'Mã đơn hàng', width: 100),
-    TransData(title: 'Mã điểm bán'),
+    TransData(title: 'Mã điểm bán', width: 100),
     TransData(title: 'Loại GD', width: 100),
     TransData(title: 'Thời gian\ntạo GD', width: 80),
     TransData(title: 'Tài khoản\nnhận', width: 80),
     TransData(title: 'Nội dung', width: 200),
+    TransData(title: 'Ghi chú', width: 200),
     TransData(title: 'Trạng thái', padding: 0, width: 80),
     TransData(title: 'Thao tác', padding: 0, width: 80),
   ];
@@ -42,7 +52,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
       child: Stack(
         children: [
           SizedBox(
-            width: 1280,
+            width: 1480,
             child: RawScrollbar(
               controller: _horizontal,
               child: SingleChildScrollView(
@@ -84,8 +94,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           /// STT
                           DataCell(
                             _buildContent(
-                              title:
-                                  '${(widget.offset * 20) + (widget.offset + index) + 1}',
+                              title: '${(widget.offset * 20) + index + 1}',
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -116,7 +125,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           DataCell(
                             _buildContent(
                               title: model.orderId,
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.left,
                             ),
                           ),
 
@@ -130,7 +139,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           DataCell(
                             _buildContent(
                               title: model.transactionType,
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.right,
                             ),
                           ),
 
@@ -166,6 +175,13 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                 child: _buildContent(title: model.content)),
                           ),
 
+                          ///Ghi chú
+                          DataCell(
+                            SizedBox(
+                                width: 200,
+                                child: _buildContent(title: model.note)),
+                          ),
+
                           /// Tài khoản nhận
                           const DataCell(
                             SizedBox(width: 80),
@@ -185,7 +201,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
           ),
           if (widget.list.isNotEmpty)
             SizedBox(
-              width: 1280,
+              width: 1480,
               child: Row(
                 children: [
                   const Expanded(child: SizedBox()),
@@ -278,80 +294,90 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           children: List.generate(
                             widget.list.length,
                             (index) {
-                              return GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 110,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color:
-                                            AppColor.GREY_TEXT.withOpacity(0.3),
-                                      ),
-                                      color: Colors.transparent),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        child: Container(
+                              RelatedTransactionReceiveDTO dto =
+                                  widget.list[index];
+                              return Container(
+                                width: 110,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color:
+                                          AppColor.GREY_TEXT.withOpacity(0.3),
+                                    ),
+                                    color: Colors.transparent),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => widget.onEditNote(
+                                          dto.transactionId, dto.note),
+                                      child: Container(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(32),
+                                          color: AppColor.BLUE_TEXT
+                                              .withOpacity(0.25),
+                                        ),
+                                        child: Image(
+                                          image: ImageUtils.instance
+                                              .getImageNetWork(
+                                                  AppImages.icEditTrans),
                                           width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(32),
-                                            color: AppColor.BLUE_TEXT
-                                                .withOpacity(0.25),
-                                          ),
-                                          child: Image(
-                                            image: ImageUtils.instance
-                                                .getImageNetWork(
-                                                    AppImages.icEditTrans),
-                                            width: 24,
-                                          ),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        child: Container(
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (!widget.isOwner &&
+                                            !dto.isEnableTerminal) return;
+                                        widget.onChooseTerminal(
+                                            dto.transactionId,
+                                            dto.terminalCode);
+                                      },
+                                      child: Container(
+                                        width: 24,
+                                        height: 24,
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 6),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(32),
+                                          color: (!widget.isOwner &&
+                                                  !dto.isEnableTerminal)
+                                              ? AppColor.GREY_BG
+                                              : AppColor.BLUE_TEXT
+                                                  .withOpacity(0.25),
+                                        ),
+                                        child: Image(
+                                          image: ImageUtils.instance
+                                              .getImageNetWork(
+                                                  AppImages.icNoteTrans),
                                           width: 24,
-                                          height: 24,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 6),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(32),
-                                            color: AppColor.BLUE_TEXT
-                                                .withOpacity(0.25),
-                                          ),
-                                          child: Image(
-                                            image: ImageUtils.instance
-                                                .getImageNetWork(
-                                                    AppImages.icNoteTrans),
-                                            width: 24,
-                                          ),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        child: Container(
+                                    ),
+                                    GestureDetector(
+                                      child: Container(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(32),
+                                          color: AppColor.GREY_BG,
+                                        ),
+                                        child: Image(
+                                          image: ImageUtils.instance
+                                              .getImageNetWork(
+                                                  AppImages.icRefundTrans),
                                           width: 24,
-                                          height: 24,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(32),
-                                            color: AppColor.BLUE_TEXT
-                                                .withOpacity(0.25),
-                                          ),
-                                          child: Image(
-                                            image: ImageUtils.instance
-                                                .getImageNetWork(
-                                                    AppImages.icRefundTrans),
-                                            width: 24,
-                                          ),
+                                          color: AppColor.GREY_BG,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -402,7 +428,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
               style: TextStyle(
                 color: textColor,
                 overflow: TextOverflow.ellipsis,
-                fontSize: fontSize ?? 12,
+                fontSize: fontSize ?? 10,
               ),
             ),
           ),
