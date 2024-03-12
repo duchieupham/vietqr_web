@@ -113,6 +113,16 @@ class MenuLeft extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ItemMenuHome(
+                title: 'Giao dịch',
+                iconId: AppImages.icMenuTransaction,
+                enableDropDownList: true,
+                listItemDrop: subMenuTransaction,
+                isSelect: currentType == MenuHomeType.TRANSACTION,
+                onTap: () {
+                  context.go('/transactions', extra: {'type': '0'});
+                },
+              ),
+              ItemMenuHome(
                 title: 'Tạo mã VietQR',
                 iconId: AppImages.icVietQrSmall,
                 isSelect: currentType == MenuHomeType.CREATE_QR,
@@ -128,16 +138,7 @@ class MenuLeft extends StatelessWidget {
                   context.go('/home');
                 },
               ),
-              ItemMenuHome(
-                title: 'Giao dịch',
-                iconId: AppImages.icMenuTransaction,
-                enableDropDownList: true,
-                listItemDrop: subMenuTransaction,
-                isSelect: currentType == MenuHomeType.TRANSACTION,
-                onTap: () {
-                  context.go('/transactions', extra: {'type': '0'});
-                },
-              ),
+
               ItemMenuHome(
                 title: 'Doanh nghiệp',
                 iconId: AppImages.icMenuHome,
@@ -254,6 +255,21 @@ class MenuLeft extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           ItemMenuHome(
+            title: 'Giao dịch',
+            paddingIcon: const EdgeInsets.all(4),
+            iconId: AppImages.icMenuTransaction,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.TRANSACTION,
+            onTap: () {
+              DialogWidget.instance.openMsgDialog(
+                  title: 'Bảo trì',
+                  msg:
+                      'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+              // context.go('/transaction');
+              // provider.updateShowMenu(true);
+            },
+          ),
+          ItemMenuHome(
             title: 'Tạo mã VietQR',
             paddingIcon: const EdgeInsets.all(4),
             iconId: AppImages.icMenuQR,
@@ -275,21 +291,7 @@ class MenuLeft extends StatelessWidget {
               provider.updateShowMenu(true);
             },
           ),
-          ItemMenuHome(
-            title: 'Giao dịch',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuTransaction,
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.TRANSACTION,
-            onTap: () {
-              DialogWidget.instance.openMsgDialog(
-                  title: 'Bảo trì',
-                  msg:
-                      'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-              // context.go('/transaction');
-              // provider.updateShowMenu(true);
-            },
-          ),
+
           ItemMenuHome(
             title: 'Doanh nghiệp',
             iconId: AppImages.icMenuHome,
