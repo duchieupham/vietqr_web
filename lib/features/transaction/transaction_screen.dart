@@ -9,11 +9,9 @@ import 'views/transaction_accounting_view.dart';
 import 'views/transaction_payment_view.dart';
 
 class TransactionScreen extends StatefulWidget {
-  final String bankId;
   final String type;
 
-  const TransactionScreen(
-      {super.key, required this.bankId, required this.type});
+  const TransactionScreen({super.key, required this.type});
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -33,16 +31,18 @@ class _TransactionScreenState extends State<TransactionScreen> {
         subMenuTransaction: [
           ItemMenuHome(
             title: 'Giao dịch thanh toán',
-            isSelect: widget.type == '0',
+            isSelect:
+                (widget.type == '0') || (widget.type.contains('0?bankId=')),
             onTap: () {
-              context.push('/transactions?type=0');
+              context.push('/transactions', extra: {'type': '0'});
             },
           ),
           ItemMenuHome(
             title: 'Giao dịch chưa hạch toán',
-            isSelect: widget.type == '1',
+            isSelect:
+                (widget.type == '1') || (widget.type.contains('1?bankId=')),
             onTap: () {
-              context.push('/transactions?type=1');
+              context.push('/transactions', extra: {'type': '1'});
             },
           ),
           // ItemMenuHome(
@@ -60,7 +60,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
   }
 
   Widget _buildBody() {
-    if (widget.type == '0') return const TransactionPaymentView();
+    if ((widget.type == '0') || (widget.type.contains('0?bankId='))) {
+      return const TransactionPaymentView();
+    }
     return const TransactionAccountingView();
   }
 }

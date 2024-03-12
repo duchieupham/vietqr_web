@@ -2,7 +2,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class RelatedTransactionReceiveDTO {
+class TransReceiveDTO {
   final String bankAccount;
   final String amount;
   final int status;
@@ -18,16 +18,16 @@ class RelatedTransactionReceiveDTO {
   final String orderId;
   final String bankShortName;
 
-  RelatedTransactionReceiveDTO({
-    required this.bankAccount,
-    required this.amount,
-    required this.status,
-    required this.time,
-    required this.timePaid,
-    required this.content,
-    required this.transactionId,
-    required this.type,
-    required this.transType,
+  TransReceiveDTO({
+    this.bankAccount = '',
+    this.amount = '',
+    this.status = 0,
+    this.time = 0,
+    this.timePaid = 0,
+    this.content = '',
+    this.transactionId = '',
+    this.type = 0,
+    this.transType = '',
     this.terminalCode = '',
     this.note = '',
     this.referenceNumber = '',
@@ -64,6 +64,12 @@ class RelatedTransactionReceiveDTO {
       .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
 
   String get timePayment => DateFormat('HH:mm:ss\ndd/MM/yyyy')
+      .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
+
+  String get timeCreateEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
+      .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
+
+  String get timePaymentEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
       .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
 
   bool get isTimeCreate {
@@ -110,13 +116,13 @@ class RelatedTransactionReceiveDTO {
     return '+';
   }
 
-  factory RelatedTransactionReceiveDTO.fromJson(Map<String, dynamic> json) {
-    return RelatedTransactionReceiveDTO(
+  factory TransReceiveDTO.fromJson(Map<String, dynamic> json) {
+    return TransReceiveDTO(
       bankAccount: json['bankAccount'] ?? '',
       amount: json['amount'] != null
           ? (json['amount'] is int)
               ? json['amount'].toString()
-              : ''
+              : json['amount']
           : '',
       status: json['status'] ?? 0,
       time: json['time'] ?? 0,

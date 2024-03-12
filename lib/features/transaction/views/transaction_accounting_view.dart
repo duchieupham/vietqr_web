@@ -3,9 +3,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
-import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
@@ -18,6 +16,7 @@ import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.d
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,7 +103,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       type: typeFilter,
       status: statusFilter,
     );
-    bloc.add(GetTransUnsettledEvent(dto: dto));
+    bloc.add(GetTransUnsettledEvent(dto: dto, isLoadMore: true));
 
     // if (_isOwner) {
     //   bloc.add(GetTransOwnerEvent(dto: dto, isLoadMore: true));
@@ -158,7 +157,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     String transactionId,
     String terminalCode,
   ) async {
-    final data = await showDialog(
+    await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -177,23 +176,15 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     );
   }
 
-  void _onChooseNote(
-    int offset,
-    String transactionId,
-    String note,
-  ) async {
-    final data = await showDialog(
+  void _onChooseNote(int offset, TransReceiveDTO dto) async {
+    await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return DialogUpdateNoteWidget(
-          note: note,
+          dto: dto,
           update: (value) {
-            bloc.add(UpdateNoteEvent(
-              transactionId: transactionId,
-              note: value,
-              offset: offset,
-            ));
+            bloc.add(UpdateNoteEvent(dto: value, offset: offset));
           },
         );
       },
@@ -212,13 +203,37 @@ class _StoreScreenState extends State<TransactionAccountingView> {
 
     if (type == 9 || type == 5) {
       _onSearch();
+    } else {
+      loadAll();
     }
   }
 
   void _onClear() {
-    _value = '';
-    searchController.clear();
-    setState(() {});
+    setState(() {
+      _value = '';
+      searchController.clear();
+    });
+    loadAll();
+  }
+
+  void loadAll({bool isFirst = false}) {
+    TransactionInputDTO dto = TransactionInputDTO(
+      bankId: _bankId,
+      offset: 0,
+      from: _dateFormat.format(_fromDate),
+      to: _dateFormat.format(_toDate),
+      value: '',
+      type: 9,
+      terminalCode: '',
+      status: 0,
+    );
+
+    if (isFirst) {
+      dto.from = _dateFormat.format(_formatFromDate(DateTime.now()));
+      dto.to = _dateFormat.format(_endDate(DateTime.now()));
+    }
+
+    bloc.add(GetTransUnsettledEvent(dto: dto));
   }
 
   @override
@@ -240,13 +255,13 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             ? const WebMobileBlankWidget()
             : BlocConsumer<TransactionBloc, TransactionState>(
                 listener: (context, state) {
-                  if (state.status == BlocStatus.LOADING) {
-                    DialogWidget.instance.openLoadingDialog();
-                  }
-
-                  if (state.status == BlocStatus.UNLOADING) {
-                    Navigator.pop(context);
-                  }
+                  // if (state.status == BlocStatus.LOADING) {
+                  //   DialogWidget.instance.openLoadingDialog();
+                  // }
+                  //
+                  // if (state.status == BlocStatus.UNLOADING) {
+                  //   Navigator.pop(context);
+                  // }
 
                   if (state.request == TransType.UPDATE_TERMINAL ||
                       state.request == TransType.UPDATE_NOTE) {
@@ -277,18 +292,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                         '/transactions?type=1?bankId=$_bankId',
                         '/transactions?type=1?bankId=$_bankId');
 
-                    TransactionInputDTO dto = TransactionInputDTO(
-                      bankId: _bankId,
-                      offset: 0,
-                      from: TimeUtils.instance.getCurrentDate(DateTime.now()),
-                      to: TimeUtils.instance.getCurrentDate(DateTime.now()),
-                      value: '',
-                      type: 9,
-                      terminalCode: '',
-                      status: 0,
-                    );
-
-                    bloc.add(GetTransUnsettledEvent(dto: dto));
+                    loadAll(isFirst: true);
                   }
                 },
                 builder: (context, state) {
@@ -352,11 +356,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                             onChooseTerminal: (transactionId, terminalCode) =>
                                 _onChooseTerminal(state.listTerminals,
                                     state.offset, transactionId, terminalCode),
-                            onEditNote: (transactionId, note) => _onChooseNote(
-                                state.offset, transactionId, note),
+                            onEditNote: (dto) =>
+                                _onChooseNote(state.offset, dto),
                           ),
                           Container(
                             padding: const EdgeInsets.only(top: 16),
+                            height: 100,
                             child: Row(
                               children: [
                                 Text('Trang ${state.offset + 1}'),
@@ -416,6 +421,19 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                                     ),
                                   ),
                                 ),
+                                Expanded(
+                                  child: Visibility(
+                                    visible: state.status == BlocStatus.LOADING,
+                                    child: const Center(
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 100),
                               ],
                             ),
                           ),
@@ -501,7 +519,10 @@ class _StoreScreenState extends State<TransactionAccountingView> {
               suffixIcon: searchController.text.isNotEmpty
                   ? GestureDetector(
                       onTap: _onClear,
-                      child: const Icon(Icons.close, size: 18),
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Icon(Icons.close, size: 18),
+                      ),
                     )
                   : null,
               suffixIconConstraints: const BoxConstraints(),

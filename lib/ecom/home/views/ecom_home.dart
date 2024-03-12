@@ -3,7 +3,7 @@ import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class _HomeScreen extends State<ECOMHomeScreen> {
 
   late WebSocketChannel channel;
 
-  List<RelatedTransactionReceiveDTO> transactions = [];
+  List<TransReceiveDTO> transactions = [];
   String userId = Session.instance.userECOMId;
   @override
   void initState() {

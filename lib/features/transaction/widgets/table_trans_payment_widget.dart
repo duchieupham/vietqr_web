@@ -2,14 +2,14 @@ import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:flutter/material.dart';
 
 class TableTransPaymentWidget extends StatefulWidget {
-  final List<RelatedTransactionReceiveDTO> list;
+  final List<TransReceiveDTO> list;
   final int offset;
   final Function(String transactionId, String terminalCode) onChooseTerminal;
-  final Function(String transactionId, String note) onEditNote;
+  final Function(TransReceiveDTO) onEditNote;
   final bool isOwner;
 
   const TableTransPaymentWidget({
@@ -84,7 +84,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                   rows: List.generate(
                     widget.list.length,
                     (index) {
-                      RelatedTransactionReceiveDTO model = widget.list[index];
+                      TransReceiveDTO model = widget.list[index];
                       return DataRow(
                         color: MaterialStateProperty.resolveWith<Color?>(
                             (Set<MaterialState> states) {
@@ -206,7 +206,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                 children: [
                   const Expanded(child: SizedBox()),
                   Container(
-                    color: AppColor.GREY_BG,
+                    color: AppColor.WHITE,
                     child: Column(
                       children: [
                         Container(
@@ -231,7 +231,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           children: List.generate(
                             widget.list.length,
                             (index) {
-                              RelatedTransactionReceiveDTO dto =
+                              TransReceiveDTO dto =
                                   widget.list[index];
                               return GestureDetector(
                                 onTap: () {},
@@ -269,7 +269,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                     ),
                   ),
                   Container(
-                    color: AppColor.GREY_BG,
+                    color: AppColor.WHITE,
                     child: Column(
                       children: [
                         Container(
@@ -294,7 +294,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           children: List.generate(
                             widget.list.length,
                             (index) {
-                              RelatedTransactionReceiveDTO dto =
+                              TransReceiveDTO dto =
                                   widget.list[index];
                               return Container(
                                 width: 110,
@@ -312,8 +312,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                     Tooltip(
                                       message: 'Sửa ghi chú',
                                       child: GestureDetector(
-                                        onTap: () => widget.onEditNote(
-                                            dto.transactionId, dto.note),
+                                        onTap: () => widget.onEditNote(dto),
                                         child: Container(
                                           width: 24,
                                           height: 24,
@@ -365,24 +364,24 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                         ),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      child: Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(32),
-                                          color: AppColor.GREY_BG,
-                                        ),
-                                        child: Image(
-                                          image: ImageUtils.instance
-                                              .getImageNetWork(
-                                                  AppImages.icRefundTrans),
-                                          width: 24,
-                                          color: AppColor.GREY_BG,
-                                        ),
-                                      ),
-                                    ),
+                                    // GestureDetector(
+                                    //   child: Container(
+                                    //     width: 24,
+                                    //     height: 24,
+                                    //     decoration: BoxDecoration(
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(32),
+                                    //       color: AppColor.GREY_BG,
+                                    //     ),
+                                    //     child: Image(
+                                    //       image: ImageUtils.instance
+                                    //           .getImageNetWork(
+                                    //               AppImages.icRefundTrans),
+                                    //       width: 24,
+                                    //       color: AppColor.GREY_BG,
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               );

@@ -2,7 +2,7 @@
 
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:equatable/equatable.dart';
 
@@ -23,10 +23,10 @@ class TransactionState extends Equatable {
   final String? msg;
   final int offset;
   final List<BankAccountDTO> listBanks;
-  final List<RelatedTransactionReceiveDTO> listTrans;
+  final List<TransReceiveDTO> listTrans;
   final BankAccountDTO? bankDTO;
   final bool isLoadMore;
-  final Map<String, List<RelatedTransactionReceiveDTO>> tranMaps;
+  final Map<String, List<TransReceiveDTO>> tranMaps;
   final List<TerminalQRDTO> listTerminals;
 
   const TransactionState({
@@ -47,13 +47,13 @@ class TransactionState extends Equatable {
     String? msg,
     TransType? request,
     List<BankAccountDTO>? listBanks,
-    List<RelatedTransactionReceiveDTO>? listTrans,
+    List<TransReceiveDTO>? listTrans,
     BankAccountDTO? bankDTO,
     bool? isLoadMore,
     bool? isEmpty,
     int? offset,
     List<TerminalQRDTO>? listTerminals,
-    Map<String, List<RelatedTransactionReceiveDTO>>? tranMaps,
+    Map<String, List<TransReceiveDTO>>? tranMaps,
   }) {
     return TransactionState(
       status: status ?? this.status,

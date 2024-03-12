@@ -5,7 +5,7 @@ import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/repositories/transaction_repository.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,12 +93,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             event.transactionId, event.terminalCode);
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
-          Map<String, List<RelatedTransactionReceiveDTO>> map = {};
+          Map<String, List<TransReceiveDTO>> map = {};
           map.addAll(state.tranMaps);
 
-          List<RelatedTransactionReceiveDTO> list = [
-            ...map['${event.offset}'] ?? []
-          ];
+          List<TransReceiveDTO> list = [...map['${event.offset}'] ?? []];
 
           int index = list.indexWhere(
               (element) => element.transactionId == event.transactionId);
@@ -134,22 +132,23 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       if (event is UpdateNoteEvent) {
         emit(state.copyWith(
             status: BlocStatus.LOADING, request: TransType.NONE));
+        String transactionId = event.dto.transactionId;
+        String note = event.dto.note;
+
         ResponseMessageDTO result =
-            await repository.updateNote(event.transactionId, event.note);
+            await repository.updateNote(transactionId, note);
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
-          Map<String, List<RelatedTransactionReceiveDTO>> map = {};
+          Map<String, List<TransReceiveDTO>> map = {};
           map.addAll(state.tranMaps);
 
-          List<RelatedTransactionReceiveDTO> list = [
-            ...map['${event.offset}'] ?? []
-          ];
+          List<TransReceiveDTO> list = [...map['${event.offset}'] ?? []];
 
-          int index = list.indexWhere(
-              (element) => element.transactionId == event.transactionId);
+          int index = list
+              .indexWhere((element) => element.transactionId == transactionId);
 
           if (index != -1) {
-            list[index].note = event.note;
+            list[index].note = note;
             map['${event.offset}'] = list;
           }
 
@@ -179,12 +178,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       if (event is GetTransNotOwnerEvent) {
         bool isLoadMore = true;
         int offset = event.dto.offset;
-        List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
-        Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
+        List<TransReceiveDTO> trans = [...state.listTrans];
+        Map<String, List<TransReceiveDTO>> maps = {};
         maps.addAll(state.tranMaps);
 
         emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
-        final List<RelatedTransactionReceiveDTO> result =
+        final List<TransReceiveDTO> result =
             await repository.getTransNotOwner(event.dto);
 
         if (result.isEmpty || result.length < 20) {
@@ -219,13 +218,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       if (event is GetTransUnsettledEvent) {
         bool isLoadMore = true;
         int offset = event.dto.offset;
-        List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
-        Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
+        List<TransReceiveDTO> trans = [...state.listTrans];
+        Map<String, List<TransReceiveDTO>> maps = {};
         maps.addAll(state.tranMaps);
 
         emit(state.copyWith(
             status: BlocStatus.LOADING, request: TransType.NONE));
-        final List<RelatedTransactionReceiveDTO> result =
+        final List<TransReceiveDTO> result =
             await repository.getTransUnsettled(event.dto);
 
         if (result.isEmpty || result.length < 20) {
@@ -265,11 +264,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             status: BlocStatus.LOADING, request: TransType.NONE));
         bool isLoadMore = true;
         int offset = event.dto.offset;
-        List<RelatedTransactionReceiveDTO> trans = [...state.listTrans];
-        Map<String, List<RelatedTransactionReceiveDTO>> maps = {};
+        List<TransReceiveDTO> trans = [...state.listTrans];
+        Map<String, List<TransReceiveDTO>> maps = {};
         maps.addAll(state.tranMaps);
 
-        final List<RelatedTransactionReceiveDTO> result =
+        final List<TransReceiveDTO> result =
             await repository.getTransactionByBankId(event.dto);
 
         if (result.isEmpty || result.length < 20) {

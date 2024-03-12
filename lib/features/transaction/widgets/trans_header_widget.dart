@@ -25,14 +25,7 @@ class TransHeaderWidget extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            AppColor.WHITE,
-            AppColor.BLUE_LIGHT,
-          ],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        ),
+        color: AppColor.WHITE,
         borderRadius: BorderRadius.circular(16),
       ),
       child: SingleChildScrollView(

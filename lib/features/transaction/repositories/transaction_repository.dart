@@ -6,7 +6,7 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
@@ -19,9 +19,9 @@ class TransactionRepository {
   String get userId => UserInformationHelper.instance.getUserId().trim();
   int limit = 20;
 
-  Future<List<RelatedTransactionReceiveDTO>> getTransactionByBankId(
+  Future<List<TransReceiveDTO>> getTransactionByBankId(
       TransactionInputDTO dto) async {
-    List<RelatedTransactionReceiveDTO> result = [];
+    List<TransReceiveDTO> result = [];
     try {
       final String url =
           '${EnvConfig.getBaseUrl()}transactions/list?bankId=${dto.bankId}&type=${dto.type}&offset=${dto.offset * limit}&value=${dto.value}&from=${dto.from}&to=${dto.to}';
@@ -33,8 +33,8 @@ class TransactionRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<RelatedTransactionReceiveDTO>(
-                (json) => RelatedTransactionReceiveDTO.fromJson(json))
+            .map<TransReceiveDTO>(
+                (json) => TransReceiveDTO.fromJson(json))
             .toList();
       }
     } catch (e) {
@@ -49,9 +49,9 @@ class TransactionRepository {
   // - 3: content
   // - 4: terminal code
   // - 5: status
-  Future<List<RelatedTransactionReceiveDTO>> getTransNotOwner(
+  Future<List<TransReceiveDTO>> getTransNotOwner(
       TransactionInputDTO dto) async {
-    List<RelatedTransactionReceiveDTO> result = [];
+    List<TransReceiveDTO> result = [];
     try {
       final String url =
           '${EnvConfig.getBaseUrl()}terminal/transactions?terminalCode=${dto.terminalCode}&userId=$userId&bankId=${dto.bankId}&type=${dto.type}&offset=${dto.offset * limit}&value=${dto.value}&from=${dto.from}&to=${dto.to}';
@@ -63,8 +63,8 @@ class TransactionRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<RelatedTransactionReceiveDTO>(
-                (json) => RelatedTransactionReceiveDTO.fromJson(json))
+            .map<TransReceiveDTO>(
+                (json) => TransReceiveDTO.fromJson(json))
             .toList();
       }
     } catch (e) {
@@ -150,9 +150,9 @@ class TransactionRepository {
   }
 
   // transactions/unsettled?bankId=9dea5...9&value= &offset=0&fromDate=2024-03-01 00:00:00&toDate=2024-03-11 23:59:59&userId=648dca06-4f72-4df8-b98f-429f4777fbda
-  Future<List<RelatedTransactionReceiveDTO>> getTransUnsettled(
+  Future<List<TransReceiveDTO>> getTransUnsettled(
       TransactionInputDTO dto) async {
-    List<RelatedTransactionReceiveDTO> result = [];
+    List<TransReceiveDTO> result = [];
     try {
       final String url =
           '${EnvConfig.getBaseUrl()}transactions/unsettled?bankId=${dto.bankId}&userId=$userId'
@@ -165,8 +165,8 @@ class TransactionRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<RelatedTransactionReceiveDTO>(
-                (json) => RelatedTransactionReceiveDTO.fromJson(json))
+            .map<TransReceiveDTO>(
+                (json) => TransReceiveDTO.fromJson(json))
             .toList();
       }
     } catch (e) {

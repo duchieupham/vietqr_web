@@ -418,10 +418,8 @@ final GoRouter _router = GoRouter(
         redirect: (context, state) {
           Map<String, String> params = state.queryParams;
           final extra = state.extra;
-          if (extra != null && extra is Map) {
-            return (userId.isNotEmpty)
-                ? '/transactions?type=${extra['type']}'
-                : '/login';
+          if (extra != null && extra is Map<String, String>) {
+            params = extra;
           }
 
           return (userId.isNotEmpty)
@@ -434,10 +432,7 @@ final GoRouter _router = GoRouter(
           if (extra != null && extra is Map<String, String>) {
             params = extra;
           }
-          return TransactionScreen(
-            bankId: params['bankId'] ?? '',
-            type: params['type'] ?? '',
-          );
+          return TransactionScreen(type: params['type'] ?? '');
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
           Map<String, String> params = state.queryParams;
@@ -448,10 +443,7 @@ final GoRouter _router = GoRouter(
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: TransactionScreen(
-              bankId: params['bankId'] ?? '',
-              type: params['type'] ?? '',
-            ),
+            child: TransactionScreen(type: params['type'] ?? ''),
           );
         }),
 
