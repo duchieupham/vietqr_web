@@ -309,53 +309,59 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    GestureDetector(
-                                      onTap: () => widget.onEditNote(
-                                          dto.transactionId, dto.note),
-                                      child: Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(32),
-                                          color: AppColor.BLUE_TEXT
-                                              .withOpacity(0.25),
-                                        ),
-                                        child: Image(
-                                          image: ImageUtils.instance
-                                              .getImageNetWork(
-                                                  AppImages.icEditTrans),
+                                    Tooltip(
+                                      message: 'Sửa ghi chú',
+                                      child: GestureDetector(
+                                        onTap: () => widget.onEditNote(
+                                            dto.transactionId, dto.note),
+                                        child: Container(
                                           width: 24,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(32),
+                                            color: AppColor.BLUE_TEXT
+                                                .withOpacity(0.25),
+                                          ),
+                                          child: Image(
+                                            image: ImageUtils.instance
+                                                .getImageNetWork(
+                                                    AppImages.icEditTrans),
+                                            width: 24,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (!widget.isOwner &&
-                                            !dto.isEnableTerminal) return;
-                                        widget.onChooseTerminal(
-                                            dto.transactionId,
-                                            dto.terminalCode);
-                                      },
-                                      child: Container(
-                                        width: 24,
-                                        height: 24,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 6),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(32),
-                                          color: (!widget.isOwner &&
-                                                  !dto.isEnableTerminal)
-                                              ? AppColor.GREY_BG
-                                              : AppColor.BLUE_TEXT
-                                                  .withOpacity(0.25),
-                                        ),
-                                        child: Image(
-                                          image: ImageUtils.instance
-                                              .getImageNetWork(
-                                                  AppImages.icNoteTrans),
+                                    Tooltip(
+                                      message: 'Sửa mã điểm bán',
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (!widget.isOwner &&
+                                              !dto.isEnableTerminal) return;
+                                          widget.onChooseTerminal(
+                                              dto.transactionId,
+                                              dto.terminalCode);
+                                        },
+                                        child: Container(
                                           width: 24,
+                                          height: 24,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 6),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(32),
+                                            color: (!widget.isOwner &&
+                                                    !dto.isEnableTerminal)
+                                                ? AppColor.GREY_BG
+                                                : AppColor.BLUE_TEXT
+                                                    .withOpacity(0.25),
+                                          ),
+                                          child: Image(
+                                            image: ImageUtils.instance
+                                                .getImageNetWork(
+                                                    AppImages.icNoteTrans),
+                                            width: 24,
+                                          ),
                                         ),
                                       ),
                                     ),

@@ -274,8 +274,8 @@ class _StoreScreenState extends State<TransactionAccountingView> {
 
                     html.window.history.pushState(
                         null,
-                        '/transactions?type=0?bankId=$_bankId',
-                        '/transactions?type=0?bankId=$_bankId');
+                        '/transactions?type=1?bankId=$_bankId',
+                        '/transactions?type=1?bankId=$_bankId');
 
                     TransactionInputDTO dto = TransactionInputDTO(
                       bankId: _bankId,
