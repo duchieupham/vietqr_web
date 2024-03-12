@@ -206,7 +206,16 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                 children: [
                   const Expanded(child: SizedBox()),
                   Container(
-                    color: AppColor.WHITE,
+                    decoration: BoxDecoration(
+                      color: AppColor.WHITE,
+                      boxShadow: [
+                        BoxShadow(
+                            color: AppColor.GREY_BORDER.withOpacity(0.8),
+                            blurRadius: 5,
+                            spreadRadius: 1,
+                            offset: const Offset(0, 0)),
+                      ],
+                    ),
                     child: Column(
                       children: [
                         Container(
@@ -231,8 +240,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           children: List.generate(
                             widget.list.length,
                             (index) {
-                              TransReceiveDTO dto =
-                                  widget.list[index];
+                              TransReceiveDTO dto = widget.list[index];
                               return GestureDetector(
                                 onTap: () {},
                                 child: Container(
@@ -294,8 +302,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           children: List.generate(
                             widget.list.length,
                             (index) {
-                              TransReceiveDTO dto =
-                                  widget.list[index];
+                              TransReceiveDTO dto = widget.list[index];
                               return Container(
                                 width: 110,
                                 height: 40,
