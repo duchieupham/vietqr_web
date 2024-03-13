@@ -218,7 +218,7 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
 
   Widget _buildFilterByWidget() {
     return DropdownTransWidget(
-      title: 'Lọc theo',
+      title: 'Tìm kiếm theo',
       list: listFilterBy,
       filter: _filterBy,
       callBack: (value) {

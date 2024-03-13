@@ -60,17 +60,25 @@ class TransReceiveDTO {
           ? 'QR giao dịch'
           : 'Khác';
 
-  String get timeCreate => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
+  String get timeCreate => time == 0
+      ? '-'
+      : DateFormat('HH:mm:ss\ndd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
 
-  String get timePayment => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
+  String get timePayment => timePaid == 0
+      ? '-'
+      : DateFormat('HH:mm:ss\ndd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
 
-  String get timeCreateEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
+  String get timeCreateEditNote => time == 0
+      ? '-'
+      : DateFormat('HH:mm:ss dd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
 
-  String get timePaymentEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
+  String get timePaymentEditNote => timePaid == 0
+      ? '-'
+      : DateFormat('HH:mm:ss dd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch(timePaid * 1000));
 
   bool get isTimeCreate {
     if (transType.trim() == 'C' && (status == 2 || status == 0 || type == 0)) {

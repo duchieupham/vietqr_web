@@ -200,7 +200,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       _toDate = toDate;
     });
 
-    if (type == 5) _onSearch();
+    if (type == 5 || type == 9) _onSearch();
   }
 
   void _onClearFilter() {
@@ -525,7 +525,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Lọc theo:',
+                'Tìm kiếm theo',
                 style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
               ),
               const SizedBox(height: 4),

@@ -29,17 +29,25 @@ class TransactionStoreDTO {
   final String? orderId;
   final String? terminalCode;
 
-  String get timeCreate => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch((time ?? 0) * 1000));
+  String get timeCreate => time == 0
+      ? '-'
+      : DateFormat('HH:mm:ss\ndd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch((time ?? 0) * 1000));
 
-  String get timePayment => DateFormat('HH:mm:ss\ndd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
+  String get timePayment => timePaid == 0
+      ? '-'
+      : DateFormat('HH:mm:ss\ndd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
 
-  String get timeCreateEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch((time ?? 0) * 1000));
+  String get timeCreateEditNote => time == 0
+      ? '-'
+      : DateFormat('HH:mm:ss dd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch((time ?? 0) * 1000));
 
-  String get timePaymentEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
+  String get timePaymentEditNote => timePaid == 0
+      ? '-'
+      : DateFormat('HH:mm:ss dd/MM/yyyy')
+          .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
 
   String get transactionType => type == 1
       ? 'QR cửa hàng'

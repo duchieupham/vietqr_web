@@ -12,6 +12,7 @@ import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.da
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_trans_payment_widget.dart';
+import 'package:VietQR/features/transaction/widgets/drop_down_trans_widget.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -210,7 +211,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       _toDate = toDate;
     });
 
-    if (type == 5) _onSearch();
+    if (type == 5 || type == 9) _onSearch();
   }
 
   void _onClearFilter() {
@@ -460,6 +461,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
         ),
         ...[
           const SizedBox(width: 24),
+          // if (typeFilter != 5)
           Container(
             width: 200,
             height: 34,
@@ -495,7 +497,9 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                 suffixIconConstraints: const BoxConstraints(),
               ),
             ),
-          ),
+          )
+          // else
+          // _buildFilterByStatusWidget()
         ],
         const SizedBox(width: 12),
         GestureDetector(
@@ -537,7 +541,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Lọc theo:',
+                'Tìm kiếm theo:',
                 style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
               ),
               const SizedBox(height: 4),
@@ -602,4 +606,27 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       ],
     );
   }
+
+// DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
+//
+// List<DataFilter> listFilterByStatus = [
+//   const DataFilter(id: 0, name: 'Chờ thanh toán'),
+//   const DataFilter(id: 1, name: 'Thành công'),
+//   const DataFilter(id: 2, name: 'Đã huỷ'),
+// ];
+//
+// Widget _buildFilterByStatusWidget() {
+//   return SizedBox(
+//     width: 200,
+//     child: DropdownTransWidget(
+//       list: listFilterByStatus,
+//       filter: _filterByStatus,
+//       callBack: (value) {
+//         if (value == null) return;
+//         _filterByStatus = value;
+//         setState(() {});
+//       },
+//     ),
+//   );
+// }
 }

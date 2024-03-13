@@ -100,8 +100,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           ),
 
                           /// Thời gian tạo
-                          DataCell(
-                              _buildContent(title: model.timePayment ?? '-')),
+                          DataCell(_buildContent(title: model.timePayment)),
 
                           /// Số tiền
                           DataCell(
