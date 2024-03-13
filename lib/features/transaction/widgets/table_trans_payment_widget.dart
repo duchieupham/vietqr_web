@@ -316,7 +316,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Tooltip(
-                                      message: 'Sửa ghi chú',
+                                      message: 'Cập nhật ghi chú',
                                       child: GestureDetector(
                                         onTap: () => widget.onEditNote(dto),
                                         child: Container(
@@ -338,7 +338,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                       ),
                                     ),
                                     Tooltip(
-                                      message: 'Sửa mã điểm bán',
+                                      message: 'Cập nhật giao dịch',
                                       child: GestureDetector(
                                         onTap: () {
                                           if (!widget.isOwner &&

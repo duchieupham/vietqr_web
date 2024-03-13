@@ -11,17 +11,15 @@ import 'drop_down_trans_widget.dart';
 
 class DialogTransPaymentWidget extends StatefulWidget {
   final int typeFilter;
-  final int status;
   final int typeTime;
   final DateTime? fromDate;
   final DateTime? toDate;
   final String terminalName;
-  final Function(int, int, int, DateTime, DateTime) callBack;
+  final Function(int, int, DateTime, DateTime) callBack;
 
   const DialogTransPaymentWidget({
     super.key,
     required this.typeFilter,
-    required this.status,
     required this.typeTime,
     required this.callBack,
     this.fromDate,
@@ -46,11 +44,11 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
     const DataFilter(id: 3, name: 'Nội dung'),
   ];
 
-  List<DataFilter> listFilterByStatus = [
-    const DataFilter(id: 0, name: 'Chờ thanh toán'),
-    const DataFilter(id: 1, name: 'Thành công'),
-    const DataFilter(id: 2, name: 'Đã huỷ'),
-  ];
+  // List<DataFilter> listFilterByStatus = [
+  //   const DataFilter(id: 0, name: 'Chờ thanh toán'),
+  //   const DataFilter(id: 1, name: 'Thành công'),
+  //   const DataFilter(id: 2, name: 'Đã huỷ'),
+  // ];
 
   List<DataFilter> listFilterByTime = [
     const DataFilter(id: 1, name: 'Hôm nay (mặc định)'),
@@ -61,7 +59,8 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
   ];
 
   DataFilter _filterBy = const DataFilter(id: 9, name: 'Tất cả (mặc định)');
-  DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
+
+  // DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
   DataFilter _filterByTime =
       const DataFilter(id: 1, name: 'Hôm nay (mặc định)');
 
@@ -83,10 +82,10 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
         listFilterBy.indexWhere((element) => element.id == widget.typeFilter);
     if (indexFilter != -1) _filterBy = listFilterBy[indexFilter];
 
-    /// Get Filter by status
-    int indexStatus = listFilterByStatus
-        .indexWhere((element) => element.id == widget.typeFilter);
-    if (indexStatus != -1) _filterByStatus = listFilterByStatus[indexStatus];
+    // /// Get Filter by status
+    // int indexStatus = listFilterByStatus
+    //     .indexWhere((element) => element.id == widget.typeFilter);
+    // if (indexStatus != -1) _filterByStatus = listFilterByStatus[indexStatus];
 
     /// Get Filter by time
     int indexTime =
@@ -101,7 +100,7 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
 
   void onReset() {
     _filterBy = const DataFilter(id: 9, name: 'Tất cả (mặc định)');
-    _filterByStatus = const DataFilter(id: 0, name: 'Thành công');
+    // _filterByStatus = const DataFilter(id: 0, name: 'Thành công');
     _filterByTime = const DataFilter(id: 1, name: 'Hôm nay (mặc định)');
 
     onChangeTimeFilter(_filterByTime);
@@ -117,8 +116,7 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
 
   void _handleApply() {
     Navigator.pop(context);
-    widget.callBack.call(
-        _filterBy.id, _filterByStatus.id, _filterByTime.id, _fromDate, _toDate);
+    widget.callBack.call(_filterBy.id, _filterByTime.id, _fromDate, _toDate);
   }
 
   @override
@@ -177,8 +175,8 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
                 ],
                 const SizedBox(height: 16),
                 _buildFilterByWidget(),
-                if (_filterBy.id == 5) _buildFilterByStatusWidget(),
-                const SizedBox(height: 16),
+                // if (_filterBy.id == 5) _buildFilterByStatusWidget(),
+                const SizedBox(height: 30),
                 _buildFilterByTimeWidget(),
                 const SizedBox(height: 12),
                 if (_filterByTime.id == 5) _buildRangeTimeWidget(),
@@ -229,17 +227,17 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
     );
   }
 
-  Widget _buildFilterByStatusWidget() {
-    return DropdownTransWidget(
-      list: listFilterByStatus,
-      filter: _filterByStatus,
-      callBack: (value) {
-        if (value == null) return;
-        _filterByStatus = value;
-        updateState();
-      },
-    );
-  }
+  // Widget _buildFilterByStatusWidget() {
+  //   return DropdownTransWidget(
+  //     list: listFilterByStatus,
+  //     filter: _filterByStatus,
+  //     callBack: (value) {
+  //       if (value == null) return;
+  //       _filterByStatus = value;
+  //       updateState();
+  //     },
+  //   );
+  // }
 
   Widget _buildFilterByTimeWidget() {
     return DropdownTransWidget(

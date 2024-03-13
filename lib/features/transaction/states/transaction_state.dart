@@ -16,7 +16,36 @@ enum TransType {
   UPDATE_NOTE,
   UPDATE_CACHE,
   UPDATE_OFFSET,
+  DAY,
+  MONTH,
+  SEVEN_DAY,
+  THREE_MONTH,
   ERROR,
+}
+
+enum TimeKey {
+  DAY,
+  MONTH,
+  SEVEN_DAY,
+  THREE_MONTH,
+  NONE,
+}
+
+extension TimeKeyExt on int {
+  TimeKey get timeKeyExt {
+    switch (this) {
+      case 1:
+        return TimeKey.DAY;
+      case 2:
+        return TimeKey.SEVEN_DAY;
+      case 3:
+        return TimeKey.MONTH;
+      case 4:
+        return TimeKey.THREE_MONTH;
+      default:
+        return TimeKey.NONE;
+    }
+  }
 }
 
 class TransactionState extends Equatable {
@@ -32,6 +61,7 @@ class TransactionState extends Equatable {
   final Map<String, List<TransReceiveDTO>> tranMapsDefault;
   final List<TerminalQRDTO> listTerminals;
   final bool getAll;
+  final List<String> listTimeKey;
 
   const TransactionState({
     this.status = BlocStatus.NONE,
@@ -41,6 +71,7 @@ class TransactionState extends Equatable {
     required this.listBanks,
     required this.listTrans,
     required this.listTerminals,
+    required this.listTimeKey,
     this.bankDTO,
     required this.tranMaps,
     required this.tranMapsDefault,
@@ -62,6 +93,7 @@ class TransactionState extends Equatable {
     List<TerminalQRDTO>? listTerminals,
     Map<String, List<TransReceiveDTO>>? tranMaps,
     Map<String, List<TransReceiveDTO>>? tranMapsDefault,
+    List<String>? listTimeKey,
   }) {
     return TransactionState(
       status: status ?? this.status,
@@ -76,6 +108,7 @@ class TransactionState extends Equatable {
       tranMaps: tranMaps ?? this.tranMaps,
       tranMapsDefault: tranMapsDefault ?? this.tranMapsDefault,
       listTerminals: listTerminals ?? this.listTerminals,
+      listTimeKey: listTimeKey ?? this.listTimeKey,
     );
   }
 
@@ -93,5 +126,6 @@ class TransactionState extends Equatable {
         tranMapsDefault,
         listTerminals,
         getAll,
+        listTimeKey,
       ];
 }

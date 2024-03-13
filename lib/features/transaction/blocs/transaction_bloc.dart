@@ -16,6 +16,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             listBanks: [],
             listTrans: [],
             listTerminals: [],
+            listTimeKey: [],
             tranMaps: {},
             tranMapsDefault: {})) {
     on<GetTransOwnerEvent>(_getTransactions);
@@ -96,21 +97,23 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           Map<String, List<TransReceiveDTO>> map = {};
+          String key = '${event.timeKey}_${event.offset}';
 
           if (state.getAll) {
             map.addAll(state.tranMapsDefault);
           } else {
             map.addAll(state.tranMaps);
+            key = '${event.offset}';
           }
 
-          List<TransReceiveDTO> list = [...map['${event.offset}'] ?? []];
+          List<TransReceiveDTO> list = [...map[key] ?? []];
 
           int index = list.indexWhere(
               (element) => element.transactionId == event.transactionId);
 
           if (index != -1) {
             list[index].terminalCode = event.terminalCode;
-            map['${event.offset}'] = list;
+            map[key] = list;
           }
 
           if (state.getAll) {
@@ -156,21 +159,23 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           Map<String, List<TransReceiveDTO>> map = {};
+          String key = '${event.timeKey}_${event.offset}';
 
           if (state.getAll) {
             map.addAll(state.tranMapsDefault);
           } else {
             map.addAll(state.tranMaps);
+            key = '${event.offset}';
           }
 
-          List<TransReceiveDTO> list = [...map['${event.offset}'] ?? []];
+          List<TransReceiveDTO> list = [...map[key] ?? []];
 
           int index = list
               .indexWhere((element) => element.transactionId == transactionId);
 
           if (index != -1) {
             list[index].note = note;
-            map['${event.offset}'] = list;
+            map[key] = list;
           }
 
           if (state.getAll) {
@@ -209,11 +214,15 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(state.copyWith(
             status: BlocStatus.LOADING, request: TransType.NONE));
 
+        List<TransReceiveDTO> list =
+            state.tranMapsDefault['${event.timeKey}_0'] ?? [];
+
         emit(
           state.copyWith(
             request: TransType.UPDATE_CACHE,
             status: BlocStatus.UNLOADING,
             getAll: event.getAll,
+            isLoadMore: list.length >= 20,
             offset: 0,
           ),
         );
@@ -297,17 +306,36 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _getTransactionsUnsettled(TransactionEvent event, Emitter emit) async {
     try {
       if (event is GetTransUnsettledEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
         bool isLoadMore = true;
         int offset = event.dto.offset;
         List<TransReceiveDTO> trans = [...state.listTrans];
         Map<String, List<TransReceiveDTO>> maps = {};
         Map<String, List<TransReceiveDTO>> mapsDefault = {};
+        List<String> listTimeKey = [...state.listTimeKey];
 
         mapsDefault.addAll(state.tranMapsDefault);
         maps.addAll(state.tranMaps);
 
-        emit(state.copyWith(
-            status: BlocStatus.LOADING, request: TransType.NONE));
+        if (event.getAll) {
+          String key = '${event.timeKey}_$offset';
+          if (listTimeKey.contains(key)) {
+            emit(state.copyWith(
+              request: TransType.GET_TRANS_TRUE,
+              listTrans: trans,
+              tranMaps: maps,
+              tranMapsDefault: mapsDefault,
+              offset: offset,
+              isLoadMore: isLoadMore,
+              getAll: event.getAll,
+              status: BlocStatus.UNLOADING,
+              listTimeKey: listTimeKey,
+            ));
+            return;
+          }
+        }
+
         final List<TransReceiveDTO> result =
             await repository.getTransUnsettled(event.dto);
 
@@ -322,7 +350,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         }
 
         if (event.getAll) {
-          mapsDefault['$offset'] = result;
+          String key = '${event.timeKey}_$offset';
+          mapsDefault[key] = result;
+          if (!listTimeKey.contains(key)) {
+            listTimeKey.add(key);
+          }
         }
 
         maps['$offset'] = result;
@@ -332,10 +364,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           listTrans: trans,
           tranMaps: maps,
           tranMapsDefault: mapsDefault,
-          getAll: event.getAll,
           offset: offset,
           isLoadMore: isLoadMore,
+          getAll: event.getAll,
           status: BlocStatus.UNLOADING,
+          listTimeKey: listTimeKey,
         ));
       }
     } catch (e) {
@@ -354,11 +387,31 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             status: BlocStatus.LOADING, request: TransType.NONE));
         bool isLoadMore = true;
         int offset = event.dto.offset;
+
         List<TransReceiveDTO> trans = [...state.listTrans];
         Map<String, List<TransReceiveDTO>> maps = {};
         Map<String, List<TransReceiveDTO>> mapsDefault = {};
+        List<String> listTimeKey = [...state.listTimeKey];
         maps.addAll(state.tranMaps);
         mapsDefault.addAll(state.tranMapsDefault);
+
+        if (event.getAll) {
+          String key = '${event.timeKey}_$offset';
+          if (listTimeKey.contains(key)) {
+            emit(state.copyWith(
+              request: TransType.GET_TRANS_TRUE,
+              listTrans: trans,
+              tranMaps: maps,
+              tranMapsDefault: mapsDefault,
+              offset: offset,
+              isLoadMore: isLoadMore,
+              getAll: event.getAll,
+              status: BlocStatus.UNLOADING,
+              listTimeKey: listTimeKey,
+            ));
+            return;
+          }
+        }
 
         final List<TransReceiveDTO> result =
             await repository.getTransactionByBankId(event.dto);
@@ -374,7 +427,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         }
 
         if (event.getAll) {
-          mapsDefault['$offset'] = result;
+          String key = '${event.timeKey}_$offset';
+          mapsDefault[key] = result;
+          if (!listTimeKey.contains(key)) {
+            listTimeKey.add(key);
+          }
         }
 
         maps['$offset'] = result;
@@ -388,6 +445,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           isLoadMore: isLoadMore,
           getAll: event.getAll,
           status: BlocStatus.UNLOADING,
+          listTimeKey: listTimeKey,
         ));
       }
     } catch (e) {
@@ -408,6 +466,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           request: TransType.UPDATE_BANK,
           bankDTO: event.dto,
           status: BlocStatus.UNLOADING,
+          tranMapsDefault: {},
+          tranMaps: {},
+          isLoadMore: true,
+          offset: 0,
+          getAll: false,
+          listTimeKey: [],
+          listTrans: [],
         ));
       }
     } catch (e) {

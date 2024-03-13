@@ -12,6 +12,7 @@ import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.da
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_trans_payment_widget.dart';
+import 'package:VietQR/features/transaction/widgets/drop_down_trans_widget.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -48,6 +49,8 @@ class _StoreScreenState extends State<TransactionAccountingView> {
   String _bankId = '';
   bool _isOwner = false;
 
+  List<String> listTimeKey = [];
+
   DateTime _fromDate = DateTime.now();
   DateTime _toDate = DateTime.now();
 
@@ -69,6 +72,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         .subtract(const Duration(seconds: 1));
   }
 
+  void _onCallAPi(TransactionInputDTO dto,
+      {bool getAll = false, String timeKey = ''}) {
+    bloc.add(
+        GetTransUnsettledEvent(dto: dto, getAll: getAll, timeKey: timeKey));
+  }
+
   void _onChooseBank(List<BankAccountDTO> list) async {
     final data = await showDialog(
       barrierDismissible: false,
@@ -79,6 +88,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     );
 
     if (data != null && data is BankAccountDTO) {
+      _onClearFilter();
       bloc.add(UpdateBankAccountEvent(data));
       html.window.history.pushState(
           null,
@@ -87,7 +97,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       setState(() {
         _bankId = data.bankId;
       });
-      loadAll(isFirst: true);
+      loadAll();
     }
   }
 
@@ -104,15 +114,18 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       type: typeFilter,
       status: statusFilter,
     );
-    bloc.add(
-        GetTransUnsettledEvent(dto: dto, isLoadMore: true, getAll: getAll));
+
+    bloc.add(GetTransUnsettledEvent(
+        dto: dto,
+        isLoadMore: true,
+        getAll: getAll,
+        timeKey: typeTime.timeKeyExt.name));
   }
 
   void _onSearch() {
-    if (typeFilter == 9 && typeTime == 1) return;
+    if (typeFilter == 9 && _value.isEmpty) return;
 
     int type = typeFilter;
-
     if (typeFilter == 5) {
       _value = '$statusFilter';
       searchController.clear();
@@ -130,9 +143,11 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       type: type,
       status: statusFilter,
     );
-    bloc.add(GetTransUnsettledEvent(dto: dto));
+
+    _onCallAPi(dto);
   }
 
+  ///
   void _onFilter() async {
     await showDialog(
       barrierDismissible: false,
@@ -140,7 +155,6 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       builder: (BuildContext context) {
         return DialogTransPaymentWidget(
           typeFilter: typeFilter,
-          status: statusFilter,
           typeTime: typeTime,
           fromDate: _fromDate,
           toDate: _toDate,
@@ -150,6 +164,34 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     );
   }
 
+  _onReceive(int type, int time, DateTime fromDate, DateTime toDate) {
+    /// 1: Thời gian hôm nay( mặc định)
+    if (time == 1 ||
+        (typeTime == time) ||
+        listTimeKey.contains('${time.timeKeyExt.name}_0')) {
+      typeFilter = type;
+      typeTime = time;
+      _fromDate = fromDate;
+      _toDate = toDate;
+      updateState();
+      bloc.add(UpdateCacheDataEvent(timeKey: typeTime.timeKeyExt.name));
+      return;
+    }
+    typeFilter = type;
+    typeTime = time;
+    _fromDate = fromDate;
+    _toDate = toDate;
+    updateState();
+
+    final dto = TransactionInputDTO(
+        bankId: _bankId,
+        from: _dateFormat.format(_fromDate),
+        to: _dateFormat.format(_toDate));
+
+    _onCallAPi(dto, getAll: true, timeKey: typeTime.timeKeyExt.name);
+  }
+
+  ///
   void _onChooseTerminal(
     List<TerminalQRDTO> list,
     int offset,
@@ -165,16 +207,17 @@ class _StoreScreenState extends State<TransactionAccountingView> {
           terminalCode: terminalCode,
           update: (dto) {
             bloc.add(UpdateTerminalEvent(
-              transactionId: transactionId,
-              terminalCode: dto.terminalCode,
-              offset: offset,
-            ));
+                transactionId: transactionId,
+                terminalCode: dto.terminalCode,
+                offset: offset,
+                timeKey: typeTime.timeKeyExt.name));
           },
         );
       },
     );
   }
 
+  ///
   void _onChooseNote(int offset, TransReceiveDTO dto) async {
     await showDialog(
       barrierDismissible: false,
@@ -183,24 +226,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         return DialogUpdateNoteWidget(
           dto: dto,
           update: (value) {
-            bloc.add(UpdateNoteEvent(dto: value, offset: offset));
+            bloc.add(UpdateNoteEvent(
+                dto: value, offset: offset, timeKey: typeTime.timeKeyExt.name));
           },
         );
       },
     );
-  }
-
-  _onReceive(
-      int type, int status, int time, DateTime fromDate, DateTime toDate) {
-    setState(() {
-      typeFilter = type;
-      statusFilter = status;
-      typeTime = time;
-      _fromDate = fromDate;
-      _toDate = toDate;
-    });
-
-    if (type == 5 || type == 9) _onSearch();
   }
 
   void _onClearFilter() {
@@ -213,7 +244,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       _fromDate = _formatFromDate(DateTime.now());
       _toDate = _endDate(DateTime.now());
     });
-    bloc.add(const UpdateCacheDataEvent(true));
+    bloc.add(UpdateCacheDataEvent(timeKey: typeTime.timeKeyExt.name));
   }
 
   void _onClear() {
@@ -221,26 +252,22 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       _value = '';
       searchController.clear();
     });
-    bloc.add(const UpdateCacheDataEvent(true));
+    bloc.add(UpdateCacheDataEvent(timeKey: typeTime.timeKeyExt.name));
   }
 
-  void loadAll({bool isFirst = false}) {
+  void loadAll() {
     TransactionInputDTO dto = TransactionInputDTO(
       bankId: _bankId,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
     );
 
-    if (isFirst) {
-      dto.from = _dateFormat.format(_formatFromDate(DateTime.now()));
-      dto.to = _dateFormat.format(_endDate(DateTime.now()));
-    }
+    dto.from = _dateFormat.format(_formatFromDate(DateTime.now()));
+    dto.to = _dateFormat.format(_endDate(DateTime.now()));
+    // dto.from = '2024-03-11 00:00:00';
+    // dto.to = '2024-03-11 23:59:59';
 
-    if (_isOwner) {
-      bloc.add(GetTransOwnerEvent(dto: dto, getAll: isFirst));
-    } else {
-      bloc.add(GetTransNotOwnerEvent(dto: dto, getAll: isFirst));
-    }
+    _onCallAPi(dto, getAll: true, timeKey: TransType.DAY.name);
   }
 
   @override
@@ -291,7 +318,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                         '/transactions?type=1?bankId=$_bankId',
                         '/transactions?type=1?bankId=$_bankId');
 
-                    loadAll(isFirst: true);
+                    loadAll();
+                  }
+
+                  if (state.request == TransType.GET_TRANS_TRUE) {
+                    listTimeKey = [...state.listTimeKey];
+                    updateState();
                   }
                 },
                 builder: (context, state) {
@@ -306,7 +338,9 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                         const SizedBox(height: 24),
                         TableTransPaymentWidget(
                           list: state.getAll
-                              ? state.tranMapsDefault['${state.offset}'] ?? []
+                              ? state.tranMapsDefault[
+                                      '${typeTime.timeKeyExt.name}_${state.offset}'] ??
+                                  []
                               : state.tranMaps['${state.offset}'] ?? [],
                           offset: state.offset,
                           isOwner: state.bankDTO?.isOwner ?? false,
@@ -317,7 +351,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                         ),
                         Container(
                           padding: const EdgeInsets.only(top: 16),
-                          height: 100,
+                          height: 60,
                           child: Row(
                             children: [
                               Text('Trang ${state.offset + 1}'),
@@ -402,12 +436,6 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     );
   }
 
-  String get statusValue => statusFilter == 1
-      ? 'Thành công'
-      : statusFilter == 0
-          ? 'Chờ thanh toán'
-          : 'Đã huỷ';
-
   String get timeValue {
     if (typeTime == 1) return 'Hôm nay (mặc định)';
     if (typeTime == 2) return '7 ngày gần nhất';
@@ -448,42 +476,45 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         ),
         ...[
           const SizedBox(width: 24),
-          Container(
-            width: 200,
-            height: 34,
-            decoration: BoxDecoration(
-              color: AppColor.GREY_BG,
-              border: Border.all(color: AppColor.GREY_LIGHT),
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: TextField(
-              style: const TextStyle(fontSize: 12),
-              controller: searchController,
-              onChanged: (value) {
-                setState(() {
-                  _value = value;
-                });
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding:
-                    const EdgeInsets.only(bottom: 16, left: 12, right: 12),
-                hintText: hinText,
-                hintStyle:
-                    const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-                suffixIcon: searchController.text.isNotEmpty
-                    ? GestureDetector(
-                        onTap: _onClear,
-                        child: const Padding(
-                          padding: EdgeInsets.only(right: 8.0),
-                          child: Icon(Icons.close, size: 18),
-                        ),
-                      )
-                    : null,
-                suffixIconConstraints: const BoxConstraints(),
+          if (typeFilter != 5)
+            Container(
+              width: 200,
+              height: 34,
+              decoration: BoxDecoration(
+                color: AppColor.GREY_BG,
+                border: Border.all(color: AppColor.GREY_LIGHT),
+                borderRadius: BorderRadius.circular(5),
               ),
-            ),
-          ),
+              child: TextField(
+                style: const TextStyle(fontSize: 12),
+                controller: searchController,
+                onChanged: (value) {
+                  setState(() {
+                    _value = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding:
+                      const EdgeInsets.only(bottom: 16, left: 12, right: 12),
+                  hintText: hinText,
+                  hintStyle:
+                      const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+                  suffixIcon: searchController.text.isNotEmpty
+                      ? GestureDetector(
+                          onTap: _onClear,
+                          child: const Padding(
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: Icon(Icons.close, size: 18),
+                          ),
+                        )
+                      : null,
+                  suffixIconConstraints: const BoxConstraints(),
+                ),
+              ),
+            )
+          else
+            _buildFilterByStatusWidget()
         ],
         const SizedBox(width: 12),
         GestureDetector(
@@ -504,7 +535,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         ),
         const SizedBox(width: 8),
         GestureDetector(
-          onTap: typeFilter != 5 ? _onSearch : null,
+          onTap: _onSearch,
           child: Container(
             width: 30,
             height: 30,
@@ -525,7 +556,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Tìm kiếm theo',
+                'Tìm kiếm theo:',
                 style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
               ),
               const SizedBox(height: 4),
@@ -542,7 +573,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                       if (typeFilter == 3)
                         _buildFilterWith('Nội dung: ${searchController.text}'),
                       if (typeFilter == 5)
-                        _buildFilterWith('Trạng thái: $statusValue'),
+                        _buildFilterWith('Trạng thái: ${_filterByStatus.name}'),
                       if (typeFilter == 2)
                         _buildFilterWith(
                             'Mã đơn hàng: ${searchController.text}'),
@@ -557,7 +588,6 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 4),
-                        margin: const EdgeInsets.only(right: 8, bottom: 4),
                         child: Row(
                           children: const [
                             Icon(Icons.remove_circle_outline,
@@ -565,7 +595,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                             SizedBox(width: 4),
                             Text('Xoá bộ lọc',
                                 style: TextStyle(
-                                    fontSize: 11, color: AppColor.BLUE_TEXT)),
+                                    fontSize: 10, color: AppColor.BLUE_TEXT)),
                           ],
                         ),
                       ),
@@ -590,5 +620,33 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         const SizedBox(width: 24),
       ],
     );
+  }
+
+  DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
+
+  List<DataFilter> listFilterByStatus = [
+    const DataFilter(id: 0, name: 'Chờ thanh toán'),
+    const DataFilter(id: 1, name: 'Thành công'),
+    const DataFilter(id: 2, name: 'Đã huỷ'),
+  ];
+
+  Widget _buildFilterByStatusWidget() {
+    return SizedBox(
+      width: 200,
+      child: DropdownTransWidget(
+        list: listFilterByStatus,
+        filter: _filterByStatus,
+        callBack: (value) {
+          if (value == null) return;
+          _filterByStatus = value;
+          statusFilter = value.id;
+          setState(() {});
+        },
+      ),
+    );
+  }
+
+  void updateState() {
+    setState(() {});
   }
 }

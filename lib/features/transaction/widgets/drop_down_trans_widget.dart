@@ -28,9 +28,9 @@ class DropdownTransWidget extends StatelessWidget {
           Text(title!,
               style:
                   const TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Container(
-          height: 42,
+          height: 34,
           decoration: BoxDecoration(
               color: AppColor.WHITE,
               border: Border.all(
@@ -45,20 +45,13 @@ class DropdownTransWidget extends StatelessWidget {
                     return DropdownMenuItem<DataFilter>(
                       value: item,
                       alignment: AlignmentDirectional.topStart,
-                      child: MTextFieldCustom(
-                        isObscureText: false,
-                        maxLines: 1,
-                        enable: false,
-                        fillColor: AppColor.WHITE,
-                        value: item.name,
-                        title: '',
-                        styles: const TextStyle(fontSize: 10),
-                        textFieldType: TextfieldType.DEFAULT,
-                        contentPadding: const EdgeInsets.only(bottom: 8),
-                        hintText: '',
-                        inputType: TextInputType.text,
-                        keyboardAction: TextInputAction.next,
-                        onChange: (value) {},
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          item.name,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        ),
                       ),
                     );
                   },
@@ -67,25 +60,13 @@ class DropdownTransWidget extends StatelessWidget {
               items: list.map((item) {
                 return DropdownMenuItem<DataFilter>(
                   value: item,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Text(
-                                item.name,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-                              ),
-                              const Spacer(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      item.name,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
                   ),
                 );
               }).toList(),
@@ -103,7 +84,7 @@ class DropdownTransWidget extends StatelessWidget {
               ),
               iconStyleData: const IconStyleData(
                 icon: Icon(Icons.expand_more),
-                iconSize: 18,
+                iconSize: 14,
                 iconEnabledColor: AppColor.BLACK,
                 iconDisabledColor: Colors.grey,
               ),
