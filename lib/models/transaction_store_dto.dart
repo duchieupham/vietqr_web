@@ -36,7 +36,7 @@ class TransactionStoreDTO {
       .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
 
   String get timeCreateEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
-      .format(DateTime.fromMillisecondsSinceEpoch(time ?? 0 * 1000));
+      .format(DateTime.fromMillisecondsSinceEpoch((time ?? 0) * 1000));
 
   String get timePaymentEditNote => DateFormat('HH:mm:ss dd/MM/yyyy')
       .format(DateTime.fromMillisecondsSinceEpoch((timePaid ?? 0) * 1000));
@@ -105,7 +105,11 @@ class TransactionStoreDTO {
         bankCode: json["bankCode"] ?? '',
         content: json["content"] ?? '',
         transType: json["transType"] ?? '',
-        time: json["time"] ?? 0,
+        time: json.containsKey('time')
+            ? (json["time"] ?? 0)
+            : json.containsKey('timeCreated')
+                ? (json["timeCreated"] ?? 0)
+                : 0,
         timePaid: json["timePaid"] ?? 0,
         status: json["status"] ?? 0,
         type: json["type"] ?? 0,
