@@ -41,9 +41,9 @@ class _DialogChooseTerminalWidgetState
       color: AppColor.TRANSPARENT,
       child: Center(
         child: Container(
-          width: 300,
+          width: 400,
+          height: 550,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          margin: const EdgeInsets.symmetric(horizontal: 60),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16),
@@ -78,7 +78,6 @@ class _DialogChooseTerminalWidgetState
               ),
               const SizedBox(height: 30),
               Container(
-                width: 300,
                 height: 34,
                 decoration: BoxDecoration(
                   color: AppColor.GREY_BG,
@@ -104,14 +103,17 @@ class _DialogChooseTerminalWidgetState
                 ),
               ),
               if (terminals.isNotEmpty)
-                SizedBox(
-                  height: 300,
+                Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: List.generate(terminals.length, (index) {
                         TerminalQRDTO dto = terminals[index];
                         return GestureDetector(
-                          onTap: () => Navigator.pop(context, dto),
+                          onTap: () {
+                            setState(() {
+                              _dto = dto;
+                            });
+                          },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 12),
@@ -165,8 +167,7 @@ class _DialogChooseTerminalWidgetState
                   ),
                 )
               else
-                const SizedBox(
-                  height: 300,
+                const Expanded(
                   child: Center(
                     child: Text(
                       'không có cửa hàng',

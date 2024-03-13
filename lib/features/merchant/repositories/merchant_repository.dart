@@ -25,11 +25,14 @@ class MerchantRepository {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        List<AccountIsMerchantDTO> list = data
-            .map<AccountIsMerchantDTO>(
-                (json) => AccountIsMerchantDTO.fromJson(json))
-            .toList();
-        result = list.first;
+        if (data is Map && data.containsKey('status')) {
+        } else {
+          List<AccountIsMerchantDTO> list = data
+              .map<AccountIsMerchantDTO>(
+                  (json) => AccountIsMerchantDTO.fromJson(json))
+              .toList();
+          result = list.first;
+        }
       }
     } catch (e) {
       LOG.error(e.toString());

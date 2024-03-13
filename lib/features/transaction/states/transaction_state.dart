@@ -14,6 +14,8 @@ enum TransType {
   LIST_TERMINAL,
   UPDATE_TERMINAL,
   UPDATE_NOTE,
+  UPDATE_CACHE,
+  UPDATE_OFFSET,
   ERROR,
 }
 
@@ -27,7 +29,9 @@ class TransactionState extends Equatable {
   final BankAccountDTO? bankDTO;
   final bool isLoadMore;
   final Map<String, List<TransReceiveDTO>> tranMaps;
+  final Map<String, List<TransReceiveDTO>> tranMapsDefault;
   final List<TerminalQRDTO> listTerminals;
+  final bool getAll;
 
   const TransactionState({
     this.status = BlocStatus.NONE,
@@ -39,7 +43,9 @@ class TransactionState extends Equatable {
     required this.listTerminals,
     this.bankDTO,
     required this.tranMaps,
+    required this.tranMapsDefault,
     this.isLoadMore = true,
+    this.getAll = false,
   });
 
   TransactionState copyWith({
@@ -50,10 +56,12 @@ class TransactionState extends Equatable {
     List<TransReceiveDTO>? listTrans,
     BankAccountDTO? bankDTO,
     bool? isLoadMore,
+    bool? getAll,
     bool? isEmpty,
     int? offset,
     List<TerminalQRDTO>? listTerminals,
     Map<String, List<TransReceiveDTO>>? tranMaps,
+    Map<String, List<TransReceiveDTO>>? tranMapsDefault,
   }) {
     return TransactionState(
       status: status ?? this.status,
@@ -64,7 +72,9 @@ class TransactionState extends Equatable {
       listTrans: listTrans ?? this.listTrans,
       bankDTO: bankDTO ?? this.bankDTO,
       isLoadMore: isLoadMore ?? this.isLoadMore,
+      getAll: getAll ?? this.getAll,
       tranMaps: tranMaps ?? this.tranMaps,
+      tranMapsDefault: tranMapsDefault ?? this.tranMapsDefault,
       listTerminals: listTerminals ?? this.listTerminals,
     );
   }
@@ -80,6 +90,8 @@ class TransactionState extends Equatable {
         bankDTO,
         isLoadMore,
         tranMaps,
+        tranMapsDefault,
         listTerminals,
+        getAll,
       ];
 }

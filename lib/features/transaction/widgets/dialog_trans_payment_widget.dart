@@ -47,8 +47,8 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
   ];
 
   List<DataFilter> listFilterByStatus = [
-    const DataFilter(id: 0, name: 'Thành công'),
-    const DataFilter(id: 1, name: 'Chờ thanh toán'),
+    const DataFilter(id: 0, name: 'Chờ thanh toán'),
+    const DataFilter(id: 1, name: 'Thành công'),
     const DataFilter(id: 2, name: 'Đã huỷ'),
   ];
 
@@ -61,7 +61,7 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
   ];
 
   DataFilter _filterBy = const DataFilter(id: 9, name: 'Tất cả (mặc định)');
-  DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Thành công');
+  DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
   DataFilter _filterByTime =
       const DataFilter(id: 1, name: 'Hôm nay (mặc định)');
 

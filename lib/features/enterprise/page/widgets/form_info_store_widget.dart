@@ -16,45 +16,47 @@ class FormInfoStoreWidget extends StatelessWidget {
           right: BorderSide(color: AppColor.GREY_TEXT.withOpacity(0.3)),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...[
-            _buildItemInfo(title: 'Tên cửa hàng', content: dto.name),
-            _buildItemInfo(title: 'Mã điểm bán', content: dto.code),
-            _buildItemInfo(title: 'Địa chỉ', content: dto.address),
-            _buildItemInfo(
-              title: 'Tài khoản cửa hàng',
-              content: '${dto.bank.bankAccount}\n${dto.bank.bankName}',
-              isAccountStore: true,
-              imgId: dto.bank.imgId,
-            ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...[
+              _buildItemInfo(title: 'Tên cửa hàng', content: dto.name),
+              _buildItemInfo(title: 'Mã điểm bán', content: dto.code),
+              _buildItemInfo(title: 'Địa chỉ', content: dto.address),
+              _buildItemInfo(
+                title: 'Tài khoản cửa hàng',
+                content: '${dto.bank.bankAccount}\n${dto.bank.bankName}',
+                isAccountStore: true,
+                imgId: dto.bank.imgId,
+              ),
+            ],
+            ...[
+              const SizedBox(height: 10),
+              const Text(
+                'Kết quả bán hàng hôm nay:',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              _buildSaleResult(
+                imgId: '',
+                title: '${dto.totalTrans} giao dịch',
+                totalTrans: dto.amount,
+                subTitle: 'Doanh thu',
+              ),
+              _buildSaleResult(
+                imgId: '',
+                percent: '${dto.revGrowthPrevDate}%',
+                subTitle: 'So với hôm qua',
+              ),
+              _buildSaleResult(
+                imgId: '',
+                percent: '${dto.revGrowthPrevMonth}%',
+                subTitle: 'So với cùng kỳ tháng trước',
+              ),
+            ],
           ],
-          ...[
-            const SizedBox(height: 10),
-            const Text(
-              'Kết quả bán hàng hôm nay:',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            _buildSaleResult(
-              imgId: '',
-              title: '${dto.totalTrans} giao dịch',
-              totalTrans: dto.amount,
-              subTitle: 'Doanh thu',
-            ),
-            _buildSaleResult(
-              imgId: '',
-              percent: '${dto.revGrowthPrevDate}%',
-              subTitle: 'So với hôm qua',
-            ),
-            _buildSaleResult(
-              imgId: '',
-              percent: '${dto.revGrowthPrevMonth}%',
-              subTitle: 'So với cùng kỳ tháng trước',
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

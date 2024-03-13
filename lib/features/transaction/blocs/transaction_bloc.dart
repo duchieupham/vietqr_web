@@ -13,11 +13,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionBloc()
       : super(const TransactionState(
-          listBanks: [],
-          listTrans: [],
-          listTerminals: [],
-          tranMaps: {},
-        )) {
+            listBanks: [],
+            listTrans: [],
+            listTerminals: [],
+            tranMaps: {},
+            tranMapsDefault: {})) {
     on<GetTransOwnerEvent>(_getTransactions);
     on<GetTransNotOwnerEvent>(_getTransactionsNotOwner);
     on<GetListBankEvent>(_getBankAccounts);
@@ -26,6 +26,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<GetTransUnsettledEvent>(_getTransactionsUnsettled);
     on<UpdateTerminalEvent>(_updateTerminal);
     on<UpdateNoteEvent>(_updateNote);
+    on<UpdateCacheDataEvent>(_updateGetAll);
+    on<UpdateOffsetEvent>(_updateOffset);
   }
 
   final repository = TransactionRepository();
@@ -94,7 +96,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           Map<String, List<TransReceiveDTO>> map = {};
-          map.addAll(state.tranMaps);
+
+          if (state.getAll) {
+            map.addAll(state.tranMapsDefault);
+          } else {
+            map.addAll(state.tranMaps);
+          }
 
           List<TransReceiveDTO> list = [...map['${event.offset}'] ?? []];
 
@@ -106,12 +113,21 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             map['${event.offset}'] = list;
           }
 
-          emit(state.copyWith(
-            request: TransType.UPDATE_TERMINAL,
-            status: BlocStatus.UNLOADING,
-            tranMaps: map,
-            listTrans: list,
-          ));
+          if (state.getAll) {
+            emit(state.copyWith(
+              request: TransType.UPDATE_TERMINAL,
+              status: BlocStatus.UNLOADING,
+              tranMapsDefault: map,
+              listTrans: list,
+            ));
+          } else {
+            emit(state.copyWith(
+              request: TransType.UPDATE_TERMINAL,
+              status: BlocStatus.UNLOADING,
+              tranMaps: map,
+              listTrans: list,
+            ));
+          }
         } else {
           emit(state.copyWith(
               request: TransType.ERROR,
@@ -140,7 +156,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           Map<String, List<TransReceiveDTO>> map = {};
-          map.addAll(state.tranMaps);
+
+          if (state.getAll) {
+            map.addAll(state.tranMapsDefault);
+          } else {
+            map.addAll(state.tranMaps);
+          }
 
           List<TransReceiveDTO> list = [...map['${event.offset}'] ?? []];
 
@@ -152,18 +173,70 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             map['${event.offset}'] = list;
           }
 
-          emit(state.copyWith(
-            request: TransType.UPDATE_NOTE,
-            status: BlocStatus.UNLOADING,
-            tranMaps: map,
-            listTrans: list,
-          ));
+          if (state.getAll) {
+            emit(state.copyWith(
+              request: TransType.UPDATE_NOTE,
+              status: BlocStatus.UNLOADING,
+              tranMapsDefault: map,
+              listTrans: list,
+            ));
+          } else {
+            emit(state.copyWith(
+              request: TransType.UPDATE_NOTE,
+              status: BlocStatus.UNLOADING,
+              tranMaps: map,
+              listTrans: list,
+            ));
+          }
         } else {
           emit(state.copyWith(
               request: TransType.ERROR,
               status: BlocStatus.UNLOADING,
               msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
         }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+    }
+  }
+
+  void _updateGetAll(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is UpdateCacheDataEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
+
+        emit(
+          state.copyWith(
+            request: TransType.UPDATE_CACHE,
+            status: BlocStatus.UNLOADING,
+            getAll: event.getAll,
+            offset: 0,
+          ),
+        );
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+    }
+  }
+
+  void _updateOffset(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is UpdateOffsetEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+
+        emit(
+          state.copyWith(
+              request: TransType.UPDATE_OFFSET,
+              status: BlocStatus.NONE,
+              offset: event.offset),
+        );
       }
     } catch (e) {
       LOG.error(e.toString());
@@ -180,7 +253,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         int offset = event.dto.offset;
         List<TransReceiveDTO> trans = [...state.listTrans];
         Map<String, List<TransReceiveDTO>> maps = {};
+        Map<String, List<TransReceiveDTO>> mapsDefault = {};
         maps.addAll(state.tranMaps);
+        mapsDefault.addAll(state.tranMapsDefault);
 
         emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
         final List<TransReceiveDTO> result =
@@ -196,6 +271,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           trans = [...result];
         }
 
+        if (event.getAll) {
+          mapsDefault['$offset'] = result;
+        }
+
         maps['$offset'] = result;
 
         emit(state.copyWith(
@@ -203,6 +282,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           listTrans: trans,
           tranMaps: maps,
           offset: offset,
+          tranMapsDefault: mapsDefault,
+          getAll: event.getAll,
           isLoadMore: isLoadMore,
           status: BlocStatus.UNLOADING,
         ));
@@ -220,6 +301,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         int offset = event.dto.offset;
         List<TransReceiveDTO> trans = [...state.listTrans];
         Map<String, List<TransReceiveDTO>> maps = {};
+        Map<String, List<TransReceiveDTO>> mapsDefault = {};
+
+        mapsDefault.addAll(state.tranMapsDefault);
         maps.addAll(state.tranMaps);
 
         emit(state.copyWith(
@@ -237,12 +321,18 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           trans = [...result];
         }
 
+        if (event.getAll) {
+          mapsDefault['$offset'] = result;
+        }
+
         maps['$offset'] = result;
 
         emit(state.copyWith(
           request: TransType.GET_TRANS_TRUE,
           listTrans: trans,
           tranMaps: maps,
+          tranMapsDefault: mapsDefault,
+          getAll: event.getAll,
           offset: offset,
           isLoadMore: isLoadMore,
           status: BlocStatus.UNLOADING,
@@ -266,7 +356,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         int offset = event.dto.offset;
         List<TransReceiveDTO> trans = [...state.listTrans];
         Map<String, List<TransReceiveDTO>> maps = {};
+        Map<String, List<TransReceiveDTO>> mapsDefault = {};
         maps.addAll(state.tranMaps);
+        mapsDefault.addAll(state.tranMapsDefault);
 
         final List<TransReceiveDTO> result =
             await repository.getTransactionByBankId(event.dto);
@@ -281,14 +373,20 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           trans = [...result];
         }
 
+        if (event.getAll) {
+          mapsDefault['$offset'] = result;
+        }
+
         maps['$offset'] = result;
 
         emit(state.copyWith(
           request: TransType.GET_TRANS_TRUE,
           listTrans: trans,
           tranMaps: maps,
+          tranMapsDefault: mapsDefault,
           offset: offset,
           isLoadMore: isLoadMore,
+          getAll: event.getAll,
           status: BlocStatus.UNLOADING,
         ));
       }
@@ -320,33 +418,3 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     }
   }
 }
-
-//
-// void _fetchTransactions(TransactionEvent event, Emitter emit) async {
-//   try {
-//     if (event is TransactionEventFetch) {
-//       emit(TransactionLoadingState());
-//       final List<RelatedTransactionReceiveDTO> result =
-//           await _transactionRepository.getTransactionByBankId(event.dto);
-//       emit(TransactionFetchSuccessState(list: result));
-//     }
-//   } catch (e) {
-//     LOG.error(e.toString());
-//     emit(TransactionFetchFailedState());
-//   }
-// }
-//
-// void _getDetail(TransactionEvent event, Emitter emit) async {
-//   try {
-//     if (event is TransactionEventGetDetail) {
-//       emit(TransactionDetailLoadingState());
-//       TransactionReceiveDTO dto =
-//           await _transactionRepository.getTransactionDetail(event.id);
-//       emit(TransactionDetailSuccessState(dto: dto));
-//     }
-//   } catch (e) {
-//     LOG.error(e.toString());
-//     emit(TransactionDetailFailedState());
-//   }
-//
-// }

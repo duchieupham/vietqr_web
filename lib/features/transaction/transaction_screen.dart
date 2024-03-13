@@ -38,20 +38,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
             },
           ),
           ItemMenuHome(
-            title: 'Giao dịch chưa hạch toán',
+            title: 'Giao dịch chờ xác nhận',
             isSelect:
                 (widget.type == '1') || (widget.type.contains('1?bankId=')),
             onTap: () {
               context.push('/transactions', extra: {'type': '1'});
             },
           ),
-          // ItemMenuHome(
-          //   title: 'Giao dịch hoàn tiền',
-          //   isSelect: false,
-          //   onTap: () {
-          //     context.push('/transactions?type=2&bankId=${widget.bankId}');
-          //   },
-          // ),
         ],
       ),
       title: const SizedBox(),

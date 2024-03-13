@@ -48,7 +48,7 @@ class _TableTransactionStoreWidgetState
       child: Stack(
         children: [
           SizedBox(
-            width: 1300,
+            width: 1360,
             child: RawScrollbar(
               controller: _vertical,
               thumbVisibility: true,
@@ -109,10 +109,10 @@ class _TableTransactionStoreWidgetState
                               /// Số tiền
                               DataCell(
                                 _buildContent(
-                                  title: CurrencyUtils.instance
-                                      .getCurrencyFormatted(
-                                          (model.amount ?? 0).toString()),
+                                  title:
+                                      '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount.toString())}',
                                   textAlign: TextAlign.right,
+                                  textColor: model.getColorStatus,
                                 ),
                               ),
 
@@ -133,6 +133,7 @@ class _TableTransactionStoreWidgetState
                                 _buildContent(
                                   title: model.statusType,
                                   textAlign: TextAlign.center,
+                                  textColor: model.getColorStatus,
                                 ),
                               ),
 
@@ -154,8 +155,7 @@ class _TableTransactionStoreWidgetState
                               DataCell(
                                 SizedBox(
                                   width: 200,
-                                  child: _buildContent(
-                                      title: model.content ?? '-'),
+                                  child: _buildContent(title: model.content),
                                 ),
                               ),
 
@@ -166,12 +166,12 @@ class _TableTransactionStoreWidgetState
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      model.bankAccount ?? '-',
+                                      model.bankAccount,
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     Text(
-                                      model.bankShortName ?? '-',
+                                      model.bankShortName,
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(fontSize: 12),
                                     ),
@@ -206,7 +206,7 @@ class _TableTransactionStoreWidgetState
           ),
           if (widget.trans.isNotEmpty)
             SizedBox(
-              width: 1300,
+              width: 1360,
               child: Row(
                 children: [
                   const Expanded(child: SizedBox()),
@@ -320,23 +320,25 @@ class _TableTransactionStoreWidgetState
       GestureTapCallback? onTap,
       double? fontSize,
       TextAlign? textAlign}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title.isNotEmpty ? title : '-',
-              maxLines: 2,
-              textAlign: textAlign,
-              style: TextStyle(
-                color: textColor,
-                overflow: TextOverflow.ellipsis,
-                fontSize: fontSize ?? 10,
+    return SelectionArea(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                title.isNotEmpty ? title : '-',
+                maxLines: 2,
+                textAlign: textAlign,
+                style: TextStyle(
+                  color: textColor,
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: fontSize ?? 10,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

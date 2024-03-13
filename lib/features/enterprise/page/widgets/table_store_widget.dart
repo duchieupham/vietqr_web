@@ -266,27 +266,30 @@ class _TableStoreWidgetState extends State<TableStoreWidget> {
     double? fontSize,
     TextAlign? textAlign,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          if (isShowIcon) ...[
-            const Icon(Icons.info_outline, color: AppColor.BLUE_TEXT, size: 18),
-            const SizedBox(width: 6),
-          ],
-          Expanded(
-            child: Text(
-              title,
-              maxLines: 2,
-              textAlign: textAlign,
-              style: TextStyle(
-                color: textColor,
-                overflow: TextOverflow.ellipsis,
-                fontSize: fontSize ?? 12,
+    return SelectionArea(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          children: [
+            if (isShowIcon) ...[
+              const Icon(Icons.info_outline,
+                  color: AppColor.BLUE_TEXT, size: 18),
+              const SizedBox(width: 6),
+            ],
+            Expanded(
+              child: Text(
+                title,
+                maxLines: 2,
+                textAlign: textAlign,
+                style: TextStyle(
+                  color: textColor,
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: fontSize ?? 12,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

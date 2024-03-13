@@ -1,7 +1,5 @@
 import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
-import 'package:VietQR/models/transaction_branch_input_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:equatable/equatable.dart';
 
@@ -15,27 +13,31 @@ class TransactionEvent extends Equatable {
 class GetTransOwnerEvent extends TransactionEvent {
   final TransactionInputDTO dto;
   final bool isLoadMore;
+  final bool getAll;
 
   const GetTransOwnerEvent({
     required this.dto,
     this.isLoadMore = false,
+    this.getAll = false,
   });
 
   @override
-  List<Object?> get props => [dto, isLoadMore];
+  List<Object?> get props => [dto, isLoadMore, getAll];
 }
 
 class GetTransNotOwnerEvent extends TransactionEvent {
   final TransactionInputDTO dto;
   final bool isLoadMore;
+  final bool getAll;
 
   const GetTransNotOwnerEvent({
     required this.dto,
     this.isLoadMore = false,
+    this.getAll = false,
   });
 
   @override
-  List<Object?> get props => [dto, isLoadMore];
+  List<Object?> get props => [dto, isLoadMore, getAll];
 }
 
 class GetTransUnsettledNotOwnerEvent extends TransactionEvent {
@@ -54,14 +56,16 @@ class GetTransUnsettledNotOwnerEvent extends TransactionEvent {
 class GetTransUnsettledEvent extends TransactionEvent {
   final TransactionInputDTO dto;
   final bool isLoadMore;
+  final bool getAll;
 
   const GetTransUnsettledEvent({
     required this.dto,
     this.isLoadMore = false,
+    this.getAll = false,
   });
 
   @override
-  List<Object?> get props => [dto, isLoadMore];
+  List<Object?> get props => [dto, isLoadMore, getAll];
 }
 
 class GetListBankEvent extends TransactionEvent {}
@@ -110,4 +114,22 @@ class UpdateNoteEvent extends TransactionEvent {
 
   @override
   List<Object?> get props => [dto, offset];
+}
+
+class UpdateCacheDataEvent extends TransactionEvent {
+  final bool getAll;
+
+  const UpdateCacheDataEvent(this.getAll);
+
+  @override
+  List<Object?> get props => [getAll];
+}
+
+class UpdateOffsetEvent extends TransactionEvent {
+  final int offset;
+
+  const UpdateOffsetEvent(this.offset);
+
+  @override
+  List<Object?> get props => [offset];
 }

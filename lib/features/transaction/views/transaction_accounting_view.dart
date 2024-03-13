@@ -15,8 +15,8 @@ import 'package:VietQR/features/transaction/widgets/dialog_trans_payment_widget.
 import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
-import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +40,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
 
   final searchController = TextEditingController();
 
+  /// 3,4,9 value = "" => get all trans
   int typeFilter = 9;
   int statusFilter = 0;
   int typeTime = 1;
@@ -86,11 +87,11 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       setState(() {
         _bankId = data.bankId;
       });
-      _onSearch();
+      loadAll(isFirst: true);
     }
   }
 
-  void loadMore(int offset) {
+  void loadMore(int offset, bool getAll) {
     if (typeFilter == 5) {
       _value = '$statusFilter';
     }
@@ -103,35 +104,33 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       type: typeFilter,
       status: statusFilter,
     );
-    bloc.add(GetTransUnsettledEvent(dto: dto, isLoadMore: true));
-
-    // if (_isOwner) {
-    //   bloc.add(GetTransOwnerEvent(dto: dto, isLoadMore: true));
-    // } else {
-    //   bloc.add(GetTransNotOwnerEvent(dto: dto, isLoadMore: true));
-    // }
+    bloc.add(
+        GetTransUnsettledEvent(dto: dto, isLoadMore: true, getAll: getAll));
   }
 
   void _onSearch() {
+    if (typeFilter == 9 && typeTime == 1) return;
+
+    int type = typeFilter;
+
     if (typeFilter == 5) {
       _value = '$statusFilter';
       searchController.clear();
     }
+    if (typeFilter == 9 && _value.isNotEmpty) {
+      type = 4;
+    }
+
     TransactionInputDTO dto = TransactionInputDTO(
       bankId: _bankId,
       offset: 0,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
       value: _value,
-      type: typeFilter,
+      type: type,
       status: statusFilter,
     );
     bloc.add(GetTransUnsettledEvent(dto: dto));
-
-    // if (_isOwner) {
-    // } else {
-    //   bloc.add(GetTransNotOwnerEvent(dto: dto));
-    // }
   }
 
   void _onFilter() async {
@@ -201,11 +200,20 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       _toDate = toDate;
     });
 
-    if (type == 9 || type == 5) {
-      _onSearch();
-    } else {
-      loadAll();
-    }
+    if (type == 5) _onSearch();
+  }
+
+  void _onClearFilter() {
+    setState(() {
+      _value = '';
+      searchController.clear();
+      typeFilter = 9;
+      statusFilter = 0;
+      typeTime = 1;
+      _fromDate = _formatFromDate(DateTime.now());
+      _toDate = _endDate(DateTime.now());
+    });
+    bloc.add(const UpdateCacheDataEvent(true));
   }
 
   void _onClear() {
@@ -213,19 +221,14 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       _value = '';
       searchController.clear();
     });
-    loadAll();
+    bloc.add(const UpdateCacheDataEvent(true));
   }
 
   void loadAll({bool isFirst = false}) {
     TransactionInputDTO dto = TransactionInputDTO(
       bankId: _bankId,
-      offset: 0,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
-      value: '',
-      type: 9,
-      terminalCode: '',
-      status: 0,
     );
 
     if (isFirst) {
@@ -233,7 +236,11 @@ class _StoreScreenState extends State<TransactionAccountingView> {
       dto.to = _dateFormat.format(_endDate(DateTime.now()));
     }
 
-    bloc.add(GetTransUnsettledEvent(dto: dto));
+    if (_isOwner) {
+      bloc.add(GetTransOwnerEvent(dto: dto, getAll: isFirst));
+    } else {
+      bloc.add(GetTransNotOwnerEvent(dto: dto, getAll: isFirst));
+    }
   }
 
   @override
@@ -255,14 +262,6 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             ? const WebMobileBlankWidget()
             : BlocConsumer<TransactionBloc, TransactionState>(
                 listener: (context, state) {
-                  // if (state.status == BlocStatus.LOADING) {
-                  //   DialogWidget.instance.openLoadingDialog();
-                  // }
-                  //
-                  // if (state.status == BlocStatus.UNLOADING) {
-                  //   Navigator.pop(context);
-                  // }
-
                   if (state.request == TransType.UPDATE_TERMINAL ||
                       state.request == TransType.UPDATE_NOTE) {
                     Navigator.pop(context);
@@ -297,148 +296,104 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                 },
                 builder: (context, state) {
                   return TransHeaderWidget(
-                    title: 'Giao dịch chưa hạch toán',
+                    title: 'Giao dịch chờ xác nhận',
                     dto: state.bankDTO,
                     onTap: () => _onChooseBank(state.listBanks),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          ...[
-                            const Text(
-                              'Kết quả bán hàng',
-                              style: TextStyle(
-                                  color: AppColor.BLACK,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11),
-                            ),
-                            const Text(
-                              'hôm nay',
-                              style: TextStyle(
-                                  color: AppColor.BLACK,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11),
-                            ),
-                            const SizedBox(height: 24),
-                          ],
-                          Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildFilterWidget(),
+                        const SizedBox(height: 24),
+                        TableTransPaymentWidget(
+                          list: state.getAll
+                              ? state.tranMapsDefault['${state.offset}'] ?? []
+                              : state.tranMaps['${state.offset}'] ?? [],
+                          offset: state.offset,
+                          isOwner: state.bankDTO?.isOwner ?? false,
+                          onChooseTerminal: (transactionId, terminalCode) =>
+                              _onChooseTerminal(state.listTerminals,
+                                  state.offset, transactionId, terminalCode),
+                          onEditNote: (dto) => _onChooseNote(state.offset, dto),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 16),
+                          height: 100,
+                          child: Row(
                             children: [
-                              _buildInfoPayment(
-                                title: 'Tất cả GD',
-                                totalTrans: '0',
-                                amount: '0',
-                                des: 'Doanh thu',
-                              ),
-                              _buildInfoPayment(
-                                title: 'Giao dịch đã hạch toán',
-                                totalTrans: '0',
-                                amount: '0',
-                                amountColor: AppColor.GREEN,
-                                des: 'Doanh thu',
-                              ),
-                              _buildInfoPayment(
-                                title: 'Giao dịch chờ hạch toán',
-                                totalTrans: '0',
-                                amount: '0',
-                                des: 'Doanh thu',
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 24),
-                          _buildFilterWidget(),
-                          const SizedBox(height: 24),
-                          TableTransPaymentWidget(
-                            list: state.tranMaps['${state.offset}'] ?? [],
-                            offset: state.offset,
-                            isOwner: state.bankDTO?.isOwner ?? false,
-                            onChooseTerminal: (transactionId, terminalCode) =>
-                                _onChooseTerminal(state.listTerminals,
-                                    state.offset, transactionId, terminalCode),
-                            onEditNote: (dto) =>
-                                _onChooseNote(state.offset, dto),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 16),
-                            height: 100,
-                            child: Row(
-                              children: [
-                                Text('Trang ${state.offset + 1}'),
-                                const SizedBox(width: 8),
-                                GestureDetector(
-                                  onTap: () {
-                                    int offset = state.offset;
-                                    if (offset <= 0) return;
-                                    offset = offset - 1;
-                                    loadMore(offset);
-                                  },
-                                  child: Container(
-                                    width: 25,
-                                    height: 25,
-                                    padding: const EdgeInsets.only(left: 6),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      border: Border.all(
-                                          color: state.offset <= 0
-                                              ? Colors.grey
-                                              : Colors.black),
-                                    ),
-                                    child: Icon(
-                                      Icons.arrow_back_ios,
-                                      size: 14,
-                                      color: state.offset <= 0
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
+                              Text('Trang ${state.offset + 1}'),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  int offset = state.offset;
+                                  if (offset <= 0) return;
+                                  offset = offset - 1;
+                                  loadMore(offset, state.getAll);
+                                },
+                                child: Container(
+                                  width: 25,
+                                  height: 25,
+                                  padding: const EdgeInsets.only(left: 6),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    border: Border.all(
+                                        color: state.offset <= 0
+                                            ? Colors.grey
+                                            : Colors.black),
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_back_ios,
+                                    size: 14,
+                                    color: state.offset <= 0
+                                        ? Colors.grey
+                                        : Colors.black,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (!state.isLoadMore) return;
-                                    int offset = state.offset;
-                                    offset = offset + 1;
-                                    loadMore(offset);
-                                  },
-                                  child: Container(
-                                    width: 25,
-                                    height: 25,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      border: Border.all(
-                                        color: !state.isLoadMore
-                                            ? Colors.grey
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 14,
+                              ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  if (!state.isLoadMore) return;
+                                  int offset = state.offset;
+                                  offset = offset + 1;
+                                  loadMore(offset, state.getAll);
+                                },
+                                child: Container(
+                                  width: 25,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    border: Border.all(
                                       color: !state.isLoadMore
                                           ? Colors.grey
                                           : Colors.black,
                                     ),
                                   ),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                    color: !state.isLoadMore
+                                        ? Colors.grey
+                                        : Colors.black,
+                                  ),
                                 ),
-                                Expanded(
-                                  child: Visibility(
-                                    visible: state.status == BlocStatus.LOADING,
-                                    child: const Center(
-                                      child: SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(),
-                                      ),
+                              ),
+                              Expanded(
+                                child: Visibility(
+                                  visible: state.status == BlocStatus.LOADING,
+                                  child: const Center(
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 100),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(width: 100),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -447,9 +402,9 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     );
   }
 
-  String get statusValue => statusFilter == 0
+  String get statusValue => statusFilter == 1
       ? 'Thành công'
-      : statusFilter == 1
+      : statusFilter == 0
           ? 'Chờ thanh toán'
           : 'Đã huỷ';
 
@@ -465,8 +420,7 @@ class _StoreScreenState extends State<TransactionAccountingView> {
     if (typeFilter == 1) return 'Tìm kiếm theo mã giao dịch';
     if (typeFilter == 2) return 'Tìm kiếm theo mã đơn hàng';
     if (typeFilter == 3) return 'Tìm kiếm theo nội dung';
-    if (typeFilter == 4) return 'Tìm kiếm mã điểm bán';
-    return 'Tìm kiếm giao dịch';
+    return 'Tìm kiếm theo mã điểm bán';
   }
 
   Widget _buildFilterWith(String title) {
@@ -492,43 +446,45 @@ class _StoreScreenState extends State<TransactionAccountingView> {
           style: TextStyle(
               color: AppColor.BLACK, fontWeight: FontWeight.bold, fontSize: 11),
         ),
-        const SizedBox(width: 24),
-        Container(
-          width: 200,
-          height: 34,
-          decoration: BoxDecoration(
-            color: AppColor.GREY_BG,
-            border: Border.all(color: AppColor.GREY_LIGHT),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: TextField(
-            style: const TextStyle(fontSize: 12),
-            controller: searchController,
-            onChanged: (value) {
-              setState(() {
-                _value = value;
-              });
-            },
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.only(bottom: 16, left: 12, right: 12),
-              hintText: hinText,
-              hintStyle:
-                  const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-              suffixIcon: searchController.text.isNotEmpty
-                  ? GestureDetector(
-                      onTap: _onClear,
-                      child: const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Icon(Icons.close, size: 18),
-                      ),
-                    )
-                  : null,
-              suffixIconConstraints: const BoxConstraints(),
+        ...[
+          const SizedBox(width: 24),
+          Container(
+            width: 200,
+            height: 34,
+            decoration: BoxDecoration(
+              color: AppColor.GREY_BG,
+              border: Border.all(color: AppColor.GREY_LIGHT),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: TextField(
+              style: const TextStyle(fontSize: 12),
+              controller: searchController,
+              onChanged: (value) {
+                setState(() {
+                  _value = value;
+                });
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.only(bottom: 16, left: 12, right: 12),
+                hintText: hinText,
+                hintStyle:
+                    const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
+                suffixIcon: searchController.text.isNotEmpty
+                    ? GestureDetector(
+                        onTap: _onClear,
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.close, size: 18),
+                        ),
+                      )
+                    : null,
+                suffixIconConstraints: const BoxConstraints(),
+              ),
             ),
           ),
-        ),
+        ],
         const SizedBox(width: 12),
         GestureDetector(
           onTap: _onFilter,
@@ -546,9 +502,9 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
         GestureDetector(
-          onTap: _onSearch,
+          onTap: typeFilter != 5 ? _onSearch : null,
           child: Container(
             width: 30,
             height: 30,
@@ -573,18 +529,47 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                 style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
               ),
               const SizedBox(height: 4),
-              Wrap(
+              Row(
                 children: [
-                  if (typeFilter == 9) _buildFilterWith('Tất cả (mặc định)'),
-                  _buildFilterWith('Thời gian: $timeValue'),
-                  if (typeFilter == 1)
-                    _buildFilterWith('Mã giao dịch: ${searchController.text}'),
-                  if (typeFilter == 3)
-                    _buildFilterWith('Nội dung: ${searchController.text}'),
-                  if (typeFilter == 5)
-                    _buildFilterWith('Trạng thái: $statusValue'),
-                  if (typeFilter == 2)
-                    _buildFilterWith('Mã đơn hàng: ${searchController.text}'),
+                  Wrap(
+                    children: [
+                      if (typeFilter == 9)
+                        _buildFilterWith('Tất cả (mặc định)'),
+                      _buildFilterWith('Thời gian: $timeValue'),
+                      if (typeFilter == 1)
+                        _buildFilterWith(
+                            'Mã giao dịch: ${searchController.text}'),
+                      if (typeFilter == 3)
+                        _buildFilterWith('Nội dung: ${searchController.text}'),
+                      if (typeFilter == 5)
+                        _buildFilterWith('Trạng thái: $statusValue'),
+                      if (typeFilter == 2)
+                        _buildFilterWith(
+                            'Mã đơn hàng: ${searchController.text}'),
+                      if (typeFilter == 4)
+                        _buildFilterWith(
+                            'Mã điểm bán: ${searchController.text}'),
+                    ],
+                  ),
+                  if (typeFilter != 9 || typeTime != 1)
+                    GestureDetector(
+                      onTap: _onClearFilter,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
+                        margin: const EdgeInsets.only(right: 8, bottom: 4),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.remove_circle_outline,
+                                color: AppColor.BLUE_TEXT, size: 18),
+                            SizedBox(width: 4),
+                            Text('Xoá bộ lọc',
+                                style: TextStyle(
+                                    fontSize: 11, color: AppColor.BLUE_TEXT)),
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ],
@@ -600,73 +585,10 @@ class _StoreScreenState extends State<TransactionAccountingView> {
             Navigator.pop(context);
           },
           borderRadius: 5,
-          height: 40,
+          height: 30,
         ),
         const SizedBox(width: 24),
       ],
-    );
-  }
-
-  Widget _buildInfoPayment({
-    String title = '',
-    String totalTrans = '',
-    String amount = '',
-    String des = '',
-    Color? amountColor,
-  }) {
-    return Container(
-      width: 200,
-      margin: const EdgeInsets.only(right: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppColor.GREY_TEXT,
-              fontSize: 10,
-              height: 1.4,
-            ),
-          ),
-          Text(
-            '$totalTrans giao dịch đến',
-            style: const TextStyle(
-              color: AppColor.BLACK,
-              fontSize: 11,
-              height: 1.4,
-            ),
-          ),
-          Row(
-            children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  color: amountColor ?? AppColor.BLUE_TEXT,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  height: 1.4,
-                ),
-              ),
-              const Text(
-                ' VND',
-                style: TextStyle(
-                  color: AppColor.GREY_TEXT,
-                  fontSize: 12,
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            des,
-            style: const TextStyle(
-              color: AppColor.GREY_TEXT,
-              fontSize: 10,
-              height: 1.4,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

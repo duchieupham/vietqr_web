@@ -31,9 +31,9 @@ class _DialogChooseBankWidgetState extends State<DialogChooseBankWidget> {
         color: AppColor.TRANSPARENT,
         child: Center(
           child: Container(
-            width: 300,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            margin: const EdgeInsets.symmetric(horizontal: 60),
+            width: 400,
+            height: 550,
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(16),
@@ -58,7 +58,6 @@ class _DialogChooseBankWidgetState extends State<DialogChooseBankWidget> {
                 ),
                 const SizedBox(height: 30),
                 Container(
-                  width: 300,
                   height: 34,
                   decoration: BoxDecoration(
                     color: AppColor.GREY_BG,
@@ -67,7 +66,7 @@ class _DialogChooseBankWidgetState extends State<DialogChooseBankWidget> {
                   ),
                   child: TextField(
                     style: const TextStyle(fontSize: 12),
-                    onChanged: (value) {},
+                    onChanged: onSearch,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding:
@@ -75,71 +74,84 @@ class _DialogChooseBankWidgetState extends State<DialogChooseBankWidget> {
                       hintText: 'Tìm kiếm theo số TK ngân hàng',
                       hintStyle:
                           TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-                      prefixIcon: Icon(Icons.search),
-                      fillColor: AppColor.WHITE,
+                      prefixIcon: Icon(Icons.search,
+                          color: AppColor.GREY_TEXT, size: 18),
+                      fillColor: AppColor.GREY_BG,
                       filled: true,
                       suffixIconConstraints: BoxConstraints(),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 300,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: List.generate(banks.length, (index) {
-                        BankAccountDTO dto = banks[index];
-                        return GestureDetector(
-                          onTap: () => Navigator.pop(context, dto),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 12),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: AppColor.GREY_BORDER),
+                const SizedBox(height: 24),
+                if (banks.isNotEmpty)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: List.generate(banks.length, (index) {
+                          BankAccountDTO dto = banks[index];
+                          return GestureDetector(
+                            onTap: () => Navigator.pop(context, dto),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 12),
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom:
+                                      BorderSide(color: AppColor.GREY_BORDER),
+                                ),
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                Image(
-                                    image: ImageUtils.instance
-                                        .getImageNetWork(dto.imgId ?? ''),
-                                    width: 32),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          dto.bankAccount,
-                                          style: const TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          dto.userBankName.toUpperCase(),
-                                          style: const TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                              child: Row(
+                                children: [
+                                  Image(
+                                      image: ImageUtils.instance
+                                          .getImageNetWork(dto.imgId),
+                                      width: 32),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            dto.bankAccount,
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            dto.userBankName.toUpperCase(),
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Image(
-                                    image: ImageUtils.instance.getImageNetWork(
-                                        AppImages.icChooseNext),
-                                    width: 32),
-                              ],
+                                  Image(
+                                      image: ImageUtils.instance
+                                          .getImageNetWork(
+                                              AppImages.icChooseNext),
+                                      width: 32),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                      ),
+                    ),
+                  )
+                else
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        'không có cửa hàng',
+                        style: TextStyle(fontSize: 12, color: AppColor.BLACK),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -148,7 +160,22 @@ class _DialogChooseBankWidgetState extends State<DialogChooseBankWidget> {
     );
   }
 
-  _onSelect(int value) {
-    setState(() {});
+  void onSearch(String value) {
+    banks = widget.banks;
+    List<BankAccountDTO> values = [];
+    List<BankAccountDTO> listMaps = [...banks];
+    if (value.trim().isNotEmpty) {
+      values.addAll(listMaps
+          .where((dto) =>
+              dto.bankAccount.toUpperCase().contains(value.toUpperCase()) ||
+              dto.bankShortName.toUpperCase().contains(value.toUpperCase()) ||
+              dto.userBankName.toUpperCase().contains(value.toUpperCase()))
+          .toList());
+    } else {
+      values = listMaps;
+    }
+    setState(() {
+      banks = values;
+    });
   }
 }

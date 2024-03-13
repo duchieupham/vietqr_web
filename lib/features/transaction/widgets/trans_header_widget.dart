@@ -69,9 +69,120 @@ class TransHeaderWidget extends StatelessWidget {
               ),
             ),
             Container(height: 1.5, color: AppColor.GREY_BORDER),
-            child,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...[
+                    const Text(
+                      'Kết quả bán hàng',
+                      style: TextStyle(
+                          color: AppColor.BLACK,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11),
+                    ),
+                    const Text(
+                      'hôm nay',
+                      style: TextStyle(
+                          color: AppColor.BLACK,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  Row(
+                    children: [
+                      _buildInfoPayment(
+                        title: 'Tất cả GD',
+                        totalTrans: '0',
+                        amount: '0',
+                        des: 'Doanh thu',
+                      ),
+                      _buildInfoPayment(
+                        title: 'Giao dịch đã hạch toán',
+                        totalTrans: '0',
+                        amount: '0',
+                        amountColor: AppColor.GREEN,
+                        des: 'Doanh thu',
+                      ),
+                      _buildInfoPayment(
+                        title: 'Giao dịch chờ hạch toán',
+                        totalTrans: '0',
+                        amount: '0',
+                        des: 'Doanh thu',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  child,
+                ],
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoPayment(
+      {String title = '',
+      String totalTrans = '',
+      String amount = '',
+      String des = '',
+      Color? amountColor}) {
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+          Text(
+            '$totalTrans giao dịch đến',
+            style: const TextStyle(
+              color: AppColor.BLACK,
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+          Row(
+            children: [
+              Text(
+                amount,
+                style: TextStyle(
+                  color: amountColor ?? AppColor.BLUE_TEXT,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  height: 1.4,
+                ),
+              ),
+              const Text(
+                ' VND',
+                style: TextStyle(
+                  color: AppColor.GREY_TEXT,
+                  fontSize: 12,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            des,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+        ],
       ),
     );
   }

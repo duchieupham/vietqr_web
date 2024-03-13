@@ -28,8 +28,8 @@ class _DialogFilterViewState extends State<DialogFilterView> {
         color: AppColor.TRANSPARENT,
         child: Center(
           child: Container(
-            width: 200,
-            height: 150,
+            width: 300,
+            height: 200,
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             margin: const EdgeInsets.symmetric(horizontal: 60),
             decoration: BoxDecoration(
@@ -57,45 +57,49 @@ class _DialogFilterViewState extends State<DialogFilterView> {
                 const Spacer(),
                 GestureDetector(
                   onTap: () => _onSelect(0),
-                  child: Row(
-                    children: [
-                      const Expanded(
-                        child: Text('Số điện thoại'),
-                      ),
-                      Radio<int>(
-                        value: type,
-                        groupValue: 0,
-                        activeColor: AppColor.BLUE_TEXT,
-                        onChanged: (value) {
-                          _onSelect(0);
-                        },
-                      ),
-                    ],
+                  child: SizedBox(
+                    height: 60,
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: Text('Số điện thoại'),
+                        ),
+                        Radio<int>(
+                          value: type,
+                          groupValue: 0,
+                          activeColor: AppColor.BLUE_TEXT,
+                          onChanged: (value) {
+                            _onSelect(0);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: 1,
                   color: Colors.grey.withOpacity(0.6),
                 ),
-                const SizedBox(height: 4),
                 GestureDetector(
                   onTap: () => _onSelect(1),
-                  child: Row(
-                    children: [
-                      const Expanded(
-                        child: Text('Họ tên'),
-                      ),
-                      Radio<int>(
-                        value: type,
-                        groupValue: 1,
-                        activeColor: AppColor.BLUE_TEXT,
-                        onChanged: (value) {
-                          _onSelect(1);
-                        },
-                      ),
-                    ],
+                  child: SizedBox(
+                    height: 60,
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: Text('Họ tên'),
+                        ),
+                        Radio<int>(
+                          value: type,
+                          groupValue: 1,
+                          activeColor: AppColor.BLUE_TEXT,
+                          onChanged: (value) {
+                            _onSelect(1);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -428,23 +428,25 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
       GestureTapCallback? onTap,
       double? fontSize,
       TextAlign? textAlign}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title.isNotEmpty ? title : '-',
-              maxLines: 2,
-              textAlign: textAlign,
-              style: TextStyle(
-                color: textColor,
-                overflow: TextOverflow.ellipsis,
-                fontSize: fontSize ?? 10,
+    return SelectionArea(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                title.isNotEmpty ? title : '-',
+                maxLines: 2,
+                textAlign: textAlign,
+                style: TextStyle(
+                  color: textColor,
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: fontSize ?? 10,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
