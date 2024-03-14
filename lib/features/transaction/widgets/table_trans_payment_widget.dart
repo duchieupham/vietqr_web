@@ -338,7 +338,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                         ),
                                       ),
                                     ),
-                                    if (!widget.isOwner)
+                                    if (widget.isOwner)
                                       Tooltip(
                                         message: 'Cập nhật giao dịch',
                                         child: GestureDetector(
