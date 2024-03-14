@@ -19,6 +19,7 @@ class AppColor {
   static const Color RED_TEXT = Color(0xFFFF0A0A);
   static const Color RED_EC1010 = Color(0xffEC1010);
   static const Color BLUE_TEXT = Color(0xFF0A7AFF);
+  static const Color BLUE_BGR = Color(0xFFF0F4FA);
   static const Color YELLOW_TEXT = Color(0xFFFFDA00);
   static const Color PURPLE_TEXT = Color(0xFF800080);
   static const Color BLUE_CARD = Color(0xFF0A7AFF);

@@ -213,18 +213,11 @@ class _StoreScreenState extends State<TransactionPaymentView> {
         return DialogChooseTerminalWidget(
           terminals: list,
           transDTO: transDTO,
-          update: (dto) {
-            if (dto == null) return;
-
-            String terminalCode = '';
-            if (dto is TerminalQRDTO) {
-              terminalCode = dto.terminalCode;
-            } else if (dto is String) {
-              terminalCode = dto;
-            }
+          update: (value) {
+            if (value.isEmpty) return;
             bloc.add(UpdateTerminalEvent(
                 transactionId: transDTO.transactionId,
-                terminalCode: terminalCode,
+                terminalCode: value,
                 offset: offset,
                 timeKey: typeTime.timeKeyExt.name));
           },

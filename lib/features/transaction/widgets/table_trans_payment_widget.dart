@@ -109,7 +109,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                     '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
                                 textAlign: TextAlign.right,
                                 textColor: model.getColorStatus,
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold),
                           ),
 

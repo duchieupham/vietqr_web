@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class DialogChooseTerminalWidget extends StatefulWidget {
   final List<TerminalQRDTO> terminals;
-  final Function(dynamic) update;
+  final Function(String) update;
   final TransReceiveDTO transDTO;
 
   const DialogChooseTerminalWidget(
@@ -104,6 +104,7 @@ class _DialogChooseTerminalWidgetState
                                 content:
                                     '${widget.transDTO.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(widget.transDTO.amount)} ',
                                 textColor: AppColor.BLUE_TEXT,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600),
                             const SizedBox(height: 12),
                             _buildItemInfo(
@@ -121,7 +122,7 @@ class _DialogChooseTerminalWidgetState
                                 content: widget.transDTO.timePaymentEditNote),
                             const SizedBox(height: 12),
                             _buildItemInfo(
-                                title: 'Tk nhận',
+                                title: 'Tk nhận:',
                                 content: widget.transDTO.bankAccount),
                           ],
                         ),
@@ -186,13 +187,8 @@ class _DialogChooseTerminalWidgetState
                                   TerminalQRDTO dto = terminals[index];
                                   return GestureDetector(
                                     onTap: () {
-                                      if (_dto.terminalCode ==
-                                          dto.terminalCode) {
-                                        _dto = TerminalQRDTO();
-                                      } else {
-                                        _dto = dto;
-                                      }
-
+                                      _dto = dto;
+                                      _searchController.text = dto.terminalCode;
                                       setState(() {});
                                     },
                                     child: Container(
@@ -254,9 +250,7 @@ class _DialogChooseTerminalWidgetState
                           bgColor: AppColor.BLUE_TEXT,
                           textSize: 10,
                           function: () {
-                            if (_dto.terminalCode.isNotEmpty) {
-                              widget.update.call(_dto);
-                            } else if (_searchController.text.isNotEmpty) {
+                            if (_searchController.text.isNotEmpty) {
                               widget.update.call(_searchController.text);
                             } else {
                               Navigator.pop(context);
@@ -279,14 +273,16 @@ class _DialogChooseTerminalWidgetState
 
   Widget _buildTabWidget() {
     return Container(
-      width: 200,
-      color: AppColor.BLUE_TEXT.withOpacity(0.1),
       padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+        color: AppColor.BLUE_BGR,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
             child: Text('Cập nhật GD',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
           ),
@@ -296,18 +292,15 @@ class _DialogChooseTerminalWidgetState
               children: [
                 Container(
                   color: AppColor.BLUE_TEXT.withOpacity(0.25),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding: const EdgeInsets.fromLTRB(8, 6, 12, 6),
                   child: Row(
                     children: [
                       Image(
                           image: ImageUtils.instance
                               .getImageNetWork(AppImages.icStoreBlack),
                           width: 28),
-                      const Expanded(
-                        child: Text('Cập nhật điểm bán',
-                            style: TextStyle(fontSize: 11)),
-                      )
+                      const Text('Cập nhật điểm bán',
+                          style: TextStyle(fontSize: 11))
                     ],
                   ),
                 ),
@@ -320,6 +313,7 @@ class _DialogChooseTerminalWidgetState
   }
 
   void onSearch(String value) {
+    _dto = TerminalQRDTO();
     terminals = widget.terminals;
     List<TerminalQRDTO> values = [];
     List<TerminalQRDTO> listMaps = [...terminals];
@@ -339,8 +333,9 @@ class _DialogChooseTerminalWidgetState
 
   Widget _buildItemInfo(
       {required String title,
-      String content = '',
+      required String content,
       Color? textColor,
+      double? fontSize,
       FontWeight? fontWeight}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,13 +345,17 @@ class _DialogChooseTerminalWidgetState
           text: TextSpan(
             children: [
               TextSpan(
-                  text: content,
+                  text: content.isEmpty ? '-' : content,
                   style: TextStyle(
-                      fontSize: 10, color: textColor, fontWeight: fontWeight)),
+                      fontSize: fontSize ?? 11,
+                      color: textColor,
+                      height: 1.4,
+                      fontWeight: fontWeight)),
               if (textColor != null)
-                const TextSpan(
+                TextSpan(
                     text: 'VND',
-                    style: TextStyle(fontSize: 10, color: AppColor.BLACK)),
+                    style: TextStyle(
+                        fontSize: fontSize ?? 11, color: AppColor.BLACK)),
             ],
           ),
         )

@@ -201,10 +201,11 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         return DialogChooseTerminalWidget(
           terminals: list,
           transDTO: transDTO,
-          update: (dto) {
+          update: (value) {
+            if (value.isEmpty) return;
             bloc.add(UpdateTerminalEvent(
                 transactionId: transDTO.transactionId,
-                terminalCode: dto.terminalCode,
+                terminalCode: value,
                 offset: offset,
                 timeKey: typeTime.timeKeyExt.name));
           },
