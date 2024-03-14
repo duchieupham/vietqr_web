@@ -30,7 +30,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         currentType: MenuHomeType.TRANSACTION,
         subMenuTransaction: [
           ItemMenuHome(
-            title: 'Giao dịch thanh toán',
+            title: 'GD thanh toán',
             isSelect:
                 (widget.type == '0') || (widget.type.contains('0?bankId=')),
             onTap: () {
@@ -38,7 +38,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             },
           ),
           ItemMenuHome(
-            title: 'Giao dịch chờ xác nhận',
+            title: 'GD chờ xác nhận',
             isSelect:
                 (widget.type == '1') || (widget.type.contains('1?bankId=')),
             onTap: () {

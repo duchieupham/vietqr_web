@@ -205,22 +205,26 @@ class _StoreScreenState extends State<TransactionPaymentView> {
 
   ///
   void _onChooseTerminal(
-    List<TerminalQRDTO> list,
-    int offset,
-    String transactionId,
-    String terminalCode,
-  ) async {
+      List<TerminalQRDTO> list, int offset, TransReceiveDTO transDTO) async {
     await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return DialogChooseTerminalWidget(
           terminals: list,
-          terminalCode: terminalCode,
+          transDTO: transDTO,
           update: (dto) {
+            if (dto == null) return;
+
+            String terminalCode = '';
+            if (dto is TerminalQRDTO) {
+              terminalCode = dto.terminalCode;
+            } else if (dto is String) {
+              terminalCode = dto;
+            }
             bloc.add(UpdateTerminalEvent(
-                transactionId: transactionId,
-                terminalCode: dto.terminalCode,
+                transactionId: transDTO.transactionId,
+                terminalCode: terminalCode,
                 offset: offset,
                 timeKey: typeTime.timeKeyExt.name));
           },
@@ -356,9 +360,8 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                               : state.tranMaps['${state.offset}'] ?? [],
                           offset: state.offset,
                           isOwner: state.bankDTO?.isOwner ?? false,
-                          onChooseTerminal: (transactionId, terminalCode) =>
-                              _onChooseTerminal(state.listTerminals,
-                                  state.offset, transactionId, terminalCode),
+                          onChooseTerminal: (transDTO) => _onChooseTerminal(
+                              state.listTerminals, state.offset, transDTO),
                           onEditNote: (dto) => _onChooseNote(state.offset, dto),
                         ),
                         Container(
@@ -629,7 +632,6 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           borderRadius: 5,
           height: 30,
         ),
-        const SizedBox(width: 24),
       ],
     );
   }

@@ -710,7 +710,7 @@ class _AddBankView extends State<AddBankStep2> {
             }),
             const Padding(padding: EdgeInsets.only(top: 20)),
             const Text(
-              'CCD/MST*',
+              'CCCD/MST*',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

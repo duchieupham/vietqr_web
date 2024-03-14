@@ -103,4 +103,9 @@ class AppImages {
   static String icEditTrans = 'ef5c8434-343f-4da5-80cf-409e1cdc3ffa';
   static String icRefundTrans = '20b5f79a-63c5-441c-9dd6-a557f05e9390';
   static String icNoteTrans = '68a11915-aa24-415d-9f2a-43d097dd9f10';
+
+  /// popup GD
+  static String icStoreBlack = '8fd18baf-84e1-4976-ac91-6ea95ddeec0c';
+  static String icOrderBlack = 'c31da1f2-ae70-40e3-9ac9-c678dba5528d';
+  static String icMapTransBlack = '0c192406-825b-4da8-9156-e816900e9559';
 }

@@ -113,7 +113,7 @@ class MenuLeft extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ItemMenuHome(
-                title: 'Giao dịch',
+                title: 'Quản lý Giao dịch',
                 iconId: AppImages.icMenuTransaction,
                 enableDropDownList: true,
                 listItemDrop: subMenuTransaction,

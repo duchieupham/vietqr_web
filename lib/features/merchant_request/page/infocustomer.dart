@@ -324,7 +324,7 @@ class InforCustomer extends StatelessWidget {
             controller: urlPathCtrl,
             maxLines: 1,
             disableBorder: true,
-            hintText: 'URL Path (hậu tố của URL, ví dụ: vietqr)',
+            hintText: 'URL Path (hậu tố của URL, mặc định: vqr)',
             inputType: TextInputType.text,
             keyboardAction: TextInputAction.next,
             onTapOutside: (value) {},

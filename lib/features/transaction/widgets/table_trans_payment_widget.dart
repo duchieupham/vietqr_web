@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class TableTransPaymentWidget extends StatefulWidget {
   final List<TransReceiveDTO> list;
   final int offset;
-  final Function(String transactionId, String terminalCode) onChooseTerminal;
+  final Function(TransReceiveDTO) onChooseTerminal;
   final Function(TransReceiveDTO) onEditNote;
   final bool isOwner;
 
@@ -105,11 +105,12 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           /// Số tiền
                           DataCell(
                             _buildContent(
-                              title:
-                                  '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
-                              textAlign: TextAlign.right,
-                              textColor: model.getColorStatus,
-                            ),
+                                title:
+                                    '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
+                                textAlign: TextAlign.right,
+                                textColor: model.getColorStatus,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
                           ),
 
                           /// Mã giao dịch
@@ -337,39 +338,36 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                                         ),
                                       ),
                                     ),
-                                    Tooltip(
-                                      message: 'Cập nhật giao dịch',
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (!widget.isOwner &&
-                                              !dto.isEnableTerminal) return;
-                                          widget.onChooseTerminal(
-                                              dto.transactionId,
-                                              dto.terminalCode);
-                                        },
-                                        child: Container(
-                                          width: 24,
-                                          height: 24,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 6),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(32),
-                                            color: (!widget.isOwner &&
-                                                    !dto.isEnableTerminal)
-                                                ? AppColor.GREY_BG
-                                                : AppColor.BLUE_TEXT
-                                                    .withOpacity(0.25),
-                                          ),
-                                          child: Image(
-                                            image: ImageUtils.instance
-                                                .getImageNetWork(
-                                                    AppImages.icNoteTrans),
+                                    if (!widget.isOwner)
+                                      Tooltip(
+                                        message: 'Cập nhật giao dịch',
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            widget.onChooseTerminal(dto);
+                                          },
+                                          child: Container(
                                             width: 24,
+                                            height: 24,
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 6),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(32),
+                                              color: (!widget.isOwner &&
+                                                      !dto.isEnableTerminal)
+                                                  ? AppColor.GREY_BG
+                                                  : AppColor.BLUE_TEXT
+                                                      .withOpacity(0.25),
+                                            ),
+                                            child: Image(
+                                              image: ImageUtils.instance
+                                                  .getImageNetWork(
+                                                      AppImages.icNoteTrans),
+                                              width: 24,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
                                     // GestureDetector(
                                     //   child: Container(
                                     //     width: 24,
@@ -426,6 +424,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
       Color? textColor,
       GestureTapCallback? onTap,
       double? fontSize,
+      FontWeight? fontWeight,
       TextAlign? textAlign}) {
     return SelectionArea(
       child: GestureDetector(
@@ -441,6 +440,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                   color: textColor,
                   overflow: TextOverflow.ellipsis,
                   fontSize: fontSize ?? 10,
+                  fontWeight: fontWeight,
                 ),
               ),
             ),
