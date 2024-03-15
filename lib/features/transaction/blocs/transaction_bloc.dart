@@ -258,15 +258,37 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _getTransactionsNotOwner(TransactionEvent event, Emitter emit) async {
     try {
       if (event is GetTransNotOwnerEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: TransType.NONE));
+
         bool isLoadMore = true;
         int offset = event.dto.offset;
+
         List<TransReceiveDTO> trans = [...state.listTrans];
         Map<String, List<TransReceiveDTO>> maps = {};
         Map<String, List<TransReceiveDTO>> mapsDefault = {};
+        List<String> listTimeKey = [...state.listTimeKey];
         maps.addAll(state.tranMaps);
         mapsDefault.addAll(state.tranMapsDefault);
 
-        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        if (event.getAll) {
+          String key = '${event.timeKey}_$offset';
+          if (listTimeKey.contains(key)) {
+            emit(state.copyWith(
+              request: TransType.GET_TRANS_TRUE,
+              listTrans: trans,
+              tranMaps: maps,
+              tranMapsDefault: mapsDefault,
+              offset: offset,
+              isLoadMore: isLoadMore,
+              getAll: event.getAll,
+              status: BlocStatus.UNLOADING,
+              listTimeKey: listTimeKey,
+            ));
+            return;
+          }
+        }
+
         final List<TransReceiveDTO> result =
             await repository.getTransNotOwner(event.dto);
 
@@ -281,7 +303,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         }
 
         if (event.getAll) {
-          mapsDefault['$offset'] = result;
+          String key = '${event.timeKey}_$offset';
+          mapsDefault[key] = result;
+          if (!listTimeKey.contains(key)) {
+            listTimeKey.add(key);
+          }
         }
 
         maps['$offset'] = result;
@@ -290,11 +316,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           request: TransType.GET_TRANS_TRUE,
           listTrans: trans,
           tranMaps: maps,
-          offset: offset,
           tranMapsDefault: mapsDefault,
-          getAll: event.getAll,
+          offset: offset,
           isLoadMore: isLoadMore,
+          getAll: event.getAll,
           status: BlocStatus.UNLOADING,
+          listTimeKey: listTimeKey,
         ));
       }
     } catch (e) {
