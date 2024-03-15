@@ -20,7 +20,9 @@ import 'package:url_launcher/url_launcher.dart';
 class DialogWidget {
   //
   const DialogWidget._privateConstructor();
+
   static const DialogWidget _instance = DialogWidget._privateConstructor();
+
   static DialogWidget get instance => _instance;
 
   static bool isPopLoading = false;
@@ -346,24 +348,36 @@ class DialogWidget {
   Future showFullModalBottomContent({
     BuildContext? context,
     required Widget widget,
+    bool? isDissmiss,
+    Color? color,
   }) async {
     context ??= NavigationService.navigatorKey.currentContext!;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return await showModalBottomSheet(
+        isDismissible: (isDissmiss != null && !isDissmiss) ? isDissmiss : true,
         isScrollControlled: true,
-        enableDrag: false, // Ngăn người dùng kéo ModalBottomSheet
+        enableDrag: false,
+        // Ngăn người dùng kéo ModalBottomSheet
         context: context,
-        backgroundColor: AppColor.TRANSPARENT,
+        backgroundColor: (color != null) ? color : AppColor.TRANSPARENT,
         builder: (context) {
-          return Container(
-            width: width,
-            height: height,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+          return WillPopScope(
+            onWillPop: () async {
+              if (isDissmiss == null || isDissmiss) {
+                Navigator.pop(context);
+              }
+              return false;
+            },
+            child: Container(
+              width: width,
+              height: height,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              decoration: BoxDecoration(
+                color: (color != null) ? color : Theme.of(context).cardColor,
+              ),
+              child: widget,
             ),
-            child: widget,
           );
         });
   }
@@ -375,7 +389,8 @@ class DialogWidget {
     context ??= NavigationService.navigatorKey.currentContext!;
     return await showModalBottomSheet(
         isScrollControlled: true,
-        enableDrag: false, // Ngăn người dùng kéo ModalBottomSheet
+        enableDrag: false,
+        // Ngăn người dùng kéo ModalBottomSheet
         context: context,
         backgroundColor: AppColor.TRANSPARENT,
         builder: (context) {
@@ -529,16 +544,13 @@ class DialogWidget {
       Color? titleColor,
       Color? msgColor}) {
     return showDialog(
-        barrierDismissible: false,
-        context: context ?? NavigationService.navigatorKey.currentContext!,
-        builder: (BuildContext context) {
-          return Material(
-            color: AppColor.TRANSPARENT,
-            child: Center(
-                child:
-                    // (PlatformUtils.instance.isWeb())
-                    //     ?
-                    Container(
+      barrierDismissible: false,
+      context: context ?? NavigationService.navigatorKey.currentContext!,
+      builder: (BuildContext context) {
+        return Material(
+          color: AppColor.TRANSPARENT,
+          child: Center(
+            child: Container(
               width: 300,
               height: 300,
               alignment: Alignment.center,
@@ -557,7 +569,6 @@ class DialogWidget {
                     width: 80,
                     height: 80,
                   ),
-
                   const Padding(padding: EdgeInsets.only(top: 10)),
                   Text(
                     title,
@@ -590,56 +601,20 @@ class DialogWidget {
                     textColor: AppColor.WHITE,
                     bgColor: AppColor.BLUE_TEXT,
                     borderRadius: 5,
-                    function: (function != null)
-                        ? function
-                        : () {
+                    function: function != null
+                        ? () {
                             Navigator.pop(context);
-                          },
+                            function();
+                          }
+                        : () => Navigator.pop(context),
                   ),
-                  // const Padding(padding: EdgeInsets.only(top: 10)),
                 ],
               ),
-            )
-                // : Container(
-                //     width: 300,
-                //     height: 250,
-                //     alignment: Alignment.center,
-                //     padding: const EdgeInsets.symmetric(horizontal: 40),
-                //     decoration: BoxDecoration(
-                //       color: Theme.of(context).cardColor,
-                //       borderRadius: BorderRadius.circular(20),
-                //     ),
-                //     child: Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         const Spacer(),
-                //         Text(
-                //           msg,
-                //           textAlign: TextAlign.center,
-                //           style: const TextStyle(
-                //             fontSize: 16,
-                //           ),
-                //         ),
-                //         const Spacer(),
-                //         ButtonWidget(
-                //           width: 230,
-                //           text: 'OK',
-                //           textColor: DefaultTheme.WHITE,
-                //           bgColor: DefaultTheme.GREEN,
-                //           function: (function != null)
-                //               ? function
-                //               : () {
-                //                   Navigator.pop(context);
-                //                 },
-                //         ),
-                //         const Padding(padding: EdgeInsets.only(bottom: 20)),
-                //       ],
-                //     ),
-                //   ),
-                ),
-          );
-        });
+            ),
+          ),
+        );
+      },
+    );
   }
 
   openMsgQRInstallApp({VoidCallback? function, BuildContext? context}) {

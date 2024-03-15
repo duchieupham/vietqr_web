@@ -3,6 +3,8 @@ import 'package:VietQR/features/logout/repositories/log_out_repository.dart';
 import 'package:VietQR/features/token/events/token_event.dart';
 import 'package:VietQR/features/token/repositories/token_repository.dart';
 import 'package:VietQR/features/token/states/token_state.dart';
+import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TokenBloc extends Bloc<TokenEvent, TokenState> {
@@ -19,9 +21,12 @@ const LogoutRepository logoutRepository = LogoutRepository();
 void _logout(TokenEvent event, Emitter emit) async {
   try {
     if (event is TokenEventLogout) {
+      emit(TokenCheckingState());
       bool check = await logoutRepository.logout();
       if (check) {
         emit(TokenExpiredLogoutState());
+        Session.instance.clearData();
+        WebSocketHelper.instance.closeListenTransaction();
       } else {
         emit(TokenLogoutFailedState());
       }
