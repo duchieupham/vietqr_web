@@ -140,7 +140,11 @@ class TransReceiveDTO {
               : 0,
       timePaid: json['timePaid'] ?? 0,
       content: json['content'] ?? '',
-      transactionId: json['transactionId'] ?? '',
+      transactionId: json.containsKey('transactionId')
+          ? (json['transactionId'] ?? '')
+          : json.containsKey('id')
+              ? (json['id'] ?? '')
+              : '',
       type: json['type'] ?? 0,
       transType: json['transType'] ?? '',
       bankShortName: json['bankShortName'] ?? '',
