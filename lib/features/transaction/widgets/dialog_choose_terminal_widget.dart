@@ -42,8 +42,8 @@ class _DialogChooseTerminalWidgetState
       color: AppColor.TRANSPARENT,
       child: Center(
         child: Container(
-          width: 600,
-          height: 550,
+          width: 650,
+          height: 650,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16),
@@ -62,7 +62,7 @@ class _DialogChooseTerminalWidgetState
   Widget _buildBodyMain() {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class _DialogChooseTerminalWidgetState
                   child: Text(
                     'Cập nhật điểm bán',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                 ),
                 GestureDetector(
@@ -83,28 +83,29 @@ class _DialogChooseTerminalWidgetState
               ],
             ),
             const SizedBox(height: 24),
-            SizedBox(
-              width: 300,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'Thông tin giao dịch',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Thông tin giao dịch',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 12),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildItemInfo(
                                 title: 'Số tiền:',
                                 content:
                                     '${widget.transDTO.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(widget.transDTO.amount)} ',
                                 textColor: AppColor.BLUE_TEXT,
-                                fontSize: 12,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w600),
                             const SizedBox(height: 12),
                             _buildItemInfo(
@@ -116,6 +117,7 @@ class _DialogChooseTerminalWidgetState
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildItemInfo(
                                 title: 'Thời gian TT:',
@@ -129,141 +131,137 @@ class _DialogChooseTerminalWidgetState
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             Expanded(
-              child: SizedBox(
-                width: 300,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Mã điểm bán',
-                      style:
-                          TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Mã điểm bán',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 34,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.GREY_BORDER),
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    const SizedBox(height: 8),
-                    Container(
-                      height: 34,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColor.GREY_BORDER),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: TextField(
-                        style: const TextStyle(fontSize: 12),
-                        onChanged: onSearch,
-                        maxLength: 10,
-                        controller: _searchController,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          counterText: '',
-                          contentPadding:
-                              EdgeInsets.only(left: 12, right: 12, bottom: 16),
-                          hintText:
-                              'Nhập mã điểm bán hoặc chọn cửa hàng bên dưới',
-                          hintStyle: TextStyle(
-                              fontSize: 10, color: AppColor.GREY_TEXT),
-                        ),
+                    child: TextField(
+                      style: const TextStyle(fontSize: 12),
+                      onChanged: onSearch,
+                      maxLength: 10,
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        counterText: '',
+                        contentPadding:
+                            EdgeInsets.only(left: 12, right: 12, bottom: 16),
+                        hintText:
+                            'Nhập mã điểm bán hoặc chọn cửa hàng bên dưới',
+                        hintStyle:
+                            TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Danh sách cửa hàng',
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: 12),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children:
-                                    List.generate(terminals.length, (index) {
-                                  TerminalQRDTO dto = terminals[index];
-                                  return GestureDetector(
-                                    onTap: () {
-                                      _dto = dto;
-                                      _searchController.text = dto.terminalCode;
-                                      setState(() {});
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 12),
-                                      decoration: BoxDecoration(
-                                          color:
-                                              dto.terminalId == _dto.terminalId
-                                                  ? AppColor.BLUE_TEXT
-                                                      .withOpacity(0.25)
-                                                  : null),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    dto.terminalName,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(
-                                                    dto.terminalCode,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        color:
-                                                            AppColor.GREY_TEXT),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
+                  ),
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ButtonWidget(
-                          text: 'Cập nhật',
-                          width: 100,
-                          textColor: AppColor.WHITE,
-                          bgColor: AppColor.BLUE_TEXT,
-                          textSize: 10,
-                          function: () {
-                            if (_searchController.text.isNotEmpty) {
-                              widget.update.call(_searchController.text);
-                            } else {
-                              Navigator.pop(context);
-                            }
-                          },
-                          borderRadius: 5,
-                          height: 30,
+                        const Text(
+                          'Danh sách cửa hàng',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w600),
                         ),
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: GridView.builder(
+                            padding: EdgeInsets.zero,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: (1 / .4),
+                            ),
+                            itemCount: terminals.length,
+                            itemBuilder: (context, index) {
+                              var data = terminals[index];
+                              return _buildItemTerminal(data);
+                            },
+                          ),
+                        )
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      ButtonWidget(
+                        text: 'Cập nhật',
+                        width: 100,
+                        textColor: AppColor.WHITE,
+                        bgColor: AppColor.BLUE_TEXT,
+                        textSize: 10,
+                        function: () {
+                          if (_searchController.text.isNotEmpty) {
+                            Navigator.pop(context);
+                            widget.update.call(_searchController.text);
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        borderRadius: 5,
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItemTerminal(TerminalQRDTO dto) {
+    bool isSelect = dto.terminalId == _dto.terminalId;
+    return GestureDetector(
+      onTap: () {
+        _dto = dto;
+        _searchController.text = dto.terminalCode;
+        setState(() {});
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          color: isSelect ? AppColor.BLUE_TEXT.withOpacity(0.25) : null,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: isSelect ? AppColor.BLUE_TEXT : AppColor.GREY_BORDER,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              dto.terminalName,
+              maxLines: 2,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis),
+            ),
+            Text(
+              dto.terminalCode,
+              style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
             ),
           ],
         ),
@@ -273,6 +271,7 @@ class _DialogChooseTerminalWidgetState
 
   Widget _buildTabWidget() {
     return Container(
+      width: 178,
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
@@ -282,7 +281,7 @@ class _DialogChooseTerminalWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.0),
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text('Cập nhật GD',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
           ),
@@ -292,13 +291,14 @@ class _DialogChooseTerminalWidgetState
               children: [
                 Container(
                   color: AppColor.BLUE_TEXT.withOpacity(0.25),
-                  padding: const EdgeInsets.fromLTRB(8, 6, 12, 6),
+                  padding: const EdgeInsets.fromLTRB(12, 6, 16, 6),
                   child: Row(
                     children: [
                       Image(
                           image: ImageUtils.instance
                               .getImageNetWork(AppImages.icStoreBlack),
                           width: 28),
+                      const SizedBox(width: 8),
                       const Text('Cập nhật điểm bán',
                           style: TextStyle(fontSize: 11))
                     ],

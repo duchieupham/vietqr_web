@@ -4,6 +4,7 @@ import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
@@ -285,10 +286,9 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         child: (!isMobile)
             ? const WebMobileBlankWidget()
             : BlocConsumer<TransactionBloc, TransactionState>(
-                listener: (context, state) {
+                listener: (context, state) async {
                   if (state.request == TransType.UPDATE_TERMINAL ||
                       state.request == TransType.UPDATE_NOTE) {
-                    Navigator.pop(context);
                     Fluttertoast.showToast(
                       msg: 'Cập nhật thành công',
                       toastLength: Toast.LENGTH_SHORT,
@@ -316,6 +316,11 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                         '/transactions?type=1?bankId=$_bankId');
 
                     loadAll();
+                  }
+
+                  if (state.request == TransType.ERROR) {
+                    await DialogWidget.instance.openMsgDialog(
+                        title: 'Thông báo', msg: state.msg ?? '');
                   }
 
                   if (state.request == TransType.GET_TRANS_TRUE) {

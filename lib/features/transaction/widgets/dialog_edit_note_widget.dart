@@ -149,6 +149,7 @@ class _DialogUpdateNoteWidgetState extends State<DialogUpdateNoteWidget> {
                               fontSize: 14,
                               onSubmitted: (value) {
                                 dto.note = _value;
+                                Navigator.pop(context);
                                 widget.update.call(dto);
                               },
                               fillColor: AppColor.TRANSPARENT,
@@ -200,6 +201,7 @@ class _DialogUpdateNoteWidgetState extends State<DialogUpdateNoteWidget> {
                                 bgColor: AppColor.BLUE_TEXT,
                                 function: () {
                                   dto.note = _value;
+                                  Navigator.pop(context);
                                   widget.update.call(dto);
                                 },
                                 borderRadius: 5,

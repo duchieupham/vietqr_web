@@ -33,8 +33,7 @@ class TransactionRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<TransReceiveDTO>(
-                (json) => TransReceiveDTO.fromJson(json))
+            .map<TransReceiveDTO>((json) => TransReceiveDTO.fromJson(json))
             .toList();
       }
     } catch (e) {
@@ -63,8 +62,7 @@ class TransactionRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<TransReceiveDTO>(
-                (json) => TransReceiveDTO.fromJson(json))
+            .map<TransReceiveDTO>((json) => TransReceiveDTO.fromJson(json))
             .toList();
       }
     } catch (e) {
@@ -107,7 +105,7 @@ class TransactionRepository {
         body: {
           "transactionId": transactionId,
           "terminalCode": terminalCode,
-          "userId": userId
+          "userId": userId,
         },
       );
       if (response.statusCode == 200 || response.statusCode == 400) {
@@ -165,8 +163,7 @@ class TransactionRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = data
-            .map<TransReceiveDTO>(
-                (json) => TransReceiveDTO.fromJson(json))
+            .map<TransReceiveDTO>((json) => TransReceiveDTO.fromJson(json))
             .toList();
       }
     } catch (e) {
