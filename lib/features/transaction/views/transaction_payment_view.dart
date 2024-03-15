@@ -314,6 +314,10 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                     );
                   }
 
+                  if (state.request == TransType.UPDATE_BANK) {
+                    bloc.add(GetTerminalsEvent(_bankId));
+                  }
+
                   if (state.request == TransType.GET_BANKS) {
                     bloc.add(GetTerminalsEvent(state.bankDTO?.bankId ?? ''));
 
