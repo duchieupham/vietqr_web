@@ -1,4 +1,6 @@
 import 'package:VietQR/models/response_message_dto.dart';
+import 'package:VietQR/models/store_model.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:equatable/equatable.dart';
 
 class VhitekState extends Equatable {
@@ -18,6 +20,15 @@ class VhitekCheckUserValidSuccessState extends VhitekState {
   final ResponseMessageDTO dto;
 
   const VhitekCheckUserValidSuccessState({required this.dto});
+
+  @override
+  List<Object?> get props => [dto];
+}
+
+class ConfirmStoreSuccessState extends VhitekState {
+  final ResponseMessageDTO dto;
+
+  const ConfirmStoreSuccessState({required this.dto});
 
   @override
   List<Object?> get props => [dto];
@@ -48,4 +59,13 @@ class LoginByUserIdSuccessState extends VhitekState {
 
   @override
   List<Object?> get props => [result];
+}
+
+class VhitekGetTerminalsSuccessState extends VhitekState {
+  final List<TerminalQRDTO> terminals;
+
+  const VhitekGetTerminalsSuccessState({required this.terminals});
+
+  @override
+  List<Object?> get props => [terminals];
 }

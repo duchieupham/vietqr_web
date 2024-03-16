@@ -58,10 +58,13 @@ class _VhitekState extends State<_VhitekScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   late VhitekBloc _vhitekBloc;
   String userId = '';
+  late ActiveVhitekProvider _provider;
+
   @override
   void initState() {
     super.initState();
     _vhitekBloc = VhitekBloc();
+    _provider = Provider.of<ActiveVhitekProvider>(context, listen: false);
   }
 
   @override
@@ -80,7 +83,7 @@ class _VhitekState extends State<_VhitekScreen> {
         }
         context.push('/login', extra: param);
       } else {
-        context.read<ActiveVhitekProvider>().getListBankAccount();
+        _provider.getListBankAccount();
       }
     }
 
@@ -158,134 +161,136 @@ class _VhitekState extends State<_VhitekScreen> {
                           child: BlocProvider<VhitekBloc>(
                             create: (context) => _vhitekBloc,
                             child: BlocConsumer<VhitekBloc, VhitekState>(
-                                listener: (context, state) {
-                              if (state is VhitekStateLoadingState) {
-                                DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is VhitekCheckUserValidSuccessState) {
-                                Navigator.pop(context);
-                                if (state.dto.status == 'SUCCESS') {
-                                  context
-                                      .read<ActiveVhitekProvider>()
-                                      .changePage(2);
-                                  context
-                                      .read<ActiveVhitekProvider>()
-                                      .changeUserIdVhitek(state.dto.message);
-                                  _animatedToPage(2);
-                                } else if (state.dto.status == 'CHECK') {
-                                  if (state.dto.message == 'C09') {
-                                    DialogWidget.instance.openMsgDialog(
-                                        title: 'Đã kích hoạt',
-                                        msg:
-                                            'Máy bán hàng đã được kích hoạt trước đó.');
+                              listener: (context, state) {
+                                if (state is VhitekStateLoadingState) {
+                                  DialogWidget.instance.openLoadingDialog();
+                                }
+                                if (state is VhitekCheckUserValidSuccessState) {
+                                  Navigator.pop(context);
+                                  if (state.dto.status == 'SUCCESS') {
+                                    _provider.changePage(2);
+                                    _provider
+                                        .changeUserIdVhitek(state.dto.message);
+                                    _animatedToPage(2);
+                                  } else if (state.dto.status == 'CHECK') {
+                                    if (state.dto.message == 'C09') {
+                                      DialogWidget.instance.openMsgDialog(
+                                          title: 'Đã kích hoạt',
+                                          msg:
+                                              'Máy bán hàng đã được kích hoạt trước đó.');
+                                    } else {
+                                      _provider.changePage(1);
+                                      _animatedToPage(1);
+                                    }
                                   } else {
-                                    context
-                                        .read<ActiveVhitekProvider>()
-                                        .changePage(1);
-                                    _animatedToPage(1);
+                                    DialogWidget.instance.openMsgDialog(
+                                        title: 'Lỗi',
+                                        msg: ErrorUtils.instance
+                                            .getErrorMessage(
+                                                state.dto.message));
                                   }
-                                } else {
-                                  DialogWidget.instance.openMsgDialog(
-                                      title: 'Lỗi',
-                                      msg: ErrorUtils.instance
-                                          .getErrorMessage(state.dto.message));
                                 }
-                              }
-                              if (state is LoginByUserIdSuccessState) {
-                                context
-                                    .read<ActiveVhitekProvider>()
-                                    .getListBankAccount();
-                              }
-                              if (state is VhitekCreateUserSuccessState) {
-                                Navigator.pop(context);
-                                if (state.dto.status == 'SUCCESS') {
-                                  context
-                                      .read<ActiveVhitekProvider>()
-                                      .changePage(2);
-                                  context
-                                      .read<ActiveVhitekProvider>()
-                                      .changeUserIdVhitek(state.dto.message);
-                                  _animatedToPage(2);
-                                } else {
-                                  DialogWidget.instance.openMsgDialog(
-                                      title: 'Lỗi',
-                                      msg: ErrorUtils.instance
-                                          .getErrorMessage(state.dto.message));
+                                if (state is LoginByUserIdSuccessState) {
+                                  _provider.getListBankAccount();
                                 }
-                              }
-                              if (state is VhitekActiveSuccessState) {
-                                Navigator.pop(context);
-                                if (state.dto.status == 'SUCCESS') {
-                                  context
-                                      .read<ActiveVhitekProvider>()
-                                      .changePage(3);
-                                  _animatedToPage(3);
-                                } else {
-                                  DialogWidget.instance.openMsgDialog(
-                                      title: 'Lỗi',
-                                      msg: ErrorUtils.instance
-                                          .getErrorMessage(state.dto.message));
+                                if (state is VhitekCreateUserSuccessState) {
+                                  Navigator.pop(context);
+                                  if (state.dto.status == 'SUCCESS') {
+                                    _provider.changePage(2);
+                                    _provider
+                                        .changeUserIdVhitek(state.dto.message);
+                                    _animatedToPage(2);
+                                  } else {
+                                    DialogWidget.instance.openMsgDialog(
+                                        title: 'Lỗi',
+                                        msg: ErrorUtils.instance
+                                            .getErrorMessage(
+                                                state.dto.message));
+                                  }
                                 }
-                              }
-                            }, builder: (context, state) {
-                              return Column(
-                                children: [
-                                  if (state is VhitekLoginLoadingState)
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 40),
-                                      child: Center(
-                                          child: CircularProgressIndicator()),
-                                    )
-                                  else ...[
-                                    Expanded(child: Center(
-                                      child: LayoutBuilder(
-                                          builder: (context, constraints) {
-                                        return SizedBox(
-                                          width: constraints.maxWidth > 700
-                                              ? 600
-                                              : constraints.maxWidth,
-                                          child: PageView(
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            controller: _pageController,
-                                            onPageChanged: (index) {},
-                                            children: [
-                                              ActiveVhitek(
-                                                mid: widget.mid,
-                                              ),
-                                              RegisterVhitek(
-                                                edit: () {
-                                                  _animatedToPage(0);
-                                                },
-                                              ),
-                                              ConfirmActive(
-                                                edit: () {
-                                                  _animatedToPage(0);
-                                                },
-                                              ),
-                                              const ActiveSuccess()
-                                            ],
+                                if (state is VhitekActiveSuccessState) {
+                                  Navigator.pop(context);
+                                  if (state.dto.status == 'SUCCESS') {
+                                    _provider.changePage(3);
+                                    _animatedToPage(3);
+                                  } else {
+                                    DialogWidget.instance.openMsgDialog(
+                                        title: 'Lỗi',
+                                        msg: ErrorUtils.instance
+                                            .getErrorMessage(
+                                                state.dto.message));
+                                  }
+                                }
+                              },
+                              builder: (context, state) {
+                                return Column(
+                                  children: [
+                                    if (state is VhitekLoginLoadingState)
+                                      const Padding(
+                                        padding: EdgeInsets.only(top: 40),
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      )
+                                    else ...[
+                                      Expanded(
+                                        child: Center(
+                                          child: LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              return SizedBox(
+                                                width:
+                                                    constraints.maxWidth > 700
+                                                        ? 600
+                                                        : constraints.maxWidth,
+                                                child: PageView(
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  controller: _pageController,
+                                                  onPageChanged: (index) {},
+                                                  children: [
+                                                    ActiveVhitek(
+                                                      mid: widget.mid,
+                                                      callBack: (bankDTO) {
+                                                        _provider
+                                                            .updateBankAccountDTO(
+                                                                bankDTO);
+                                                        _vhitekBloc.add(
+                                                            GetTerminalsEvent(
+                                                                _provider
+                                                                    .bankAccountDTO
+                                                                    .bankId));
+                                                      },
+                                                      onChanged: (code, address,
+                                                          email, dto) {},
+                                                    ),
+                                                    RegisterVhitek(
+                                                      edit: onEdit,
+                                                      onChanged:
+                                                          _onChangeRegister,
+                                                    ),
+                                                    ConfirmActive(
+                                                      edit: onEdit,
+                                                      mid: _provider.mid,
+                                                      email: _provider.email,
+                                                      userIdVhitek: _provider
+                                                          .userIdVhitek,
+                                                      midAddress:
+                                                          _provider.midAddress,
+                                                      dto: _provider
+                                                          .bankAccountDTO,
+                                                    ),
+                                                    ActiveSuccess(edit: onEdit),
+                                                  ],
+                                                ),
+                                              );
+                                            },
                                           ),
-                                        );
-                                      }),
-                                    )),
-                                    LayoutBuilder(
-                                        builder: (context, constraints) {
-                                      return SizedBox(
-                                        width: constraints.maxWidth > 700
-                                            ? 600
-                                            : constraints.maxWidth,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 28, vertical: 20),
-                                          child: _buildButton(),
                                         ),
-                                      );
-                                    })
-                                  ]
-                                ],
-                              );
-                            }),
+                                      ),
+                                    ]
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -297,136 +302,6 @@ class _VhitekState extends State<_VhitekScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildButton() {
-    return Consumer<ActiveVhitekProvider>(builder: (context, provider, child) {
-      if (provider.page == 0) {
-        return ButtonWidget(
-            text: 'Tiếp theo',
-            textColor: AppColor.WHITE,
-            borderRadius: 5,
-            bgColor: AppColor.BLUE_TEXT,
-            function: () {
-              if (provider.bankAccountDTO.bankAccount.isEmpty) {
-                DialogWidget.instance.openMsgDialog(
-                    title: 'Cảnh báo',
-                    msg: 'Vui lòng chọn tài khoản ngân hàng');
-              } else if (provider.mid.isEmpty ||
-                  provider.midAddress.isEmpty ||
-                  provider.email.isEmpty) {
-                DialogWidget.instance.openMsgDialog(
-                    title: 'Cảnh báo',
-                    msg: 'Vui lòng nhập đầy đủ thông tin trên form');
-              } else {
-                _vhitekBloc.add(CheckUserValidEvent(email: provider.email));
-              }
-            });
-      } else if (provider.page == 1) {
-        return ButtonWidget(
-            text: 'Đăng kí',
-            textColor: AppColor.WHITE,
-            borderRadius: 5,
-            bgColor: AppColor.BLUE_TEXT,
-            function: () {
-              provider.checkErrPassword();
-              if (provider.email.isEmpty ||
-                  provider.userName.isEmpty ||
-                  provider.phoneNumber.isEmpty ||
-                  provider.password.isEmpty) {
-                DialogWidget.instance.openMsgDialog(
-                    title: 'Cảnh báo',
-                    msg: 'Vui lòng nhập đầy đủ thông tin trên form');
-              } else if (provider.isErrPasswordConfirm) {
-                DialogWidget.instance.openMsgDialog(
-                    title: 'Cảnh báo', msg: 'Mật khẩu không trùng nhau');
-              } else {
-                if (!provider.isErrPassword) {
-                  Map<String, dynamic> param = {};
-                  param['userId'] =
-                      UserInformationHelper.instance.getUserId().trim();
-                  param['email'] = provider.email;
-                  param['phoneNo'] = provider.phoneNumber;
-                  param['password'] = provider.password;
-                  param['name'] = provider.userName;
-                  _vhitekBloc.add(CreateUserEvent(param: param));
-                }
-              }
-            });
-      } else if (provider.page == 2) {
-        return ButtonWidget(
-            text: 'Kích hoạt',
-            textColor: AppColor.WHITE,
-            borderRadius: 5,
-            bgColor: AppColor.BLUE_TEXT,
-            function: () {
-              Map<String, dynamic> param = {};
-              param['userId'] =
-                  UserInformationHelper.instance.getUserId().trim();
-              param['mid'] = provider.mid;
-              param['address'] = provider.midAddress;
-              param['userIdVhitek'] = provider.userIdVhitek;
-              param['bankAccount'] = provider.bankAccountDTO.bankAccount;
-              param['userBankName'] = provider.bankAccountDTO.userBankName;
-              param['bankId'] = provider.bankAccountDTO.bankId;
-              print(
-                  '-------------------------------------${provider.bankAccountDTO.toJson()}');
-              _vhitekBloc.add(ActiveEvent(param: param));
-            });
-      } else if (provider.page == 3) {
-        return ButtonWidget(
-            text: 'Hoàn tất',
-            textColor: AppColor.WHITE,
-            borderRadius: 5,
-            bgColor: AppColor.BLUE_TEXT,
-            function: () {
-              js.context.callMethod('sendDataToFlutter', ['CLOSE_WEB', '*']);
-              context.push('/home');
-            });
-      }
-
-      return const SizedBox.shrink();
-    });
-  }
-
-  Widget _buildHeader() {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 12,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    // Navigator.pop(context);
-                    context.push('/home');
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    size: 20,
-                    color: AppColor.BLACK_BUTTON,
-                  )),
-              const Spacer(),
-              Image(
-                image:
-                    ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
-                height: 40,
-              )
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        DividerWidget(
-          width: double.infinity,
-          color: AppColor.BLACK_BUTTON.withOpacity(0.2),
-        ),
-      ],
     );
   }
 
@@ -479,5 +354,18 @@ class _VhitekState extends State<_VhitekScreen> {
         ],
       ),
     );
+  }
+
+  _onChangeRegister(userId, email, phoneNumber, password, userName) {
+    _provider.changeUserIdVhitek(userId);
+    _provider.changeEmail(email);
+    _provider.changePhoneNumber(phoneNumber);
+    _provider.changePassword(password);
+    _provider.changeUserName(userName);
+  }
+
+  onEdit(int value) {
+    _provider.changePage(value);
+    _animatedToPage(0);
   }
 }

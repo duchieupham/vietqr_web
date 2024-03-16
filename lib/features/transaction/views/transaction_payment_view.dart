@@ -23,6 +23,7 @@ import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'dart:html' as html;
 
@@ -375,10 +376,11 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                               const SizedBox(width: 8),
                               GestureDetector(
                                 onTap: () {
-                                  int offset = state.offset;
-                                  if (offset <= 0) return;
-                                  offset = offset - 1;
-                                  loadMore(offset, state.getAll);
+                                  // int offset = state.offset;
+                                  // if (offset <= 0) return;
+                                  // offset = offset - 1;
+                                  // loadMore(offset, state.getAll);
+                                  context.go('/service/may-ban-hang/active');
                                 },
                                 child: Container(
                                   width: 25,

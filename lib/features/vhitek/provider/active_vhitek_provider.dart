@@ -1,51 +1,80 @@
 import 'package:VietQR/features/home/repositories/home_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 
 class ActiveVhitekProvider with ChangeNotifier {
   int _page = 0;
+
   int get page => _page;
 
   String _mid = '';
+
   String get mid => _mid;
 
   String _midAddress = '';
+
   String get midAddress => _midAddress;
 
   String _email = '';
+
   String get email => _email;
 
   String _userName = '';
+
   String get userName => _userName;
 
   String _phoneNumber = '';
+
   String get phoneNumber => _phoneNumber;
 
   String _password = '';
+
   String get password => _password;
 
   String _passwordConfirm = '';
+
   String get passwordConfirm => _passwordConfirm;
 
   bool _isErrPasswordConfirm = false;
+
   bool get isErrPasswordConfirm => _isErrPasswordConfirm;
 
   bool _isErrPassword = false;
+
   bool get isErrPassword => _isErrPassword;
 
   String _userIdVhitek = '';
+
   String get userIdVhitek => _userIdVhitek;
 
   String _errorPass = '';
+
   String get errorPass => _errorPass;
 
   final homeRepository = const HomeRepository();
   BankAccountDTO _bankAccountDTO = BankAccountDTO();
+
   BankAccountDTO get bankAccountDTO => _bankAccountDTO;
 
   List<BankAccountDTO> bankAccounts = [];
   bool isLoadingGetListBank = false;
+
+  List<TerminalQRDTO> terminals = [];
+
+  TerminalQRDTO terminalDTO = TerminalQRDTO();
+
+  void updateTerminals(List<TerminalQRDTO> list) {
+    terminals = [...list];
+    notifyListeners();
+  }
+
+  void updateTerminalDTO(TerminalQRDTO dto) {
+    terminalDTO = dto;
+    notifyListeners();
+  }
+
   getListBankAccount() async {
     List<BankAccountDTO> result = await homeRepository
         .getListBankAccount(UserInformationHelper.instance.getUserId());
@@ -70,8 +99,12 @@ class ActiveVhitekProvider with ChangeNotifier {
     _userIdVhitek = value;
   }
 
-  changeMid(String value) {
-    _mid = value;
+  void changeMid(dynamic value) {
+    if (value is String) {
+      _mid = value;
+    }
+
+    notifyListeners();
   }
 
   changeMidAddress(String value) {

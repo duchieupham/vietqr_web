@@ -109,8 +109,8 @@ class _DialogChooseTerminalWidgetState
                                 fontWeight: FontWeight.w600),
                             const SizedBox(height: 12),
                             _buildItemInfo(
-                                title: 'Mã giao dịch',
-                                content: widget.transDTO.referenceNumber),
+                                title: 'Tk nhận:',
+                                content: widget.transDTO.bankAccount),
                           ],
                         ),
                       ),
@@ -120,12 +120,13 @@ class _DialogChooseTerminalWidgetState
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             _buildItemInfo(
-                                title: 'Thời gian TT:',
-                                content: widget.transDTO.timePaymentEditNote),
+                              title: 'Mã giao dịch',
+                              content: widget.transDTO.referenceNumber,
+                            ),
                             const SizedBox(height: 12),
                             _buildItemInfo(
-                                title: 'Tk nhận:',
-                                content: widget.transDTO.bankAccount),
+                                title: 'Thời gian TT:',
+                                content: widget.transDTO.timePaymentEditNote),
                           ],
                         ),
                       ),
@@ -254,14 +255,18 @@ class _DialogChooseTerminalWidgetState
             Text(
               dto.terminalName,
               maxLines: 2,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.ellipsis),
+                  overflow: TextOverflow.ellipsis,
+                  color: isSelect ? AppColor.BLUE_TEXT : AppColor.BLACK),
             ),
             Text(
               dto.terminalCode,
-              style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
+              style: TextStyle(
+                fontSize: 12,
+                color: isSelect ? AppColor.BLUE_TEXT : AppColor.BLACK,
+              ),
             ),
           ],
         ),
@@ -345,12 +350,13 @@ class _DialogChooseTerminalWidgetState
           text: TextSpan(
             children: [
               TextSpan(
-                  text: content.isEmpty ? '-' : content,
-                  style: TextStyle(
-                      fontSize: fontSize ?? 11,
-                      color: textColor,
-                      height: 1.4,
-                      fontWeight: fontWeight)),
+                text: content.isEmpty ? '-' : content,
+                style: TextStyle(
+                    fontSize: fontSize ?? 11,
+                    color: textColor ?? AppColor.BLACK,
+                    height: 1.4,
+                    fontWeight: fontWeight ?? FontWeight.w500),
+              ),
               if (textColor != null)
                 TextSpan(
                     text: 'VND',

@@ -9,16 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class ActiveSuccess extends StatefulWidget {
-  final Function(int) edit;
-
-  const ActiveSuccess({super.key, required this.edit});
+class ActiveStoreSuccess extends StatefulWidget {
+  const ActiveStoreSuccess({super.key});
 
   @override
-  State<ActiveSuccess> createState() => _ActiveSuccessState();
+  State<ActiveStoreSuccess> createState() => _ActiveSuccessState();
 }
 
-class _ActiveSuccessState extends State<ActiveSuccess> {
+class _ActiveSuccessState extends State<ActiveStoreSuccess> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ActiveVhitekProvider>(
@@ -44,7 +42,8 @@ class _ActiveSuccessState extends State<ActiveSuccess> {
                     const Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Kích hoạt thành công',
+                        'Kích hoạt máy cho\ncửa  / điểm bán thành công',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600),
                       ),
@@ -64,27 +63,15 @@ class _ActiveSuccessState extends State<ActiveSuccess> {
                 ),
               ),
             ),
-            Column(
-              children: [
-                ButtonWidget(
-                  text: 'Kích hoạt máy cho cửa hàng',
-                  textColor: AppColor.WHITE,
-                  borderRadius: 5,
-                  bgColor: AppColor.BLUE_TEXT,
-                  function: () => widget.edit(4),
-                ),
-                ButtonWidget(
-                  text: 'Hoàn tất',
-                  textColor: AppColor.BLUE_TEXT,
-                  borderRadius: 5,
-                  bgColor: AppColor.BLUE_TEXT.withOpacity(0.25),
-                  function: () {
-                    js.context
-                        .callMethod('sendDataToFlutter', ['CLOSE_WEB', '*']);
-                    context.push('/home');
-                  },
-                ),
-              ],
+            ButtonWidget(
+              text: 'Hoàn tất',
+              textColor: AppColor.BLUE_TEXT,
+              borderRadius: 5,
+              bgColor: AppColor.BLUE_TEXT,
+              function: () {
+                js.context.callMethod('sendDataToFlutter', ['CLOSE_WEB', '*']);
+                context.push('/home');
+              },
             ),
           ],
         );

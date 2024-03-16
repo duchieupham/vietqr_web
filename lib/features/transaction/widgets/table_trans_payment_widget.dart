@@ -100,7 +100,10 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           ),
 
                           /// Thời gian tạo
-                          DataCell(_buildContent(title: model.timePayment)),
+                          DataCell(_buildContent(
+                            title: model.timePayment,
+                            textAlign: TextAlign.right,
+                          )),
 
                           /// Số tiền
                           DataCell(
@@ -139,13 +142,16 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                           DataCell(
                             _buildContent(
                               title: model.transactionType,
-                              textAlign: TextAlign.right,
+                              textAlign: TextAlign.left,
                             ),
                           ),
 
                           /// Thời gian tạo
                           DataCell(
-                            _buildContent(title: model.timeCreate),
+                            _buildContent(
+                              title: model.timeCreate,
+                              textAlign: TextAlign.right,
+                            ),
                           ),
 
                           /// Tài khoản nhận

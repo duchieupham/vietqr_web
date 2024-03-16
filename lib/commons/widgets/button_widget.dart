@@ -15,21 +15,23 @@ class ButtonWidget extends StatelessWidget {
 
   final BorderRadius? bdRadius;
   final BoxBorder? border;
+  final Widget? icon;
 
-  const ButtonWidget(
-      {Key? key,
-      this.width,
-      required this.text,
-      required this.textColor,
-      required this.bgColor,
-      required this.function,
-      this.height,
-      this.textSize = 14,
-      this.borderRadius,
-      this.bdRadius,
-      this.border,
-      this.padding = EdgeInsets.zero})
-      : super(key: key);
+  const ButtonWidget({
+    Key? key,
+    this.width,
+    required this.text,
+    required this.textColor,
+    required this.bgColor,
+    required this.function,
+    this.height,
+    this.textSize = 14,
+    this.borderRadius,
+    this.bdRadius,
+    this.border,
+    this.padding = EdgeInsets.zero,
+    this.icon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +49,17 @@ class ButtonWidget extends StatelessWidget {
           color: bgColor,
           border: border,
         ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: textColor, fontSize: textSize),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: textColor, fontSize: textSize),
+              ),
+            ),
+            if (icon != null) icon!
+          ],
         ),
       ),
     );

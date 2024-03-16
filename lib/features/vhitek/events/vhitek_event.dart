@@ -7,6 +7,28 @@ class VhitekEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class GetTerminalsEvent extends VhitekEvent {
+  final String bankId;
+
+  const GetTerminalsEvent(this.bankId);
+
+  @override
+  List<Object?> get props => [bankId];
+}
+
+class ConfirmStoreEvent extends VhitekEvent {
+  final String terminalId;
+  final String midCode;
+
+  const ConfirmStoreEvent({
+    required this.terminalId,
+    required this.midCode,
+  });
+
+  @override
+  List<Object?> get props => [terminalId, midCode];
+}
+
 class CheckUserValidEvent extends VhitekEvent {
   final String email;
 

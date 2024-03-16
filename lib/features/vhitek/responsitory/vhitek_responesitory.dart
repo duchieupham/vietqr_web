@@ -35,6 +35,27 @@ class VhitekRepository {
     return result;
   }
 
+  Future<ResponseMessageDTO> confirmStore(
+      String terminalId, String machineCode) async {
+    ResponseMessageDTO result =
+        const ResponseMessageDTO(status: '', message: '');
+    try {
+      String url = '${EnvConfig.getBaseUrl()}terminal/qr-box';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+        body: {'terminalId': terminalId, 'machineCode': machineCode},
+      );
+      var data = jsonDecode(response.body);
+      if (data != null) {
+        result = ResponseMessageDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
   Future<ResponseMessageDTO> createUser(Map<String, dynamic> param) async {
     ResponseMessageDTO result =
         const ResponseMessageDTO(status: '', message: '');
@@ -117,5 +138,12 @@ class VhitekRepository {
       LOG.error(e.toString());
     }
     return result;
+  }
+
+  Future getListTerminal(String bankId, String userId) async {
+    try {
+      String url =
+          '${EnvConfig.getBaseUrl()}terminal/list?bankId=$bankId&userId=$userId';
+    } catch (e) {}
   }
 }
