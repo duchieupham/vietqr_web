@@ -296,7 +296,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             const Text(
               'My VietQR',
               style: TextStyle(
-                  fontWeight: FontWeight.w600,
+                  // fontWeight: FontWeight.w600,
                   color: AppColor.BLACK,
                   fontSize: 12),
             ),

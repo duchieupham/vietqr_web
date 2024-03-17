@@ -38,7 +38,7 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
-                    'Thông tin kich hoạt máy\ncho cửa hàng đã chính xác chứ?',
+                    'Thông tin kích hoạt máy\ncho cửa hàng đã chính xác chứ?',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
@@ -135,18 +135,21 @@ class _ConfirmStoreState extends State<ConfirmStore> {
             ),
           ),
         ),
-        ButtonWidget(
-          text: 'Xác nhận',
-          textColor: AppColor.BLUE_TEXT,
-          borderRadius: 5,
-          bgColor: AppColor.BLUE_TEXT,
-          function: () {
-            context.read<VhitekBloc>().add(ConfirmStoreEvent(
-                  terminalId: widget.terminal.terminalId,
-                  midCode: widget.midCode,
-                  bankID: widget.dto.bankId,
-                ));
-          },
+        Center(
+          child: ButtonWidget(
+            width: 250,
+            text: 'Xác nhận',
+            textColor: AppColor.BLUE_TEXT,
+            borderRadius: 5,
+            bgColor: AppColor.BLUE_TEXT,
+            function: () {
+              context.read<VhitekBloc>().add(ConfirmStoreEvent(
+                    terminalId: widget.terminal.terminalId,
+                    midCode: widget.midCode,
+                    bankID: widget.dto.bankId,
+                  ));
+            },
+          ),
         ),
       ],
     );

@@ -73,6 +73,7 @@ class _ActiveSuccessState extends State<ActiveSuccess> {
                   bgColor: AppColor.BLUE_TEXT,
                   function: () => widget.edit(4),
                 ),
+                const Padding(padding: EdgeInsets.only(top: 15)),
                 ButtonWidget(
                   text: 'Hoàn tất',
                   textColor: AppColor.BLUE_TEXT,
