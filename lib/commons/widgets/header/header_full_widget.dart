@@ -266,8 +266,12 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
       child: Container(
         width: size,
         height: size,
+        padding: (imgId.trim().isNotEmpty)
+            ? const EdgeInsets.all(0)
+            : const EdgeInsets.all(50),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(size),
+          color: AppColor.WHITE,
           image: DecorationImage(
             fit: BoxFit.cover,
             image: (imgId.trim().isNotEmpty)
