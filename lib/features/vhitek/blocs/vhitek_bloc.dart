@@ -40,8 +40,8 @@ void _confirmStore(VhitekEvent event, Emitter emit) async {
   try {
     if (event is ConfirmStoreEvent) {
       emit(VhitekStateLoadingState());
-      final ResponseMessageDTO result =
-          await _vhitekRepository.confirmStore(event.terminalId, event.midCode);
+      final ResponseMessageDTO result = await _vhitekRepository.confirmStore(
+          event.terminalId, event.midCode, event.bankID);
       emit(ConfirmStoreSuccessState(dto: result));
     }
   } catch (e) {

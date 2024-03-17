@@ -36,15 +36,19 @@ class VhitekRepository {
   }
 
   Future<ResponseMessageDTO> confirmStore(
-      String terminalId, String machineCode) async {
+      String terminalId, String machineCode, String bankID) async {
     ResponseMessageDTO result =
         const ResponseMessageDTO(status: '', message: '');
     try {
-      String url = '${EnvConfig.getBaseUrl()}terminal/qr-box';
+      String url = '${EnvConfig.getBaseUrl()}terminal/qr-sync';
       final response = await BaseAPIClient.postAPI(
         url: url,
         type: AuthenticationType.SYSTEM,
-        body: {'terminalId': terminalId, 'machineCode': machineCode},
+        body: {
+          'terminalId': terminalId,
+          'machineCode': machineCode,
+          'bankID': bankID,
+        },
       );
       var data = jsonDecode(response.body);
       if (data != null) {

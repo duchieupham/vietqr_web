@@ -47,7 +47,7 @@ class TransactionFrame extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const FooterWeb(),
+                  // const FooterWeb(),
                 ],
               )
             : const WebMobileBlankWidget(),

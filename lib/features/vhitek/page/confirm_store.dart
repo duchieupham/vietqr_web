@@ -142,8 +142,10 @@ class _ConfirmStoreState extends State<ConfirmStore> {
           bgColor: AppColor.BLUE_TEXT,
           function: () {
             context.read<VhitekBloc>().add(ConfirmStoreEvent(
-                terminalId: widget.terminal.terminalId,
-                midCode: widget.midCode));
+                  terminalId: widget.terminal.terminalId,
+                  midCode: widget.midCode,
+                  bankID: widget.dto.bankId,
+                ));
           },
         ),
       ],

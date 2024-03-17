@@ -19,14 +19,16 @@ class GetTerminalsEvent extends VhitekEvent {
 class ConfirmStoreEvent extends VhitekEvent {
   final String terminalId;
   final String midCode;
+  final String bankID;
 
   const ConfirmStoreEvent({
     required this.terminalId,
     required this.midCode,
+    required this.bankID,
   });
 
   @override
-  List<Object?> get props => [terminalId, midCode];
+  List<Object?> get props => [terminalId, midCode, bankID];
 }
 
 class CheckUserValidEvent extends VhitekEvent {
