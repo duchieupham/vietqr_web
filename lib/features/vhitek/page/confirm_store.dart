@@ -127,7 +127,7 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                     style: TextStyle(
                       color: AppColor.BLUE_TEXT,
                       decoration: TextDecoration.underline,
-                      fontSize: 10,
+                      fontSize: 15,
                     ),
                   ),
                 )
@@ -139,7 +139,7 @@ class _ConfirmStoreState extends State<ConfirmStore> {
           child: ButtonWidget(
             width: 250,
             text: 'Xác nhận',
-            textColor: AppColor.BLUE_TEXT,
+            textColor: AppColor.WHITE,
             borderRadius: 5,
             bgColor: AppColor.BLUE_TEXT,
             function: () {
