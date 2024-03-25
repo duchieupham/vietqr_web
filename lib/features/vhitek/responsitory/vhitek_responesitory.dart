@@ -47,7 +47,7 @@ class VhitekRepository {
         body: {
           'terminalId': terminalId,
           'machineCode': machineCode,
-          'bankID': bankID,
+          'bankId': bankID,
         },
       );
       var data = jsonDecode(response.body);

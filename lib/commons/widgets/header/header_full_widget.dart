@@ -266,8 +266,12 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
       child: Container(
         width: size,
         height: size,
+        padding: (imgId.trim().isNotEmpty)
+            ? const EdgeInsets.all(0)
+            : const EdgeInsets.all(50),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(size),
+          color: AppColor.WHITE,
           image: DecorationImage(
             fit: BoxFit.cover,
             image: (imgId.trim().isNotEmpty)
@@ -296,7 +300,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             const Text(
               'My VietQR',
               style: TextStyle(
-                  fontWeight: FontWeight.w600,
+                  // fontWeight: FontWeight.w600,
                   color: AppColor.BLACK,
                   fontSize: 12),
             ),

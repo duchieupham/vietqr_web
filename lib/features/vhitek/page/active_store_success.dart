@@ -63,15 +63,19 @@ class _ActiveSuccessState extends State<ActiveStoreSuccess> {
                 ),
               ),
             ),
-            ButtonWidget(
-              text: 'Hoàn tất',
-              textColor: AppColor.BLUE_TEXT,
-              borderRadius: 5,
-              bgColor: AppColor.BLUE_TEXT,
-              function: () {
-                js.context.callMethod('sendDataToFlutter', ['CLOSE_WEB', '*']);
-                context.push('/home');
-              },
+            Center(
+              child: ButtonWidget(
+                width: 250,
+                text: 'Hoàn tất',
+                textColor: AppColor.WHITE,
+                borderRadius: 5,
+                bgColor: AppColor.BLUE_TEXT,
+                function: () {
+                  js.context
+                      .callMethod('sendDataToFlutter', ['CLOSE_WEB', '*']);
+                  context.push('/home');
+                },
+              ),
             ),
           ],
         );

@@ -38,7 +38,7 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                 const Align(
                   alignment: Alignment.center,
                   child: Text(
-                    'Thông tin kich hoạt máy\ncho cửa hàng đã chính xác chứ?',
+                    'Thông tin kích hoạt máy\ncho cửa hàng đã chính xác chứ?',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
@@ -53,19 +53,19 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                            vertical: 10, horizontal: 12),
                         child: Row(
                           children: [
                             const Text(
                               'Mã máy',
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 15),
                             ),
                             Expanded(
                               child: Text(
                                 widget.midCode,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.bold),
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -73,7 +73,7 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                            vertical: 10, horizontal: 12),
                         decoration: const BoxDecoration(
                           border: Border.symmetric(
                             horizontal: BorderSide(color: AppColor.GREY_BORDER),
@@ -83,14 +83,14 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                           children: [
                             const Text(
                               'TK ngân hàng',
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 15),
                             ),
                             Expanded(
                               child: Text(
                                 '${widget.dto.bankAccount} - ${widget.dto.bankShortName}',
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.bold),
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -98,19 +98,19 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                            vertical: 10, horizontal: 12),
                         child: Row(
                           children: [
                             const Text(
                               'Cửa hàng / điểm bán',
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 15),
                             ),
                             Expanded(
                               child: Text(
                                 widget.terminal.terminalCode,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.bold),
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -127,7 +127,7 @@ class _ConfirmStoreState extends State<ConfirmStore> {
                     style: TextStyle(
                       color: AppColor.BLUE_TEXT,
                       decoration: TextDecoration.underline,
-                      fontSize: 10,
+                      fontSize: 15,
                     ),
                   ),
                 )
@@ -135,18 +135,21 @@ class _ConfirmStoreState extends State<ConfirmStore> {
             ),
           ),
         ),
-        ButtonWidget(
-          text: 'Xác nhận',
-          textColor: AppColor.BLUE_TEXT,
-          borderRadius: 5,
-          bgColor: AppColor.BLUE_TEXT,
-          function: () {
-            context.read<VhitekBloc>().add(ConfirmStoreEvent(
-                  terminalId: widget.terminal.terminalId,
-                  midCode: widget.midCode,
-                  bankID: widget.dto.bankId,
-                ));
-          },
+        Center(
+          child: ButtonWidget(
+            width: 250,
+            text: 'Xác nhận',
+            textColor: AppColor.WHITE,
+            borderRadius: 5,
+            bgColor: AppColor.BLUE_TEXT,
+            function: () {
+              context.read<VhitekBloc>().add(ConfirmStoreEvent(
+                    terminalId: widget.terminal.terminalId,
+                    midCode: widget.midCode,
+                    bankID: widget.dto.bankId,
+                  ));
+            },
+          ),
         ),
       ],
     );
