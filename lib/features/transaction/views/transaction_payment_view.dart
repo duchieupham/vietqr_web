@@ -1,9 +1,8 @@
-import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'dart:async';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
-import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
-import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
@@ -12,8 +11,7 @@ import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
-import 'package:VietQR/features/transaction/widgets/dialog_trans_payment_widget.dart';
-import 'package:VietQR/features/transaction/widgets/drop_down_trans_widget.dart';
+import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -23,7 +21,6 @@ import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'dart:html' as html;
 
@@ -37,16 +34,19 @@ class TransactionPaymentView extends StatefulWidget {
 class _StoreScreenState extends State<TransactionPaymentView> {
   late TransactionBloc bloc;
 
+  final _streamController = StreamController<bool>.broadcast();
+  late Stream<bool> filterStream;
+
   double get width => MediaQuery.of(context).size.width;
 
   bool get isMobile => (PlatformUtils.instance.resizeWhen(width, 650));
 
-  final searchController = TextEditingController();
+  final _controller = TextEditingController();
 
   /// 3,4,9 value = "" => get all trans
-  int typeFilter = 9;
-  int statusFilter = 0;
-  int typeTime = 1;
+  int _typeFilter = 9;
+  int _typeStatus = 0;
+  int _typeTime = 1;
   String _value = '';
   String _bankId = '';
   bool _isOwner = false;
@@ -60,56 +60,34 @@ class _StoreScreenState extends State<TransactionPaymentView> {
 
   DateFormat get _dateFormatShow => DateFormat('dd-MM-yyyy HH:mm:ss');
 
-  DateTime get now => DateTime.now();
+  DateTime get now =>
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-  DateTime _formatFromDate(DateTime now) {
-    DateTime fromDate = DateTime(now.year, now.month, now.day);
-    return fromDate;
+  DateTime get _formatFromDate => now.subtract(const Duration(days: 7));
+
+  DateTime get _formatEndDate => _formatFromDate
+      .add(const Duration(days: 8))
+      .subtract(const Duration(seconds: 1));
+
+  String get timeValue {
+    if (_typeTime == 1) return 'Hôm nay (mặc định)';
+    if (_typeTime == 2) return '7 ngày gần nhất';
+    if (_typeTime == 3) return '1 tháng gần đây';
+    if (_typeTime == 4) return '3 tháng gần đây';
+    return 'Từ ${_dateFormatShow.format(_fromDate)} - đến ${_dateFormatShow.format(_toDate)}';
   }
 
-  DateTime _endDate(DateTime now) {
-    DateTime fromDate = _formatFromDate(now);
-    return fromDate
-        .add(const Duration(days: 1))
-        .subtract(const Duration(seconds: 1));
-  }
-
-  void _onCallAPi(TransactionInputDTO dto,
-      {bool getAll = false, String timeKey = ''}) {
+  void _onCallAPi(TransactionInputDTO dto, {String timeKey = ''}) {
     if (_isOwner) {
-      bloc.add(GetTransOwnerEvent(dto: dto, getAll: getAll, timeKey: timeKey));
+      bloc.add(GetTransOwnerEvent(dto: dto, timeKey: timeKey));
     } else {
-      bloc.add(
-          GetTransNotOwnerEvent(dto: dto, getAll: getAll, timeKey: timeKey));
+      bloc.add(GetTransNotOwnerEvent(dto: dto, timeKey: timeKey));
     }
   }
 
-  void _onChooseBank(List<BankAccountDTO> list) async {
-    final data = await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DialogChooseBankWidget(banks: list);
-      },
-    );
-
-    if (data != null && data is BankAccountDTO) {
-      _onClearFilter();
-      bloc.add(UpdateBankAccountEvent(data));
-      html.window.history.pushState(
-          null,
-          '/transactions?type=0?bankId=$_bankId',
-          '/transactions?type=0?bankId=${data.bankId}');
-      setState(() {
-        _bankId = data.bankId;
-      });
-      loadAll();
-    }
-  }
-
-  void loadMore(int offset, bool getAll) {
-    if (typeFilter == 5) {
-      _value = '$statusFilter';
+  void loadMore(int offset, bool loadMore) {
+    if (_typeFilter == 5) {
+      _value = '$_typeStatus';
     }
     TransactionInputDTO dto = TransactionInputDTO(
       bankId: _bankId,
@@ -117,35 +95,28 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
       value: _value,
-      type: typeFilter,
-      status: statusFilter,
+      type: _typeFilter,
+      status: _typeStatus,
     );
 
     if (_isOwner) {
-      bloc.add(GetTransOwnerEvent(
-          dto: dto,
-          isLoadMore: true,
-          getAll: getAll,
-          timeKey: typeTime.timeKeyExt.name));
+      bloc.add(FetchTransOwnerEvent(dto: dto, loadMore: loadMore));
     } else {
-      bloc.add(GetTransNotOwnerEvent(
-          dto: dto,
-          isLoadMore: true,
-          getAll: getAll,
-          timeKey: typeTime.timeKeyExt.name));
+      bloc.add(FetchTransNotOwnerEvent(dto: dto, loadMore: loadMore));
     }
   }
 
-  void _onSearch() {
-    if (typeFilter == 9 && _value.isEmpty) return;
+  void _onSearch(int time) {
+    _typeTime = time;
+    updateState();
 
-    int type = typeFilter;
-    if (typeFilter == 5) {
-      _value = '$statusFilter';
-      searchController.clear();
+    int type = _typeFilter;
+    if (type == 5) {
+      _value = '$_typeStatus';
+      _controller.clear();
     }
-    if (typeFilter == 9 && _value.isNotEmpty) {
-      type = 4;
+    if (_typeFilter == 9 && _value.isNotEmpty) {
+      type = 1;
     }
 
     TransactionInputDTO dto = TransactionInputDTO(
@@ -155,136 +126,58 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       to: _dateFormat.format(_toDate),
       value: _value,
       type: type,
-      status: statusFilter,
+      status: _typeStatus,
     );
 
-    _onCallAPi(dto);
-  }
-
-  ///
-  void _onFilter() async {
-    await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DialogTransPaymentWidget(
-          typeFilter: typeFilter,
-          typeTime: typeTime,
-          fromDate: _fromDate,
-          toDate: _toDate,
-          callBack: _onReceive,
-        );
-      },
-    );
-  }
-
-  _onReceive(int type, int time, DateTime fromDate, DateTime toDate) {
-    /// 1: Thời gian hôm nay( mặc định)
-    if (time == 1 ||
-        (typeTime == time) ||
-        listTimeKey.contains('${time.timeKeyExt.name}_0')) {
-      typeFilter = type;
-      typeTime = time;
-      _fromDate = fromDate;
-      _toDate = toDate;
-      updateState();
-      bloc.add(UpdateCacheDataEvent(timeKey: typeTime.timeKeyExt.name));
+    if (_typeFilter == 9 && _value.isEmpty) {
+      _onCallAPi(dto, timeKey: _typeTime.timeKeyExt.name);
       return;
     }
-    typeFilter = type;
-    typeTime = time;
-    _fromDate = fromDate;
-    _toDate = toDate;
+    if (_isOwner) {
+      bloc.add(
+          FetchTransOwnerEvent(dto: dto, loadMore: true, clickSearch: true));
+    } else {
+      bloc.add(
+          FetchTransNotOwnerEvent(dto: dto, loadMore: true, clickSearch: true));
+    }
+  }
+
+  _onReceive(int? type, int? time, int? status, String? search,
+      DateTime? fromDate, DateTime? toDate, bool clearData) {
+    _typeFilter = type ?? _typeFilter;
+    _typeTime = time ?? _typeTime;
+    _typeStatus = status ?? _typeStatus;
+    _value = search ?? _value;
+    _fromDate = fromDate ?? _fromDate;
+    _toDate = toDate ?? _toDate;
     updateState();
 
-    final dto = TransactionInputDTO(
-        bankId: _bankId,
-        from: _dateFormat.format(_fromDate),
-        to: _dateFormat.format(_toDate));
-
-    _onCallAPi(dto, getAll: true, timeKey: typeTime.timeKeyExt.name);
-  }
-
-  ///
-  void _onChooseTerminal(
-      List<TerminalQRDTO> list, int offset, TransReceiveDTO transDTO) async {
-    await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DialogChooseTerminalWidget(
-          terminals: list,
-          transDTO: transDTO,
-          update: (value) {
-            if (value.isEmpty) return;
-            bloc.add(UpdateTerminalEvent(
-                transactionId: transDTO.transactionId,
-                terminalCode: value,
-                offset: offset,
-                timeKey: typeTime.timeKeyExt.name));
-          },
-        );
-      },
-    );
-  }
-
-  ///
-  void _onChooseNote(int offset, TransReceiveDTO dto) async {
-    await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DialogUpdateNoteWidget(
-          dto: dto,
-          update: (value) {
-            bloc.add(UpdateNoteEvent(
-                dto: value, offset: offset, timeKey: typeTime.timeKeyExt.name));
-          },
-        );
-      },
-    );
-  }
-
-  void _onClearFilter() {
-    setState(() {
-      _value = '';
-      searchController.clear();
-      typeFilter = 9;
-      statusFilter = 0;
-      typeTime = 1;
-      _fromDate = _formatFromDate(DateTime.now());
-      _toDate = _endDate(DateTime.now());
-    });
-    bloc.add(UpdateCacheDataEvent(timeKey: typeTime.timeKeyExt.name));
-  }
-
-  void _onClear() {
-    setState(() {
-      _value = '';
-      searchController.clear();
-    });
-    bloc.add(UpdateCacheDataEvent(timeKey: typeTime.timeKeyExt.name));
+    if (clearData) {
+      bloc.add(UpdateCacheDataEvent(
+          timeKey: _typeTime.timeKeyExt.name, clearData: clearData));
+    }
   }
 
   void loadAll() {
+    _fromDate = _formatFromDate;
+    _toDate = _formatEndDate;
+    updateState();
+
     TransactionInputDTO dto = TransactionInputDTO(
       bankId: _bankId,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
     );
 
-    dto.from = _dateFormat.format(_formatFromDate(DateTime.now()));
-    dto.to = _dateFormat.format(_endDate(DateTime.now()));
-    // dto.from = '2024-03-11 00:00:00';
-    // dto.to = '2024-03-11 23:59:59';
-
-    _onCallAPi(dto, getAll: true, timeKey: TransType.DAY.name);
+    _onCallAPi(dto, timeKey: _typeTime.timeKeyExt.name);
   }
 
   @override
   void initState() {
     super.initState();
     bloc = TransactionBloc();
+    filterStream = _streamController.stream;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       bloc.add(GetListBankEvent());
     });
@@ -341,8 +234,12 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                   }
 
                   if (state.request == TransType.GET_TRANS_TRUE) {
-                    listTimeKey = [...state.listTimeKey];
+                    listTimeKey = [...state.keys];
                     updateState();
+                  }
+
+                  if (state.request == TransType.UPDATE_OFFSET) {
+                    loadMore(state.offset, state.isLoadMore);
                   }
                 },
                 builder: (context, state) {
@@ -353,19 +250,22 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildFilterWidget(),
+                        FilterWidget(
+                          stream: filterStream,
+                          callBack: _onReceive,
+                          onSearch: _onSearch,
+                        ),
                         const SizedBox(height: 24),
                         TableTransPaymentWidget(
-                          list: state.getAll
-                              ? state.tranMapsDefault[
-                                      '${typeTime.timeKeyExt.name}_${state.offset}'] ??
-                                  []
-                              : state.tranMaps['${state.offset}'] ?? [],
+                          list: state.isCache
+                              ? state.mapLocals[_typeTime.timeKeyExt.name] ?? []
+                              : state.maps['${state.offset}'] ?? [],
                           offset: state.offset,
                           isOwner: state.bankDTO?.isOwner ?? false,
                           onChooseTerminal: (transDTO) => _onChooseTerminal(
                               state.listTerminals, state.offset, transDTO),
                           onEditNote: (dto) => _onChooseNote(state.offset, dto),
+                          isLoading: state.status == BlocStatus.LOADING,
                         ),
                         Container(
                           padding: const EdgeInsets.only(top: 16),
@@ -376,11 +276,10 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                               const SizedBox(width: 8),
                               GestureDetector(
                                 onTap: () {
-                                  // int offset = state.offset;
-                                  // if (offset <= 0) return;
-                                  // offset = offset - 1;
-                                  // loadMore(offset, state.getAll);
-                                  context.go('/service/may-ban-hang/active');
+                                  int offset = state.offset;
+                                  if (offset <= 0) return;
+                                  offset = offset - 1;
+                                  bloc.add(UpdateOffsetEvent(offset));
                                 },
                                 child: Container(
                                   width: 25,
@@ -408,7 +307,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                   if (!state.isLoadMore) return;
                                   int offset = state.offset;
                                   offset = offset + 1;
-                                  loadMore(offset, state.getAll);
+                                  bloc.add(UpdateOffsetEvent(offset));
                                 },
                                 child: Container(
                                   width: 25,
@@ -430,19 +329,6 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Visibility(
-                                  visible: state.status == BlocStatus.LOADING,
-                                  child: const Center(
-                                    child: SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 100),
                             ],
                           ),
                         ),
@@ -455,216 +341,82 @@ class _StoreScreenState extends State<TransactionPaymentView> {
     );
   }
 
-  String get timeValue {
-    if (typeTime == 1) return 'Hôm nay (mặc định)';
-    if (typeTime == 2) return '7 ngày gần nhất';
-    if (typeTime == 3) return '1 tháng gần đây';
-    if (typeTime == 4) return '3 tháng gần đây';
-    return 'Từ ${_dateFormatShow.format(_fromDate)} - đến ${_dateFormatShow.format(_toDate)}';
-  }
-
-  String get hinText {
-    if (typeFilter == 1) return 'Tìm kiếm theo mã giao dịch';
-    if (typeFilter == 2) return 'Tìm kiếm theo mã đơn hàng';
-    if (typeFilter == 3) return 'Tìm kiếm theo nội dung';
-    return 'Tìm kiếm theo mã điểm bán';
-  }
-
-  Widget _buildFilterWith(String title) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      margin: const EdgeInsets.only(right: 8, bottom: 4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: AppColor.BLUE_TEXT.withOpacity(0.3),
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 10, color: AppColor.BLUE_TEXT),
-      ),
-    );
-  }
-
-  Widget _buildFilterWidget() {
-    return Row(
-      children: [
-        const Text(
-          'Danh sách giao dịch\nthanh toán',
-          style: TextStyle(
-              color: AppColor.BLACK, fontWeight: FontWeight.bold, fontSize: 11),
-        ),
-        ...[
-          const SizedBox(width: 24),
-          if (typeFilter != 5)
-            Container(
-              width: 200,
-              height: 34,
-              decoration: BoxDecoration(
-                color: AppColor.GREY_BG,
-                border: Border.all(color: AppColor.GREY_LIGHT),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: TextField(
-                style: const TextStyle(fontSize: 12),
-                controller: searchController,
-                onChanged: (value) {
-                  setState(() {
-                    _value = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding:
-                      const EdgeInsets.only(bottom: 16, left: 12, right: 12),
-                  hintText: hinText,
-                  hintStyle:
-                      const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-                  suffixIcon: searchController.text.isNotEmpty
-                      ? GestureDetector(
-                          onTap: _onClear,
-                          child: const Padding(
-                            padding: EdgeInsets.only(right: 8.0),
-                            child: Icon(Icons.close, size: 18),
-                          ),
-                        )
-                      : null,
-                  suffixIconConstraints: const BoxConstraints(),
-                ),
-              ),
-            )
-          else
-            _buildFilterByStatusWidget()
-        ],
-        const SizedBox(width: 12),
-        GestureDetector(
-          onTap: _onFilter,
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              color: AppColor.BLUE_TEXT.withOpacity(0.25),
-            ),
-            child: Image(
-              image:
-                  ImageUtils.instance.getImageNetWork(AppImages.icFilterTrans),
-              width: 28,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        GestureDetector(
-          onTap: _onSearch,
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(32),
-              color: AppColor.BLUE_TEXT,
-            ),
-            child: Image(
-              image:
-                  ImageUtils.instance.getImageNetWork(AppImages.icSearchTrans),
-              width: 28,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Tìm kiếm theo:',
-                style: TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Wrap(
-                    children: [
-                      if (typeFilter == 9)
-                        _buildFilterWith('Tất cả (mặc định)'),
-                      _buildFilterWith('Thời gian: $timeValue'),
-                      if (typeFilter == 1)
-                        _buildFilterWith(
-                            'Mã giao dịch: ${searchController.text}'),
-                      if (typeFilter == 3)
-                        _buildFilterWith('Nội dung: ${searchController.text}'),
-                      if (typeFilter == 5)
-                        _buildFilterWith('Trạng thái: ${_filterByStatus.name}'),
-                      if (typeFilter == 2)
-                        _buildFilterWith(
-                            'Mã đơn hàng: ${searchController.text}'),
-                      if (typeFilter == 4)
-                        _buildFilterWith(
-                            'Mã điểm bán: ${searchController.text}'),
-                    ],
-                  ),
-                  if (typeFilter != 9 || typeTime != 1)
-                    GestureDetector(
-                      onTap: _onClearFilter,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 4),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.remove_circle_outline,
-                                color: AppColor.BLUE_TEXT, size: 18),
-                            SizedBox(width: 4),
-                            Text('Xoá bộ lọc',
-                                style: TextStyle(
-                                    fontSize: 10, color: AppColor.BLUE_TEXT)),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        ButtonWidget(
-          text: 'Xuất Excel',
-          width: 120,
-          border: Border.all(color: AppColor.GREEN),
-          textColor: AppColor.GREEN,
-          bgColor: AppColor.TRANSPARENT,
-          function: () {
-            Navigator.pop(context);
+  ///
+  void _onChooseTerminal(
+      List<TerminalQRDTO> list, int offset, TransReceiveDTO transDTO) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogChooseTerminalWidget(
+          terminals: list,
+          transDTO: transDTO,
+          update: (value) {
+            if (value.isEmpty) return;
+            bloc.add(
+              UpdateTerminalEvent(
+                  transactionId: transDTO.transactionId,
+                  terminalCode: value,
+                  offset: offset,
+                  timeKey: _typeTime.timeKeyExt.name),
+            );
           },
-          borderRadius: 5,
-          height: 30,
-        ),
-      ],
+        );
+      },
     );
   }
 
-  DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
+  void _onChooseBank(List<BankAccountDTO> list) async {
+    final data = await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogChooseBankWidget(banks: list);
+      },
+    );
 
-  List<DataFilter> listFilterByStatus = [
-    const DataFilter(id: 0, name: 'Chờ thanh toán'),
-    const DataFilter(id: 1, name: 'Thành công'),
-    const DataFilter(id: 2, name: 'Đã huỷ'),
-  ];
+    if (data != null && data is BankAccountDTO) {
+      _streamController.add(true);
+      bloc.add(UpdateBankAccountEvent(data));
+      html.window.history.pushState(
+          null,
+          '/transactions?type=0?bankId=$_bankId',
+          '/transactions?type=0?bankId=${data.bankId}');
+      _bankId = data.bankId;
+      loadAll();
+    }
+  }
 
-  Widget _buildFilterByStatusWidget() {
-    return SizedBox(
-      width: 200,
-      child: DropdownTransWidget(
-        list: listFilterByStatus,
-        filter: _filterByStatus,
-        callBack: (value) {
-          if (value == null) return;
-          _filterByStatus = value;
-          statusFilter = value.id;
-          setState(() {});
-        },
-      ),
+  ///
+  void _onChooseNote(int offset, TransReceiveDTO dto) async {
+    await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogUpdateNoteWidget(
+          dto: dto,
+          update: (value) {
+            bloc.add(
+              UpdateNoteEvent(
+                  dto: value,
+                  offset: offset,
+                  timeKey: _typeTime.timeKeyExt.name),
+            );
+          },
+        );
+      },
     );
   }
 
   void updateState() {
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    if (_streamController.hasListener) {
+      _streamController.close();
+    }
+    super.dispose();
   }
 }

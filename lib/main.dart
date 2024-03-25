@@ -33,6 +33,7 @@ import 'package:VietQR/features/login/views/introduce.dart';
 import 'package:VietQR/features/login/views/login.dart';
 import 'package:VietQR/features/login/views/news.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
+import 'package:VietQR/features/member_manage/member_manage_screen.dart';
 import 'package:VietQR/features/merchant/views/merchant_bill.dart';
 import 'package:VietQR/features/merchant/views/merchant_fee.dart';
 import 'package:VietQR/features/merchant/views/merchant_report.dart';
@@ -410,39 +411,34 @@ final GoRouter _router = GoRouter(
     //         child: const EnterpriseScreen(),
     //       );
     //     }),
+    GoRoute(
+      path: '/member',
+      redirect: (context, state) => (userId.isNotEmpty) ? '/member' : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const MemberManageScreen(),
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return buildPageWithoutAnimation(
+          context: context,
+          state: state,
+          child: const MemberManageScreen(),
+        );
+      },
+    ),
 
     /// Giao dịch
     GoRoute(
         path: '/transactions',
         redirect: (context, state) {
-          Map<String, String> params = state.queryParams;
-          final extra = state.extra;
-          if (extra != null && extra is Map<String, String>) {
-            params = extra;
-          }
-
-          return (userId.isNotEmpty)
-              ? '/transactions?type=${params['type']}'
-              : '/login';
+          return (userId.isNotEmpty) ? '/transactions' : '/login';
         },
         builder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
-          final extra = state.extra;
-          if (extra != null && extra is Map<String, String>) {
-            params = extra;
-          }
-          return TransactionScreen(type: params['type'] ?? '');
+          return const TransactionScreen();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
-          final extra = state.extra;
-          if (extra != null && extra is Map<String, String>) {
-            params = extra;
-          }
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: TransactionScreen(type: params['type'] ?? ''),
+            child: const TransactionScreen(),
           );
         }),
 

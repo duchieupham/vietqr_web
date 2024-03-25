@@ -1,4 +1,3 @@
-import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
@@ -13,36 +12,52 @@ class TransactionEvent extends Equatable {
 
 class GetTransOwnerEvent extends TransactionEvent {
   final TransactionInputDTO dto;
-  final bool isLoadMore;
-  final bool getAll;
   final String timeKey;
 
-  const GetTransOwnerEvent({
+  const GetTransOwnerEvent({required this.dto, this.timeKey = ''});
+
+  @override
+  List<Object?> get props => [dto, timeKey];
+}
+
+class FetchTransOwnerEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final bool loadMore;
+  final bool clickSearch;
+
+  const FetchTransOwnerEvent({
     required this.dto,
-    this.isLoadMore = false,
-    this.getAll = false,
-    this.timeKey = '',
+    this.loadMore = true,
+    this.clickSearch = false,
   });
 
   @override
-  List<Object?> get props => [dto, isLoadMore, getAll, timeKey];
+  List<Object?> get props => [dto, loadMore, clickSearch];
+}
+
+class FetchTransNotOwnerEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final bool loadMore;
+  final bool clickSearch;
+
+  const FetchTransNotOwnerEvent({
+    required this.dto,
+    this.loadMore = true,
+    this.clickSearch = false,
+  });
+
+  @override
+  List<Object?> get props => [dto, loadMore, clickSearch];
 }
 
 class GetTransNotOwnerEvent extends TransactionEvent {
   final TransactionInputDTO dto;
-  final bool isLoadMore;
-  final bool getAll;
   final String timeKey;
 
-  const GetTransNotOwnerEvent({
-    required this.dto,
-    this.isLoadMore = false,
-    this.getAll = false,
-    this.timeKey = '',
-  });
+  const GetTransNotOwnerEvent({required this.dto, this.timeKey = ''});
 
   @override
-  List<Object?> get props => [dto, isLoadMore, getAll, timeKey];
+  List<Object?> get props => [dto, timeKey];
 }
 
 class GetTransUnsettledNotOwnerEvent extends TransactionEvent {
@@ -60,19 +75,27 @@ class GetTransUnsettledNotOwnerEvent extends TransactionEvent {
 
 class GetTransUnsettledEvent extends TransactionEvent {
   final TransactionInputDTO dto;
-  final bool isLoadMore;
-  final bool getAll;
   final String timeKey;
 
-  const GetTransUnsettledEvent({
+  const GetTransUnsettledEvent({required this.dto, this.timeKey = ''});
+
+  @override
+  List<Object?> get props => [dto, timeKey];
+}
+
+class FetchTransUnsettledEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final bool loadMore;
+  final bool clickSearch;
+
+  const FetchTransUnsettledEvent({
     required this.dto,
-    this.isLoadMore = false,
-    this.getAll = false,
-    this.timeKey = '',
+    this.loadMore = true,
+    this.clickSearch = false,
   });
 
   @override
-  List<Object?> get props => [dto, isLoadMore, getAll, timeKey];
+  List<Object?> get props => [dto, loadMore, clickSearch];
 }
 
 class GetListBankEvent extends TransactionEvent {}
@@ -128,13 +151,16 @@ class UpdateNoteEvent extends TransactionEvent {
 }
 
 class UpdateCacheDataEvent extends TransactionEvent {
-  final bool getAll;
   final String timeKey;
+  final bool clearData;
 
-  const UpdateCacheDataEvent({this.getAll = true, this.timeKey = ''});
+  const UpdateCacheDataEvent({
+    this.timeKey = '',
+    this.clearData = false,
+  });
 
   @override
-  List<Object?> get props => [getAll, timeKey];
+  List<Object?> get props => [timeKey, clearData];
 }
 
 class UpdateOffsetEvent extends TransactionEvent {

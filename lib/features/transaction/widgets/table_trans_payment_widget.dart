@@ -11,6 +11,7 @@ class TableTransPaymentWidget extends StatefulWidget {
   final Function(TransReceiveDTO) onChooseTerminal;
   final Function(TransReceiveDTO) onEditNote;
   final bool isOwner;
+  final bool isLoading;
 
   const TableTransPaymentWidget({
     super.key,
@@ -19,6 +20,7 @@ class TableTransPaymentWidget extends StatefulWidget {
     required this.onChooseTerminal,
     required this.onEditNote,
     this.isOwner = false,
+    this.isLoading = false,
   });
 
   @override
@@ -47,8 +49,9 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
+      width: width,
       child: Stack(
         children: [
           SizedBox(
@@ -58,149 +61,190 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 controller: _horizontal,
-                child: DataTable(
-                  headingRowHeight: 40,
-                  dataRowHeight: 40,
-                  horizontalMargin: 10,
-                  columnSpacing: 16,
-                  headingRowColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                    return AppColor.BLUE_TEXT.withOpacity(0.25);
-                  }),
-                  border: TableBorder.all(
-                    width: 0.5,
-                    color: AppColor.GREY_TEXT.withOpacity(0.6),
-                  ),
-                  columns: List.generate(list.length, (index) {
-                    TransData e = list[index];
-                    return DataColumn(
-                      label: _buildTitle(
-                        title: e.title,
-                        width: e.width,
-                        padding: e.padding,
+                child: Column(
+                  children: [
+                    DataTable(
+                      headingRowHeight: 40,
+                      dataRowHeight: 40,
+                      horizontalMargin: 10,
+                      columnSpacing: 16,
+                      headingRowColor:
+                          MaterialStateProperty.resolveWith<Color?>(
+                              (Set<MaterialState> states) {
+                        return AppColor.BLUE_TEXT.withOpacity(0.25);
+                      }),
+                      border: TableBorder.all(
+                        width: 0.5,
+                        color: AppColor.GREY_TEXT.withOpacity(0.6),
                       ),
-                    );
-                  }),
-                  rows: List.generate(
-                    widget.list.length,
-                    (index) {
-                      TransReceiveDTO model = widget.list[index];
-                      return DataRow(
-                        color: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                          return Colors.transparent;
-                        }),
-                        cells: [
-                          /// STT
-                          DataCell(
-                            _buildContent(
-                              title: '${(widget.offset * 20) + index + 1}',
-                              textAlign: TextAlign.center,
-                            ),
+                      columns: List.generate(list.length, (index) {
+                        TransData e = list[index];
+                        return DataColumn(
+                          label: _buildTitle(
+                            title: e.title,
+                            width: e.width,
+                            padding: e.padding,
                           ),
+                        );
+                      }),
+                      rows: List.generate(
+                        widget.list.length,
+                        (index) {
+                          TransReceiveDTO model = widget.list[index];
+                          return DataRow(
+                            color: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                              return Colors.transparent;
+                            }),
+                            cells: [
+                              /// STT
+                              DataCell(
+                                _buildContent(
+                                  title: '${(widget.offset * 20) + index + 1}',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
 
-                          /// Thời gian tạo
-                          DataCell(_buildContent(
-                            title: model.timePayment,
-                            textAlign: TextAlign.right,
-                          )),
-
-                          /// Số tiền
-                          DataCell(
-                            _buildContent(
-                                title:
-                                    '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
+                              /// Thời gian tạo
+                              DataCell(_buildContent(
+                                title: model.timePayment,
                                 textAlign: TextAlign.right,
-                                textColor: model.getColorStatus,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold),
-                          ),
+                              )),
 
-                          /// Mã giao dịch
-                          DataCell(
-                            _buildContent(
-                              title: model.referenceNumber,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
+                              /// Số tiền
+                              DataCell(
+                                _buildContent(
+                                    title:
+                                        '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
+                                    textAlign: TextAlign.right,
+                                    textColor: model.getColorStatus,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold),
+                              ),
 
-                          /// Mã đơn hàng
-                          DataCell(
-                            _buildContent(
-                              title: model.orderId,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-
-                          /// Mã điểm bán
-                          DataCell(_buildContent(
-                            title: model.terminalCode,
-                            textAlign: TextAlign.left,
-                          )),
-
-                          /// Loại GD
-                          DataCell(
-                            _buildContent(
-                              title: model.transactionType,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-
-                          /// Thời gian tạo
-                          DataCell(
-                            _buildContent(
-                              title: model.timeCreate,
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-
-                          /// Tài khoản nhận
-                          DataCell(
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  model.bankAccount,
+                              /// Mã giao dịch
+                              DataCell(
+                                _buildContent(
+                                  title: model.referenceNumber,
                                   textAlign: TextAlign.left,
-                                  style: const TextStyle(fontSize: 12),
                                 ),
-                                const Text(
-                                  'MBBank',
+                              ),
+
+                              /// Mã đơn hàng
+                              DataCell(
+                                _buildContent(
+                                  title: model.orderId,
                                   textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 12),
                                 ),
-                              ],
+                              ),
+
+                              /// Mã điểm bán
+                              DataCell(_buildContent(
+                                title: model.terminalCode,
+                                textAlign: TextAlign.left,
+                              )),
+
+                              /// Loại GD
+                              DataCell(
+                                _buildContent(
+                                  title: model.transactionType,
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+
+                              /// Thời gian tạo
+                              DataCell(
+                                _buildContent(
+                                  title: model.timeCreate,
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+
+                              /// Tài khoản nhận
+                              DataCell(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      model.bankAccount,
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    const Text(
+                                      'MBBank',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              /// Nội dung
+                              DataCell(
+                                SizedBox(
+                                    width: 200,
+                                    child: _buildContent(title: model.content)),
+                              ),
+
+                              ///Ghi chú
+                              DataCell(
+                                SizedBox(
+                                    width: 200,
+                                    child: _buildContent(title: model.note)),
+                              ),
+
+                              /// Tài khoản nhận
+                              const DataCell(
+                                SizedBox(width: 80),
+                              ),
+
+                              /// Tài khoản nhận
+                              const DataCell(
+                                SizedBox(width: 80),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    if (widget.list.isEmpty)
+                      Container(
+                        height: 100,
+                        width: 1531,
+                        color: AppColor.BLUE_TEXT.withOpacity(0.1),
+                        child: Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              width: width - 220,
+                              child: (widget.isLoading)
+                                  ? const Center(
+                                      child: SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        Image(
+                                          image: ImageUtils.instance
+                                              .getImageNetWork(
+                                                  AppImages.icEmptyTrans),
+                                          width: 60,
+                                        ),
+                                        const Text('Trống',
+                                            style: TextStyle(
+                                                color: AppColor.GREY_TEXT)),
+                                      ],
+                                    ),
                             ),
-                          ),
-
-                          /// Nội dung
-                          DataCell(
-                            SizedBox(
-                                width: 200,
-                                child: _buildContent(title: model.content)),
-                          ),
-
-                          ///Ghi chú
-                          DataCell(
-                            SizedBox(
-                                width: 200,
-                                child: _buildContent(title: model.note)),
-                          ),
-
-                          /// Tài khoản nhận
-                          const DataCell(
-                            SizedBox(width: 80),
-                          ),
-
-                          /// Tài khoản nhận
-                          const DataCell(
-                            SizedBox(width: 80),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                            const Expanded(child: SizedBox()),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),

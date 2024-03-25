@@ -103,6 +103,7 @@ class AppImages {
   static String icEditTrans = 'ef5c8434-343f-4da5-80cf-409e1cdc3ffa';
   static String icRefundTrans = '20b5f79a-63c5-441c-9dd6-a557f05e9390';
   static String icNoteTrans = '68a11915-aa24-415d-9f2a-43d097dd9f10';
+  static String icEmptyTrans = '2cc506cb-df85-429c-87dc-4d08d2bd5ff9';
 
   /// popup GD
   static String icStoreBlack = '8fd18baf-84e1-4976-ac91-6ea95ddeec0c';

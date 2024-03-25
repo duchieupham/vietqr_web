@@ -16,22 +16,26 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             listBanks: [],
             listTrans: [],
             listTerminals: [],
-            listTimeKey: [],
-            tranMaps: {},
-            tranMapsDefault: {})) {
+            keys: [],
+            maps: {},
+            mapLocals: {})) {
     on<GetTransOwnerEvent>(_getTransactions);
+    on<FetchTransOwnerEvent>(_fetchTransaction);
     on<GetTransNotOwnerEvent>(_getTransactionsNotOwner);
+    on<FetchTransNotOwnerEvent>(_fetchTransactionNotOwner);
+    on<GetTransUnsettledEvent>(_getTransactionsUnsettled);
+    on<FetchTransUnsettledEvent>(_fetchTransactionUnsettled);
     on<GetListBankEvent>(_getBankAccounts);
     on<GetTerminalsEvent>(_getTerminals);
     on<UpdateBankAccountEvent>(_updateBankAccount);
-    on<GetTransUnsettledEvent>(_getTransactionsUnsettled);
     on<UpdateTerminalEvent>(_updateTerminal);
     on<UpdateNoteEvent>(_updateNote);
-    on<UpdateCacheDataEvent>(_updateGetAll);
+    on<UpdateCacheDataEvent>(_updateCache);
     on<UpdateOffsetEvent>(_updateOffset);
   }
 
   final repository = TransactionRepository();
+  final int _limit = 20;
 
   void _getBankAccounts(TransactionEvent event, Emitter emit) async {
     try {
@@ -99,10 +103,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           Map<String, List<TransReceiveDTO>> map = {};
           String key = '${event.timeKey}_${event.offset}';
 
-          if (state.getAll) {
-            map.addAll(state.tranMapsDefault);
+          if (state.isCache) {
+            map.addAll(state.mapLocals);
           } else {
-            map.addAll(state.tranMaps);
+            map.addAll(state.maps);
             key = '${event.offset}';
           }
 
@@ -116,18 +120,18 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             map[key] = list;
           }
 
-          if (state.getAll) {
+          if (state.isCache) {
             emit(state.copyWith(
               request: TransType.UPDATE_TERMINAL,
               status: BlocStatus.UNLOADING,
-              tranMapsDefault: map,
+              mapLocals: map,
               listTrans: list,
             ));
           } else {
             emit(state.copyWith(
               request: TransType.UPDATE_TERMINAL,
               status: BlocStatus.UNLOADING,
-              tranMaps: map,
+              maps: map,
               listTrans: list,
             ));
           }
@@ -161,10 +165,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           Map<String, List<TransReceiveDTO>> map = {};
           String key = '${event.timeKey}_${event.offset}';
 
-          if (state.getAll) {
-            map.addAll(state.tranMapsDefault);
+          if (state.isCache) {
+            map.addAll(state.mapLocals);
           } else {
-            map.addAll(state.tranMaps);
+            map.addAll(state.maps);
             key = '${event.offset}';
           }
 
@@ -178,18 +182,18 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             map[key] = list;
           }
 
-          if (state.getAll) {
+          if (state.isCache) {
             emit(state.copyWith(
               request: TransType.UPDATE_NOTE,
               status: BlocStatus.UNLOADING,
-              tranMapsDefault: map,
+              mapLocals: map,
               listTrans: list,
             ));
           } else {
             emit(state.copyWith(
               request: TransType.UPDATE_NOTE,
               status: BlocStatus.UNLOADING,
-              tranMaps: map,
+              maps: map,
               listTrans: list,
             ));
           }
@@ -208,21 +212,21 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     }
   }
 
-  void _updateGetAll(TransactionEvent event, Emitter emit) async {
+  void _updateCache(TransactionEvent event, Emitter emit) async {
     try {
       if (event is UpdateCacheDataEvent) {
         emit(state.copyWith(
             status: BlocStatus.LOADING, request: TransType.NONE));
 
-        List<TransReceiveDTO> list =
-            state.tranMapsDefault['${event.timeKey}_0'] ?? [];
+        List<TransReceiveDTO> list = state.mapLocals[event.timeKey] ?? [];
 
         emit(
           state.copyWith(
             request: TransType.UPDATE_CACHE,
             status: BlocStatus.UNLOADING,
-            getAll: event.getAll,
+            isCache: true,
             isLoadMore: list.length >= 20,
+            maps: event.clearData ? {} : state.maps,
             offset: 0,
           ),
         );
@@ -242,9 +246,11 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         emit(
           state.copyWith(
-              request: TransType.UPDATE_OFFSET,
-              status: BlocStatus.NONE,
-              offset: event.offset),
+            request: TransType.UPDATE_OFFSET,
+            status: BlocStatus.NONE,
+            offset: event.offset,
+            isCache: false,
+          ),
         );
       }
     } catch (e) {
@@ -259,74 +265,59 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     try {
       if (event is GetTransNotOwnerEvent) {
         emit(state.copyWith(
-            status: BlocStatus.LOADING, request: TransType.NONE));
-
+            status: BlocStatus.LOADING,
+            request: TransType.NONE,
+            isCache: true));
         bool isLoadMore = true;
         int offset = event.dto.offset;
 
         List<TransReceiveDTO> trans = [...state.listTrans];
-        Map<String, List<TransReceiveDTO>> maps = {};
-        Map<String, List<TransReceiveDTO>> mapsDefault = {};
-        List<String> listTimeKey = [...state.listTimeKey];
-        maps.addAll(state.tranMaps);
-        mapsDefault.addAll(state.tranMapsDefault);
+        List<String> keys = [...state.keys];
 
-        if (event.getAll) {
-          String key = '${event.timeKey}_$offset';
-          if (listTimeKey.contains(key)) {
-            emit(state.copyWith(
-              request: TransType.GET_TRANS_TRUE,
-              listTrans: trans,
-              tranMaps: maps,
-              tranMapsDefault: mapsDefault,
-              offset: offset,
-              isLoadMore: isLoadMore,
-              getAll: event.getAll,
-              status: BlocStatus.UNLOADING,
-              listTimeKey: listTimeKey,
-            ));
-            return;
-          }
+        Map<String, List<TransReceiveDTO>> mapsLocal = {};
+        mapsLocal.addAll(state.mapLocals);
+
+        if (keys.contains(event.timeKey)) {
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            maps: {},
+            status: BlocStatus.UNLOADING,
+            isCache: true,
+          ));
+          return;
         }
 
-        final List<TransReceiveDTO> result =
-            await repository.getTransNotOwner(event.dto);
+        final result = await repository.getTransNotOwner(event.dto);
 
-        if (result.isEmpty || result.length < 20) {
+        if (result.isEmpty || result.length < _limit) {
           isLoadMore = false;
         }
 
-        if (event.isLoadMore && result.isNotEmpty) {
-          trans = [...trans, ...result];
-        } else {
-          trans = [...result];
-        }
+        String key = event.timeKey;
 
-        if (event.getAll) {
-          String key = '${event.timeKey}_$offset';
-          mapsDefault[key] = result;
-          if (!listTimeKey.contains(key)) {
-            listTimeKey.add(key);
-          }
-        }
-
-        maps['$offset'] = result;
+        mapsLocal[key] = result;
+        keys.add(key);
 
         emit(state.copyWith(
           request: TransType.GET_TRANS_TRUE,
           listTrans: trans,
-          tranMaps: maps,
-          tranMapsDefault: mapsDefault,
+          mapLocals: mapsLocal,
+          maps: {},
           offset: offset,
           isLoadMore: isLoadMore,
-          getAll: event.getAll,
           status: BlocStatus.UNLOADING,
-          listTimeKey: listTimeKey,
+          keys: keys,
+          isCache: true,
         ));
       }
     } catch (e) {
       LOG.error(e.toString());
-      emit(state.copyWith(request: TransType.ERROR));
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
     }
   }
 
@@ -334,54 +325,105 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     try {
       if (event is GetTransUnsettledEvent) {
         emit(state.copyWith(
-            status: BlocStatus.LOADING, request: TransType.NONE));
+            status: BlocStatus.LOADING,
+            request: TransType.NONE,
+            isCache: true));
         bool isLoadMore = true;
         int offset = event.dto.offset;
+
         List<TransReceiveDTO> trans = [...state.listTrans];
-        Map<String, List<TransReceiveDTO>> maps = {};
-        Map<String, List<TransReceiveDTO>> mapsDefault = {};
-        List<String> listTimeKey = [...state.listTimeKey];
+        List<String> keys = [...state.keys];
 
-        mapsDefault.addAll(state.tranMapsDefault);
-        maps.addAll(state.tranMaps);
+        Map<String, List<TransReceiveDTO>> mapsLocal = {};
+        mapsLocal.addAll(state.mapLocals);
 
-        if (event.getAll) {
-          String key = '${event.timeKey}_$offset';
-          if (listTimeKey.contains(key)) {
-            emit(state.copyWith(
-              request: TransType.GET_TRANS_TRUE,
-              listTrans: trans,
-              tranMaps: maps,
-              tranMapsDefault: mapsDefault,
-              offset: offset,
-              isLoadMore: isLoadMore,
-              getAll: event.getAll,
-              status: BlocStatus.UNLOADING,
-              listTimeKey: listTimeKey,
-            ));
-            return;
-          }
+        if (keys.contains(event.timeKey)) {
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            maps: {},
+            status: BlocStatus.UNLOADING,
+            isCache: true,
+          ));
+          return;
         }
 
-        final List<TransReceiveDTO> result =
-            await repository.getTransUnsettled(event.dto);
+        final result = await repository.getTransUnsettled(event.dto);
 
-        if (result.isEmpty || result.length < 20) {
+        if (result.isEmpty || result.length < _limit) {
           isLoadMore = false;
         }
 
-        if (event.isLoadMore && result.isNotEmpty) {
-          trans = [...trans, ...result];
-        } else {
-          trans = [...result];
+        String key = event.timeKey;
+
+        mapsLocal[key] = result;
+        keys.add(key);
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          mapLocals: mapsLocal,
+          maps: {},
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+          keys: keys,
+          isCache: true,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _fetchTransactionUnsettled(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is FetchTransUnsettledEvent) {
+        emit(state.copyWith(
+          status: BlocStatus.LOADING,
+          request: TransType.NONE,
+          isCache: false,
+          maps: event.clickSearch ? {} : state.maps,
+        ));
+        bool isLoadMore = event.loadMore;
+        int offset = event.dto.offset;
+
+        List<TransReceiveDTO> trans = state.maps['$offset'] ?? [];
+
+        if (trans.length >= _limit && trans.isNotEmpty) {
+          isLoadMore = true;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        } else if (trans.length < _limit && trans.isNotEmpty) {
+          isLoadMore = false;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
         }
 
-        if (event.getAll) {
-          String key = '${event.timeKey}_$offset';
-          mapsDefault[key] = result;
-          if (!listTimeKey.contains(key)) {
-            listTimeKey.add(key);
-          }
+        Map<String, List<TransReceiveDTO>> maps = {};
+        maps.addAll(state.maps);
+
+        final result = await repository.getTransUnsettled(event.dto);
+
+        if (result.isEmpty || result.length < _limit) {
+          isLoadMore = false;
         }
 
         maps['$offset'] = result;
@@ -389,21 +431,151 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(state.copyWith(
           request: TransType.GET_TRANS_TRUE,
           listTrans: trans,
-          tranMaps: maps,
-          tranMapsDefault: mapsDefault,
+          maps: maps,
           offset: offset,
           isLoadMore: isLoadMore,
-          getAll: event.getAll,
           status: BlocStatus.UNLOADING,
-          listTimeKey: listTimeKey,
+          isCache: false,
         ));
       }
     } catch (e) {
       LOG.error(e.toString());
       emit(state.copyWith(
-        request: TransType.ERROR,
-        status: BlocStatus.UNLOADING,
-      ));
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _fetchTransactionNotOwner(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is FetchTransNotOwnerEvent) {
+        emit(state.copyWith(
+          status: BlocStatus.LOADING,
+          request: TransType.NONE,
+          isCache: false,
+          maps: event.clickSearch ? {} : state.maps,
+        ));
+        bool isLoadMore = event.loadMore;
+        int offset = event.dto.offset;
+
+        List<TransReceiveDTO> trans = state.maps['$offset'] ?? [];
+
+        if (trans.length >= _limit && trans.isNotEmpty) {
+          isLoadMore = true;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        } else if (trans.length < _limit && trans.isNotEmpty) {
+          isLoadMore = false;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        }
+
+        Map<String, List<TransReceiveDTO>> maps = {};
+        maps.addAll(state.maps);
+
+        final result = await repository.getTransNotOwner(event.dto);
+
+        if (result.isEmpty || result.length < _limit) {
+          isLoadMore = false;
+        }
+
+        maps['$offset'] = result;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          maps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+          isCache: false,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _fetchTransaction(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is FetchTransOwnerEvent) {
+        emit(state.copyWith(
+          status: BlocStatus.LOADING,
+          request: TransType.NONE,
+          isCache: false,
+          maps: event.clickSearch ? {} : state.maps,
+        ));
+        bool isLoadMore = event.loadMore;
+        int offset = event.dto.offset;
+
+        List<TransReceiveDTO> trans = state.maps['$offset'] ?? [];
+
+        if (trans.length >= _limit && trans.isNotEmpty) {
+          isLoadMore = true;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        } else if (trans.length < _limit && trans.isNotEmpty) {
+          isLoadMore = false;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        }
+
+        Map<String, List<TransReceiveDTO>> maps = {};
+        maps.addAll(state.maps);
+
+        final result = await repository.getTransactionByBankId(event.dto);
+
+        if (result.isEmpty || result.length < _limit) {
+          isLoadMore = false;
+        }
+
+        maps['$offset'] = result;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          maps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+          isCache: false,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
     }
   }
 
@@ -411,68 +583,51 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     try {
       if (event is GetTransOwnerEvent) {
         emit(state.copyWith(
-            status: BlocStatus.LOADING, request: TransType.NONE));
+            status: BlocStatus.LOADING,
+            request: TransType.NONE,
+            isCache: true));
         bool isLoadMore = true;
         int offset = event.dto.offset;
 
         List<TransReceiveDTO> trans = [...state.listTrans];
-        Map<String, List<TransReceiveDTO>> maps = {};
-        Map<String, List<TransReceiveDTO>> mapsDefault = {};
-        List<String> listTimeKey = [...state.listTimeKey];
-        maps.addAll(state.tranMaps);
-        mapsDefault.addAll(state.tranMapsDefault);
+        List<String> keys = [...state.keys];
 
-        if (event.getAll) {
-          String key = '${event.timeKey}_$offset';
-          if (listTimeKey.contains(key)) {
-            emit(state.copyWith(
-              request: TransType.GET_TRANS_TRUE,
-              listTrans: trans,
-              tranMaps: maps,
-              tranMapsDefault: mapsDefault,
-              offset: offset,
-              isLoadMore: isLoadMore,
-              getAll: event.getAll,
-              status: BlocStatus.UNLOADING,
-              listTimeKey: listTimeKey,
-            ));
-            return;
-          }
+        Map<String, List<TransReceiveDTO>> mapsLocal = {};
+        mapsLocal.addAll(state.mapLocals);
+
+        if (keys.contains(event.timeKey)) {
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            maps: {},
+            status: BlocStatus.UNLOADING,
+            isCache: true,
+          ));
+          return;
         }
 
-        final List<TransReceiveDTO> result =
-            await repository.getTransactionByBankId(event.dto);
+        final result = await repository.getTransactionByBankId(event.dto);
 
-        if (result.isEmpty || result.length < 20) {
+        if (result.isEmpty || result.length < _limit) {
           isLoadMore = false;
         }
 
-        if (event.isLoadMore && result.isNotEmpty) {
-          trans = [...trans, ...result];
-        } else {
-          trans = [...result];
-        }
+        String key = event.timeKey;
 
-        if (event.getAll) {
-          String key = '${event.timeKey}_$offset';
-          mapsDefault[key] = result;
-          if (!listTimeKey.contains(key)) {
-            listTimeKey.add(key);
-          }
-        }
-
-        maps['$offset'] = result;
+        mapsLocal[key] = result;
+        keys.add(key);
 
         emit(state.copyWith(
           request: TransType.GET_TRANS_TRUE,
           listTrans: trans,
-          tranMaps: maps,
-          tranMapsDefault: mapsDefault,
+          mapLocals: mapsLocal,
+          maps: {},
           offset: offset,
           isLoadMore: isLoadMore,
-          getAll: event.getAll,
           status: BlocStatus.UNLOADING,
-          listTimeKey: listTimeKey,
+          keys: keys,
+          isCache: true,
         ));
       }
     } catch (e) {
@@ -487,18 +642,16 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   void _updateBankAccount(TransactionEvent event, Emitter emit) async {
     try {
       if (event is UpdateBankAccountEvent) {
-        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
-
         emit(state.copyWith(
           request: TransType.UPDATE_BANK,
           bankDTO: event.dto,
-          status: BlocStatus.UNLOADING,
-          tranMapsDefault: {},
-          tranMaps: {},
+          status: BlocStatus.NONE,
+          mapLocals: {},
+          maps: {},
           isLoadMore: true,
           offset: 0,
-          getAll: false,
-          listTimeKey: [],
+          isCache: true,
+          keys: [],
           listTrans: [],
         ));
       }

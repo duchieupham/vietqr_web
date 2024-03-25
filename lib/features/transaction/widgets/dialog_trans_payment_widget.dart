@@ -7,6 +7,7 @@ import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
+import '../../../models/transaction/data_filter.dart';
 import 'drop_down_trans_widget.dart';
 
 class DialogTransPaymentWidget extends StatefulWidget {
@@ -61,8 +62,7 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
   DataFilter _filterBy = const DataFilter(id: 9, name: 'Tất cả (mặc định)');
 
   // DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
-  DataFilter _filterByTime =
-      const DataFilter(id: 1, name: 'Hôm nay (mặc định)');
+  DataFilter _filterByTime = const DataFilter(id: 2, name: '7 ngày gần nhất');
 
   DateTime _fromDate = DateTime.now();
   DateTime _toDate = DateTime.now();
@@ -101,7 +101,7 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
   void onReset() {
     _filterBy = const DataFilter(id: 9, name: 'Tất cả (mặc định)');
     // _filterByStatus = const DataFilter(id: 0, name: 'Thành công');
-    _filterByTime = const DataFilter(id: 1, name: 'Hôm nay (mặc định)');
+    _filterByTime = const DataFilter(id: 2, name: '7 ngày gần nhất');
 
     onChangeTimeFilter(_filterByTime);
   }
@@ -459,11 +459,4 @@ class _DialogTransPaymentWidgetState extends State<DialogTransPaymentWidget> {
       updateToDate(fromDate);
     }
   }
-}
-
-class DataFilter {
-  final int id;
-  final String name;
-
-  const DataFilter({required this.id, required this.name});
 }

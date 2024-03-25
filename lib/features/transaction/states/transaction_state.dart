@@ -4,6 +4,7 @@ import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
+import 'package:VietQR/models/transaction_input_dto.dart';
 import 'package:equatable/equatable.dart';
 
 enum TransType {
@@ -15,6 +16,7 @@ enum TransType {
   UPDATE_TERMINAL,
   UPDATE_NOTE,
   UPDATE_CACHE,
+  UPDATE_CACHE_CALL,
   UPDATE_OFFSET,
   DAY,
   MONTH,
@@ -34,9 +36,9 @@ enum TimeKey {
 extension TimeKeyExt on int {
   TimeKey get timeKeyExt {
     switch (this) {
-      case 1:
-        return TimeKey.DAY;
       case 2:
+        return TimeKey.DAY;
+      case 1:
         return TimeKey.SEVEN_DAY;
       case 3:
         return TimeKey.MONTH;
@@ -57,26 +59,28 @@ class TransactionState extends Equatable {
   final List<TransReceiveDTO> listTrans;
   final BankAccountDTO? bankDTO;
   final bool isLoadMore;
-  final Map<String, List<TransReceiveDTO>> tranMaps;
-  final Map<String, List<TransReceiveDTO>> tranMapsDefault;
+  final Map<String, List<TransReceiveDTO>> maps;
+  final Map<String, List<TransReceiveDTO>> mapLocals;
   final List<TerminalQRDTO> listTerminals;
-  final bool getAll;
-  final List<String> listTimeKey;
+  final bool isCache;
+  final List<String> keys;
+  final TransactionInputDTO? transInput;
 
   const TransactionState({
     this.status = BlocStatus.NONE,
     this.request = TransType.NONE,
     this.msg,
     this.offset = 0,
+    this.bankDTO,
+    this.isLoadMore = true,
+    this.isCache = false,
+    this.transInput,
+    required this.maps,
+    required this.mapLocals,
     required this.listBanks,
     required this.listTrans,
     required this.listTerminals,
-    required this.listTimeKey,
-    this.bankDTO,
-    required this.tranMaps,
-    required this.tranMapsDefault,
-    this.isLoadMore = true,
-    this.getAll = false,
+    required this.keys,
   });
 
   TransactionState copyWith({
@@ -87,13 +91,14 @@ class TransactionState extends Equatable {
     List<TransReceiveDTO>? listTrans,
     BankAccountDTO? bankDTO,
     bool? isLoadMore,
-    bool? getAll,
+    bool? isCache,
     bool? isEmpty,
     int? offset,
     List<TerminalQRDTO>? listTerminals,
-    Map<String, List<TransReceiveDTO>>? tranMaps,
-    Map<String, List<TransReceiveDTO>>? tranMapsDefault,
-    List<String>? listTimeKey,
+    Map<String, List<TransReceiveDTO>>? maps,
+    Map<String, List<TransReceiveDTO>>? mapLocals,
+    List<String>? keys,
+    TransactionInputDTO? transInput,
   }) {
     return TransactionState(
       status: status ?? this.status,
@@ -104,11 +109,12 @@ class TransactionState extends Equatable {
       listTrans: listTrans ?? this.listTrans,
       bankDTO: bankDTO ?? this.bankDTO,
       isLoadMore: isLoadMore ?? this.isLoadMore,
-      getAll: getAll ?? this.getAll,
-      tranMaps: tranMaps ?? this.tranMaps,
-      tranMapsDefault: tranMapsDefault ?? this.tranMapsDefault,
+      isCache: isCache ?? this.isCache,
+      maps: maps ?? this.maps,
+      mapLocals: mapLocals ?? this.mapLocals,
       listTerminals: listTerminals ?? this.listTerminals,
-      listTimeKey: listTimeKey ?? this.listTimeKey,
+      keys: keys ?? this.keys,
+      transInput: transInput ?? this.transInput,
     );
   }
 
@@ -122,10 +128,11 @@ class TransactionState extends Equatable {
         listTrans,
         bankDTO,
         isLoadMore,
-        tranMaps,
-        tranMapsDefault,
+        maps,
+        mapLocals,
         listTerminals,
-        getAll,
-        listTimeKey,
+        isCache,
+        keys,
+        transInput,
       ];
 }

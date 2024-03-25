@@ -3,6 +3,7 @@
 enum MenuHomeType {
   HOME,
   TRANSACTION,
+  MEMBER,
   BANK_ACCOUNT,
   OPEN_BANK_MB_ACCOUNT,
   SCAN_QR,
@@ -26,7 +27,6 @@ enum SubMenuType {
   LIST_TRANSACTION,
   SYNTHESIS_REPORT,
   BILL,
-
   SERVICE_FEE,
   OTHER,
 }

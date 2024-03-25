@@ -23,6 +23,7 @@ class MenuLeft extends StatelessWidget {
   final List<Widget> subMenuMerchantRequest;
   final List<Widget> subMenuEnterprise;
   final List<Widget> subMenuTransaction;
+  final List<Widget> subMenuMember;
   final Function(int)? onSelectMenu;
 
   const MenuLeft(
@@ -33,6 +34,7 @@ class MenuLeft extends StatelessWidget {
       this.subMenuMerchantRequest = const [],
       this.subMenuEnterprise = const [],
       this.subMenuTransaction = const [],
+      this.subMenuMember = const [],
       this.subMenuMerchant = const []});
 
   @override
@@ -113,13 +115,23 @@ class MenuLeft extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ItemMenuHome(
-                title: 'Quản lý Giao dịch',
+                title: 'Quản lý giao dịch',
                 iconId: AppImages.icMenuTransaction,
                 enableDropDownList: true,
                 listItemDrop: subMenuTransaction,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
                 onTap: () {
                   context.go('/transactions', extra: {'type': '0'});
+                },
+              ),
+              ItemMenuHome(
+                title: 'Quản lý nhân viên',
+                iconId: AppImages.icMenuTransaction,
+                enableDropDownList: true,
+                listItemDrop: subMenuMember,
+                isSelect: currentType == MenuHomeType.MEMBER,
+                onTap: () {
+                  context.go('/member');
                 },
               ),
               ItemMenuHome(

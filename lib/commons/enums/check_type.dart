@@ -121,9 +121,9 @@ extension TypeTimeFilterExt on TypeTimeFilter {
       case TypeTimeFilter.ALL:
         return 0;
       case TypeTimeFilter.TODAY:
-        return 1;
-      case TypeTimeFilter.SEVEN_LAST_DAY:
         return 2;
+      case TypeTimeFilter.SEVEN_LAST_DAY:
+        return 1;
       case TypeTimeFilter.THIRTY_LAST_DAY:
         return 3;
       case TypeTimeFilter.THREE_MONTH_LAST_DAY:

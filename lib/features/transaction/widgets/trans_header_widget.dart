@@ -74,23 +74,14 @@ class TransHeaderWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ...[
-                    const Text(
-                      'Kết quả bán hàng',
-                      style: TextStyle(
-                          color: AppColor.BLACK,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11),
-                    ),
-                    const Text(
-                      'hôm nay',
-                      style: TextStyle(
-                          color: AppColor.BLACK,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                  const Text(
+                    'Kết quả bán hàng hôm nay',
+                    style: TextStyle(
+                        color: AppColor.BLACK,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11),
+                  ),
+                  const SizedBox(height: 24),
                   Row(
                     children: [
                       _buildInfoPayment(

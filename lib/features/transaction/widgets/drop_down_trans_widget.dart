@@ -1,15 +1,15 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/enums/textfield_type.dart';
-import 'package:VietQR/features/transaction/widgets/dialog_trans_payment_widget.dart';
-import 'package:VietQR/layouts/text_field_custom.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+
+import '../../../models/transaction/data_filter.dart';
 
 class DropdownTransWidget extends StatelessWidget {
   final List<DataFilter> list;
   final DataFilter filter;
   final Function(DataFilter?) callBack;
   final String? title;
+  final BorderRadiusGeometry? borderRadius;
 
   const DropdownTransWidget({
     super.key,
@@ -17,6 +17,7 @@ class DropdownTransWidget extends StatelessWidget {
     required this.filter,
     required this.callBack,
     this.title,
+    this.borderRadius,
   });
 
   @override
@@ -24,18 +25,14 @@ class DropdownTransWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null)
-          Text(title!,
-              style:
-                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
+        if (title != null) Text(title!, style: const TextStyle(fontSize: 11)),
         const SizedBox(height: 6),
         Container(
           height: 34,
           decoration: BoxDecoration(
               color: AppColor.WHITE,
-              border: Border.all(
-                  color: AppColor.BLACK_BUTTON.withOpacity(0.5), width: 0.5),
-              borderRadius: BorderRadius.circular(6)),
+              border: Border.all(color: AppColor.GREY_BORDER, width: 0.5),
+              borderRadius: borderRadius ?? BorderRadius.circular(5)),
           child: DropdownButtonHideUnderline(
             child: DropdownButton2<DataFilter>(
               isExpanded: true,
@@ -76,7 +73,7 @@ class DropdownTransWidget extends StatelessWidget {
               },
               buttonStyleData: ButtonStyleData(
                 width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: AppColor.WHITE,
@@ -93,7 +90,7 @@ class DropdownTransWidget extends StatelessWidget {
                     BoxDecoration(borderRadius: BorderRadius.circular(5)),
               ),
               menuItemStyleData: const MenuItemStyleData(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 12),
               ),
             ),
           ),

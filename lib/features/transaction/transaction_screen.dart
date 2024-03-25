@@ -13,11 +13,10 @@ import 'package:go_router/go_router.dart';
 
 import 'views/transaction_accounting_view.dart';
 import 'views/transaction_payment_view.dart';
+import 'dart:html' as html;
 
 class TransactionScreen extends StatefulWidget {
-  final String type;
-
-  const TransactionScreen({super.key, required this.type});
+  const TransactionScreen({super.key});
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -25,6 +24,7 @@ class TransactionScreen extends StatefulWidget {
 
 class _TransactionScreenState extends State<TransactionScreen> {
   late TokenBloc bloc;
+  String type = '0';
 
   @override
   void initState() {
@@ -75,19 +75,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
             subMenuTransaction: [
               ItemMenuHome(
                 title: 'GD thanh toán',
-                isSelect:
-                    (widget.type == '0') || (widget.type.contains('0?bankId=')),
-                onTap: () {
-                  context.push('/transactions', extra: {'type': '0'});
-                },
+                isSelect: (type == '0'),
+                onTap: () => onTapMenu('0'),
               ),
               ItemMenuHome(
                 title: 'GD chờ xác nhận',
-                isSelect:
-                    (widget.type == '1') || (widget.type.contains('1?bankId=')),
-                onTap: () {
-                  context.push('/transactions', extra: {'type': '1'});
-                },
+                isSelect: type == '1',
+                onTap: () => onTapMenu('1'),
               ),
             ],
           ),
@@ -98,8 +92,21 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
+  void onTapMenu(String value) {
+    if (value == '0') {
+      html.window.history
+          .pushState(value, '/transactions', '/transactions?type=$value');
+      type = value;
+    } else {
+      html.window.history
+          .pushState(value, '/transactions', '/transactions?type=$value');
+      type = value;
+    }
+    setState(() {});
+  }
+
   Widget _buildBody() {
-    if ((widget.type == '0') || (widget.type.contains('0?bankId='))) {
+    if (type == '0') {
       return const TransactionPaymentView();
     }
     return const TransactionAccountingView();
