@@ -5,7 +5,7 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:flutter/material.dart';
 
-class TableTransPaymentWidget extends StatefulWidget {
+class TableTransWidget extends StatefulWidget {
   final List<TransReceiveDTO> list;
   final int offset;
   final Function(TransReceiveDTO) onChooseTerminal;
@@ -13,7 +13,7 @@ class TableTransPaymentWidget extends StatefulWidget {
   final bool isOwner;
   final bool isLoading;
 
-  const TableTransPaymentWidget({
+  const TableTransWidget({
     super.key,
     required this.list,
     required this.offset,
@@ -24,11 +24,10 @@ class TableTransPaymentWidget extends StatefulWidget {
   });
 
   @override
-  State<TableTransPaymentWidget> createState() =>
-      _TableTransPaymentWidgetState();
+  State<TableTransWidget> createState() => _TableTransWidgetState();
 }
 
-class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
+class _TableTransWidgetState extends State<TableTransWidget> {
   final ScrollController _horizontal = ScrollController();
 
   final List<TransData> list = [
@@ -91,6 +90,7 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                         widget.list.length,
                         (index) {
                           TransReceiveDTO model = widget.list[index];
+
                           return DataRow(
                             color: MaterialStateProperty.resolveWith<Color?>(
                                 (Set<MaterialState> states) {
@@ -153,56 +153,53 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
                               ),
 
                               /// Thời gian tạo
-                              DataCell(
-                                _buildContent(
+                              DataCell(_buildContent(
                                   title: model.timeCreate,
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
+                                  textAlign: TextAlign.right)),
 
                               /// Tài khoản nhận
-                              DataCell(
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              DataCell(SizedBox(
+                                width: 200,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       model.bankAccount,
+                                      maxLines: 1,
                                       textAlign: TextAlign.left,
-                                      style: const TextStyle(fontSize: 12),
+                                      style: const TextStyle(
+                                          fontSize: 10,
+                                          overflow: TextOverflow.ellipsis),
                                     ),
-                                    const Text(
-                                      'MBBank',
+                                    Text(
+                                      model.bankShortName,
+                                      maxLines: 1,
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(fontSize: 12),
+                                      style: const TextStyle(
+                                          fontSize: 10,
+                                          overflow: TextOverflow.ellipsis),
                                     ),
                                   ],
                                 ),
-                              ),
+                              )),
 
                               /// Nội dung
-                              DataCell(
-                                SizedBox(
-                                    width: 200,
-                                    child: _buildContent(title: model.content)),
-                              ),
+                              DataCell(SizedBox(
+                                  width: 200,
+                                  child: _buildContent(title: model.content))),
 
                               ///Ghi chú
-                              DataCell(
-                                SizedBox(
-                                    width: 200,
-                                    child: _buildContent(title: model.note)),
-                              ),
+                              DataCell(SizedBox(
+                                  width: 200,
+                                  child: _buildContent(title: model.note))),
 
                               /// Tài khoản nhận
-                              const DataCell(
-                                SizedBox(width: 80),
-                              ),
+                              const DataCell(SizedBox(width: 80)),
 
                               /// Tài khoản nhận
-                              const DataCell(
-                                SizedBox(width: 80),
-                              ),
+                              const DataCell(SizedBox(width: 80)),
                             ],
                           );
                         },
@@ -469,32 +466,27 @@ class _TableTransPaymentWidgetState extends State<TableTransPaymentWidget> {
     );
   }
 
-  Widget _buildContent(
-      {required String title,
-      Color? textColor,
-      GestureTapCallback? onTap,
-      double? fontSize,
-      FontWeight? fontWeight,
-      TextAlign? textAlign}) {
+  Widget _buildContent({
+    String title = '',
+    Color? textColor,
+    GestureTapCallback? onTap,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextAlign? textAlign,
+  }) {
     return SelectionArea(
       child: GestureDetector(
         onTap: onTap,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title.isNotEmpty ? title : '-',
-                maxLines: 2,
-                textAlign: textAlign,
-                style: TextStyle(
-                  color: textColor,
-                  overflow: TextOverflow.ellipsis,
-                  fontSize: fontSize ?? 10,
-                  fontWeight: fontWeight,
-                ),
-              ),
-            ),
-          ],
+        child: Text(
+          title.isNotEmpty ? title : '-',
+          maxLines: 2,
+          textAlign: textAlign,
+          style: TextStyle(
+            color: textColor,
+            overflow: TextOverflow.ellipsis,
+            fontSize: fontSize ?? 10,
+            fontWeight: fontWeight,
+          ),
         ),
       ),
     );

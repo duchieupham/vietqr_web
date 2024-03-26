@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -377,5 +378,49 @@ class TimeUtils {
     String month = dateString.substring(2, 4);
     String year = dateString.substring(4, 8);
     return '$day/$month/$year';
+  }
+
+  Future<DateTime?> showDateTimePicker({
+    required BuildContext context,
+    DateTime? initialDate,
+    DateTime? firstDate,
+    DateTime? lastDate,
+    bool isSelectedTime = true,
+  }) async {
+    initialDate ??= DateTime.now();
+    firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
+    lastDate ??= firstDate.add(const Duration(days: 365 * 200));
+
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+
+    if (selectedDate == null) return null;
+
+    bool mounted = NavigationService.navigatorKey.currentContext!.mounted;
+
+    if (!mounted) return selectedDate;
+
+    TimeOfDay? selectedTime;
+
+    if (isSelectedTime) {
+      selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDate),
+      );
+    }
+
+    return selectedTime == null
+        ? selectedDate
+        : DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
   }
 }

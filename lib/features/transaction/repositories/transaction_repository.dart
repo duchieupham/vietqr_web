@@ -194,4 +194,13 @@ class TransactionRepository {
     }
     return result;
   }
+
+  Future<String> exportExcel(String bankId, String fromDate, String toDate,
+      String terminalCode) async {
+    final String url =
+        '${EnvConfig.getBaseUrl()}terminal/web/transaction-detail/export?'
+        'userId=$userId&bankId=$bankId&fromDate=$fromDate&toDate=$toDate&terminalCode=$terminalCode';
+
+    return url;
+  }
 }

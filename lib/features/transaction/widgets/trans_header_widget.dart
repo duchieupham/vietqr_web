@@ -4,6 +4,8 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:flutter/material.dart';
 
+import 'horizontal_dashedline_painter.dart';
+
 class TransHeaderWidget extends StatelessWidget {
   final String title;
   final Widget child;
@@ -68,7 +70,7 @@ class TransHeaderWidget extends StatelessWidget {
                 ],
               ),
             ),
-            Container(height: 1.5, color: AppColor.GREY_BORDER),
+            Container(height: 1, color: AppColor.GREY_DADADA),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Column(
@@ -81,7 +83,7 @@ class TransHeaderWidget extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 11),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       _buildInfoPayment(
@@ -106,6 +108,12 @@ class TransHeaderWidget extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 24),
+                  CustomPaint(
+                    painter:
+                        HorizontalDashedLinePainter(dashWidth: 5, dashSpace: 3),
+                    size: const Size(double.infinity, 1),
+                  ),
+                  const SizedBox(height: 16),
                   child,
                 ],
               ),

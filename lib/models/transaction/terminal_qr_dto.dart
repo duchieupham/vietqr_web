@@ -22,4 +22,9 @@ class TerminalQRDTO {
       userId: json['userId'] ?? '',
     );
   }
+
+  @override
+  String toString() {
+    return terminalName;
+  }
 }

@@ -15,7 +15,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       : super(const TransactionState(
             listBanks: [],
             listTrans: [],
-            listTerminals: [],
+            terminals: [],
             keys: [],
             maps: {},
             mapLocals: {})) {
@@ -80,7 +80,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         emit(state.copyWith(
             request: TransType.LIST_TERMINAL,
-            listTerminals: list,
+            terminals: list,
             status: BlocStatus.NONE));
       }
     } catch (e) {

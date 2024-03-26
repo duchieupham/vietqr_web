@@ -3,26 +3,36 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/month_calculator.dart';
+import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 
 import '../../../models/transaction/data_filter.dart';
-import 'drop_down_trans_widget.dart';
+import 'dialog_excel_widget.dart';
+import 'drop_trans_widget.dart';
 
 class FilterWidget extends StatefulWidget {
   final Function(int?, int?, int?, String?, DateTime?, DateTime?, bool)
       callBack;
   final Function(int) onSearch;
   final Stream<bool> stream;
+  final List<TerminalQRDTO> terminals;
+  final String bankId;
+  final bool isOwner;
 
-  const FilterWidget(
-      {super.key,
-      required this.callBack,
-      required this.onSearch,
-      required this.stream});
+  const FilterWidget({
+    super.key,
+    required this.callBack,
+    required this.onSearch,
+    required this.stream,
+    required this.terminals,
+    required this.bankId,
+    required this.isOwner,
+  });
 
   @override
   State<FilterWidget> createState() => _FilterWidgetState();
@@ -105,32 +115,36 @@ class _FilterWidgetState extends State<FilterWidget> {
               color: AppColor.BLACK, fontWeight: FontWeight.bold, fontSize: 11),
         ),
         const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            ...[
-              _buildFilterByWidget(),
-              _buildSearchWidget(),
-              _buildFilterByStatusWidget(),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              ...[
+                _buildFilterByWidget(),
+                _buildSearchWidget(),
+                _buildFilterByStatusWidget(),
+              ],
+              const SizedBox(width: 24),
+              ...[
+                _buildFilterByTimeWidget(),
+                _buildRangeTimeWidget(),
+              ],
+              _removeFilterWidget(),
+              _searchWidget(),
+              if (widget.isOwner)
+                ButtonWidget(
+                  text: 'Xuất Excel',
+                  width: 100,
+                  border: Border.all(color: AppColor.GREEN),
+                  textColor: AppColor.GREEN,
+                  bgColor: AppColor.TRANSPARENT,
+                  function: _onExportExcel,
+                  borderRadius: 5,
+                  height: 34,
+                ),
             ],
-            const SizedBox(width: 24),
-            ...[
-              _buildFilterByTimeWidget(),
-              _buildRangeTimeWidget(),
-            ],
-            _removeFilterWidget(),
-            _searchWidget(),
-            ButtonWidget(
-              text: 'Xuất Excel',
-              width: 100,
-              border: Border.all(color: AppColor.GREEN),
-              textColor: AppColor.GREEN,
-              bgColor: AppColor.TRANSPARENT,
-              function: () {},
-              borderRadius: 5,
-              height: 34,
-            ),
-          ],
+          ),
         ),
       ],
     );
@@ -152,7 +166,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget _buildFilterByWidget() {
     return SizedBox(
       width: 170,
-      child: DropdownTransWidget(
+      child: DropTransWidget<DataFilter>(
         title: 'Tìm kiếm theo',
         list: listFilterBy,
         filter: _filterBy,
@@ -171,7 +185,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     if (_filterBy.id != 5) return const SizedBox();
     return SizedBox(
       width: 200,
-      child: DropdownTransWidget(
+      child: DropTransWidget<DataFilter>(
         list: listFilterByStatus,
         filter: _filterByStatus,
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
@@ -188,7 +202,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget _buildFilterByTimeWidget() {
     return SizedBox(
       width: 160,
-      child: DropdownTransWidget(
+      child: DropTransWidget(
         title: 'Thời gian',
         list: listFilterByTime,
         filter: _filterByTime,
@@ -218,7 +232,7 @@ class _FilterWidgetState extends State<FilterWidget> {
       children: [
         Text(
           title ?? 'Từ ngày',
-          style: const TextStyle(fontSize: 11),
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
         GestureDetector(
@@ -299,43 +313,6 @@ class _FilterWidgetState extends State<FilterWidget> {
     );
   }
 
-  Future<DateTime?> showDateTimePicker({
-    required BuildContext context,
-    DateTime? initialDate,
-    DateTime? firstDate,
-    DateTime? lastDate,
-  }) async {
-    initialDate ??= DateTime.now();
-    firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
-    lastDate ??= firstDate.add(const Duration(days: 365 * 200));
-
-    final DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-    );
-
-    if (selectedDate == null) return null;
-
-    if (!mounted) return selectedDate;
-
-    final TimeOfDay? selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(selectedDate),
-    );
-
-    return selectedTime == null
-        ? selectedDate
-        : DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            selectedTime.hour,
-            selectedTime.minute,
-          );
-  }
-
   void updateFromDate(DateTime dateTime) {
     _fromDate = dateTime;
     updateState();
@@ -351,15 +328,10 @@ class _FilterWidgetState extends State<FilterWidget> {
     _filterByTime = value;
     updateState();
     DateTime endDate = DateTime(now.year, now.month, now.day);
-    if (_filterByTime.id == TypeTimeFilter.PERIOD.id) {
-      DateTime fromDate = endDate
-          .add(const Duration(days: 1))
-          .subtract(const Duration(seconds: 1));
-      _onCallBack(fromDate: fromDate, toDate: endDate);
-      updateFromDate(fromDate);
-      updateToDate(endDate);
-    } else if (_filterByTime.id == TypeTimeFilter.TODAY.id) {
-      DateTime fromDate = endDate
+    if (_filterByTime.id == TypeTimeFilter.TODAY.id ||
+        _filterByTime.id == TypeTimeFilter.PERIOD.id) {
+      DateTime fromDate = endDate;
+      endDate = endDate
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
       _onCallBack(fromDate: fromDate, toDate: endDate);
@@ -465,7 +437,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   void _pickToDate() async {
-    DateTime? date = await showDateTimePicker(
+    DateTime? date = await TimeUtils.instance.showDateTimePicker(
       context: context,
       initialDate: _toDate,
       firstDate: DateTime(2021, 6),
@@ -488,7 +460,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   void _pickFromDate() async {
-    DateTime? date = await showDateTimePicker(
+    DateTime? date = await TimeUtils.instance.showDateTimePicker(
       context: context,
       initialDate: _fromDate,
       firstDate: DateTime(2021, 6),
@@ -509,5 +481,18 @@ class _FilterWidgetState extends State<FilterWidget> {
       updateFromDate(date ?? DateTime.now());
       _onCallBack(fromDate: _fromDate);
     }
+  }
+
+  void _onExportExcel() async {
+    final data = await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DialogExcelWidget(
+          terminals: widget.terminals,
+          bankId: widget.bankId,
+        );
+      },
+    );
   }
 }

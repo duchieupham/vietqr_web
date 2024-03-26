@@ -1,88 +1,94 @@
-import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
-import '../../../models/transaction/data_filter.dart';
-
-class DropdownTransWidget extends StatelessWidget {
-  final List<DataFilter> list;
-  final DataFilter filter;
-  final Function(DataFilter?) callBack;
+class DropTransWidget<T> extends StatelessWidget {
+  final List<T> list;
+  final T filter;
+  final ValueChanged<T?> callBack;
   final String? title;
-  final BorderRadiusGeometry? borderRadius;
+  final BorderRadius? borderRadius;
 
-  const DropdownTransWidget({
-    super.key,
+  const DropTransWidget({
+    Key? key,
     required this.list,
     required this.filter,
     required this.callBack,
     this.title,
     this.borderRadius,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null) Text(title!, style: const TextStyle(fontSize: 11)),
+        if (title != null)
+          Text(
+            title!,
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+          ),
         const SizedBox(height: 6),
         Container(
           height: 34,
           decoration: BoxDecoration(
-              color: AppColor.WHITE,
-              border: Border.all(color: AppColor.GREY_BORDER, width: 0.5),
-              borderRadius: borderRadius ?? BorderRadius.circular(5)),
+            color: Colors.white,
+            border: Border.all(color: Colors.grey, width: 0.5),
+            borderRadius: borderRadius ?? BorderRadius.circular(5),
+          ),
           child: DropdownButtonHideUnderline(
-            child: DropdownButton2<DataFilter>(
+            child: DropdownButton2<T>(
               isExpanded: true,
               selectedItemBuilder: (context) {
-                return list.map(
+                return list.map<Widget>(
                   (item) {
-                    return DropdownMenuItem<DataFilter>(
+                    return DropdownMenuItem<T>(
                       value: item,
                       alignment: AlignmentDirectional.topStart,
                       child: Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          item.name,
+                          item.toString(),
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     );
                   },
                 ).toList();
               },
-              items: list.map((item) {
-                return DropdownMenuItem<DataFilter>(
-                  value: item,
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      item.name,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w500),
+              items: list.map<DropdownMenuItem<T>>(
+                (item) {
+                  return DropdownMenuItem<T>(
+                    value: item,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        item.toString(),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                },
+              ).toList(),
               value: filter,
-              onChanged: (value) {
-                callBack.call(value);
-              },
+              onChanged: callBack,
               buttonStyleData: ButtonStyleData(
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: AppColor.WHITE,
+                  color: Colors.white,
                 ),
               ),
               iconStyleData: const IconStyleData(
                 icon: Icon(Icons.expand_more),
                 iconSize: 14,
-                iconEnabledColor: AppColor.BLACK,
+                iconEnabledColor: Colors.black,
                 iconDisabledColor: Colors.grey,
               ),
               dropdownStyleData: DropdownStyleData(

@@ -12,7 +12,8 @@ import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.da
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
-import 'package:VietQR/features/transaction/widgets/table_trans_payment_widget.dart';
+import 'package:VietQR/features/transaction/widgets/horizontal_dashedline_painter.dart';
+import 'package:VietQR/features/transaction/widgets/table_trans_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
@@ -239,18 +240,34 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                       children: [
                         FilterWidget(
                           stream: filterStream,
+                          terminals: state.terminals,
                           callBack: _onReceive,
                           onSearch: _onSearch,
+                          bankId: _bankId,
+                          isOwner: false,
                         ),
                         const SizedBox(height: 24),
-                        TableTransPaymentWidget(
+                        CustomPaint(
+                          painter: HorizontalDashedLinePainter(dashWidth: 5, dashSpace: 3),
+                          size: const Size(double.infinity, 1),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Danh sách GD chờ thanh toán',
+                          style: TextStyle(
+                              color: AppColor.BLACK,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11),
+                        ),
+                        const SizedBox(height: 12),
+                        TableTransWidget(
                           list: state.isCache
                               ? state.mapLocals[_typeTime.timeKeyExt.name] ?? []
                               : state.maps['${state.offset}'] ?? [],
                           offset: state.offset,
                           isOwner: state.bankDTO?.isOwner ?? false,
                           onChooseTerminal: (transDTO) => _onChooseTerminal(
-                              state.listTerminals, state.offset, transDTO),
+                              state.terminals, state.offset, transDTO),
                           onEditNote: (dto) => _onChooseNote(state.offset, dto),
                           isLoading: state.status == BlocStatus.LOADING,
                         ),

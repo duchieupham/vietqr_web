@@ -61,7 +61,7 @@ class TransactionState extends Equatable {
   final bool isLoadMore;
   final Map<String, List<TransReceiveDTO>> maps;
   final Map<String, List<TransReceiveDTO>> mapLocals;
-  final List<TerminalQRDTO> listTerminals;
+  final List<TerminalQRDTO> terminals;
   final bool isCache;
   final List<String> keys;
   final TransactionInputDTO? transInput;
@@ -79,7 +79,7 @@ class TransactionState extends Equatable {
     required this.mapLocals,
     required this.listBanks,
     required this.listTrans,
-    required this.listTerminals,
+    required this.terminals,
     required this.keys,
   });
 
@@ -94,7 +94,7 @@ class TransactionState extends Equatable {
     bool? isCache,
     bool? isEmpty,
     int? offset,
-    List<TerminalQRDTO>? listTerminals,
+    List<TerminalQRDTO>? terminals,
     Map<String, List<TransReceiveDTO>>? maps,
     Map<String, List<TransReceiveDTO>>? mapLocals,
     List<String>? keys,
@@ -112,7 +112,7 @@ class TransactionState extends Equatable {
       isCache: isCache ?? this.isCache,
       maps: maps ?? this.maps,
       mapLocals: mapLocals ?? this.mapLocals,
-      listTerminals: listTerminals ?? this.listTerminals,
+      terminals: terminals ?? this.terminals,
       keys: keys ?? this.keys,
       transInput: transInput ?? this.transInput,
     );
@@ -130,7 +130,7 @@ class TransactionState extends Equatable {
         isLoadMore,
         maps,
         mapLocals,
-        listTerminals,
+        terminals,
         isCache,
         keys,
         transInput,
