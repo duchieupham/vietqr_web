@@ -383,6 +383,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           '/transactions?type=0?bankId=$_bankId',
           '/transactions?type=0?bankId=${data.bankId}');
       _bankId = data.bankId;
+      _isOwner = data.isOwner;
       loadAll();
     }
   }
