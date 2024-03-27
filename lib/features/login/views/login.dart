@@ -646,7 +646,7 @@ class _Login extends State<Login> {
               data: qrValue,
               size: 305,
               embeddedImage:
-                  ImageUtils.instance.getImageNetWork(AppImages.icVietQrLogin),
+                  const AssetImage('assets/images/ic-viet-qr-small.png'),
               embeddedImageStyle: QrEmbeddedImageStyle(
                 size: const Size(30, 30),
               ),

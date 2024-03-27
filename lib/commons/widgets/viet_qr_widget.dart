@@ -184,7 +184,7 @@ class VietQRWidget extends StatelessWidget {
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
             embeddedImage:
-                ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
+                const AssetImage('assets/images/ic-viet-qr-small.png'),
             embeddedImageStyle: QrEmbeddedImageStyle(
               size: const Size(30, 30),
             ),
@@ -278,8 +278,8 @@ class VietQRWidget extends StatelessWidget {
                 QrImage(
                   data: qrGeneratedDTO.qrCode,
                   version: QrVersions.auto,
-                  embeddedImage: ImageUtils.instance
-                      .getImageNetWork(AppImages.icVietQrSmall),
+                  embeddedImage:
+                      const AssetImage('assets/images/ic-viet-qr-small.png'),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: const Size(25, 25),
                   ),
