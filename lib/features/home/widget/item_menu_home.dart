@@ -15,6 +15,7 @@ class ItemMenuHome extends StatefulWidget {
   final double titleSize;
   final bool isOnlyIcon, isDefaultColor;
   final EdgeInsets paddingIcon;
+  final bool bold;
 
   const ItemMenuHome(
       {Key? key,
@@ -32,6 +33,7 @@ class ItemMenuHome extends StatefulWidget {
       this.isOnlyIcon = false,
       this.isDefaultColor = false,
       this.isFirst = false,
+      this.bold = false,
       this.paddingIcon = EdgeInsets.zero})
       : super(key: key);
 
@@ -85,6 +87,8 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
       if (widget.pathImage != null && widget.pathImage != '') {
         return Tooltip(
           message: widget.title,
+          textStyle:
+              TextStyle(fontWeight: widget.bold ? FontWeight.bold : null),
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
             color: widget.isSelect
@@ -108,6 +112,8 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
           },
           child: Tooltip(
             message: widget.title,
+            textStyle:
+                TextStyle(fontWeight: widget.bold ? FontWeight.bold : null),
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: widget.paddingIcon,
@@ -163,13 +169,16 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                          fontSize: widget.titleSize, color: AppColor.RED_TEXT),
+                          fontSize: widget.titleSize,
+                          color: AppColor.RED_TEXT,
+                          fontWeight: widget.bold ? FontWeight.bold : null),
                     )
                   else
                     Text(
                       widget.title,
                       style: TextStyle(
                           fontSize: widget.titleSize,
+                          fontWeight: widget.bold ? FontWeight.bold : null,
                           color: widget.isSelect
                               ? AppColor.BLUE_TEXT
                               : AppColor.BLACK),

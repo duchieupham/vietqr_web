@@ -2,7 +2,7 @@ class TransactionInputDTO {
   final String bankId;
   final int offset;
   final int status;
-  final int type;
+  int type;
   String? from;
   String? to;
   String value;

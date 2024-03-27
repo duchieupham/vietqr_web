@@ -74,12 +74,12 @@ class _TransactionScreenState extends State<TransactionScreen> {
             currentType: MenuHomeType.TRANSACTION,
             subMenuTransaction: [
               ItemMenuHome(
-                title: 'GD thanh toán',
+                title: 'Quản lý GD thanh toán',
                 isSelect: (type == '0'),
                 onTap: () => onTapMenu('0'),
               ),
               ItemMenuHome(
-                title: 'GD chờ xác nhận',
+                title: 'Quản lý  GD chờ xác nhận',
                 isSelect: type == '1',
                 onTap: () => onTapMenu('1'),
               ),

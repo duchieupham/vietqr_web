@@ -78,6 +78,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         list = [...list];
 
+        TerminalQRDTO value = TerminalQRDTO(terminalName: 'Tất cả cửa hàng');
+
+        list.insert(0, value);
+
         emit(state.copyWith(
             request: TransType.LIST_TERMINAL,
             terminals: list,

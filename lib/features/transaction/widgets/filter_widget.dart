@@ -16,13 +16,14 @@ import 'dialog_excel_widget.dart';
 import 'drop_trans_widget.dart';
 
 class FilterWidget extends StatefulWidget {
-  final Function(int?, int?, int?, String?, DateTime?, DateTime?, bool)
+  final Function(int?, int?, int?, String?, String?, DateTime?, DateTime?, bool)
       callBack;
   final Function(int) onSearch;
   final Stream<bool> stream;
   final List<TerminalQRDTO> terminals;
   final String bankId;
   final bool isOwner;
+  final bool isPending;
 
   const FilterWidget({
     super.key,
@@ -32,6 +33,7 @@ class FilterWidget extends StatefulWidget {
     required this.terminals,
     required this.bankId,
     required this.isOwner,
+    this.isPending = false,
   });
 
   @override
@@ -47,6 +49,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   DateTime get now => DateTime.now();
 
   String _value = '';
+  String _terminalCode = '';
   DateTime _fromDate = DateTime.now();
   DateTime _toDate = DateTime.now();
 
@@ -155,12 +158,13 @@ class _FilterWidgetState extends State<FilterWidget> {
     int? time,
     int? status,
     String? search,
+    String? terminalCode,
     DateTime? fromDate,
     DateTime? toDate,
     bool clearData = false,
   }) {
-    widget.callBack
-        .call(type, time, status, search, fromDate, toDate, clearData);
+    widget.callBack.call(
+        type, time, status, search, terminalCode, fromDate, toDate, clearData);
   }
 
   Widget _buildFilterByWidget() {
@@ -270,27 +274,25 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget _buildSearchWidget() {
     if (_filterBy.id == 5) return const SizedBox();
     return Container(
-      width: 220,
+      width: 250,
       height: 34,
+      alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        color: AppColor.WHITE,
-        border: Border.all(color: AppColor.GREY_BORDER, width: 0.5),
-        borderRadius: const BorderRadius.horizontal(
-          right: Radius.circular(5),
-        ),
+        border: Border.all(color: AppColor.GREY_BORDER),
+        borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextField(
         style: const TextStyle(fontSize: 12),
         controller: searchController,
-        onChanged: (value) {
-          _value = value;
-          _onCallBack(search: value);
-          updateState();
-        },
+        onChanged: onChangedSearch,
         decoration: InputDecoration(
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.only(bottom: 16, left: 12, right: 12),
+          contentPadding: EdgeInsets.only(
+            bottom: (_filterBy.id == 4) ? 0 : 16,
+            top: (_filterBy.id == 4) ? 5 : 0,
+            left: 12,
+            right: 12,
+          ),
           hintText: hinText,
           hintStyle: const TextStyle(fontSize: 12, color: AppColor.GREY_TEXT),
           prefixIcon: const Padding(
@@ -298,15 +300,42 @@ class _FilterWidgetState extends State<FilterWidget> {
             child: Icon(Icons.search, size: 18, color: AppColor.GREY_TEXT),
           ),
           prefixIconConstraints: const BoxConstraints(),
-          suffixIcon: searchController.text.isNotEmpty
-              ? GestureDetector(
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (searchController.text.isNotEmpty)
+                InkWell(
                   onTap: _onClear,
-                  child: const Padding(
-                    padding: EdgeInsets.only(right: 8.0),
-                    child: Icon(Icons.close, size: 18),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(right: _filterBy.id == 4 ? 0 : 8.0),
+                    child: const Icon(Icons.close, size: 18),
                   ),
-                )
-              : null,
+                ),
+              if (_filterBy.id == 4) // Mã điểm bán
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+                  padding: EdgeInsets.zero,
+                  iconSize: 18,
+                  constraints: const BoxConstraints(),
+                  onSelected: onChangedTerminal,
+                  itemBuilder: (BuildContext context) {
+                    return widget.terminals.map((e) {
+                      return PopupMenuItem<String>(
+                        value: e.terminalCode,
+                        child: Text(
+                          e.terminalName,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+            ],
+          ),
           suffixIconConstraints: const BoxConstraints(),
         ),
       ),
@@ -408,6 +437,7 @@ class _FilterWidgetState extends State<FilterWidget> {
 
   void _onClearFilter({bool clearData = false}) {
     _value = '';
+    _terminalCode = '';
     searchController.clear();
     _filterBy = listFilterBy.first;
     _filterByStatus = listFilterByStatus.first;
@@ -421,14 +451,16 @@ class _FilterWidgetState extends State<FilterWidget> {
         fromDate: _fromDate,
         toDate: _toDate,
         search: _value,
+        terminalCode: _terminalCode,
         clearData: clearData);
     updateState();
   }
 
   void _onClear() {
     _value = '';
+    _terminalCode = '';
     searchController.clear();
-    _onCallBack(search: _value, clearData: true);
+    _onCallBack(search: _value, clearData: true, terminalCode: _terminalCode);
     updateState();
   }
 
@@ -484,7 +516,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   void _onExportExcel() async {
-    final data = await showDialog(
+    await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -494,5 +526,29 @@ class _FilterWidgetState extends State<FilterWidget> {
         );
       },
     );
+  }
+
+  void onChangedTerminal(String value) {
+    searchController.text = value;
+    if (widget.isOwner || widget.isPending) {
+      _value = value;
+      _onCallBack(search: value);
+    } else {
+      _terminalCode = value;
+      _onCallBack(terminalCode: value);
+    }
+    updateState();
+  }
+
+  void onChangedSearch(String value) {
+    if (_filterBy.id == 4 && !widget.isOwner) {
+      _terminalCode = value;
+      _onCallBack(terminalCode: value);
+    } else {
+      _value = value;
+      _onCallBack(search: value);
+    }
+
+    updateState();
   }
 }

@@ -11,7 +11,6 @@ import 'package:VietQR/features/transaction/states/transaction_state.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
-import 'package:VietQR/features/transaction/widgets/dialog_excel_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
 import 'package:VietQR/features/transaction/widgets/horizontal_dashedline_painter.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_widget.dart';
@@ -50,6 +49,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
   int _typeStatus = 0;
   int _typeTime = 1;
   String _value = '';
+  String _terminalCode = '';
   String _bankId = '';
   bool _isOwner = false;
 
@@ -99,6 +99,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       value: _value,
       type: _typeFilter,
       status: _typeStatus,
+      terminalCode: _terminalCode,
     );
 
     if (_isOwner) {
@@ -129,6 +130,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       value: _value,
       type: type,
       status: _typeStatus,
+      terminalCode: _terminalCode,
     );
 
     if (_typeFilter == 9 && _value.isEmpty) {
@@ -139,19 +141,29 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       bloc.add(
           FetchTransOwnerEvent(dto: dto, loadMore: true, clickSearch: true));
     } else {
+      if (_typeFilter == 4) dto.type = 9;
+
       bloc.add(
           FetchTransNotOwnerEvent(dto: dto, loadMore: true, clickSearch: true));
     }
   }
 
-  _onReceive(int? type, int? time, int? status, String? search,
-      DateTime? fromDate, DateTime? toDate, bool clearData) {
+  _onReceive(
+      int? type,
+      int? time,
+      int? status,
+      String? search,
+      String? terminalCode,
+      DateTime? fromDate,
+      DateTime? toDate,
+      bool clearData) {
     _typeFilter = type ?? _typeFilter;
     _typeTime = time ?? _typeTime;
     _typeStatus = status ?? _typeStatus;
     _value = search ?? _value;
     _fromDate = fromDate ?? _fromDate;
     _toDate = toDate ?? _toDate;
+    _terminalCode = terminalCode ?? _terminalCode;
     updateState();
 
     if (clearData) {
@@ -169,6 +181,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       bankId: _bankId,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
+      terminalCode: _terminalCode,
     );
 
     _onCallAPi(dto, timeKey: _typeTime.timeKeyExt.name);

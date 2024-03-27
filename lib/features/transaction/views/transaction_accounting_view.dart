@@ -130,8 +130,15 @@ class _StoreScreenState extends State<TransactionAccountingView> {
         FetchTransUnsettledEvent(dto: dto, loadMore: true, clickSearch: true));
   }
 
-  _onReceive(int? type, int? time, int? status, String? search,
-      DateTime? fromDate, DateTime? toDate, bool clearData) {
+  _onReceive(
+      int? type,
+      int? time,
+      int? status,
+      String? search,
+      String? terminalCode,
+      DateTime? fromDate,
+      DateTime? toDate,
+      bool clearData) {
     _typeFilter = type ?? _typeFilter;
     _typeTime = time ?? _typeTime;
     _typeStatus = status ?? _typeStatus;
@@ -245,10 +252,12 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                           onSearch: _onSearch,
                           bankId: _bankId,
                           isOwner: false,
+                          isPending: true,
                         ),
                         const SizedBox(height: 24),
                         CustomPaint(
-                          painter: HorizontalDashedLinePainter(dashWidth: 5, dashSpace: 3),
+                          painter: HorizontalDashedLinePainter(
+                              dashWidth: 5, dashSpace: 3),
                           size: const Size(double.infinity, 1),
                         ),
                         const SizedBox(height: 12),
