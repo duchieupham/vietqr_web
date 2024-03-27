@@ -105,7 +105,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           Map<String, List<TransReceiveDTO>> map = {};
-          String key = '${event.timeKey}_${event.offset}';
+          String key = event.timeKey;
 
           if (state.isCache) {
             map.addAll(state.mapLocals);
@@ -167,7 +167,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
         if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
           Map<String, List<TransReceiveDTO>> map = {};
-          String key = '${event.timeKey}_${event.offset}';
+          String key = event.timeKey;
 
           if (state.isCache) {
             map.addAll(state.mapLocals);

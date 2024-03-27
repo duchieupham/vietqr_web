@@ -33,6 +33,9 @@ class _DialogChooseTerminalWidgetState
   void initState() {
     super.initState();
     terminals = [...widget.terminals];
+    if (terminals.isNotEmpty && terminals.first.terminalCode.isEmpty) {
+      terminals.removeAt(0);
+    }
     setState(() {});
   }
 
