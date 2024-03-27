@@ -89,12 +89,14 @@ import 'features/login/provider/menu_login_provider.dart';
 import 'features/vhitek/vhitek_screen.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   usePathUrlStrategy();
   sharedPrefs = await SharedPreferences.getInstance();
   await _initialServiceHelper();
@@ -831,6 +833,7 @@ class _VietQRApp extends State<VietQRApp> {
   @override
   void initState() {
     super.initState();
+    FlutterNativeSplash.remove();
     WebSocketHelper.instance.listenTransactionSocket();
     Session.load;
     Session.instance.getGuideWeb();

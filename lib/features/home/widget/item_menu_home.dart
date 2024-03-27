@@ -89,18 +89,10 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
           message: widget.title,
           textStyle:
               TextStyle(fontWeight: widget.bold ? FontWeight.bold : null),
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            color: widget.isSelect
-                ? AppColor.BLUE_TEXT.withOpacity(0.3)
-                : Colors.transparent,
-            width: 40,
-            height: 40,
-            child: Image.asset(
-              widget.pathImage!,
-              height: 15,
-              width: 25,
-            ),
+          child: Image.asset(
+            widget.pathImage!,
+            height: 35,
+            width: 35,
           ),
         );
       }

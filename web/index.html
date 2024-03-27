@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+<!DOCTYPE html><html><head>
     <!--
       If you are serving your web app in a path other than the root, change the
       href value below to reflect the base path you are serving from.
@@ -19,34 +16,45 @@
 
     <meta charset="UTF-8">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta name="description"
-          content="VietQR là chuẩn thanh toán QR của EMV Co. · Giao dịch nhanh chóng/ Đơn giản hóa trải nghiệm và tăng tốc độ thanh toán thông qua việc quét mã QR được phát triển nhằm tạo sự thanh toán và thuận tiện cho khách 19006234 - VietQR.vn - VietQR.com - VietQR.org">
+    <meta name="description" content="VietQR là chuẩn thanh toán QR của EMV Co. · Giao dịch nhanh chóng/ Đơn giản hóa trải nghiệm và tăng tốc độ thanh toán thông qua việc quét mã QR được phát triển nhằm tạo sự thanh toán và thuận tiện cho khách 19006234 - VietQR.vn - VietQR.com - VietQR.org">
     <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /> -->
 
     <!-- iOS meta tags & icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title"
-          content="VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam">
-    <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
+    <meta name="apple-mobile-web-app-title" content="VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam">
     <!-- Favicon -->
 
-    <link rel="icon" type="image/png" href="favicon.png"/>
     <title>VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-    <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
+    <!-- Main Favicon -->
+    <link rel="icon" type="image/pg" href="favicon/png"/>
 
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
 
-
-    </script>
     <!-- This script adds the flutter initialization JS code -->
     <!--  <script src="flutter.js" defer></script>-->
-    <script src="main.dart.js" defer></script>
+    <script src="main.dart.js" defer=""></script>
     <link rel="stylesheet" type="text/css" href="splash/style.css">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  <script src="splash/splash.js"></script>
 </head>
 
 <body>
@@ -117,6 +125,8 @@
 
 
 
+
+
 </script>
 
 <picture id="splash">
@@ -129,6 +139,8 @@
     <img class="center" aria-hidden="true" src="splash/img/light-1x.png"/>
 </picture>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+
 <script>
     // Hàm JavaScript để gửi dữ liệu từ InAppWebView đến Flutter web
     function receiveDataFromFlutter(data) {
@@ -146,13 +158,8 @@
             window.flutter_inappwebview.callHandler('sendDataToFlutter', data);
         }
 
-
-
-
-
 </script>
-<script
-        src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.15/plugins/export/libs/FileSaver.js/FileSaver.min.js"></script>
-</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.15/plugins/export/libs/FileSaver.js/FileSaver.min.js"></script>
 
-</html>
+
+</body></html>

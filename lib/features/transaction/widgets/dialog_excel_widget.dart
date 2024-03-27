@@ -370,8 +370,8 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
       endDate = endDate
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
-      updateFromDate(endDate);
-      updateToDate(fromDate);
+      updateFromDate(fromDate);
+      updateToDate(endDate);
     }
   }
 

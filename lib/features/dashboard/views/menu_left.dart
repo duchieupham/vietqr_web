@@ -379,8 +379,7 @@ class MenuLeft extends StatelessWidget {
           // ),
           ItemMenuHome(
             title: 'Giới thiệu VietQR VN',
-            iconId: AppImages.icVietQrSmall,
-            paddingIcon: const EdgeInsets.all(4),
+            pathImage: 'assets/images/logo-small-round.png',
             isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
             isDefaultColor: true,
