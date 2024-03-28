@@ -8,8 +8,8 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'trans_pending_view.dart';
 import 'trans_unclassified_view.dart';
+import 'trans_pending_view.dart';
 
 enum TransPendingType { unclassified, waiting }
 

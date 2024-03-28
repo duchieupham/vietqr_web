@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'transaction_pending/trans_pending_screen.dart';
-import 'transaction_pending/trans_pending_view.dart';
+import 'transaction_pending/trans_unclassified_view.dart';
 import 'transaction_payment/transaction_payment_view.dart';
 import 'dart:html' as html;
 
@@ -110,6 +110,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     if (type == '0') {
       return const TransactionPaymentView();
     }
-    return const TransPendingView();
+    return const TransUnclassifiedView();
   }
 }
