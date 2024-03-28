@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'views/transaction_accounting_view.dart';
-import 'views/transaction_payment_view.dart';
+import 'transaction_pending/trans_pending_screen.dart';
+import 'transaction_pending/trans_pending_view.dart';
+import 'transaction_payment/transaction_payment_view.dart';
 import 'dart:html' as html;
 
 class TransactionScreen extends StatefulWidget {
@@ -109,6 +110,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     if (type == '0') {
       return const TransactionPaymentView();
     }
-    return const TransactionAccountingView();
+    return const TransPendingView();
   }
 }

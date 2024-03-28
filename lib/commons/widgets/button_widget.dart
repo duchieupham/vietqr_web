@@ -25,7 +25,7 @@ class ButtonWidget extends StatelessWidget {
     required this.bgColor,
     required this.function,
     this.height,
-    this.textSize = 14,
+    this.textSize = 12,
     this.borderRadius,
     this.bdRadius,
     this.border,

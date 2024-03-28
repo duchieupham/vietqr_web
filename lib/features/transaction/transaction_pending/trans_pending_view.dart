@@ -12,7 +12,7 @@ import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.da
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
-import 'package:VietQR/features/transaction/widgets/horizontal_dashedline_painter.dart';
+import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -25,14 +25,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'dart:html' as html;
 
-class TransactionAccountingView extends StatefulWidget {
-  const TransactionAccountingView({super.key});
+class TransPendingView extends StatefulWidget {
+  const TransPendingView({super.key});
 
   @override
-  State<TransactionAccountingView> createState() => _StoreScreenState();
+  State<TransPendingView> createState() => _StoreScreenState();
 }
 
-class _StoreScreenState extends State<TransactionAccountingView> {
+class _StoreScreenState extends State<TransPendingView> {
   late TransactionBloc bloc;
 
   final _streamController = StreamController<bool>.broadcast();
@@ -242,110 +242,52 @@ class _StoreScreenState extends State<TransactionAccountingView> {
                     title: 'Giao dịch chờ xác nhận',
                     dto: state.bankDTO,
                     onTap: () => _onChooseBank(state.listBanks),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        FilterWidget(
-                          stream: filterStream,
-                          terminals: state.terminals,
-                          callBack: _onReceive,
-                          onSearch: _onSearch,
-                          bankId: _bankId,
-                          isOwner: false,
-                          isPending: true,
-                        ),
-                        const SizedBox(height: 24),
-                        CustomPaint(
-                          painter: HorizontalDashedLinePainter(
-                              dashWidth: 5, dashSpace: 3),
-                          size: const Size(double.infinity, 1),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'Danh sách GD chờ thanh toán',
-                          style: TextStyle(
-                              color: AppColor.BLACK,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11),
-                        ),
-                        const SizedBox(height: 12),
-                        TableTransWidget(
-                          list: state.isCache
-                              ? state.mapLocals[_typeTime.timeKeyExt.name] ?? []
-                              : state.maps['${state.offset}'] ?? [],
-                          offset: state.offset,
-                          isOwner: state.bankDTO?.isOwner ?? false,
-                          onChooseTerminal: (transDTO) => _onChooseTerminal(
-                              state.terminals, state.offset, transDTO),
-                          onEditNote: (dto) => _onChooseNote(state.offset, dto),
-                          isLoading: state.status == BlocStatus.LOADING,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 16),
-                          height: 60,
-                          child: Row(
-                            children: [
-                              Text('Trang ${state.offset + 1}'),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  int offset = state.offset;
-                                  if (offset <= 0) return;
-                                  offset = offset - 1;
-                                  bloc.add(UpdateOffsetEvent(offset));
-                                },
-                                child: Container(
-                                  width: 25,
-                                  height: 25,
-                                  padding: const EdgeInsets.only(left: 6),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    border: Border.all(
-                                        color: state.offset <= 0
-                                            ? Colors.grey
-                                            : Colors.black),
-                                  ),
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    size: 14,
-                                    color: state.offset <= 0
-                                        ? Colors.grey
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  if (!state.isLoadMore) return;
-                                  int offset = state.offset;
-                                  offset = offset + 1;
-                                  bloc.add(UpdateOffsetEvent(offset));
-                                },
-                                child: Container(
-                                  width: 25,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    border: Border.all(
-                                      color: !state.isLoadMore
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 14,
-                                    color: !state.isLoadMore
-                                        ? Colors.grey
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          FilterWidget(
+                            stream: filterStream,
+                            terminals: state.terminals,
+                            callBack: _onReceive,
+                            onSearch: _onSearch,
+                            bankId: _bankId,
+                            isOwner: false,
+                            isPending: true,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          CustomPaint(
+                            painter: HorizontalDashedLinePainter(
+                                dashWidth: 5, dashSpace: 3),
+                            size: const Size(double.infinity, 1),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Danh sách GD chờ thanh toán',
+                            style: TextStyle(
+                                color: AppColor.BLACK,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11),
+                          ),
+                          const SizedBox(height: 12),
+                          TableTransWidget(
+                            list: state.isCache
+                                ? state.mapLocals[_typeTime.timeKeyExt.name] ??
+                                    []
+                                : state.maps['${state.offset}'] ?? [],
+                            offset: state.offset,
+                            isOwner: state.bankDTO?.isOwner ?? false,
+                            onChooseTerminal: (transDTO) => _onChooseTerminal(
+                                state.terminals, state.offset, transDTO),
+                            onEditNote: (dto) =>
+                                _onChooseNote(state.offset, dto),
+                            isLoading: state.status == BlocStatus.LOADING,
+                          ),
+                          _buildPageWidget(state),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -418,6 +360,66 @@ class _StoreScreenState extends State<TransactionAccountingView> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildPageWidget(TransactionState state) {
+    return Container(
+      padding: const EdgeInsets.only(top: 16),
+      height: 60,
+      child: Row(
+        children: [
+          Text('Trang ${state.offset + 1}'),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              int offset = state.offset;
+              if (offset <= 0) return;
+              offset = offset - 1;
+              bloc.add(UpdateOffsetEvent(offset));
+            },
+            child: Container(
+              width: 25,
+              height: 25,
+              padding: const EdgeInsets.only(left: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                    color: state.offset <= 0 ? Colors.grey : Colors.black),
+              ),
+              child: Icon(
+                Icons.arrow_back_ios,
+                size: 14,
+                color: state.offset <= 0 ? Colors.grey : Colors.black,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              if (!state.isLoadMore) return;
+              int offset = state.offset;
+              offset = offset + 1;
+              bloc.add(UpdateOffsetEvent(offset));
+            },
+            child: Container(
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: !state.isLoadMore ? Colors.grey : Colors.black,
+                ),
+              ),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: !state.isLoadMore ? Colors.grey : Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

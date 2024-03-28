@@ -131,7 +131,7 @@ class MenuLeft extends StatelessWidget {
                 listItemDrop: subMenuMember,
                 isSelect: currentType == MenuHomeType.MEMBER,
                 onTap: () {
-                  context.go('/member');
+                  context.go('/member/list');
                 },
               ),
               ItemMenuHome(

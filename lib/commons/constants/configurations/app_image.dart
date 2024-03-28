@@ -109,4 +109,8 @@ class AppImages {
   static String icStoreBlack = '8fd18baf-84e1-4976-ac91-6ea95ddeec0c';
   static String icOrderBlack = 'c31da1f2-ae70-40e3-9ac9-c678dba5528d';
   static String icMapTransBlack = '0c192406-825b-4da8-9156-e816900e9559';
+
+  /// member
+  static String icDetailMember = '9a9fa6f3-0cc0-4dab-8a43-31be47e90c16';
+  static String icTrashRed = '8576b7b9-c77c-4ba1-82a7-a5b9030d37bd';
 }

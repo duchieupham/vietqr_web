@@ -12,7 +12,7 @@ import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.da
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
-import 'package:VietQR/features/transaction/widgets/horizontal_dashedline_painter.dart';
+import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -262,109 +262,94 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                     title: 'Giao dịch thanh toán',
                     dto: state.bankDTO,
                     onTap: () => _onChooseBank(state.listBanks),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        FilterWidget(
-                          stream: filterStream,
-                          callBack: _onReceive,
-                          onSearch: _onSearch,
-                          terminals: state.terminals,
-                          bankId: _bankId,
-                          isOwner: _isOwner,
-                        ),
-                        const SizedBox(height: 24),
-                        CustomPaint(
-                          painter: HorizontalDashedLinePainter(
-                              dashWidth: 5, dashSpace: 3),
-                          size: const Size(double.infinity, 1),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          'Danh sách GD thanh toán',
-                          style: TextStyle(
-                              color: AppColor.BLACK,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 11),
-                        ),
-                        const SizedBox(height: 12),
-                        TableTransWidget(
-                          list: state.isCache
-                              ? state.mapLocals[_typeTime.timeKeyExt.name] ?? []
-                              : state.maps['${state.offset}'] ?? [],
-                          offset: state.offset,
-                          isOwner: state.bankDTO?.isOwner ?? false,
-                          onChooseTerminal: (transDTO) => _onChooseTerminal(
-                              state.terminals, state.offset, transDTO),
-                          onEditNote: (dto) => _onChooseNote(state.offset, dto),
-                          isLoading: state.status == BlocStatus.LOADING,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 16),
-                          height: 60,
-                          child: Row(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Trang ${state.offset + 1}'),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  int offset = state.offset;
-                                  if (offset <= 0) return;
-                                  offset = offset - 1;
-                                  bloc.add(UpdateOffsetEvent(offset));
-                                },
-                                child: Container(
-                                  width: 25,
-                                  height: 25,
-                                  padding: const EdgeInsets.only(left: 6),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    border: Border.all(
-                                        color: state.offset <= 0
-                                            ? Colors.grey
-                                            : Colors.black),
-                                  ),
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    size: 14,
-                                    color: state.offset <= 0
-                                        ? Colors.grey
-                                        : Colors.black,
-                                  ),
-                                ),
+                              const Text(
+                                'Kết quả bán hàng hôm nay',
+                                style: TextStyle(
+                                    color: AppColor.BLACK,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11),
                               ),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  if (!state.isLoadMore) return;
-                                  int offset = state.offset;
-                                  offset = offset + 1;
-                                  bloc.add(UpdateOffsetEvent(offset));
-                                },
-                                child: Container(
-                                  width: 25,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    border: Border.all(
-                                      color: !state.isLoadMore
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  _buildInfoPayment(
+                                    title: 'Tất cả GD',
+                                    totalTrans: '0',
+                                    amount: '0',
+                                    des: 'Doanh thu',
                                   ),
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 14,
-                                    color: !state.isLoadMore
-                                        ? Colors.grey
-                                        : Colors.black,
+                                  _buildInfoPayment(
+                                    title: 'Giao dịch đã hạch toán',
+                                    totalTrans: '0',
+                                    amount: '0',
+                                    amountColor: AppColor.GREEN,
+                                    des: 'Doanh thu',
                                   ),
-                                ),
+                                  _buildInfoPayment(
+                                    title: 'Giao dịch chờ hạch toán',
+                                    totalTrans: '0',
+                                    amount: '0',
+                                    des: 'Doanh thu',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          CustomPaint(
+                            painter: HorizontalDashedLinePainter(
+                                dashWidth: 5, dashSpace: 3),
+                            size: const Size(double.infinity, 1),
+                          ),
+                          const SizedBox(height: 16),
+                          FilterWidget(
+                            stream: filterStream,
+                            callBack: _onReceive,
+                            onSearch: _onSearch,
+                            terminals: state.terminals,
+                            bankId: _bankId,
+                            isOwner: _isOwner,
+                          ),
+                          const SizedBox(height: 24),
+                          CustomPaint(
+                            painter: HorizontalDashedLinePainter(
+                                dashWidth: 5, dashSpace: 3),
+                            size: const Size(double.infinity, 1),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Danh sách GD thanh toán',
+                            style: TextStyle(
+                                color: AppColor.BLACK,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11),
+                          ),
+                          const SizedBox(height: 12),
+                          TableTransWidget(
+                            list: state.isCache
+                                ? state.mapLocals[_typeTime.timeKeyExt.name] ??
+                                    []
+                                : state.maps['${state.offset}'] ?? [],
+                            offset: state.offset,
+                            isOwner: state.bankDTO?.isOwner ?? false,
+                            onChooseTerminal: (transDTO) => _onChooseTerminal(
+                                state.terminals, state.offset, transDTO),
+                            onEditNote: (dto) =>
+                                _onChooseNote(state.offset, dto),
+                            isLoading: state.status == BlocStatus.LOADING,
+                          ),
+                          _buildPageWidget(state),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -438,6 +423,128 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildPageWidget(TransactionState state) {
+    return Container(
+      padding: const EdgeInsets.only(top: 16),
+      height: 60,
+      child: Row(
+        children: [
+          Text('Trang ${state.offset + 1}'),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              int offset = state.offset;
+              if (offset <= 0) return;
+              offset = offset - 1;
+              bloc.add(UpdateOffsetEvent(offset));
+            },
+            child: Container(
+              width: 25,
+              height: 25,
+              padding: const EdgeInsets.only(left: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                    color: state.offset <= 0 ? Colors.grey : Colors.black),
+              ),
+              child: Icon(
+                Icons.arrow_back_ios,
+                size: 14,
+                color: state.offset <= 0 ? Colors.grey : Colors.black,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              if (!state.isLoadMore) return;
+              int offset = state.offset;
+              offset = offset + 1;
+              bloc.add(UpdateOffsetEvent(offset));
+            },
+            child: Container(
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                border: Border.all(
+                  color: !state.isLoadMore ? Colors.grey : Colors.black,
+                ),
+              ),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: !state.isLoadMore ? Colors.grey : Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoPayment(
+      {String title = '',
+      String totalTrans = '',
+      String amount = '',
+      String des = '',
+      Color? amountColor}) {
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+          Text(
+            '$totalTrans giao dịch đến',
+            style: const TextStyle(
+              color: AppColor.BLACK,
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+          Row(
+            children: [
+              Text(
+                amount,
+                style: TextStyle(
+                  color: amountColor ?? AppColor.BLUE_TEXT,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  height: 1.4,
+                ),
+              ),
+              const Text(
+                ' VND',
+                style: TextStyle(
+                  color: AppColor.GREY_TEXT,
+                  fontSize: 12,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            des,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

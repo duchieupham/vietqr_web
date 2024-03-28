@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'dialog_pick_date.dart';
-import 'drop_trans_widget.dart';
+import '../../../layouts/m_drop_widget.dart';
 import 'dart:html' as html;
 
 class DialogExcelWidget extends StatefulWidget {
@@ -321,7 +321,7 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   Widget _buildDropListTerminal() {
-    return DropTransWidget<TerminalQRDTO>(
+    return MDropWidget<TerminalQRDTO>(
       title: 'Cửa hàng',
       list: terminals,
       filter: terminalDTO,
@@ -330,7 +330,7 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   Widget _buildFilterByTimeWidget() {
-    return DropTransWidget<DataFilter>(
+    return MDropWidget<DataFilter>(
       title: 'Thời gian',
       list: listFilterByTime,
       filter: _filterByTime,

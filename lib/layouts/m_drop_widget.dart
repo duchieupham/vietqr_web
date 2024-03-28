@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-class DropTransWidget<T> extends StatelessWidget {
+class MDropWidget<T> extends StatelessWidget {
   final List<T> list;
   final T filter;
   final ValueChanged<T?> callBack;
   final String? title;
   final BorderRadius? borderRadius;
 
-  const DropTransWidget({
+  const MDropWidget({
     Key? key,
     required this.list,
     required this.filter,
@@ -22,11 +22,7 @@ class DropTransWidget<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title != null)
-          Text(
-            title!,
-            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-          ),
+        if (title != null) Text(title!, style: const TextStyle(fontSize: 11)),
         const SizedBox(height: 6),
         Container(
           height: 34,

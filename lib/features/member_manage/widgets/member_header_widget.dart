@@ -1,18 +1,17 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
+import 'package:VietQR/models/merchant/merchant_dto.dart';
 import 'package:flutter/material.dart';
 
-import '../../../layouts/horizontal_dashedline_painter.dart';
-
-class TransHeaderWidget extends StatelessWidget {
+class MemberHeaderWidget extends StatelessWidget {
   final String title;
   final Widget child;
-  final BankAccountDTO? dto;
+  final MerchantDTO? dto;
   final GestureTapCallback? onTap;
 
-  const TransHeaderWidget(
+  const MemberHeaderWidget(
       {super.key,
       required this.title,
       required this.child,
@@ -38,7 +37,7 @@ class TransHeaderWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Row(
                 children: [
-                  Text('Giao dịch', style: styles),
+                  Text('Quản lý nhân viên', style: styles),
                   const SizedBox(width: 8),
                   Text('/', style: styles),
                   const SizedBox(width: 8),
@@ -48,17 +47,9 @@ class TransHeaderWidget extends StatelessWidget {
                     onTap: onTap,
                     child: Row(
                       children: [
-                        if (dto?.imgId != null) ...[
-                          Image(
-                              image: ImageUtils.instance
-                                  .getImageNetWork(dto?.imgId ?? ''),
-                              width: 36),
-                          Text(
-                            dto?.bankAccount ?? '',
+                        Text(dto?.name ?? '',
                             style: const TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                                fontSize: 10, fontWeight: FontWeight.bold)),
                         Image(
                           image: ImageUtils.instance
                               .getImageNetWork(AppImages.icChooseBank),
@@ -71,7 +62,10 @@ class TransHeaderWidget extends StatelessWidget {
               ),
             ),
             Container(height: 1, color: AppColor.GREY_DADADA),
-            child,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: child,
+            ),
           ],
         ),
       ),

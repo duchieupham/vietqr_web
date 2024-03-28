@@ -175,16 +175,16 @@ class VietQRWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image(
-            image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
-            width: 110,
-            fit: BoxFit.fitWidth,
-          ),
+          // Image(
+          //   image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+          //   width: 110,
+          //   fit: BoxFit.fitWidth,
+          // ),
           QrImage(
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
             embeddedImage:
-                const AssetImage('assets/images/ic-viet-qr-small.png'),
+                ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             embeddedImageStyle: QrEmbeddedImageStyle(
               size: const Size(30, 30),
             ),
@@ -270,16 +270,16 @@ class VietQRWidget extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Image(
-                  image: ImageUtils.instance
-                      .getImageNetWork(AppImages.logoVietqrVn),
-                  width: 110,
-                ),
+                // Image(
+                //   image: ImageUtils.instance
+                //       .getImageNetWork(AppImages.logoVietqrVn),
+                //   width: 110,
+                // ),
                 QrImage(
                   data: qrGeneratedDTO.qrCode,
                   version: QrVersions.auto,
                   embeddedImage:
-                      const AssetImage('assets/images/ic-viet-qr-small.png'),
+                      const AssetImage('assets/images/ic-viet-qr.png'),
                   embeddedImageStyle: QrEmbeddedImageStyle(
                     size: const Size(25, 25),
                   ),

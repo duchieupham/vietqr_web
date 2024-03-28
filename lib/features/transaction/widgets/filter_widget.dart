@@ -13,7 +13,7 @@ import 'package:jiffy/jiffy.dart';
 
 import '../../../models/transaction/data_filter.dart';
 import 'dialog_excel_widget.dart';
-import 'drop_trans_widget.dart';
+import '../../../layouts/m_drop_widget.dart';
 
 class FilterWidget extends StatefulWidget {
   final Function(int?, int?, int?, String?, String?, DateTime?, DateTime?, bool)
@@ -117,7 +117,7 @@ class _FilterWidgetState extends State<FilterWidget> {
           style: TextStyle(
               color: AppColor.BLACK, fontWeight: FontWeight.bold, fontSize: 11),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -170,7 +170,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget _buildFilterByWidget() {
     return SizedBox(
       width: 170,
-      child: DropTransWidget<DataFilter>(
+      child: MDropWidget<DataFilter>(
         title: 'Tìm kiếm theo',
         list: listFilterBy,
         filter: _filterBy,
@@ -189,7 +189,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     if (_filterBy.id != 5) return const SizedBox();
     return SizedBox(
       width: 200,
-      child: DropTransWidget<DataFilter>(
+      child: MDropWidget<DataFilter>(
         list: listFilterByStatus,
         filter: _filterByStatus,
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
@@ -206,7 +206,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   Widget _buildFilterByTimeWidget() {
     return SizedBox(
       width: 160,
-      child: DropTransWidget(
+      child: MDropWidget(
         title: 'Thời gian',
         list: listFilterByTime,
         filter: _filterByTime,
@@ -236,7 +236,7 @@ class _FilterWidgetState extends State<FilterWidget> {
       children: [
         Text(
           title ?? 'Từ ngày',
-          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 11),
         ),
         const SizedBox(height: 6),
         GestureDetector(
@@ -278,7 +278,7 @@ class _FilterWidgetState extends State<FilterWidget> {
       height: 34,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.GREY_BORDER),
+        border: Border.all(color: AppColor.GREY_BORDER, width: 0.5),
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextField(

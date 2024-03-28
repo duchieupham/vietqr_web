@@ -344,7 +344,8 @@ class _HomeScreenState extends State<_HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _buildTitleCard(dto, userId,
-                                        isSelect: provider.bankId == dto.bankId),
+                                        isSelect:
+                                            provider.bankId == dto.bankId),
                                     if ((!dto.isAuthenticated &&
                                         dto.bankCode == 'MB' &&
                                         dto.userId == userId)) ...[

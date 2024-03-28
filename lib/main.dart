@@ -194,7 +194,6 @@ final GoRouter _router = GoRouter(
       path: '/',
       redirect: (context, state) {
         return (userId.isNotEmpty) ? '/transactions?type=0' : '/login';
-        // return '/test/qr-generated?token=ZDFlMzc4ZDAtOGY4MC00OTRiLWIyMDMtMmVmZDkxYWNkYWUz';
       },
     ),
     GoRoute(
@@ -414,15 +413,30 @@ final GoRouter _router = GoRouter(
     //       );
     //     }),
     GoRoute(
-      path: '/member',
-      redirect: (context, state) => (userId.isNotEmpty) ? '/member' : '/login',
+      path: '/member/list',
+      redirect: (context, state) =>
+          (userId.isNotEmpty) ? '/member/list' : '/login',
       builder: (BuildContext context, GoRouterState state) =>
-          const MemberManageScreen(),
+          const MemberManageScreen(type: MemberType.LIST_MEMBER),
       pageBuilder: (BuildContext context, GoRouterState state) {
         return buildPageWithoutAnimation(
           context: context,
           state: state,
-          child: const MemberManageScreen(),
+          child: const MemberManageScreen(type: MemberType.LIST_MEMBER),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/member/add-member',
+      redirect: (context, state) =>
+          (userId.isNotEmpty) ? '/member/add-member' : '/login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const MemberManageScreen(type: MemberType.ADD_MEMBER),
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return buildPageWithoutAnimation(
+          context: context,
+          state: state,
+          child: const MemberManageScreen(type: MemberType.ADD_MEMBER),
         );
       },
     ),

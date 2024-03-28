@@ -10,7 +10,6 @@ import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
-import 'package:VietQR/models/transaction_receive_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 
 class TransactionRepository {
