@@ -11,20 +11,15 @@ import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
-  TransactionBloc()
-      : super(const TransactionState(
-            listBanks: [],
-            listTrans: [],
-            terminals: [],
-            keys: [],
-            maps: {},
-            mapLocals: {})) {
+  TransactionBloc() : super(const TransactionState()) {
     on<GetTransOwnerEvent>(_getTransactions);
     on<FetchTransOwnerEvent>(_fetchTransaction);
     on<GetTransNotOwnerEvent>(_getTransactionsNotOwner);
     on<FetchTransNotOwnerEvent>(_fetchTransactionNotOwner);
     on<GetTransUnsettledEvent>(_getTransactionsUnsettled);
     on<FetchTransUnsettledEvent>(_fetchTransactionUnsettled);
+    on<GetTransUnclassifiedEvent>(_getTransUnclassified);
+    on<FetchTransUnclassifiedEvent>(_fetchTransUnclassified);
     on<GetListBankEvent>(_getBankAccounts);
     on<GetTerminalsEvent>(_getTerminals);
     on<UpdateBankAccountEvent>(_updateBankAccount);
@@ -32,6 +27,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<UpdateNoteEvent>(_updateNote);
     on<UpdateCacheDataEvent>(_updateCache);
     on<UpdateOffsetEvent>(_updateOffset);
+    on<TransApproveEvent>(_transApprove);
+    on<TransRequestEvent>(_transRequest);
+    on<GetTotalTransEvent>(_getTotalTrans);
   }
 
   final repository = TransactionRepository();
@@ -57,6 +55,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(state.copyWith(
           request: TransType.GET_BANKS,
           listBanks: list,
+          isLoading: false,
           bankDTO: bankDTO,
           status: BlocStatus.NONE,
         ));
@@ -256,6 +255,95 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
             isCache: false,
           ),
         );
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+    }
+  }
+
+  void _transApprove(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is TransApproveEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        TransType type = TransType.NONE;
+        final result = await repository.transApprove(event.dto);
+        if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+          Map<String, List<TransReceiveDTO>> maps = {};
+          maps.addAll(state.maps);
+
+          List<TransReceiveDTO> list = [...maps['${event.offset}'] ?? []];
+
+          /// duyệt thành công
+          if (event.dto.status == 1) {
+            maps['${event.offset}'] = list
+                .where((element) => element.id != event.dto.transactionId)
+                .toList();
+            type = TransType.APPROVE_TRANS;
+          } else {
+            int index = list
+                .indexWhere((element) => element.id == event.dto.transactionId);
+            List<TransRequest> requests = [];
+            if (index != -1) requests = [...list[index].requests];
+            requests = requests
+                .where((element) => element.requestId != event.dto.requestId)
+                .toList();
+            list[index].requests = [...requests];
+            maps['${event.offset}'] = list
+                .where((element) => element.id != event.dto.transactionId)
+                .toList();
+            type = TransType.CLOSE_TRANS;
+          }
+
+          emit(
+            state.copyWith(
+              request: type,
+              status: BlocStatus.NONE,
+              maps: maps,
+            ),
+          );
+        } else {
+          emit(state.copyWith(
+              status: BlocStatus.ERROR,
+              msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+    }
+  }
+
+  void _transRequest(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is TransRequestEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+        TransType type = TransType.NONE;
+        final result = await repository.transRequest(event.dto);
+        if (result.status == Stringify.RESPONSE_STATUS_SUCCESS) {
+          Map<String, List<TransReceiveDTO>> maps = {};
+          maps.addAll(state.maps);
+
+          List<TransReceiveDTO> list = [...maps['${event.offset}'] ?? []];
+
+          /// duyệt thành công
+
+          emit(
+            state.copyWith(
+              request: type,
+              status: BlocStatus.NONE,
+              maps: maps,
+            ),
+          );
+        } else {
+          emit(state.copyWith(
+              status: BlocStatus.ERROR,
+              msg: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'));
+        }
       }
     } catch (e) {
       LOG.error(e.toString());
@@ -657,6 +745,136 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           isCache: true,
           keys: [],
           listTrans: [],
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _getTransUnclassified(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetTransUnclassifiedEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING,
+            request: TransType.NONE,
+            isCache: true));
+        bool isLoadMore = true;
+        int offset = event.dto.offset;
+
+        Map<String, List<TransReceiveDTO>> maps = {};
+        maps.addAll(state.maps);
+
+        final result = await repository.getTransUnclassified(event.dto);
+
+        List<TransReceiveDTO> datas = [...result.items];
+
+        if (datas.isEmpty || datas.length < _limit) {
+          isLoadMore = false;
+        }
+
+        maps['$offset'] = datas;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          maps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+          isCache: true,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _fetchTransUnclassified(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is FetchTransUnclassifiedEvent) {
+        emit(state.copyWith(
+          status: BlocStatus.LOADING,
+          request: TransType.NONE,
+          isCache: false,
+          maps: event.clickSearch ? {} : state.maps,
+        ));
+        bool isLoadMore = event.loadMore;
+        int offset = event.dto.offset;
+
+        List<TransReceiveDTO> trans = state.maps['$offset'] ?? [];
+
+        if (trans.length >= _limit && trans.isNotEmpty) {
+          isLoadMore = true;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        } else if (trans.length < _limit && trans.isNotEmpty) {
+          isLoadMore = false;
+          emit(state.copyWith(
+            request: TransType.GET_TRANS_TRUE,
+            offset: offset,
+            isLoadMore: isLoadMore,
+            status: BlocStatus.UNLOADING,
+            isCache: false,
+          ));
+          return;
+        }
+
+        Map<String, List<TransReceiveDTO>> maps = {};
+        maps.addAll(state.maps);
+
+        final result = await repository.getTransUnclassified(event.dto);
+
+        List<TransReceiveDTO> datas = [...result.items];
+
+        if (datas.isEmpty || datas.length < _limit) {
+          isLoadMore = false;
+        }
+
+        maps['$offset'] = datas;
+
+        emit(state.copyWith(
+          request: TransType.GET_TRANS_TRUE,
+          listTrans: trans,
+          maps: maps,
+          offset: offset,
+          isLoadMore: isLoadMore,
+          status: BlocStatus.UNLOADING,
+          transactionDTO: result,
+          isCache: false,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          request: TransType.ERROR,
+          status: BlocStatus.UNLOADING,
+          msg: 'Có lỗi xảy ra. Vui lòng thử lại sau.'));
+    }
+  }
+
+  void _getTotalTrans(TransactionEvent event, Emitter emit) async {
+    try {
+      if (event is GetTotalTransEvent) {
+        emit(state.copyWith(status: BlocStatus.NONE, request: TransType.NONE));
+
+        final result = await repository.getTotalTrans(event.dto);
+
+        emit(state.copyWith(
+          request: TransType.GET_TOTAL,
+          totalTransDTO: result,
         ));
       }
     } catch (e) {

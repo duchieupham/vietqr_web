@@ -4,6 +4,7 @@ import 'package:VietQR/features/home/repositories/user_setting_repository.dart';
 import 'package:VietQR/features/information_user/repositories/wallet_repository.dart';
 import 'package:VietQR/features/merchant/repositories/merchant_repository.dart';
 import 'package:VietQR/models/account_is_merchant.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/wallet_dto.dart';
 import 'package:VietQR/services/shared_references/guide_helper.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -27,6 +28,7 @@ class Session {
   }
 
   late SharedPreferences sharedPrefs;
+
   static Session get instance => _singleton;
   final StreamController<EventType> _eventStream =
       StreamController<EventType>();
@@ -92,19 +94,26 @@ class Session {
   final UserSettingRepository _userSettingRepository =
       const UserSettingRepository();
 
-  Future getGuideWeb() async {
+  Future<SettingAccountDTO> getGuideWeb() async {
+    SettingAccountDTO result = SettingAccountDTO();
     String userId = UserInformationHelper.instance.getUserId();
     if (userId.isNotEmpty) {
-      bool value = await _userSettingRepository.getGuideWeb(userId);
-      await GuideHelper.instance.updateGuideDisable(value);
+      result = await _userSettingRepository.getGuideWeb(userId);
+
+      await GuideHelper.instance.updateGuideDisable(result.guideWeb);
+      await UserInformationHelper.instance.setAccountSetting(result);
     }
+    return result;
   }
 
   String _userECOMId = '';
+
   String get userECOMId => _userECOMId;
 
   String _userECOMToken = '';
+
   String get userECOMToken => _userECOMToken;
+
   void updateUserECOMId(String value) {
     _userECOMId = value;
   }
@@ -127,7 +136,9 @@ class Session {
   final WalletRepository walletRepository = const WalletRepository();
 
   WalletDTO _wallet = const WalletDTO();
+
   WalletDTO get wallet => _wallet;
+
   Future fetchWallet() async {
     String userId = UserInformationHelper.instance.getUserId();
     final WalletDTO dto = await walletRepository.getInfoWallet(userId);
@@ -136,6 +147,7 @@ class Session {
 
   // Account setting
   final SettingRepository settingRepository = const SettingRepository();
+
   Future fetchAccountSetting() async {
     String userId = UserInformationHelper.instance.getUserId();
     final settingAccount = await settingRepository.getSettingAccount(userId);
@@ -159,8 +171,10 @@ class Session {
   final MerchantRepository merchantRepository = const MerchantRepository();
 
   AccountIsMerchantDTO _accountIsMerchantDTO = const AccountIsMerchantDTO();
+
   AccountIsMerchantDTO get accountIsMerchantDTO => _accountIsMerchantDTO;
   List<BankAccountDTO> _listBankAccountOfMerchant = [];
+
   List<BankAccountDTO> get listBankAccountOfMerchant =>
       _listBankAccountOfMerchant;
 
@@ -192,6 +206,7 @@ class Session {
   }
 
   bool inQRGeneratePage = false;
+
   updateQRGeneratePage(bool value) {
     inQRGeneratePage = value;
   }

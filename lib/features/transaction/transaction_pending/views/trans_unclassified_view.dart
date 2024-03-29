@@ -8,25 +8,37 @@ import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
-import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.dart';
+import 'package:VietQR/features/transaction/transaction_pending/widgets/table_unclassified_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
 import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
-import 'package:VietQR/features/transaction/widgets/table_trans_widget.dart';
-import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
+import 'package:VietQR/services/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'dart:html' as html;
+import 'package:provider/provider.dart';
 
 class TransUnclassifiedView extends StatefulWidget {
-  const TransUnclassifiedView({super.key});
+  final BankAccountDTO bank;
+  final MerchantRole role;
+  final TransactionInputDTO dto;
+  final ValueChanged<TransactionInputDTO> callBack;
+  final Stream<dynamic> stream;
+
+  const TransUnclassifiedView(
+      {super.key,
+      required this.bank,
+      required this.callBack,
+      required this.dto,
+      required this.role,
+      required this.stream});
 
   @override
   State<TransUnclassifiedView> createState() => _StoreScreenState();
@@ -34,6 +46,9 @@ class TransUnclassifiedView extends StatefulWidget {
 
 class _StoreScreenState extends State<TransUnclassifiedView> {
   late TransactionBloc bloc;
+  late SettingProvider provider;
+
+  MerchantRole role = MerchantRole();
 
   final _streamController = StreamController<bool>.broadcast();
   late Stream<bool> filterStream;
@@ -49,8 +64,6 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
   int _typeStatus = 0;
   int _typeTime = 1;
   String _value = '';
-  String _bankId = '';
-  bool _isOwner = false;
 
   List<String> listTimeKey = [];
 
@@ -79,6 +92,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
   }
 
   void _onCallAPi(TransactionInputDTO dto, {String timeKey = ''}) {
+    widget.callBack(dto);
     bloc.add(GetTransUnsettledEvent(dto: dto, timeKey: timeKey));
   }
 
@@ -87,7 +101,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
       _value = '$_typeStatus';
     }
     TransactionInputDTO dto = TransactionInputDTO(
-      bankId: _bankId,
+      bankId: widget.bank.bankId,
       offset: offset,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
@@ -113,7 +127,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
     }
 
     TransactionInputDTO dto = TransactionInputDTO(
-      bankId: _bankId,
+      bankId: widget.bank.bankId,
       offset: 0,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
@@ -128,6 +142,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
     }
     bloc.add(
         FetchTransUnsettledEvent(dto: dto, loadMore: true, clickSearch: true));
+    widget.callBack.call(dto);
   }
 
   _onReceive(
@@ -148,21 +163,42 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
     updateState();
 
     if (clearData) {
+      TransactionInputDTO dto = TransactionInputDTO(
+        bankId: widget.bank.bankId,
+        offset: 0,
+        from: _dateFormat.format(_fromDate),
+        to: _dateFormat.format(_toDate),
+        value: _value,
+        type: _typeFilter,
+        status: _typeStatus,
+      );
+      widget.callBack.call(dto);
       bloc.add(UpdateCacheDataEvent(
           timeKey: _typeTime.timeKeyExt.name, clearData: clearData));
     }
   }
 
-  void loadAll() {
-    _fromDate = _formatFromDate;
-    _toDate = _formatEndDate;
+  void loadAll({BankAccountDTO? bankDTO}) {
+    _typeFilter = widget.dto.type;
+    _typeStatus = widget.dto.status;
+    _typeTime = widget.dto.typeTime;
+    _value = widget.dto.value;
+    _fromDate = widget.dto.from.isNotEmpty
+        ? _dateFormat.parse(widget.dto.from)
+        : _formatFromDate;
+    _toDate = widget.dto.to.isNotEmpty
+        ? _dateFormat.parse(widget.dto.to)
+        : _formatEndDate;
+
     updateState();
 
     TransactionInputDTO dto = TransactionInputDTO(
-      bankId: _bankId,
+      bankId: widget.bank.bankId,
       from: _dateFormat.format(_fromDate),
       to: _dateFormat.format(_toDate),
     );
+
+    if (bankDTO != null) dto.bankId = bankDTO.bankId;
 
     _onCallAPi(dto, timeKey: _typeTime.timeKeyExt.name);
   }
@@ -171,10 +207,16 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
   void initState() {
     super.initState();
     bloc = TransactionBloc();
+    provider = Provider.of<SettingProvider>(context, listen: false);
     filterStream = _streamController.stream;
-
+    widget.stream.listen((event) {
+      if (event is BankAccountDTO) {
+        bloc.add(UpdateBankAccountEvent(event));
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bloc.add(GetListBankEvent());
+      loadAll();
+      bloc.add(GetTerminalsEvent(widget.bank.bankId));
     });
   }
 
@@ -182,117 +224,92 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
   Widget build(BuildContext context) {
     return BlocProvider<TransactionBloc>(
       create: (context) => bloc,
-      child: Material(
-        color: AppColor.GREY_BG,
-        child: (!isMobile)
-            ? const WebMobileBlankWidget()
-            : BlocConsumer<TransactionBloc, TransactionState>(
-                listener: (context, state) async {
-                  if (state.request == TransType.UPDATE_TERMINAL ||
-                      state.request == TransType.UPDATE_NOTE) {
-                    Fluttertoast.showToast(
-                      msg: 'Cập nhật thành công',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Theme.of(context).cardColor,
-                      textColor: Theme.of(context).hintColor,
-                      fontSize: 15,
-                      webBgColor: 'rgba(255, 255, 255)',
-                      webPosition: 'center',
-                    );
-                  }
-
-                  if (state.request == TransType.UPDATE_BANK) {
-                    bloc.add(GetTerminalsEvent(_bankId));
-                  }
-
-                  if (state.request == TransType.GET_BANKS) {
-                    bloc.add(GetTerminalsEvent(state.bankDTO?.bankId ?? ''));
-
-                    setState(() {
-                      _bankId = state.bankDTO?.bankId ?? '';
-                      _isOwner = state.bankDTO?.isOwner ?? false;
-                    });
-
-                    html.window.history.pushState(
-                        null,
-                        '/transactions?type=1?bankId=$_bankId',
-                        '/transactions?type=1?bankId=$_bankId');
-
-                    loadAll();
-                  }
-
-                  if (state.request == TransType.ERROR) {
-                    await DialogWidget.instance.openMsgDialog(
-                        title: 'Thông báo', msg: state.msg ?? '');
-                  }
-
-                  if (state.request == TransType.GET_TRANS_TRUE) {
-                    listTimeKey = [...state.keys];
-                    updateState();
-                  }
-
-                  if (state.request == TransType.UPDATE_OFFSET) {
-                    loadMore(state.offset, state.isLoadMore);
-                  }
-                },
-                builder: (context, state) {
-                  return TransHeaderWidget(
-                    title: 'Giao dịch chờ xác nhận',
-                    dto: state.bankDTO,
-                    onTap: () => _onChooseBank(state.listBanks),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          FilterWidget(
-                            stream: filterStream,
-                            terminals: state.terminals,
-                            callBack: _onReceive,
-                            onSearch: _onSearch,
-                            bankId: _bankId,
-                            isOwner: false,
-                            isPending: true,
-                          ),
-                          const SizedBox(height: 24),
-                          CustomPaint(
-                            painter: HorizontalDashedLinePainter(
-                                dashWidth: 5, dashSpace: 3),
-                            size: const Size(double.infinity, 1),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'Danh sách GD chờ thanh toán',
-                            style: TextStyle(
-                                color: AppColor.BLACK,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11),
-                          ),
-                          const SizedBox(height: 12),
-                          TableTransWidget(
-                            list: state.isCache
-                                ? state.mapLocals[_typeTime.timeKeyExt.name] ??
-                                    []
-                                : state.maps['${state.offset}'] ?? [],
-                            offset: state.offset,
-                            isOwner: state.bankDTO?.isOwner ?? false,
-                            onChooseTerminal: (transDTO) => _onChooseTerminal(
-                                state.terminals, state.offset, transDTO),
-                            onEditNote: (dto) =>
-                                _onChooseNote(state.offset, dto),
-                            isLoading: state.status == BlocStatus.LOADING,
-                          ),
-                          _buildPageWidget(state),
-                        ],
-                      ),
-                    ),
+      child: (!isMobile)
+          ? const Material(
+              color: AppColor.GREY_BG,
+              child: WebMobileBlankWidget(),
+            )
+          : BlocConsumer<TransactionBloc, TransactionState>(
+              listener: (context, state) async {
+                if (state.request == TransType.UPDATE_TERMINAL ||
+                    state.request == TransType.UPDATE_NOTE) {
+                  Fluttertoast.showToast(
+                    msg: 'Cập nhật thành công',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Theme.of(context).cardColor,
+                    textColor: Theme.of(context).hintColor,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
                   );
-                },
-              ),
-      ),
+                }
+
+                if (state.request == TransType.ERROR) {
+                  await DialogWidget.instance
+                      .openMsgDialog(title: 'Thông báo', msg: state.msg ?? '');
+                }
+
+                if (state.request == TransType.GET_TRANS_TRUE) {
+                  listTimeKey = [...state.keys];
+                  updateState();
+                }
+
+                if (state.request == TransType.UPDATE_OFFSET) {
+                  loadMore(state.offset, state.isLoadMore);
+                }
+                if (state.request == TransType.UPDATE_BANK) {
+                  loadAll(bankDTO: state.bankDTO);
+                  bloc.add(GetTerminalsEvent(state.bankDTO?.bankId ?? ''));
+                }
+              },
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    FilterWidget(
+                      stream: filterStream,
+                      terminals: state.terminals,
+                      callBack: _onReceive,
+                      onSearch: _onSearch,
+                      bankId: widget.bank.bankId,
+                      isOwner: false,
+                      isPending: true,
+                    ),
+                    const SizedBox(height: 24),
+                    CustomPaint(
+                      painter: HorizontalDashedLinePainter(
+                          dashWidth: 5, dashSpace: 3),
+                      size: const Size(double.infinity, 1),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'Danh sách GD chờ thanh toán',
+                      style: TextStyle(
+                          color: AppColor.BLACK,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11),
+                    ),
+                    const SizedBox(height: 12),
+                    TableUnclassifiedWidget(
+                      items: state.isCache
+                          ? state.mapLocals[_typeTime.timeKeyExt.name] ?? []
+                          : state.maps['${state.offset}'] ?? [],
+                      offset: state.offset,
+                      isOwner: widget.bank.isOwner,
+                      onChooseTerminal: (transDTO) => _onChooseTerminal(
+                          state.terminals, state.offset, transDTO),
+                      onEditNote: (dto) => _onChooseNote(state.offset, dto),
+                      isLoading: state.status == BlocStatus.LOADING,
+                      role: widget.role,
+                      callBack: (TransRequest value) {},
+                    ),
+                    _buildPageWidget(state),
+                  ],
+                );
+              },
+            ),
     );
   }
 
@@ -306,40 +323,30 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
         return DialogChooseTerminalWidget(
           terminals: list,
           transDTO: transDTO,
-          update: (value) {
-            if (value.isEmpty) return;
-            bloc.add(
-              UpdateTerminalEvent(
-                  transactionId: transDTO.transactionId,
-                  terminalCode: value,
-                  offset: offset,
-                  timeKey: _typeTime.timeKeyExt.name),
-            );
+          update: (terminalCode, terminalId) {
+            if (terminalCode.isEmpty) return;
+            if (widget.role.isUpdateTransRequest) {
+              TransRequest dto = TransRequest(
+                transactionId: transDTO.transactionId,
+                requestType: 0,
+                terminalCode: terminalCode,
+                terminalId: terminalId,
+                merchantId: widget.role.merchantId,
+              );
+              bloc.add(TransRequestEvent(dto: dto, offset: offset));
+            } else {
+              bloc.add(
+                UpdateTerminalEvent(
+                    transactionId: transDTO.transactionId,
+                    terminalCode: terminalCode,
+                    offset: offset,
+                    timeKey: _typeTime.timeKeyExt.name),
+              );
+            }
           },
         );
       },
     );
-  }
-
-  void _onChooseBank(List<BankAccountDTO> list) async {
-    final data = await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DialogChooseBankWidget(banks: list);
-      },
-    );
-
-    if (data != null && data is BankAccountDTO) {
-      _streamController.add(true);
-      bloc.add(UpdateBankAccountEvent(data));
-      html.window.history.pushState(
-          null,
-          '/transactions?type=0?bankId=$_bankId',
-          '/transactions?type=0?bankId=${data.bankId}');
-      _bankId = data.bankId;
-      loadAll();
-    }
   }
 
   ///

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class DialogChooseTerminalWidget extends StatefulWidget {
   final List<TerminalQRDTO> terminals;
-  final Function(String) update;
+  final Function(String, String) update;
   final TransReceiveDTO transDTO;
 
   const DialogChooseTerminalWidget(
@@ -214,7 +214,8 @@ class _DialogChooseTerminalWidgetState
                         function: () {
                           if (_searchController.text.isNotEmpty) {
                             Navigator.pop(context);
-                            widget.update.call(_searchController.text);
+                            widget.update
+                                .call(_searchController.text, _dto.terminalId);
                           } else {
                             Navigator.pop(context);
                           }

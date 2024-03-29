@@ -2,6 +2,7 @@
 
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction/total_trans_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
@@ -18,6 +19,9 @@ enum TransType {
   UPDATE_CACHE,
   UPDATE_CACHE_CALL,
   UPDATE_OFFSET,
+  APPROVE_TRANS,
+  CLOSE_TRANS,
+  GET_TOTAL,
   DAY,
   MONTH,
   SEVEN_DAY,
@@ -61,10 +65,13 @@ class TransactionState extends Equatable {
   final bool isLoadMore;
   final Map<String, List<TransReceiveDTO>> maps;
   final Map<String, List<TransReceiveDTO>> mapLocals;
+  final TransactionDTO? transactionDTO;
   final List<TerminalQRDTO> terminals;
   final bool isCache;
   final List<String> keys;
   final TransactionInputDTO? transInput;
+  final bool isLoading;
+  final TotalTransDTO? totalTransDTO;
 
   const TransactionState({
     this.status = BlocStatus.NONE,
@@ -75,12 +82,15 @@ class TransactionState extends Equatable {
     this.isLoadMore = true,
     this.isCache = false,
     this.transInput,
-    required this.maps,
-    required this.mapLocals,
-    required this.listBanks,
-    required this.listTrans,
-    required this.terminals,
-    required this.keys,
+    this.maps = const {},
+    this.mapLocals = const {},
+    this.listBanks = const [],
+    this.listTrans = const [],
+    this.terminals = const [],
+    this.keys = const [],
+    this.transactionDTO,
+    this.isLoading = true,
+    this.totalTransDTO,
   });
 
   TransactionState copyWith({
@@ -91,6 +101,7 @@ class TransactionState extends Equatable {
     List<TransReceiveDTO>? listTrans,
     BankAccountDTO? bankDTO,
     bool? isLoadMore,
+    bool? isLoading,
     bool? isCache,
     bool? isEmpty,
     int? offset,
@@ -99,6 +110,8 @@ class TransactionState extends Equatable {
     Map<String, List<TransReceiveDTO>>? mapLocals,
     List<String>? keys,
     TransactionInputDTO? transInput,
+    TransactionDTO? transactionDTO,
+    TotalTransDTO? totalTransDTO,
   }) {
     return TransactionState(
       status: status ?? this.status,
@@ -115,6 +128,9 @@ class TransactionState extends Equatable {
       terminals: terminals ?? this.terminals,
       keys: keys ?? this.keys,
       transInput: transInput ?? this.transInput,
+      transactionDTO: transactionDTO ?? this.transactionDTO,
+      isLoading: isLoading ?? this.isLoading,
+      totalTransDTO: totalTransDTO ?? this.totalTransDTO,
     );
   }
 
@@ -134,5 +150,8 @@ class TransactionState extends Equatable {
         isCache,
         keys,
         transInput,
+        transactionDTO,
+        isLoading,
+        totalTransDTO,
       ];
 }

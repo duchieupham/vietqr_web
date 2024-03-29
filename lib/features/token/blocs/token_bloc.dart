@@ -11,6 +11,7 @@ class TokenBloc extends Bloc<TokenEvent, TokenState> {
   TokenBloc() : super(TokenInitialState()) {
     on<TokenEventCheckValid>(_checkValidToken);
     // on<TokenFcmUpdateEvent>(_updateFcmToken);
+    on<GetAccountSettingEvent>(_getAccountSetting);
     on<TokenEventLogout>(_logout);
   }
 }
@@ -53,6 +54,19 @@ void _checkValidToken(TokenEvent event, Emitter emit) async {
       } else if (check == 4) {
         emit(TokenExpiredState());
       }
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    emit(TokenInvalidState());
+  }
+}
+
+void _getAccountSetting(TokenEvent event, Emitter emit) async {
+  try {
+    if (event is TokenEventCheckValid) {
+      emit(TokenCheckingState());
+      int result = await tokenRepository.getAccountSetting();
+      emit(GetAccountSettingSuccess(result));
     }
   } catch (e) {
     LOG.error(e.toString());

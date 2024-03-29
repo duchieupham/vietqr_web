@@ -2,6 +2,42 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+class TransactionDTO {
+  final int? page;
+  final int? size;
+  final int? totalPage;
+  final int? totalElement;
+  final List<TransReceiveDTO> items;
+
+  TransactionDTO({
+    this.page,
+    this.size,
+    this.totalPage,
+    this.totalElement,
+    this.items = const [],
+  });
+
+  factory TransactionDTO.fromJson(Map<String, dynamic> json) => TransactionDTO(
+        page: json["page"] ?? 0,
+        size: json["size"] ?? 0,
+        totalPage: json["totalPage"] ?? 0,
+        totalElement: json["totalElement"] ?? 0,
+        items: json["items"] == null
+            ? []
+            : List<TransReceiveDTO>.from(
+                json["items"]!.map((x) => TransReceiveDTO.fromJson(x)),
+              ),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "page": page,
+        "size": size,
+        "totalPage": totalPage,
+        "totalElement": totalElement,
+        "items": List<dynamic>.from(items.map((x) => x.toJson())),
+      };
+}
+
 class TransReceiveDTO {
   final String bankAccount;
   final String amount;
@@ -13,10 +49,17 @@ class TransReceiveDTO {
   final int type;
   final String transType;
   String terminalCode;
+  String terminalName;
   String note;
   final String referenceNumber;
   final String orderId;
   final String bankShortName;
+  final String id;
+  final String bankId;
+  final int timeCreated;
+  final String userBankName;
+  final int totalRequest;
+  List<TransRequest> requests;
 
   TransReceiveDTO({
     this.bankAccount = '',
@@ -29,11 +72,20 @@ class TransReceiveDTO {
     this.type = 0,
     this.transType = '',
     this.terminalCode = '',
+    this.terminalName = '',
     this.note = '',
     this.referenceNumber = '',
     this.orderId = '',
     this.bankShortName = '',
+    this.id = '',
+    this.bankId = '',
+    this.timeCreated = 0,
+    this.userBankName = '',
+    this.totalRequest = 0,
+    this.requests = const [],
   });
+
+  double get heightRequest => requests.isEmpty ? 50 : requests.length * 50;
 
   // api update terminalCode (chỉ enable khi is_owner = true và type = 2, transType = C, status = 1):
   bool get isEnableTerminal {
@@ -151,7 +203,17 @@ class TransReceiveDTO {
       orderId: json['orderId'] ?? '',
       note: json['note'] ?? '',
       terminalCode: json['terminalCode'] ?? '',
+      terminalName: json['terminalName'] ?? '',
       referenceNumber: json['referenceNumber'] ?? '',
+      id: json["id"] ?? '',
+      bankId: json["bankId"] ?? '',
+      timeCreated: json["timeCreated"] ?? 0,
+      userBankName: json["userBankName"] ?? '',
+      totalRequest: json["totalRequest"] ?? 0,
+      requests: json["requests"] == null
+          ? []
+          : List<TransRequest>.from(
+              json["requests"]!.map((x) => TransRequest.fromJson(x))),
     );
   }
 
@@ -167,4 +229,65 @@ class TransReceiveDTO {
     data['transType'] = transType;
     return data;
   }
+}
+
+class TransRequest {
+  final String fullName;
+  final int requestType;
+  final String userId;
+  final String merchantId;
+  final String terminalId;
+  final String merchantName;
+  final String transactionId;
+  final String requestId;
+  final String phoneNumber;
+  final String terminalName;
+  final String terminalCode;
+  int status;
+
+  TransRequest({
+    this.fullName = '',
+    this.requestType = 0,
+    this.userId = '',
+    this.merchantId = '',
+    this.terminalId = '',
+    this.merchantName = '',
+    this.transactionId = '',
+    this.requestId = '',
+    this.phoneNumber = '',
+    this.terminalName = '',
+    this.terminalCode = '',
+    this.status = 0,
+  });
+
+  String get nameRequest =>
+      'Xác nhận GD thuộc cửa hàng $terminalName ${terminalCode.isNotEmpty ? '($terminalCode)' : ''}';
+
+  factory TransRequest.fromJson(Map<String, dynamic> json) => TransRequest(
+        fullName: json["fullName"] ?? '',
+        requestType: json["requestType"] ?? 0,
+        userId: json["userId"] ?? '',
+        merchantId: json["merchantId"] ?? '',
+        terminalId: json["terminalId"] ?? '',
+        merchantName: json["merchantName"] ?? '',
+        transactionId: json["transactionId"] ?? '',
+        terminalCode: json["requestValue"] ?? '',
+        requestId: json["requestId"] ?? '',
+        phoneNumber: json["phoneNumber"] ?? '',
+        terminalName: json["terminalName"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "fullName": fullName,
+        "requestType": requestType,
+        "userId": userId,
+        "merchantId": merchantId,
+        "terminalId": terminalId,
+        "merchantName": merchantName,
+        "transactionId": transactionId,
+        "requestValue": terminalCode,
+        "requestId": requestId,
+        "phoneNumber": phoneNumber,
+        "terminalName": terminalName,
+      };
 }

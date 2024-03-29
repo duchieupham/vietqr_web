@@ -1,5 +1,6 @@
 import 'package:VietQR/features/home/repositories/home_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +38,9 @@ class SettingProvider with ChangeNotifier {
       isAuthenticated: false);
 
   BankAccountDTO get bankAccountSelected => _bankAccountSelected;
+
+  SettingAccountDTO get settingAccountDTO =>
+      UserInformationHelper.instance.getAccountSetting();
 
   final homeRepository = const HomeRepository();
 

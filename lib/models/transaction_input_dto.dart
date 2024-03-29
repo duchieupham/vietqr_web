@@ -1,21 +1,23 @@
 class TransactionInputDTO {
-  final String bankId;
-  final int offset;
-  final int status;
+  String bankId;
+  int offset;
+  int status;
   int type;
-  String? from;
-  String? to;
+  int typeTime;
+  String from;
+  String to;
   String value;
   String userId;
   String terminalCode;
 
   TransactionInputDTO({
-    required this.bankId,
+    this.bankId = '',
     this.offset = 0,
     this.status = 0,
     this.type = 9,
-    this.from,
-    this.to,
+    this.typeTime = 1,
+    this.from = '',
+    this.to = '',
     this.value = '',
     this.userId = '',
     this.terminalCode = '',
@@ -28,9 +30,9 @@ class TransactionInputDTO {
     data['terminalCode'] = terminalCode;
     data['status'] = status;
     data['type'] = type;
-    if (from != null) data['from'] = from;
-    if (to != null) data['to'] = to;
-    if (value != null) data['value'] = value;
+    data['from'] = from;
+    data['to'] = to;
+    data['value'] = value;
     return data;
   }
 }

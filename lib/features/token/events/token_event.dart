@@ -22,3 +22,5 @@ class TokenFcmUpdateEvent extends TokenEvent {
 }
 
 class TokenEventLogout extends TokenEvent {}
+
+class GetAccountSettingEvent extends TokenEvent {}

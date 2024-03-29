@@ -80,6 +80,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
   }
 
   void _onCallAPi(TransactionInputDTO dto, {String timeKey = ''}) {
+    bloc.add(GetTotalTransEvent(dto: dto));
     if (_isOwner) {
       bloc.add(GetTransOwnerEvent(dto: dto, timeKey: timeKey));
     } else {
@@ -101,6 +102,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       status: _typeStatus,
       terminalCode: _terminalCode,
     );
+    bloc.add(GetTotalTransEvent(dto: dto));
 
     if (_isOwner) {
       bloc.add(FetchTransOwnerEvent(dto: dto, loadMore: loadMore));
@@ -167,6 +169,17 @@ class _StoreScreenState extends State<TransactionPaymentView> {
     updateState();
 
     if (clearData) {
+      TransactionInputDTO dto = TransactionInputDTO(
+        bankId: _bankId,
+        offset: 0,
+        from: _dateFormat.format(_fromDate),
+        to: _dateFormat.format(_toDate),
+        value: _value,
+        type: _typeFilter,
+        status: _typeStatus,
+      );
+
+      bloc.add(GetTotalTransEvent(dto: dto));
       bloc.add(UpdateCacheDataEvent(
           timeKey: _typeTime.timeKeyExt.name, clearData: clearData));
     }
@@ -283,21 +296,29 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                 children: [
                                   _buildInfoPayment(
                                     title: 'Tất cả GD',
-                                    totalTrans: '0',
-                                    amount: '0',
+                                    totalTrans:
+                                        '${state.totalTransDTO?.totalTrans ?? ''}',
+                                    amount:
+                                        state.totalTransDTO?.getCashIn ?? '',
                                     des: 'Doanh thu',
                                   ),
                                   _buildInfoPayment(
                                     title: 'Giao dịch đã hạch toán',
-                                    totalTrans: '0',
-                                    amount: '0',
+                                    totalTrans:
+                                        '${state.totalTransDTO?.totalSettled ?? ''}',
+                                    amount:
+                                        state.totalTransDTO?.getCashSettled ??
+                                            '',
                                     amountColor: AppColor.GREEN,
                                     des: 'Doanh thu',
                                   ),
                                   _buildInfoPayment(
                                     title: 'Giao dịch chờ hạch toán',
-                                    totalTrans: '0',
-                                    amount: '0',
+                                    totalTrans:
+                                        '${state.totalTransDTO?.totalUnsettled ?? ''}',
+                                    amount:
+                                        state.totalTransDTO?.getCashUnsettled ??
+                                            '',
                                     des: 'Doanh thu',
                                   ),
                                 ],
@@ -368,7 +389,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
         return DialogChooseTerminalWidget(
           terminals: list,
           transDTO: transDTO,
-          update: (value) {
+          update: (value, terminalId) {
             if (value.isEmpty) return;
             bloc.add(
               UpdateTerminalEvent(

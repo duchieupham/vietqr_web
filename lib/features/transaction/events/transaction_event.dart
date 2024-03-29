@@ -171,3 +171,59 @@ class UpdateOffsetEvent extends TransactionEvent {
   @override
   List<Object?> get props => [offset];
 }
+
+class GetTransUnclassifiedEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final String timeKey;
+
+  const GetTransUnclassifiedEvent({required this.dto, this.timeKey = ''});
+
+  @override
+  List<Object?> get props => [dto, timeKey];
+}
+
+class FetchTransUnclassifiedEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+  final bool loadMore;
+  final bool clickSearch;
+
+  const FetchTransUnclassifiedEvent({
+    required this.dto,
+    this.loadMore = true,
+    this.clickSearch = false,
+  });
+
+  @override
+  List<Object?> get props => [dto, loadMore, clickSearch];
+}
+
+class TransApproveEvent extends TransactionEvent {
+  final TransRequest dto;
+  final int offset;
+
+  const TransApproveEvent({required this.dto, required this.offset});
+
+  @override
+  List<Object?> get props => [dto, offset];
+}
+
+class TransRequestEvent extends TransactionEvent {
+  final TransRequest dto;
+  final int offset;
+
+  const TransRequestEvent({required this.dto, required this.offset});
+
+  @override
+  List<Object?> get props => [dto, offset];
+}
+
+class GetTotalTransEvent extends TransactionEvent {
+  final TransactionInputDTO dto;
+
+  const GetTotalTransEvent({
+    required this.dto,
+  });
+
+  @override
+  List<Object?> get props => [dto];
+}

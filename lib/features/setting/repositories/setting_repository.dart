@@ -30,7 +30,7 @@ class SettingRepository {
   }
 
   Future<SettingAccountDTO> getSettingAccount(String userId) async {
-    SettingAccountDTO result = const SettingAccountDTO();
+    SettingAccountDTO result = SettingAccountDTO();
     try {
       final String url = '${EnvConfig.getBaseUrl()}accounts/setting/$userId';
       final response = await BaseAPIClient.getAPI(

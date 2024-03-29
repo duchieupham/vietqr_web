@@ -6,6 +6,7 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/transaction/total_trans_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
@@ -171,6 +172,58 @@ class TransactionRepository {
     return result;
   }
 
+  Future<TransactionDTO> getTransUnclassified(TransactionInputDTO dto) async {
+    TransactionDTO result = TransactionDTO();
+    try {
+      final String url =
+          '${EnvConfig.getBaseUrl()}transaction-request?bankId=${dto.bankId}&userId=$userId'
+          '&type=${dto.type}&page=${dto.offset + 1}&size=$limit&value=${dto.value}&fromDate=${dto.from}&toDate=${dto.to}';
+
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        result = TransactionDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<ResponseMessageDTO> transRequest(TransRequest dto) async {
+    ResponseMessageDTO result = const ResponseMessageDTO();
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}transaction-request';
+
+      final response = await BaseAPIClient.postAPI(
+          url: url,
+          type: AuthenticationType.SYSTEM,
+          body: {
+            'transactionId': dto.transactionId,
+            'requestType': dto.requestType,
+            'requestValue': dto.terminalCode,
+            'userId': userId,
+            'terminalId': dto.terminalId,
+            'merchantId': dto.merchantId,
+          });
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          result = ResponseMessageDTO.fromJson(data);
+        }
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+    }
+    return result;
+  }
+
   Future<List<BankAccountDTO>> getListBankAccount() async {
     List<BankAccountDTO> result = [];
 
@@ -190,6 +243,55 @@ class TransactionRepository {
       }
     } catch (e) {
       LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<TotalTransDTO> getTotalTrans(TransactionInputDTO dto) async {
+    TotalTransDTO result = TotalTransDTO();
+
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}transactions/web/overview?'
+          'bankId=${dto.bankId}&userId=$userId&fromDate=${dto.from}&toDate=${dto.to}';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          result = TotalTransDTO.fromJson(data);
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<ResponseMessageDTO> transApprove(TransRequest body) async {
+    ResponseMessageDTO result = const ResponseMessageDTO();
+
+    try {
+      final String url = '${EnvConfig.getBaseUrl()}transaction-approve';
+      final response = await BaseAPIClient.postAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+        body: {
+          'requestId': body.requestId,
+          'transactionId': body.transactionId,
+          'userId': body.userId,
+          'status': body.status,
+        },
+      );
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        result = const ResponseMessageDTO(status: 'SUCCESS', message: '');
+      } else {
+        result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      result = const ResponseMessageDTO(status: 'FAILED', message: 'E05');
     }
     return result;
   }

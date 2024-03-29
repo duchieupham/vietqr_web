@@ -49,6 +49,8 @@ import 'package:VietQR/features/register/views/service.dart';
 import 'package:VietQR/features/setting/blocs/card_num_bloc.dart';
 import 'package:VietQR/features/setting/get_key_page.dart';
 import 'package:VietQR/features/token/blocs/token_bloc.dart';
+import 'package:VietQR/features/token/events/token_event.dart';
+import 'package:VietQR/features/token/states/token_state.dart';
 import 'package:VietQR/features/top_up_account/views/top_up_view.dart';
 import 'package:VietQR/features/transaction/transaction_screen.dart';
 import 'package:VietQR/features/vhitek/vhitek_screen_page.dart';

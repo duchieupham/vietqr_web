@@ -4,8 +4,6 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:flutter/material.dart';
 
-import '../../../layouts/horizontal_dashedline_painter.dart';
-
 class TransHeaderWidget extends StatelessWidget {
   final String title;
   final Widget child;

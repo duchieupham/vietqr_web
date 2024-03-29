@@ -10,6 +10,7 @@ class UserInformationHelper {
 
   static const UserInformationHelper _instance =
       UserInformationHelper._privateConsrtructor();
+
   static UserInformationHelper get instance => _instance;
 
   Future<void> initialUserInformationHelper() async {
@@ -87,12 +88,14 @@ class UserInformationHelper {
   }
 
   Future<void> setAccountSetting(SettingAccountDTO dto) async {
-    await sharedPrefs.setString('ACCOUNT_SETTING', dto.toSPJson().toString());
+    await sharedPrefs.setString('ACCOUNT_SETTING', jsonEncode(dto));
   }
 
   SettingAccountDTO getAccountSetting() {
-    return SettingAccountDTO.fromJson(
-        json.decode(sharedPrefs.getString('ACCOUNT_SETTING')!));
+    final data = sharedPrefs.getString('ACCOUNT_SETTING');
+    if (data == null || data.isEmpty) return SettingAccountDTO();
+    Map<String, dynamic> value = json.decode(data);
+    return SettingAccountDTO.fromJson(value);
   }
 
   Future<void> setImageId(String imgId) async {
