@@ -104,7 +104,7 @@ class AppImages {
   static String icRefundTrans = '20b5f79a-63c5-441c-9dd6-a557f05e9390';
   static String icNoteTrans = '68a11915-aa24-415d-9f2a-43d097dd9f10';
   static String icEmptyTrans = '2cc506cb-df85-429c-87dc-4d08d2bd5ff9';
-  static String icRequestTrans='bcacb10e-8730-4f0d-b18c-bfa9498d6496';
+  static String icRequestTrans = 'bcacb10e-8730-4f0d-b18c-bfa9498d6496';
 
   /// popup GD
   static String icStoreBlack = '8fd18baf-84e1-4976-ac91-6ea95ddeec0c';
@@ -114,4 +114,10 @@ class AppImages {
   /// member
   static String icDetailMember = '9a9fa6f3-0cc0-4dab-8a43-31be47e90c16';
   static String icTrashRed = '8576b7b9-c77c-4ba1-82a7-a5b9030d37bd';
+
+  ///notify
+  static String icSuccessOut = 'ebca92a0-f0de-4d3b-a9c2-74b2aa6d6e5a';
+  static String icSuccessInGreen = 'e6b21866-b49c-4998-a472-4a41f4e68b3e';
+  static String icSuccessInBlue = '8e97696d-474f-4e89-9bec-512af8353625';
+  static String icCheckedWhite = '86b95a6a-19c7-4528-a466-8a9eec4cca42';
 }

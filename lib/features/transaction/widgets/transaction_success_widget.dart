@@ -10,14 +10,14 @@ import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/utils/transaction_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
-import 'package:VietQR/models/notification_transaction_success_dto.dart';
+import 'package:VietQR/models/notify_trans_dto.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:audioplayers/audioplayers.dart';
 
 class TransactionSuccessWidget extends StatefulWidget {
-  final NotificationTransactionSuccessDTO dto;
+  final NotifyTransDTO dto;
 
   const TransactionSuccessWidget({
     super.key,

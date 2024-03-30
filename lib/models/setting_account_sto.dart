@@ -109,6 +109,8 @@ class MerchantRole {
     this.roles = const [],
   });
 
+  bool get isAdmin => categories.contains(0) && roles.contains(0);
+
   bool get isUnclassified =>
       categories.contains(2) && (roles.contains(2) || roles.contains(4));
 

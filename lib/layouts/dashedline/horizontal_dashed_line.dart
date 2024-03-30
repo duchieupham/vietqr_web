@@ -1,13 +1,12 @@
-import 'dart:ui' as ui;
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
 
-class HorizontalDashedLinePainter extends CustomPainter {
+class HorizontalDashedLine extends CustomPainter {
   final double dashWidth;
   final double dashSpace;
   final Color color;
 
-  HorizontalDashedLinePainter({
+  HorizontalDashedLine({
     required this.dashWidth,
     required this.dashSpace,
     this.color = AppColor.GREY_DADADA,

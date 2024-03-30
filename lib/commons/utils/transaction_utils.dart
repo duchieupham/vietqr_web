@@ -2,10 +2,11 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
 
 class TransactionUtils {
-  const TransactionUtils._privateConsrtructor();
+  const TransactionUtils._privateConstructor();
 
   static const TransactionUtils _instance =
-      TransactionUtils._privateConsrtructor();
+      TransactionUtils._privateConstructor();
+
   static TransactionUtils get instance => _instance;
 
   //status = 0 => not paid

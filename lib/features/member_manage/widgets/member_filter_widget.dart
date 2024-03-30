@@ -3,27 +3,22 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/layouts/m_drop_widget.dart';
-import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/transaction/data_filter.dart';
 
 class MemberFilterWidget extends StatefulWidget {
-  final Function(int?, String?, bool?) callBack;
+  final Function(int?, String?, bool) callBack;
+  final VoidCallback onSearch;
   final Stream<bool> stream;
-  final List<TerminalQRDTO> terminals;
-  final String bankId;
   final bool isOwner;
-  final bool isPending;
 
   const MemberFilterWidget({
     super.key,
     required this.callBack,
     required this.stream,
-    required this.terminals,
-    required this.bankId,
     required this.isOwner,
-    this.isPending = false,
+    required this.onSearch,
   });
 
   @override
@@ -170,6 +165,7 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
 
   Widget _searchWidget() {
     return InkWell(
+      onTap: widget.onSearch.call,
       child: Container(
         width: 34,
         height: 34,
@@ -195,6 +191,7 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
 
   void _onClear() {
     searchController.clear();
+    _value = '';
     _onCallBack(search: _value, clearData: true);
     updateState();
   }
@@ -218,7 +215,7 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
 
   void onChangedTerminal(String value) {
     searchController.text = value;
-    if (widget.isOwner || widget.isPending) {
+    if (widget.isOwner) {
       _value = value;
       _onCallBack(search: value);
     }
@@ -228,7 +225,6 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
   void onChangedSearch(String value) {
     _value = value;
     _onCallBack(search: value);
-
     updateState();
   }
 }

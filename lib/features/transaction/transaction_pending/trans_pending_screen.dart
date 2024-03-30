@@ -7,7 +7,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
-import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.dart';
+import 'package:VietQR/layouts/dialog/choose_bank_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
@@ -207,7 +207,7 @@ class TransPendingScreenState extends State<TransPendingScreen> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return DialogChooseBankWidget(banks: list);
+        return ChooseBankWidget(banks: list);
       },
     );
 

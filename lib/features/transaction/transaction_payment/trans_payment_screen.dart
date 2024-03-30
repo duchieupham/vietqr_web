@@ -8,11 +8,11 @@ import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
 import 'package:VietQR/features/transaction/events/transaction_event.dart';
 import 'package:VietQR/features/transaction/states/transaction_state.dart';
-import 'package:VietQR/features/transaction/widgets/dialog_choose_bank_widget.dart';
+import 'package:VietQR/layouts/dialog/choose_bank_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
-import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
+import 'package:VietQR/layouts/dashedline/horizontal_dashed_line.dart';
 import 'package:VietQR/features/transaction/widgets/table_trans_widget.dart';
 import 'package:VietQR/features/transaction/widgets/trans_header_widget.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
@@ -80,12 +80,25 @@ class _StoreScreenState extends State<TransactionPaymentView> {
   }
 
   void _onCallAPi(TransactionInputDTO dto, {String timeKey = ''}) {
-    bloc.add(GetTotalTransEvent(dto: dto));
     if (_isOwner) {
       bloc.add(GetTransOwnerEvent(dto: dto, timeKey: timeKey));
     } else {
       bloc.add(GetTransNotOwnerEvent(dto: dto, timeKey: timeKey));
     }
+  }
+
+  void getTotalTransByDay() {
+    String from = _dateFormat.format(now);
+    String to = _dateFormat.format(
+        now.add(const Duration(days: 1)).subtract(const Duration(seconds: 1)));
+
+    TransactionInputDTO dto = TransactionInputDTO(
+      bankId: _bankId,
+      from: from,
+      to: to,
+      terminalCode: _terminalCode,
+    );
+    bloc.add(GetTotalTransEvent(dto: dto));
   }
 
   void loadMore(int offset, bool loadMore) {
@@ -102,7 +115,6 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       status: _typeStatus,
       terminalCode: _terminalCode,
     );
-    bloc.add(GetTotalTransEvent(dto: dto));
 
     if (_isOwner) {
       bloc.add(FetchTransOwnerEvent(dto: dto, loadMore: loadMore));
@@ -169,17 +181,6 @@ class _StoreScreenState extends State<TransactionPaymentView> {
     updateState();
 
     if (clearData) {
-      TransactionInputDTO dto = TransactionInputDTO(
-        bankId: _bankId,
-        offset: 0,
-        from: _dateFormat.format(_fromDate),
-        to: _dateFormat.format(_toDate),
-        value: _value,
-        type: _typeFilter,
-        status: _typeStatus,
-      );
-
-      bloc.add(GetTotalTransEvent(dto: dto));
       bloc.add(UpdateCacheDataEvent(
           timeKey: _typeTime.timeKeyExt.name, clearData: clearData));
     }
@@ -238,6 +239,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
 
                   if (state.request == TransType.UPDATE_BANK) {
                     bloc.add(GetTerminalsEvent(_bankId));
+                    getTotalTransByDay();
                   }
 
                   if (state.request == TransType.GET_BANKS) {
@@ -252,7 +254,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                         null,
                         '/transactions?type=0?bankId=$_bankId',
                         '/transactions?type=0?bankId=$_bankId');
-
+                    getTotalTransByDay();
                     loadAll();
                   }
 
@@ -327,7 +329,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                           ),
                           const SizedBox(height: 24),
                           CustomPaint(
-                            painter: HorizontalDashedLinePainter(
+                            painter: HorizontalDashedLine(
                                 dashWidth: 5, dashSpace: 3),
                             size: const Size(double.infinity, 1),
                           ),
@@ -342,7 +344,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                           ),
                           const SizedBox(height: 24),
                           CustomPaint(
-                            painter: HorizontalDashedLinePainter(
+                            painter: HorizontalDashedLine(
                                 dashWidth: 5, dashSpace: 3),
                             size: const Size(double.infinity, 1),
                           ),
@@ -409,7 +411,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return DialogChooseBankWidget(banks: list);
+        return ChooseBankWidget(banks: list);
       },
     );
 

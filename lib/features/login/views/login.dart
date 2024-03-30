@@ -49,7 +49,6 @@ class _Login extends State<Login> {
       TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final LoginBloc _loginBloc = LoginBloc();
-  static String code = '';
   AESConvert des = AESConvert();
   InfoUserDTO _userDTO = InfoUserDTO();
   String qrValue = '';
@@ -226,10 +225,9 @@ class _Login extends State<Login> {
   void openPinDialog(BuildContext context) {
     print(
         '-------------------------------------${EncryptUtils.instance.encrypted(
-      '0769231213',
+      '0982125822',
       '000000',
     )}');
-
     if (phoneNoController.text.isEmpty) {
       DialogWidget.instance.openMsgDialog(
           title: 'Đăng nhập không thành công',
@@ -358,6 +356,11 @@ class _Login extends State<Login> {
                     textColor: AppColor.WHITE,
                     bgColor: AppColor.BLUE_TEXT,
                     function: () {
+                      print(
+                          'hehhee-------------------------------------${EncryptUtils.instance.encrypted(
+                        '0963223959',
+                        '000000',
+                      )}');
                       _loginBloc
                           .add(CheckExistPhone(phone: phoneNoController.text));
                     },

@@ -13,7 +13,7 @@ import 'package:go_router/go_router.dart';
 
 import 'transaction_pending/trans_pending_screen.dart';
 import 'transaction_pending/views/trans_unclassified_view.dart';
-import 'transaction_payment/transaction_payment_view.dart';
+import 'transaction_payment/trans_payment_screen.dart';
 import 'dart:html' as html;
 
 class TransactionScreen extends StatefulWidget {

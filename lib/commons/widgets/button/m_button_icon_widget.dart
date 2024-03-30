@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
 class MButtonIconWidget extends StatelessWidget {
@@ -11,6 +12,7 @@ class MButtonIconWidget extends StatelessWidget {
   final double borderRadius;
   final EdgeInsets padding;
   final BoxBorder? border;
+  final String? pathIcon;
 
   const MButtonIconWidget({
     super.key,
@@ -24,9 +26,10 @@ class MButtonIconWidget extends StatelessWidget {
     this.iconColor,
     this.textSize = 11,
     this.borderRadius = 5,
-    this.iconSize = 12,
+    this.iconSize,
     this.border,
     this.padding = const EdgeInsets.fromLTRB(5, 5, 8, 5),
+    this.pathIcon,
   });
 
   @override
@@ -45,12 +48,15 @@ class MButtonIconWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: iconColor,
-              size: iconSize,
-            ),
-            const SizedBox(width: 4),
+            if (pathIcon != null)
+              Image(
+                image: ImageUtils.instance.getImageNetWork(pathIcon!),
+                width: iconSize ?? 25,
+              )
+            else ...[
+              Icon(icon, color: iconColor, size: iconSize),
+              const SizedBox(width: 4),
+            ],
             Text(
               title,
               style: TextStyle(

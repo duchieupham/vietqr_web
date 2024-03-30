@@ -1,7 +1,9 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/layouts/table/data_cell_widget.dart';
 import 'package:VietQR/models/member/member_dto.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,15 +11,15 @@ import 'package:provider/provider.dart';
 class TableMemberWidget extends StatefulWidget {
   final List<Member> items;
   final int offset;
-  final bool isOwner;
   final bool isLoading;
+  final MerchantRole role;
 
   const TableMemberWidget({
     Key? key,
     required this.items,
     required this.offset,
-    this.isOwner = false,
     this.isLoading = false,
+    required this.role,
   }) : super(key: key);
 
   @override
@@ -26,7 +28,7 @@ class TableMemberWidget extends StatefulWidget {
 
 class _TableMemberWidgetState extends State<TableMemberWidget> {
   final _horizontal = ScrollController();
-  final double _headingRowHeight = 40;
+  final double _headingRowHeight = 50;
 
   final List<TransData> list = [
     TransData(title: 'stt'.toUpperCase(), width: 40),
@@ -35,10 +37,10 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
     TransData(title: 'Cấp quản lý', width: 100),
     TransData(title: 'Cửa hàng / điểm bán', width: 200),
     TransData(title: 'Phân quyền chức năng', width: 200),
-    TransData(title: 'Thao tác', width: 100),
+    TransData(title: 'Thao tác', width: 120),
   ];
   final List<TransData> listPin = [
-    TransData(title: 'Thao tác', width: 100),
+    TransData(title: 'Thao tác', width: 120),
   ];
 
   double widthTable = 0;
@@ -47,7 +49,7 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
   void initState() {
     super.initState();
     for (var element in list) {
-      widthTable += (element.width ?? 0) + 1; // +1 là width của border
+      widthTable += (element.width ?? 0); // +1 là width của border
     }
   }
 
@@ -106,64 +108,9 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
                     ),
                   );
                 }),
-                rows: List.generate(
-                  widget.items.length,
-                  (index) {
-                    Member model = widget.items[index];
-                    return DataRow(
-                      color: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) => Colors.transparent),
-                      cells: [
-                        dataCell(
-                          child: buildContent(
-                            title: '${(widget.offset * 20) + index + 1}',
-                            textAlign: TextAlign.center,
-                            width: list[0].width,
-                          ),
-                        ),
-                        dataCell(
-                          child: buildContent(
-                            title: model.fullName,
-                            textAlign: TextAlign.left,
-                            width: list[1].width,
-                          ),
-                        ),
-                        dataCell(
-                          child: buildContent(
-                            title: model.phoneNo,
-                            textAlign: TextAlign.right,
-                            width: list[2].width,
-                          ),
-                        ),
-                        dataCell(
-                          child: buildContent(
-                            title: model.level,
-                            textAlign: TextAlign.left,
-                            width: list[3].width,
-                          ),
-                        ),
-                        dataCell(
-                          child: buildContent(
-                            title: model.nameStore,
-                            textAlign: TextAlign.left,
-                            width: list[4].width,
-                          ),
-                        ),
-                        dataCell(
-                          child: buildContent(
-                            title: model.phoneNo,
-                            textAlign: TextAlign.left,
-                            width: list[5].width,
-                          ),
-                        ),
-                        dataCell(
-                          child: buildContent(),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                rows: const [],
               ),
+              _buildRows(),
               _buildEmpty(withEmpty),
             ],
           ),
@@ -172,60 +119,80 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
     );
   }
 
-  DataCell dataCell({required Widget child}) {
-    return DataCell(child);
-  }
-
   Widget _buildPinColumn() {
     if (widget.items.isEmpty) return const SizedBox();
     return SizedBox(
       width: widthTable - 1,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: List.generate(
-          listPin.length,
-          (index) {
-            TransData data = listPin[index];
-            return _buildItemPin(
-              data: data,
-              child: Column(
-                children: List.generate(widget.items.length, (index) {
-                  Member member = widget.items[index];
-                  return Container(
-                    width: data.width,
-                    height: member.headingRowHeight,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: AppColor.GREY_TEXT.withOpacity(0.3)),
-                        color: Colors.transparent),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+        children: [
+          _buildItemPin(
+            data: listPin[0],
+            isShadow: false,
+            child: Column(
+              children: List.generate(widget.items.length, (index) {
+                Member dto = widget.items[index];
+                return Container(
+                  width: listPin[0].width,
+                  height: dto.heightRow,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.GREY_TEXT.withOpacity(0.3),
+                          width: 0.25),
+                      color: Colors.transparent),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildIcon(
+                        icon: AppImages.icDetailMember,
+                        message: 'Xem chi tiết',
+                        // onTap: () => widget.onEditNote(dto),
+                      ),
+                      if (widget.role.isAdmin) ...[
+                        const SizedBox(width: 6),
                         _buildIcon(
-                          message: 'Thông tin nhân viên',
-                          url: AppImages.icDetailMember,
+                          icon: AppImages.icEditTrans,
+                          message: 'Cập nhật',
+                          // onTap: () => widget.onChooseTerminal(dto),
                         ),
-                        if (widget.isOwner) ...[
-                          const SizedBox(width: 4),
-                          _buildIcon(
-                            message: 'Cập nhật ghi chú',
-                            url: AppImages.icEditTrans,
-                          ),
-                          const SizedBox(width: 4),
-                          _buildIcon(
-                            message: 'Xoá nhân viên',
-                            url: AppImages.icTrashRed,
-                            color: AppColor.RED_CALENDAR.withOpacity(0.3),
-                          ),
-                        ],
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            );
-          },
+                        const SizedBox(width: 6),
+                        _buildIcon(
+                          icon: AppImages.icTrashRed,
+                          message: 'Xoá nhân viên',
+                        ),
+                      ]
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIcon({
+    GestureTapCallback? onTap,
+    required String icon,
+    required String message,
+  }) {
+    return Tooltip(
+      message: message,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(32),
+            color: AppColor.BLUE_TEXT.withOpacity(0.25),
+          ),
+          child: Image(
+            image: ImageUtils.instance.getImageNetWork(icon),
+            width: 24,
+          ),
         ),
       ),
     );
@@ -272,17 +239,20 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
     );
   }
 
-  Widget _buildItemPin({required TransData data, required Widget child}) {
+  Widget _buildItemPin(
+      {required TransData data, required Widget child, bool isShadow = true}) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColor.WHITE,
-        boxShadow: [
-          BoxShadow(
-              color: AppColor.GREY_DADADA,
-              blurRadius: 5,
-              spreadRadius: 1,
-              offset: Offset(0, 0)),
-        ],
+        boxShadow: isShadow
+            ? [
+                const BoxShadow(
+                    color: AppColor.GREY_DADADA,
+                    blurRadius: 5,
+                    spreadRadius: 1,
+                    offset: Offset(0, 0)),
+              ]
+            : [],
       ),
       child: Column(
         children: [
@@ -293,7 +263,7 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
             decoration: BoxDecoration(
               color: AppColor.BLUE_TEXT.withOpacity(0.25),
               border: Border.all(
-                  color: AppColor.GREY_TEXT.withOpacity(0.3), width: 1),
+                  color: AppColor.GREY_TEXT.withOpacity(0.3), width: 0.25),
             ),
             alignment: Alignment.center,
             child: Text(
@@ -317,71 +287,109 @@ class _TableMemberWidgetState extends State<TableMemberWidget> {
       child: Text(
         title,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
       ),
     );
   }
 
-  Widget buildContent({
-    String? title,
-    Color? textColor,
-    GestureTapCallback? onTap,
-    double? fontSize,
-    FontWeight? fontWeight,
-    TextAlign? textAlign,
-    double? width,
-    double height = 40,
-  }) {
-    return SelectionArea(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          width: width,
-          height: height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildRows() {
+    if (widget.items.isEmpty) return const SizedBox.shrink();
+    return SizedBox(
+      width: widthTable,
+      child: Column(
+        children: List.generate(widget.items.length, (index) {
+          Member e = widget.items[index];
+          return Row(
             children: [
-              Text(
-                title ?? '-',
-                maxLines: height > 40 ? null : 2,
-                textAlign: textAlign,
-                style: TextStyle(
-                  color: textColor,
-                  overflow: TextOverflow.ellipsis,
-                  fontSize: fontSize ?? 10,
-                  fontWeight: fontWeight,
-                ),
+              /// STT
+              DataCellWidget(
+                title: '${(widget.offset * 20) + index + 1}',
+                width: list[0].width,
+                height: e.heightRow,
+                textAlign: TextAlign.center,
+              ),
+
+              /// Họ tên
+              DataCellWidget(
+                title: e.fullName.trim(),
+                width: list[1].width,
+                height: e.heightRow,
+                textAlign: TextAlign.left,
+              ),
+
+              /// Phone
+              DataCellWidget(
+                title: e.phoneNo,
+                width: list[2].width,
+                height: e.heightRow,
+                textAlign: TextAlign.right,
+              ),
+
+              /// cấp quản lý
+              DataCellWidget(
+                title: e.level,
+                width: list[3].width,
+                height: e.heightRow,
+                textAlign: TextAlign.left,
+              ),
+
+              /// tên cửa hàng
+              DataCellWidget(
+                title: e.nameStore,
+                width: list[4].width,
+                height: e.heightRow,
+                textAlign: TextAlign.left,
+              ),
+
+              _buildRoleWidget(
+                e,
+                width: list[5].width,
+              ),
+
+              DataCellWidget(
+                width: list[6].width,
+                height: e.heightRow,
               ),
             ],
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
 
-  Widget _buildIcon(
-      {String message = '',
-      String url = '',
-      GestureTapCallback? onTap,
-      Color? color}) {
-    return Tooltip(
-      message: message,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(32),
-            color: color ?? AppColor.BLUE_TEXT.withOpacity(0.25),
-          ),
-          child: Image(
-            image: ImageUtils.instance.getImageNetWork(url),
-            width: 24,
-          ),
-        ),
+  Widget _buildRoleWidget(Member e, {double? width}) {
+    List<TransReceiveRole> listData = [...e.transReceiveRoles];
+    return Container(
+      height: e.heightRow,
+      width: width,
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColor.GREY_DADADA, width: 0.25),
+      ),
+      child: Wrap(
+        alignment: WrapAlignment.start,
+        spacing: 6,
+        runSpacing: 6,
+        children: List.generate(listData.length, (index) {
+          TransReceiveRole dto = listData[index];
+          return Container(
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: dto.getBgrColor,
+            ),
+            child: Text(
+              dto.name ?? '',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: dto.getColor,
+                height: 1.4,
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

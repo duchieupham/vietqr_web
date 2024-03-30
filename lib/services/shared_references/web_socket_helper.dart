@@ -6,12 +6,14 @@ import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/mobile_recharge/widget/pop_up_top_up_sucsess.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
+import 'package:VietQR/layouts/dialog/notify_trans_widget.dart';
 import 'package:VietQR/main.dart';
-import 'package:VietQR/models/notification_transaction_success_dto.dart';
+import 'package:VietQR/models/notify_trans_dto.dart';
 import 'package:VietQR/models/top_up_sucsess_dto.dart';
 import 'package:VietQR/services/shared_references/media_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../commons/constants/configurations/stringify.dart';
@@ -55,6 +57,7 @@ class WebSocketHelper {
 
   void listenTransactionSocket() {
     String userId = UserInformationHelper.instance.getUserId();
+    print(userId);
     if (userId.isNotEmpty) {
       bool isListenWebSocket = WebSocketHelper.instance.isListenWs();
       if (!isListenWebSocket) {
@@ -67,6 +70,7 @@ class WebSocketHelper {
           if (_channelTransaction.closeCode == null) {
             _channelTransaction.stream.listen((event) {
               var data = jsonDecode(event);
+
               print('------------------------------- $data');
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
@@ -76,8 +80,8 @@ class WebSocketHelper {
                 if (!Session.instance.inQRGeneratePage) {
                   MediaHelper.instance.playAudio(data);
                   DialogWidget.instance.openWidgetDialog(
-                    child: TransactionSuccessWidget(
-                      dto: NotificationTransactionSuccessDTO.fromJson(data),
+                    child: NotifyTransWidget(
+                      dto: NotifyTransDTO.fromJson(data),
                     ),
                   );
                 }

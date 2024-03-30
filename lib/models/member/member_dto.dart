@@ -4,28 +4,31 @@
 
 import 'dart:convert';
 
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:flutter/material.dart';
+
 MemberDTO memberDtoFromJson(String str) => MemberDTO.fromJson(json.decode(str));
 
 class MemberDTO {
-  final int? page;
-  final int? size;
-  final int? totalPage;
-  final int? totalElement;
+  final int page;
+  final int size;
+  final int totalPage;
+  final int totalElement;
   final List<Member> items;
 
   MemberDTO({
-    this.page,
-    this.size,
-    this.totalPage,
-    this.totalElement,
+    this.page = 0,
+    this.size = 0,
+    this.totalPage = 0,
+    this.totalElement = 0,
     this.items = const [],
   });
 
   factory MemberDTO.fromJson(Map<String, dynamic> json) => MemberDTO(
-        page: json["page"],
-        size: json["size"],
-        totalPage: json["totalPage"],
-        totalElement: json["totalElement"],
+        page: json["page"] ?? 0,
+        size: json["size"] ?? 0,
+        totalPage: json["totalPage"] ?? 0,
+        totalElement: json["totalElement"] ?? 0,
         items: json["items"] == null
             ? []
             : List<Member>.from(json["items"]!.map((x) => Member.fromJson(x))),
@@ -49,10 +52,11 @@ class Member {
           ? '${terminals.length} cửa hàng'
           : terminals.length == 1
               ? terminals.first.terminalName
-              : '${terminals.first.terminalName},${terminals.last.terminalName}';
+              : '${terminals.first.terminalName} , ${terminals.last.terminalName}';
 
-  double get headingRowHeight =>
-      transReceiveRoles.length > 2 ? (transReceiveRoles.length * 20) : 40;
+  double get heightRow => transReceiveRoles.length > 1
+      ? (transReceiveRoles.length / 2) * 60
+      : transReceiveRoles.length * 50;
 
   Member({
     this.merchantId = '',
@@ -125,6 +129,20 @@ class TransReceiveRole {
     this.role,
     this.color,
   });
+
+  // color: Màu: 0: blue, 1:green, 2: red
+
+  Color get getColor => color == 0
+      ? AppColor.BLUE_TEXT
+      : color == 1
+          ? AppColor.GREEN
+          : AppColor.ORANGE_DARK;
+
+  Color get getBgrColor => color == 0
+      ? AppColor.BLUE_TEXT.withOpacity(0.25)
+      : color == 1
+          ? AppColor.GREEN.withOpacity(0.25)
+          : AppColor.ORANGE_DARK.withOpacity(0.25);
 
   factory TransReceiveRole.fromJson(Map<String, dynamic> json) =>
       TransReceiveRole(

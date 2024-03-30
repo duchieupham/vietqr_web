@@ -12,7 +12,7 @@ import 'package:VietQR/features/transaction/transaction_pending/widgets/table_un
 import 'package:VietQR/features/transaction/widgets/dialog_choose_terminal_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_edit_note_widget.dart';
 import 'package:VietQR/features/transaction/widgets/filter_widget.dart';
-import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
+import 'package:VietQR/layouts/dashedline/horizontal_dashed_line.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
@@ -279,7 +279,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
                     ),
                     const SizedBox(height: 24),
                     CustomPaint(
-                      painter: HorizontalDashedLinePainter(
+                      painter: HorizontalDashedLine(
                           dashWidth: 5, dashSpace: 3),
                       size: const Size(double.infinity, 1),
                     ),

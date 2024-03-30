@@ -4,16 +4,16 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:flutter/material.dart';
 
-class DialogChooseBankWidget extends StatefulWidget {
+class ChooseBankWidget extends StatefulWidget {
   final List<BankAccountDTO> banks;
 
-  const DialogChooseBankWidget({super.key, required this.banks});
+  const ChooseBankWidget({super.key, required this.banks});
 
   @override
-  State<DialogChooseBankWidget> createState() => _DialogChooseBankWidgetState();
+  State<ChooseBankWidget> createState() => _ChooseBankWidgetState();
 }
 
-class _DialogChooseBankWidgetState extends State<DialogChooseBankWidget> {
+class _ChooseBankWidgetState extends State<ChooseBankWidget> {
   List<BankAccountDTO> banks = [];
 
   @override

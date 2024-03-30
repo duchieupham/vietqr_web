@@ -1,7 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
-import 'package:VietQR/layouts/horizontal_dashedline_painter.dart';
+import 'package:VietQR/layouts/dashedline/horizontal_dashed_line.dart';
 import 'package:VietQR/models/merchant/merchant_dto.dart';
 import 'package:flutter/material.dart';
 

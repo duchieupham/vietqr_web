@@ -15,12 +15,12 @@ class MemberRepository {
   String get userId => UserInformationHelper.instance.getUserId().trim();
   int limit = 20;
 
-  Future<MemberDTO?> getMembers(MemberInputDTO dto) async {
-    MemberDTO? result;
+  Future<MemberDTO> getMembers(MemberInputDTO dto) async {
+    MemberDTO result = MemberDTO();
     try {
       final String url =
           '${EnvConfig.getBaseUrl()}merchant-member/${dto.merchantId}?'
-          'page=${dto.page}&size=${dto.size}&type=${dto.type}&value=${dto.value}';
+          'page=${dto.page}&size=$limit&type=${dto.type}&value=${dto.value}';
 
       final response = await BaseAPIClient.getAPI(
         url: url,
