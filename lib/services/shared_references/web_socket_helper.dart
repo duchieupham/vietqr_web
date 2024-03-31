@@ -79,7 +79,7 @@ class WebSocketHelper {
                 Session.instance.sendEvent(EventTypes.updateCountNotification);
                 if (!Session.instance.inQRGeneratePage) {
                   MediaHelper.instance.playAudio(data);
-                  DialogWidget.instance.openWidgetDialog(
+                  DialogWidget.instance.showDialogTrans(
                     child: NotifyTransWidget(
                       dto: NotifyTransDTO.fromJson(data),
                     ),

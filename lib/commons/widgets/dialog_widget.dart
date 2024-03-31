@@ -888,6 +888,17 @@ class DialogWidget {
     );
   }
 
+  showDialogTrans({required Widget child}) {
+    final BuildContext context = NavigationService.navigatorKey.currentContext!;
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return child;
+      },
+    );
+  }
+
   openTransactionDialog(String address, String body) {
     final ScrollController _scrollContoller = ScrollController();
     return showDialog(

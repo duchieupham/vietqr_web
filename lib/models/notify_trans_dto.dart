@@ -72,7 +72,7 @@ class NotifyTransDTO {
           .format(DateTime.fromMillisecondsSinceEpoch(time * 1000));
 
   ///
-  bool get isTerNotEmpty => terminalName.isNotEmpty && terminalCode.isNotEmpty;
+  bool get isTerNotEmpty => terminalName.isNotEmpty || terminalCode.isNotEmpty;
 
   bool get isTerEmpty => terminalName.isEmpty && terminalCode.isEmpty;
 

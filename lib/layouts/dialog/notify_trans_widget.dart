@@ -36,6 +36,7 @@ class _NotifyTransWidgetState extends State<NotifyTransWidget> {
       child: Center(
         child: Container(
           height: 450,
+          width: 550,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16),
@@ -85,10 +86,12 @@ class _NotifyTransWidgetState extends State<NotifyTransWidget> {
             ),
           ],
           const SizedBox(height: 30),
-          if (!widget.dto.isTransUnclassified) ...[
+          ...[
             if (widget.dto.isTerNotEmpty)
               Text(
-                widget.dto.terminalName,
+                widget.dto.terminalName.isNotEmpty
+                    ? widget.dto.terminalName
+                    : widget.dto.terminalCode,
                 style: const TextStyle(
                     fontSize: 14,
                     color: AppColor.BLACK,

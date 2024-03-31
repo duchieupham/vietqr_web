@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/member_manage/member_manage.dart';
 import 'package:VietQR/features/member_manage/widgets/member_filter_widget.dart';
 import 'package:VietQR/features/member_manage/widgets/table_member_widget.dart';
 import 'package:VietQR/layouts/dialog/choose_merchant_widget.dart';
 import 'package:VietQR/layouts/dashedline/horizontal_dashed_line.dart';
+import 'package:VietQR/layouts/dialog/notify_trans_widget.dart';
 import 'package:VietQR/models/member/member_input_dto.dart';
 import 'package:VietQR/models/merchant/merchant_dto.dart';
+import 'package:VietQR/models/notify_trans_dto.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/services/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -118,20 +121,48 @@ class _ListMemberViewState extends State<ListMemberView> {
   }
 
   void _onChooseMerchant(List<MerchantDTO> list) async {
-    final data = await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return ChooseMerchantWidget(items: list);
-      },
+    DialogWidget.instance.showDialogTrans(
+      child: NotifyTransWidget(
+        dto: NotifyTransDTO.fromJson(
+          {
+            "bankAccount": "0373568944",
+            "traceId": "VQR90c509a729",
+            "bankCode": "MB",
+            "amount": "5000",
+            "orderId": "",
+            "bankName": "Ngân hàng TMCP Quân đội",
+            "notificationType": "N05",
+            "content": "VQR90c509a729.Thanh toan",
+            "terminalName": "Cuahang Demo",
+            "bankId": "95364bee-3bc5-4070-96b1-1dbc3c9b8c19",
+            "transType": "C",
+            "rawTerminalCode": "",
+            "referenceNumber": "",
+            "notificationId": "b92651a8-071b-4339-9d8c-35c1be675df0",
+            "terminalCode": "atrRnGNO4O",
+            "time": "1711854283",
+            "refId": "d9d97dbd-4aa1-424b-ad81-d3f6d849d16f",
+            "transactionReceiveId": "ec698efe-addf-4258-8c56-536bc6d694b6",
+            "status": "1"
+          },
+        ),
+      ),
     );
 
-    if (data != null && data is MerchantDTO) {
-      _merchant = data;
-      MemberInputDTO dto = MemberInputDTO(merchantId: _merchant.id);
-      bloc.add(GetMembersEvent(dto));
-      onRole(data);
-    }
+    // final data = await showDialog(
+    //   barrierDismissible: false,
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return ChooseMerchantWidget(items: list);
+    //   },
+    // );
+    //
+    // if (data != null && data is MerchantDTO) {
+    //   _merchant = data;
+    //   MemberInputDTO dto = MemberInputDTO(merchantId: _merchant.id);
+    //   bloc.add(GetMembersEvent(dto));
+    //   onRole(data);
+    // }
   }
 
   void _onSearch() {
