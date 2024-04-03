@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
@@ -49,6 +50,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
   bool amIHovering = false;
   bool openMenuCard = true;
   Offset exitFrom = const Offset(0, 0);
+  double _currentHeight = 0.0;
 
   onOpenDropDownList() {
     if (openListDropDown) {
@@ -78,9 +80,22 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
     return Colors.transparent;
   }
 
+  void _startAnimation() {
+    Timer.periodic(const Duration(microseconds: 20), (timer) {
+      setState(() {
+        _currentHeight += 15;
+        if (_currentHeight >= getHeightDropDownList()) {
+          _currentHeight = getHeightDropDownList();
+          timer.cancel();
+        }
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _startAnimation();
   }
 
   @override
@@ -144,6 +159,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               openMenuCard = !openMenuCard;
             });
           }
+
           // if (widget.enableDropDownList) {
           //   onOpenDropDownList();
           // }
@@ -160,62 +176,74 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image(
-                    image: ImageUtils.instance.getImageNetWork(widget.iconId),
-                    color: AppColor.BLACK,
-                    height: 30,
-                  ),
-                  const Spacer(),
-                  if (widget.isLogout)
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontSize: widget.titleSize,
-                        color: AppColor.RED_TEXT,
-                        fontWeight: widget.bold ? FontWeight.bold : null,
-                      ),
-                    )
-                  else
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontSize: widget.titleSize,
-                        fontWeight: widget.bold ? FontWeight.bold : null,
-                        // color: widget.isSelect
-                        //     ? AppColor.BLUE_TEXT
-                        //     : AppColor.BLACK,
+                  Row(
+                    children: [
+                      Image(
+                        image:
+                            ImageUtils.instance.getImageNetWork(widget.iconId),
                         color: AppColor.BLACK,
+                        height: 30,
                       ),
-                    ),
-                  const Spacer(),
+                      const SizedBox(width: 19),
+                      // const Spacer(),
+                      if (widget.isLogout)
+                        Text(
+                          widget.title,
+                          style: TextStyle(
+                            fontSize: widget.titleSize,
+                            color: AppColor.RED_TEXT,
+                            fontWeight: widget.bold ? FontWeight.bold : null,
+                          ),
+                        )
+                      else
+                        Text(
+                          widget.title,
+                          style: TextStyle(
+                            fontSize: widget.titleSize,
+                            fontWeight: widget.bold ? FontWeight.bold : null,
+                            // color: widget.isSelect
+                            //     ? AppColor.BLUE_TEXT
+                            //     : AppColor.BLACK,
+                            color: AppColor.BLACK,
+                          ),
+                        ),
+                    ],
+                  ),
+
+                  // const Spacer(),
                   if (widget.enableMenuCard)
-                    Container(
-                      height: 20,
-                      width: 20,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: AppColor.BLUE_BGR,
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Transform.rotate(
-                        angle: !openMenuCard ? -math.pi / 2 : math.pi / 2,
-                        child: const Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 20,
+                    Expanded(
+                      child: Container(
+                        height: 20,
+                        width: 20,
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                            color: AppColor.BLUE_BGR,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Transform.rotate(
+                          angle: !openMenuCard ? -math.pi / 2 : math.pi / 2,
+                          child: const Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                          ),
                         ),
                       ),
                     )
                   else if (widget.enableDropDownList)
-                    Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                          color: AppColor.BLUE_BGR,
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Transform.rotate(
-                        angle: !openListDropDown ? math.pi : 0,
-                        child: const Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 20,
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        height: 20,
+                        width: 20,
+                        decoration: BoxDecoration(
+                            color: AppColor.BLUE_BGR,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Transform.rotate(
+                          angle: !openListDropDown ? math.pi : 0,
+                          child: const Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                          ),
                         ),
                       ),
                     )
@@ -230,20 +258,34 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
   }
 
   Widget _dropDownList() {
-    return SlideFadeTransition(
-      offset: -0.2,
-      delayStart: const Duration(microseconds: 10),
-      animationDuration: const Duration(milliseconds: 400),
-      direction: Direction.vertical,
-      child: Container(
-        padding: const EdgeInsets.only(left: 40, right: 40),
-        // margin: const EdgeInsets.only(left: 20),
-        height: getHeightDropDownList(),
-        width: double.infinity,
-        child: ListView(
-          children: widget.listItemDrop,
-        ),
+    return AnimatedContainer(
+      duration: const Duration(microseconds: 20),
+      padding: const EdgeInsets.only(left: 40, right: 40),
+      // margin: const EdgeInsets.only(left: 20),
+      curve: Curves.easeInOut,
+      height: _currentHeight,
+      width: double.infinity,
+      child: ListView(
+        children: widget.listItemDrop,
       ),
     );
   }
+
+  // Widget _dropDownList() {
+  //   return SlideFadeTransition(
+  //     offset: -0.2,
+  //     delayStart: const Duration(microseconds: 10),
+  //     animationDuration: const Duration(milliseconds: 400),
+  //     direction: Direction.vertical,
+  //     child: Container(
+  //       padding: const EdgeInsets.only(left: 40, right: 40),
+  //       // margin: const EdgeInsets.only(left: 20),
+  //       height: getHeightDropDownList(),
+  //       width: double.infinity,
+  //       child: ListView(
+  //         children: widget.listItemDrop,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

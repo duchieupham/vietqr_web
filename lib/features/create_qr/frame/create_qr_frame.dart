@@ -11,13 +11,18 @@ import 'dart:html' as html;
 
 import '../../wallet/wallet_screen.dart';
 
+// ignore: constant_identifier_names
+enum QrType { QR, WALLET }
+
 class CreateQRFrame extends StatefulWidget {
+  final QrType type;
   final Widget widget1;
   final Widget widget2;
   final Widget widget3;
 
   const CreateQRFrame({
     super.key,
+    required this.type,
     required this.widget1,
     required this.widget2,
     required this.widget3,
@@ -28,9 +33,16 @@ class CreateQRFrame extends StatefulWidget {
 }
 
 class _HomeFrameState extends State<CreateQRFrame> {
-  String type = '0';
+  QrType? type = QrType.QR;
   final PageController pageController = PageController();
   int currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    type = widget.type;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +77,12 @@ class _HomeFrameState extends State<CreateQRFrame> {
                             subMenuQr: [
                               ItemDropDownMenu(
                                 title: 'Tạo mã VietQR',
-                                isSelect: type == "0" ? true : false,
+                                isSelect: type == QrType.QR,
                                 onTap: () => onTapMenu('0'),
                               ),
                               ItemDropDownMenu(
                                 title: 'Ví QR',
-                                isSelect: type == "1" ? true : false,
+                                isSelect: type == QrType.WALLET,
                                 onTap: () => onTapMenu('1'),
                               ),
                             ],
@@ -127,18 +139,18 @@ class _HomeFrameState extends State<CreateQRFrame> {
   }
 
   void onTapMenu(String value) {
-    if (value == '0') {
+    if (value == "0") {
       html.window.history.pushState(value, '/qr', '/create-qr');
-      type = value;
+      type = QrType.QR;
     } else {
       html.window.history.pushState(value, '/qr', '/qr-wallet');
-      type = value;
+      type = QrType.WALLET;
     }
     setState(() {});
   }
 
   Widget _buildBody() {
-    if (type == '0') {
+    if (type == QrType.QR) {
       return createQrSection();
     }
     return const WalletScreen();

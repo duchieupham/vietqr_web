@@ -41,8 +41,9 @@ import 'event/create_qr_event.dart';
 
 class CreateQrScreen extends StatefulWidget {
   final String bankAccountId;
-
-  const CreateQrScreen({super.key, this.bankAccountId = ''});
+  final QrType type;
+  const CreateQrScreen(
+      {super.key, required this.type, this.bankAccountId = ''});
 
   @override
   State<CreateQrScreen> createState() => _CreateQrScreenState();
@@ -225,6 +226,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               }
             },
             child: CreateQRFrame(
+              type: widget.type,
               widget1: _buildListBank(),
               widget2: _formCreate(),
               widget3: _buildInfoAccount(state),

@@ -16,6 +16,7 @@ import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/blocs/bank_type_bloc.dart';
 import 'package:VietQR/features/branch/blocs/branch_bloc.dart';
 import 'package:VietQR/features/create_qr/create_qr_screen.dart';
+import 'package:VietQR/features/create_qr/frame/create_qr_frame.dart';
 import 'package:VietQR/features/create_qr/qr_generate.dart';
 import 'package:VietQR/features/create_qr/qr_generate_dev.dart';
 import 'package:VietQR/features/dashboard/dashboard_screen.dart';
@@ -621,6 +622,7 @@ final GoRouter _router = GoRouter(
             ? '/create-qr/${state.params['id'] ?? ''}'
             : '/login',
         builder: (BuildContext context, GoRouterState state) => CreateQrScreen(
+              type: QrType.QR,
               bankAccountId: state.params['id'] ?? '',
             ),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -629,6 +631,7 @@ final GoRouter _router = GoRouter(
             context: context,
             state: state,
             child: CreateQrScreen(
+              type: QrType.QR,
               bankAccountId: state.params['id'] ?? '',
             ),
           );
@@ -721,7 +724,9 @@ final GoRouter _router = GoRouter(
         path: '/create-qr',
         builder: (BuildContext context, GoRouterState state) {
           if (userId.isNotEmpty) {
-            return const CreateQrScreen();
+            return const CreateQrScreen(
+              type: QrType.QR,
+            );
           } else {
             return const CreateQRLogin();
           }
@@ -732,7 +737,9 @@ final GoRouter _router = GoRouter(
             context: context,
             state: state,
             child: userId.isNotEmpty
-                ? const CreateQrScreen()
+                ? const CreateQrScreen(
+                    type: QrType.QR,
+                  )
                 : const CreateQRLogin(),
           );
         }),
@@ -746,7 +753,9 @@ final GoRouter _router = GoRouter(
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const WalletScreen(),
+            child: const CreateQrScreen(
+              type: QrType.WALLET,
+            ),
           );
         }),
     GoRoute(
