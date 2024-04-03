@@ -24,6 +24,7 @@ class FilterWidget extends StatefulWidget {
   final String bankId;
   final bool isOwner;
   final bool isPending;
+  final bool shouldRefresh;
 
   const FilterWidget({
     super.key,
@@ -34,6 +35,7 @@ class FilterWidget extends StatefulWidget {
     required this.bankId,
     required this.isOwner,
     this.isPending = false,
+    this.shouldRefresh = false,
   });
 
   @override
@@ -417,19 +419,37 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   Widget _searchWidget() {
-    return InkWell(
-      onTap: () => widget.onSearch(_filterByTime.id),
-      child: Container(
-        width: 34,
-        height: 34,
-        margin: const EdgeInsets.only(left: 16, right: 16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          color: AppColor.BLUE_TEXT,
-        ),
-        child: Image(
-          image: ImageUtils.instance.getImageNetWork(AppImages.icSearchTrans),
-          width: 28,
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 16,
+      ),
+      child: InkWell(
+        onTap: () => widget.onSearch(_filterByTime.id),
+        child: Container(
+          width: 120,
+          height: 34,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: AppColor.BLUE_TEXT,
+          ),
+          child: Row(
+            children: [
+              Image(
+                image: ImageUtils.instance
+                    .getImageNetWork(AppImages.icSearchTrans),
+                width: 28,
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Tìm kiếm',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

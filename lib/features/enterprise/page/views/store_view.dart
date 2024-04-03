@@ -5,6 +5,9 @@ import 'package:VietQR/features/enterprise/page/widgets/table_store_widget.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../commons/constants/configurations/app_image.dart';
+import '../../../../commons/utils/image_utils.dart';
+
 class StoreView extends StatefulWidget {
   const StoreView({super.key});
 
@@ -241,19 +244,56 @@ class _StoreViewState extends State<StoreView> {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: _onSearch,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: AppColor.BLUE_TEXT,
+        // GestureDetector(
+        //onTap: _onSearch,
+        // child: Container(
+        //   width: 40,
+        //   height: 40,
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(40),
+        //     color: AppColor.BLUE_TEXT,
+        //   ),
+        //   child: const Icon(Icons.search, color: AppColor.WHITE),
+        // ),
+        // ),
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+          ),
+          child: InkWell(
+            onTap: _onSearch,
+            child: Container(
+              width: 120,
+              height: 40,
+              // margin: const EdgeInsets.symmetric(horizontal: 24),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: AppColor.BLUE_TEXT,
+              ),
+              child: Row(
+                children: [
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icSearchTrans),
+                    width: 28,
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Tìm kiếm',
+                    // textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: const Icon(Icons.search, color: AppColor.WHITE),
           ),
         ),
-        const Spacer(),
+
+        // const Spacer(),
         ButtonWidget(
           text: 'Xuất Excel',
           width: 120,
