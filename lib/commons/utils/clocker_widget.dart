@@ -27,7 +27,7 @@ class ClockWidget extends StatelessWidget {
                 Text(
                   '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())},',
                   style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 10,
                       color: AppColor.GREY_TEXT,
                       fontWeight: FontWeight.w400),
                 ),
