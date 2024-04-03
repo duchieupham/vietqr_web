@@ -24,6 +24,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../home/widget/item_menu_dropdown.dart';
 import '../home/widget/item_menu_top.dart';
 import 'events/vhitek_event.dart';
 
@@ -121,21 +122,21 @@ class _VhitekState extends State<_VhitekScreen> {
                   MenuLeft(
                     currentType: MenuHomeType.MERCHANT_REQUEST,
                     subMenuMerchantRequest: [
-                      ItemMenuHome(
+                      ItemDropDownMenu(
                         title: 'API SERVICE',
                         isSelect: false,
                         onTap: () {
                           context.go('/merchant/request');
                         },
                       ),
-                      ItemMenuHome(
+                      ItemDropDownMenu(
                         title: 'ECOMMERCE',
                         isSelect: false,
                         onTap: () {
                           context.go('/merchant/request/ecommerce');
                         },
                       ),
-                      ItemMenuHome(
+                      ItemDropDownMenu(
                         title: 'KẾT NỐI MÁY BÁN HÀNG',
                         isSelect: true,
                         onTap: () {},
@@ -144,7 +145,7 @@ class _VhitekState extends State<_VhitekScreen> {
                           .getCustomerSyncTestId()
                           .trim()
                           .isNotEmpty)
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'TEST CALLBACK',
                           isSelect: false,
                           onTap: () {

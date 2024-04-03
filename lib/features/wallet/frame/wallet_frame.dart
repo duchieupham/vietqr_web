@@ -48,11 +48,11 @@ class _WalletFrameState extends State<WalletFrame> {
                 height: height,
                 child: Column(
                   children: [
-                    const HeaderWidget(),
+                    // const HeaderWidget(),
                     Expanded(
                         child: Row(
                       children: [
-                        widget.menu,
+                        // widget.menu,
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

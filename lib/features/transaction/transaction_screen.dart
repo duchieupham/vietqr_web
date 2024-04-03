@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../home/widget/item_menu_dropdown.dart';
 import 'transaction_pending/trans_pending_screen.dart';
 import 'transaction_pending/views/trans_unclassified_view.dart';
 import 'transaction_payment/trans_payment_screen.dart';
@@ -74,14 +75,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
           menu: MenuLeft(
             currentType: MenuHomeType.TRANSACTION,
             subMenuTransaction: [
-              ItemMenuHome(
+              ItemDropDownMenu(
                 title: 'Quản lý GD thanh toán',
-                isSelect: (type == '0'),
+                isSelect: type == "0" ? true : false,
                 onTap: () => onTapMenu('0'),
               ),
-              ItemMenuHome(
+              ItemDropDownMenu(
                 title: 'Quản lý  GD chờ xác nhận',
-                isSelect: type == '1',
+                isSelect: type == "1" ? true : false,
                 onTap: () => onTapMenu('1'),
               ),
             ],

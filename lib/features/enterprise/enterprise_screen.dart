@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/enterprise/enterprise.dart';
+import 'package:VietQR/features/home/widget/item_menu_dropdown.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -30,8 +31,8 @@ class _EnterpriseScreenState extends State<EnterpriseScreen> {
           //   isSelect: true,
           //   onTap: () {},
           // ),
-          ItemMenuHome(
-            title: 'Cửa hàng',
+          ItemDropDownMenu(
+            title: 'Thông tin kinh doanh',
             isSelect: true,
             onTap: () {
               context.go('/enterprise/store');

@@ -17,7 +17,7 @@ class ClockWidget extends StatelessWidget {
           children: [
             Text(
               DateFormat('hh:mm:ss').format(DateTime.now()),
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
             ),
             const SizedBox(
               height: 2,
@@ -26,8 +26,10 @@ class ClockWidget extends StatelessWidget {
               children: [
                 Text(
                   '${TimeUtils.instance.getCurrentDateInWeek(DateTime.now())},',
-                  style:
-                      const TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
+                  style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColor.GREY_TEXT,
+                      fontWeight: FontWeight.w400),
                 ),
                 Text(
                   DateFormat('MM-dd-yyyy').format(DateTime.now()),

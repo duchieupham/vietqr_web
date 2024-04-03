@@ -4,7 +4,12 @@ import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_dropdown.dart';
 import 'package:flutter/material.dart';
+
+import 'dart:html' as html;
+
+import '../../wallet/wallet_screen.dart';
 
 class CreateQRFrame extends StatefulWidget {
   final Widget widget1;
@@ -23,6 +28,7 @@ class CreateQRFrame extends StatefulWidget {
 }
 
 class _HomeFrameState extends State<CreateQRFrame> {
+  String type = '0';
   final PageController pageController = PageController();
   int currentPage = 0;
 
@@ -54,45 +60,22 @@ class _HomeFrameState extends State<CreateQRFrame> {
                     Expanded(
                       child: Row(
                         children: [
-                          const MenuLeft(
+                          MenuLeft(
                             currentType: MenuHomeType.CREATE_QR,
+                            subMenuQr: [
+                              ItemDropDownMenu(
+                                title: 'Tạo mã VietQR',
+                                isSelect: type == "0" ? true : false,
+                                onTap: () => onTapMenu('0'),
+                              ),
+                              ItemDropDownMenu(
+                                title: 'Ví QR',
+                                isSelect: type == "1" ? true : false,
+                                onTap: () => onTapMenu('1'),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: Text(
-                                    'Tạo mã VietQR',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                Expanded(
-                                    child: Row(
-                                  children: [
-                                    const SizedBox(width: 16),
-                                    Expanded(child: widget.widget1),
-                                    const SizedBox(width: 30),
-                                    Expanded(child: widget.widget2),
-                                    const SizedBox(width: 30),
-                                    Expanded(child: widget.widget3),
-                                    const SizedBox(width: 16),
-                                    // Expanded(flex: 2, child: widget.widget3),
-                                    // const SizedBox(width: 16),
-                                  ],
-                                )),
-                                const FooterWeb(),
-                              ],
-                            ),
-                          ),
+                          _buildBody(),
                         ],
                       ),
                     ),
@@ -102,6 +85,63 @@ class _HomeFrameState extends State<CreateQRFrame> {
             : _forMobile(),
       ),
     );
+  }
+
+  Widget createQrSection() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: Text(
+              'Tạo mã VietQR',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.underline,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Expanded(
+              child: Row(
+            children: [
+              const SizedBox(width: 16),
+              Expanded(child: widget.widget1),
+              const SizedBox(width: 30),
+              Expanded(child: widget.widget2),
+              const SizedBox(width: 30),
+              Expanded(child: widget.widget3),
+              const SizedBox(width: 16),
+              // Expanded(flex: 2, child: widget.widget3),
+              // const SizedBox(width: 16),
+            ],
+          )),
+          const FooterWeb(),
+        ],
+      ),
+    );
+  }
+
+  void onTapMenu(String value) {
+    if (value == '0') {
+      html.window.history.pushState(value, '/qr', '/create-qr');
+      type = value;
+    } else {
+      html.window.history.pushState(value, '/qr', '/qr-wallet');
+      type = value;
+    }
+    setState(() {});
+  }
+
+  Widget _buildBody() {
+    if (type == '0') {
+      return createQrSection();
+    }
+    return const WalletScreen();
   }
 
   Widget _forMobile() {

@@ -12,6 +12,8 @@ import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../home/widget/item_menu_dropdown.dart';
+
 enum StoreType { STORE, DETAIL, OVERVIEW }
 
 class StoreScreen extends StatefulWidget {
@@ -50,7 +52,7 @@ class _StoreScreenState extends State<StoreScreen> {
                         MenuLeft(
                           currentType: MenuHomeType.ENTERPRISE,
                           subMenuEnterprise: [
-                            ItemMenuHome(
+                            ItemDropDownMenu(
                               title: 'Cửa hàng',
                               isSelect: true,
                               onTap: () {

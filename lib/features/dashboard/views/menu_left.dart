@@ -24,6 +24,8 @@ class MenuLeft extends StatelessWidget {
   final List<Widget> subMenuEnterprise;
   final List<Widget> subMenuTransaction;
   final List<Widget> subMenuMember;
+  final List<Widget> subMenuQr;
+
   final Function(int)? onSelectMenu;
 
   const MenuLeft(
@@ -35,6 +37,7 @@ class MenuLeft extends StatelessWidget {
       this.subMenuEnterprise = const [],
       this.subMenuTransaction = const [],
       this.subMenuMember = const [],
+      this.subMenuQr = const [],
       this.subMenuMerchant = const []});
 
   @override
@@ -67,14 +70,14 @@ class MenuLeft extends StatelessWidget {
         builder: (context, provider, child) {
           double width = 0;
           if (provider.showMenu) {
-            width = 220;
+            width = 270;
           } else {
             width = 50;
           }
 
           return Container(
             width: width,
-            color: AppColor.BLUE_TEXT.withOpacity(0.2),
+            color: AppColor.BLUE_BGR,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -84,10 +87,10 @@ class MenuLeft extends StatelessWidget {
                     child: Text(
                       'Menu',
                       style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      ),
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          color: AppColor.BLUE_BGR),
                     ),
                   ),
                 if (provider.showMenu)
@@ -107,6 +110,7 @@ class MenuLeft extends StatelessWidget {
 
   Widget _buildListItem(
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
+    bool isVisible = false;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -120,54 +124,63 @@ class MenuLeft extends StatelessWidget {
                 enableDropDownList: true,
                 listItemDrop: subMenuTransaction,
                 isSelect: currentType == MenuHomeType.TRANSACTION,
+                bold: true,
                 onTap: () {
+                  isVisible = true;
                   context.go('/transactions', extra: {'type': '0'});
                 },
               ),
               ItemMenuHome(
+                title: 'Quản lý TT Kinh Doanh',
+                iconId: AppImages.icMenuMerchant,
+                enableDropDownList: true,
+                listItemDrop: subMenuEnterprise,
+                isSelect: currentType == MenuHomeType.ENTERPRISE,
+                bold: true,
+                onTap: () {
+                  context.go('/enterprise/store');
+                },
+              ),
+              ItemMenuHome(
                 title: 'Quản lý nhân viên',
-                iconId: AppImages.icMenuTransaction,
+                iconId: AppImages.icMenuEmployeeBlack,
                 enableDropDownList: true,
                 listItemDrop: subMenuMember,
                 isSelect: currentType == MenuHomeType.MEMBER,
+                bold: true,
                 onTap: () {
                   context.go('/member/list');
                 },
               ),
               ItemMenuHome(
-                title: 'Tạo mã VietQR',
-                iconId: AppImages.icVietQrSmall,
+                title: 'Tiện ích QR',
+                iconId: AppImages.icMenuQrBlack,
                 isSelect: currentType == MenuHomeType.CREATE_QR,
+                enableDropDownList: true,
+                listItemDrop: subMenuQr,
+                bold: true,
                 onTap: () {
                   context.go('/create-qr');
                 },
               ),
-              ItemMenuHome(
-                title: 'Trang chủ',
-                iconId: AppImages.icMenuHome,
-                isSelect: currentType == MenuHomeType.HOME,
-                onTap: () {
-                  context.go('/home');
-                },
-              ),
+              // ItemMenuHome(
+              //   title: 'Trang chủ',
+              //   iconId: AppImages.icMenuQrBlack,
+              //   isSelect: currentType == MenuHomeType.HOME,
+              //   bold: true,
+              //   onTap: () {
+              //     context.go('/home');
+              //   },
+              // ),
 
-              ItemMenuHome(
-                title: 'Doanh nghiệp',
-                iconId: AppImages.icMenuHome,
-                enableDropDownList: true,
-                listItemDrop: subMenuEnterprise,
-                isSelect: currentType == MenuHomeType.ENTERPRISE,
-                onTap: () {
-                  context.go('/enterprise/store');
-                },
-              ),
               if (UserInformationHelper.instance.getAccountIsMerchant())
                 ItemMenuHome(
                   title: 'Đại lý',
-                  iconId: AppImages.icMenuBank,
+                  iconId: AppImages.icMenuContactBlack,
                   enableDropDownList: true,
                   listItemDrop: subMenuMerchant,
                   isSelect: currentType == MenuHomeType.MERCHANT,
+                  bold: true,
                   onTap: () {
                     // DialogWidget.instance.openMsgDialog(
                     //     title: 'Bảo trì',
@@ -178,10 +191,11 @@ class MenuLeft extends StatelessWidget {
                 ),
               ItemMenuHome(
                 title: 'Tích hợp và kết nối',
-                iconId: AppImages.icMenuBank,
+                iconId: AppImages.icMenuIntergrated,
                 enableDropDownList: true,
                 listItemDrop: subMenuMerchantRequest,
                 isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+                bold: true,
                 onTap: () {
                   context.go('/merchant/request');
                 },
@@ -203,13 +217,14 @@ class MenuLeft extends StatelessWidget {
               //   },
               // ),
 
-              ItemMenuHome(
-                title: 'Ví QR',
-                isSelect: currentType == MenuHomeType.WALLET_QR,
-                onTap: () {
-                  context.go('/qr-wallet');
-                },
-              ),
+              // ItemMenuHome(
+              //   title: 'Ví QR',
+              //   isSelect: currentType == MenuHomeType.WALLET_QR,
+              //   bold: true,
+              //   onTap: () {
+              //     context.go('/qr-wallet');
+              //   },
+              // ),
               // ItemMenuHome(
               //   title: 'Chia sẻ BĐSD',
               //   isSelect: currentType == MenuHomeType.BUSINESS,
@@ -221,8 +236,9 @@ class MenuLeft extends StatelessWidget {
               // ),
               ItemMenuHome(
                 title: 'Giới thiệu VietQR VN',
-                pathImage: AppImages.icMenuIntroVietQrVN,
+                pathImage: AppImages.icMenuContactBlack,
                 isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
+                bold: true,
                 onTap: () {
                   DialogWidget.instance.openPopup(
                     width: 500,
@@ -234,27 +250,27 @@ class MenuLeft extends StatelessWidget {
             ],
           ),
         ),
-        ItemMenuHome(
-          title: 'Cài đặt',
-          iconId: AppImages.icMenuSetting,
-          isSelect: currentType == MenuHomeType.SETTING,
-          onTap: () {
-            DialogWidget.instance.openPopup(
-              width: 800,
-              height: 650,
-              child: const PopupSetting(),
-            );
-          },
-        ),
-        ItemMenuHome(
-          title: 'Đăng xuất',
-          isSelect: currentType == MenuHomeType.LOGOUT,
-          isLogout: true,
-          iconId: AppImages.icMenuLogout,
-          onTap: () {
-            logoutBloc.add(const LogoutEventSubmit());
-          },
-        ),
+        // ItemMenuHome(
+        //   title: 'Cài đặt',
+        //   iconId: AppImages.icMenuSetting,
+        //   isSelect: currentType == MenuHomeType.SETTING,
+        //   onTap: () {
+        //     DialogWidget.instance.openPopup(
+        //       width: 800,
+        //       height: 650,
+        //       child: const PopupSetting(),
+        //     );
+        //   },
+        // ),
+        // ItemMenuHome(
+        //   title: 'Đăng xuất',
+        //   isSelect: currentType == MenuHomeType.LOGOUT,
+        //   isLogout: true,
+        //   iconId: AppImages.icMenuLogout,
+        //   onTap: () {
+        //     logoutBloc.add(const LogoutEventSubmit());
+        //   },
+        // ),
       ],
     );
   }

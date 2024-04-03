@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../home/widget/item_menu_dropdown.dart';
 import '../frame/merchant_frame.dart';
 
 class MerchantReport extends StatefulWidget {
@@ -50,33 +51,33 @@ class _MerchantViewState extends State<MerchantReport> {
       menu: MenuLeft(
         currentType: MenuHomeType.MERCHANT,
         subMenuMerchant: [
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Báo cáo tổng hợp',
             isSelect: true,
             onTap: () {},
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Thống kê giao dịch',
             isSelect: false,
             onTap: () {
               context.go('/merchant/transaction');
             },
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Phí dịch vụ',
             isSelect: false,
             onTap: () {
               context.go('/merchant/fee');
             },
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Hóa đơn',
             isSelect: false,
             onTap: () {
               context.go('/merchant/bill');
             },
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Bảng giá',
             isSelect: false,
             onTap: () {},

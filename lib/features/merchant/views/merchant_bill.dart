@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_dropdown.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/home/widget/item_menu_top.dart';
 import 'package:VietQR/features/merchant/blocs/merchant_bloc.dart';
@@ -50,33 +51,33 @@ class _MerchantViewState extends State<MerchantBill> {
       menu: MenuLeft(
         currentType: MenuHomeType.MERCHANT,
         subMenuMerchant: [
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Báo cáo tổng hợp',
             isSelect: false,
             onTap: () {
               context.go('/merchant/report');
             },
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Thống kê giao dịch',
             isSelect: false,
             onTap: () {
               context.go('/merchant/transaction');
             },
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Phí dịch vụ',
             isSelect: false,
             onTap: () {
               context.go('/merchant/fee');
             },
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Hóa đơn',
             isSelect: true,
             onTap: () {},
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Bảng giá',
             isSelect: false,
             onTap: () {},

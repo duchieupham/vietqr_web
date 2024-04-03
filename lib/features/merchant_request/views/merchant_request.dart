@@ -23,6 +23,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../home/widget/item_menu_dropdown.dart';
+
 class MerchantRequest extends StatefulWidget {
   const MerchantRequest({super.key});
 
@@ -68,19 +70,19 @@ class _MerchantViewState extends State<MerchantRequest> {
             menu: MenuLeft(
               currentType: MenuHomeType.MERCHANT_REQUEST,
               subMenuMerchantRequest: [
-                ItemMenuHome(
+                ItemDropDownMenu(
                   title: 'API SERVICE',
                   isSelect: true,
                   onTap: () {},
                 ),
-                ItemMenuHome(
+                ItemDropDownMenu(
                   title: 'ECOMMERCE',
                   isSelect: false,
                   onTap: () {
                     context.go('/merchant/request/ecommerce');
                   },
                 ),
-                ItemMenuHome(
+                ItemDropDownMenu(
                   title: 'KẾT NỐI MÁY BÁN HÀNG',
                   isSelect: false,
                   onTap: () {

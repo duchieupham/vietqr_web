@@ -61,8 +61,9 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
         UserInformationHelper.instance.getAccountInformation().imgId;
     return Container(
       width: width,
+      color: AppColor.BLUE_BGR,
       padding: const EdgeInsets.only(left: 14, right: 20),
-      height: 60,
+      height: 80,
       child: Row(
         children: [
           (widget.isSubHeader != null && widget.isSubHeader!)
@@ -79,12 +80,13 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                               .updateShowMenu(false);
                         },
                         child: BoxLayout(
-                          width: 35,
-                          height: 35,
-                          borderRadius: 35,
+                          width: 40,
+                          height: 40,
+                          borderRadius: 100,
                           alignment: Alignment.center,
                           padding: const EdgeInsets.all(0),
-                          bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+                          bgColor: AppColor.WHITE,
+                          border: Border.all(color: AppColor.BLACK, width: 0.5),
                           child: Icon(
                             (provider.showMenu)
                                 ? Icons.close_rounded
@@ -136,17 +138,18 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           //   bgColor: AppColor.WHITE.withOpacity(0.7),
           //   textColor: AppColor.BLUE_TEXT,
           // ),
-          _buildInfoTelegram(),
-          const SizedBox(
-            width: 12,
-          ),
-          _buildWallet(),
-          const SizedBox(
-            width: 12,
-          ),
+          // _buildInfoTelegram(),
+          // const SizedBox(
+          //   width: 12,
+          // ),
+          // _buildWallet(),
+          // const SizedBox(
+          //   width: 12,
+          // ),
           Container(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-              margin: const EdgeInsets.symmetric(vertical: 10),
+              // padding: const EdgeInsets.only(top: 21, bottom: 21),
+              // padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              // margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
               ),
@@ -186,10 +189,11 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                       child: BoxLayout(
                         width: 35,
                         height: 35,
-                        borderRadius: 35,
+                        borderRadius: 100,
                         alignment: Alignment.center,
                         padding: const EdgeInsets.all(0),
-                        bgColor: Theme.of(context).cardColor.withOpacity(0.3),
+                        bgColor: AppColor.WHITE,
+                        border: Border.all(color: AppColor.BLACK, width: 0.5),
                         child: Icon(
                           Icons.notifications_none_rounded,
                           size: 20,

@@ -4,6 +4,8 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 
+import '../../../layouts/sldie_fade_animation.dart';
+
 class ItemMenuHome extends StatefulWidget {
   final String iconId;
   final String title;
@@ -69,7 +71,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
 
   getBgItem() {
     if (widget.isSelect) {
-      return AppColor.BLUE_TEXT.withOpacity(0.30);
+      return AppColor.BLUE_BGR;
     } else if (amIHovering) {
       return AppColor.GREY_BUTTON;
     }
@@ -152,28 +154,38 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
             Container(
               height: heightItem,
               width: double.infinity,
-              alignment: Alignment.center,
+              // alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              color: getBgItem(),
+              color: AppColor.BLUE_BGR,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Image(
+                    image: ImageUtils.instance.getImageNetWork(widget.iconId),
+                    color: AppColor.BLACK,
+                    height: 30,
+                  ),
+                  const Spacer(),
                   if (widget.isLogout)
                     Text(
                       widget.title,
                       style: TextStyle(
-                          fontSize: widget.titleSize,
-                          color: AppColor.RED_TEXT,
-                          fontWeight: widget.bold ? FontWeight.bold : null),
+                        fontSize: widget.titleSize,
+                        color: AppColor.RED_TEXT,
+                        fontWeight: widget.bold ? FontWeight.bold : null,
+                      ),
                     )
                   else
                     Text(
                       widget.title,
                       style: TextStyle(
-                          fontSize: widget.titleSize,
-                          fontWeight: widget.bold ? FontWeight.bold : null,
-                          color: widget.isSelect
-                              ? AppColor.BLUE_TEXT
-                              : AppColor.BLACK),
+                        fontSize: widget.titleSize,
+                        fontWeight: widget.bold ? FontWeight.bold : null,
+                        // color: widget.isSelect
+                        //     ? AppColor.BLUE_TEXT
+                        //     : AppColor.BLACK,
+                        color: AppColor.BLACK,
+                      ),
                     ),
                   const Spacer(),
                   if (widget.enableMenuCard)
@@ -182,13 +194,13 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                       width: 20,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: AppColor.CARD_CODE_BG,
+                          color: AppColor.BLUE_BGR,
                           borderRadius: BorderRadius.circular(15)),
                       child: Transform.rotate(
                         angle: !openMenuCard ? -math.pi / 2 : math.pi / 2,
                         child: const Icon(
                           Icons.keyboard_arrow_down,
-                          size: 15,
+                          size: 20,
                         ),
                       ),
                     )
@@ -197,13 +209,13 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                       height: 20,
                       width: 20,
                       decoration: BoxDecoration(
-                          color: AppColor.CARD_CODE_BG,
+                          color: AppColor.BLUE_BGR,
                           borderRadius: BorderRadius.circular(15)),
                       child: Transform.rotate(
                         angle: !openListDropDown ? math.pi : 0,
                         child: const Icon(
                           Icons.keyboard_arrow_down,
-                          size: 15,
+                          size: 20,
                         ),
                       ),
                     )
@@ -218,14 +230,19 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
   }
 
   Widget _dropDownList() {
-    return AnimatedContainer(
-      margin: const EdgeInsets.only(left: 20),
-      height: getHeightDropDownList(),
-      width: double.infinity,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.fastOutSlowIn,
-      child: ListView(
-        children: widget.listItemDrop,
+    return SlideFadeTransition(
+      offset: -0.2,
+      delayStart: const Duration(microseconds: 10),
+      animationDuration: const Duration(milliseconds: 400),
+      direction: Direction.vertical,
+      child: Container(
+        padding: const EdgeInsets.only(left: 40, right: 40),
+        // margin: const EdgeInsets.only(left: 20),
+        height: getHeightDropDownList(),
+        width: double.infinity,
+        child: ListView(
+          children: widget.listItemDrop,
+        ),
       ),
     );
   }

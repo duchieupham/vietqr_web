@@ -6,8 +6,13 @@ class AppImages {
   static String icMenuWallet = '43e7650b-d591-48f6-abcb-640b7426b3ed';
   static String icMenuContact = 'aea13c59-f430-4411-a285-74e900fcc53e';
   static String icMenuHome = '5607f58e-ee6c-493c-9e17-8cc4130f13d2';
-  static String icMenuTransaction = 'a1bb15e9-bc2e-43a3-9080-01d47a8206aa';
+  static String icMenuTransaction = '5e9aa6ef-17d3-46d4-bb02-f5ccf84860de';
   static String icMenuShareBDSD = 'aea13c59-f430-4411-a285-74e900fcc53e';
+  static String icMenuMerchant = '16827735-95b7-4e6e-8348-1c75bc580947';
+  static String icMenuEmployeeBlack = '9579d333-891c-46c9-b756-8c0a67855b92';
+  static String icMenuQrBlack = 'cfe8225e-ac60-4f94-8fe2-ddbc12d5492d';
+  static String icMenuIntergrated = 'd8bc527f-ea1c-4e3d-9d2a-3b49e7b324b6';
+  static String icMenuContactBlack = '12d4f2fc-eb56-49d3-b733-dec573acab4b';
 
   static String icMenuIntroVietQrVN =
       'assets/icons_menu/ic-menu-intro-vietqrvn.png';

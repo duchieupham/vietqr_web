@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../home/widget/item_menu_dropdown.dart';
 import '../events/run_callback_event.dart';
 
 class CallbackPage extends StatefulWidget {
@@ -68,21 +69,21 @@ class _CallbackPageState extends State<CallbackPage> {
                     MenuLeft(
                       currentType: MenuHomeType.MERCHANT_REQUEST,
                       subMenuMerchantRequest: [
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'API SERVICE',
                           isSelect: false,
                           onTap: () {
                             context.go('/merchant/request');
                           },
                         ),
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'ECOMMERCE',
                           isSelect: false,
                           onTap: () {
                             context.go('/merchant/request/ecommerce');
                           },
                         ),
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'KẾT NỐI MÁY BÁN HÀNG',
                           isSelect: false,
                           onTap: () {

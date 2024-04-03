@@ -19,6 +19,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../home/widget/item_menu_dropdown.dart';
+
 class GetKeyPage extends StatefulWidget {
   const GetKeyPage({Key? key}) : super(key: key);
 
@@ -61,19 +63,19 @@ class _GetKeyPageState extends State<GetKeyPage> {
                     MenuLeft(
                       currentType: MenuHomeType.MERCHANT_REQUEST,
                       subMenuMerchantRequest: [
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'API SERVICE',
                           isSelect: false,
                           onTap: () {
                             context.go('/merchant/request');
                           },
                         ),
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'ECOMMERCE',
                           isSelect: true,
                           onTap: () {},
                         ),
-                        ItemMenuHome(
+                        ItemDropDownMenu(
                           title: 'KẾT NỐI MÁY BÁN HÀNG',
                           isSelect: false,
                           onTap: () {
@@ -84,7 +86,7 @@ class _GetKeyPageState extends State<GetKeyPage> {
                             .getCustomerSyncTestId()
                             .trim()
                             .isNotEmpty)
-                          ItemMenuHome(
+                          ItemDropDownMenu(
                             title: 'TEST CALLBACK',
                             isSelect: false,
                             onTap: () {

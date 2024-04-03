@@ -7,6 +7,7 @@ import 'package:VietQR/features/transaction/views/transaction_fram_view.dart';
 import 'package:flutter/material.dart';
 import 'dart:html' as html;
 
+import '../home/widget/item_menu_dropdown.dart';
 import 'member_manage.dart';
 
 enum MemberType { LIST_MEMBER, ADD_MEMBER }
@@ -36,12 +37,12 @@ class _MemberManageScreenState extends State<MemberManageScreen> {
       menu: MenuLeft(
         currentType: MenuHomeType.MEMBER,
         subMenuMember: [
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Danh sách nhân viên',
             isSelect: type == MemberType.LIST_MEMBER,
             onTap: () => onTapMenu(MemberType.LIST_MEMBER),
           ),
-          ItemMenuHome(
+          ItemDropDownMenu(
             title: 'Thêm mới nhân viên',
             isSelect: type == MemberType.ADD_MEMBER,
             onTap: () => onTapMenu(MemberType.ADD_MEMBER),
