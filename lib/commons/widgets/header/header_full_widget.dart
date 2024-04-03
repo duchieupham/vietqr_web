@@ -88,9 +88,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                           bgColor: AppColor.WHITE,
                           border: Border.all(color: AppColor.BLACK, width: 0.5),
                           child: Icon(
-                            (provider.showMenu)
-                                ? Icons.close_rounded
-                                : Icons.menu_rounded,
+                            Icons.menu_rounded,
                             size: 20,
                             color: Theme.of(context).hintColor,
                           ),

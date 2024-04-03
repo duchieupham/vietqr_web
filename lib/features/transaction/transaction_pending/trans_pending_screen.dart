@@ -91,65 +91,68 @@ class TransPendingScreenState extends State<TransPendingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TransactionBloc>(
-      create: (context) => bloc,
-      child: BlocConsumer<TransactionBloc, TransactionState>(
-        listener: _listener,
-        builder: (context, state) {
-          return TransHeaderWidget(
-            title: 'Giao dịch chờ xác nhận',
-            dto: state.bankDTO,
-            onTap: () => _onChooseBank(state.listBanks),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (state.isLoading)
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 100),
-                        child: const SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator(),
+    return Material(
+      color: AppColor.BLUE_BGR,
+      child: BlocProvider<TransactionBloc>(
+        create: (context) => bloc,
+        child: BlocConsumer<TransactionBloc, TransactionState>(
+          listener: _listener,
+          builder: (context, state) {
+            return TransHeaderWidget(
+              title: 'Giao dịch chờ xác nhận',
+              dto: state.bankDTO,
+              onTap: () => _onChooseBank(state.listBanks),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (state.isLoading)
+                      Center(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 100),
+                          child: const SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
+                      )
+                    else if (!role.disableTab && !isOwner)
+                      const Center(
+                        child: Text('Bạn không có quyền truy cập'),
+                      )
+                    else ...[
+                      _buildTabWidget(),
+                      const SizedBox(height: 24),
+                      IndexedStack(
+                        index: transType.transPenIndex,
+                        children: <Widget>[
+                          TransUnclassifiedView(
+                            bank: bank,
+                            role: role,
+                            dto: inputDTO,
+                            stream: unclassifiedStream,
+                            callBack: (value) {
+                              inputDTO = value;
+                              updateState();
+                            },
+                          ),
+                          TransPendingView(
+                            inputDTO: inputDTO,
+                            stream: pendingStream,
+                            role: role,
+                            isOwner: isOwner,
+                          ),
+                        ],
                       ),
-                    )
-                  else if (!role.disableTab && !isOwner)
-                    const Center(
-                      child: Text('Bạn không có quyền truy cập'),
-                    )
-                  else ...[
-                    _buildTabWidget(),
-                    const SizedBox(height: 24),
-                    IndexedStack(
-                      index: transType.transPenIndex,
-                      children: <Widget>[
-                        TransUnclassifiedView(
-                          bank: bank,
-                          role: role,
-                          dto: inputDTO,
-                          stream: unclassifiedStream,
-                          callBack: (value) {
-                            inputDTO = value;
-                            updateState();
-                          },
-                        ),
-                        TransPendingView(
-                          inputDTO: inputDTO,
-                          stream: pendingStream,
-                          role: role,
-                          isOwner: isOwner,
-                        ),
-                      ],
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

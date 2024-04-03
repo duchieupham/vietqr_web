@@ -217,7 +217,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
     return BlocProvider<TransactionBloc>(
       create: (context) => bloc,
       child: Material(
-        color: AppColor.GREY_BG,
+        color: AppColor.BLUE_BGR,
         child: (!isMobile)
             ? const WebMobileBlankWidget()
             : BlocConsumer<TransactionBloc, TransactionState>(

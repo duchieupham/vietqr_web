@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/member_manage/member_manage.dart';
@@ -59,59 +60,62 @@ class _ListMemberViewState extends State<ListMemberView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => bloc,
-      child: BlocConsumer<MemberBloc, MemberState>(
-        listener: (context, state) {
-          if (state.request == MemberType.GET_MERCHANTS) {
-            if (state.merchants.isNotEmpty) {
-              _merchant = state.merchants.first;
-              onRole(state.merchants.first);
+    return Material(
+      color: AppColor.BLUE_BGR,
+      child: BlocProvider(
+        create: (context) => bloc,
+        child: BlocConsumer<MemberBloc, MemberState>(
+          listener: (context, state) {
+            if (state.request == MemberType.GET_MERCHANTS) {
+              if (state.merchants.isNotEmpty) {
+                _merchant = state.merchants.first;
+                onRole(state.merchants.first);
+              }
+              MemberInputDTO dto = MemberInputDTO(merchantId: _merchant.id);
+              bloc.add(GetMembersEvent(dto));
             }
-            MemberInputDTO dto = MemberInputDTO(merchantId: _merchant.id);
-            bloc.add(GetMembersEvent(dto));
-          }
 
-          if (state.request == MemberType.UPDATE_OFFSET) {
-            MemberInputDTO dto = MemberInputDTO(
-                merchantId: _merchant.id,
-                value: _value,
-                type: _type,
-                page: state.offset);
-            bloc.add(FetchMembersEvent(dto));
-          }
-        },
-        builder: (context, state) {
-          return MemberHeaderWidget(
-            title: 'Danh sách nhân viên',
-            dto: _merchant,
-            onTap: () => _onChooseMerchant(state.merchants),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                MemberFilterWidget(
-                  stream: filterStream,
-                  callBack: _onReceive,
-                  onSearch: _onSearch,
-                  isOwner: false,
-                ),
-                const SizedBox(height: 24),
-                CustomPaint(
-                  painter: HorizontalDashedLine(dashWidth: 5, dashSpace: 3),
-                  size: const Size(double.infinity, 1),
-                ),
-                const SizedBox(height: 12),
-                TableMemberWidget(
-                  items: state.maps['${state.offset}'] ?? [],
-                  offset: state.offset - 1,
-                  isLoading: state.status == BlocStatus.LOADING,
-                  role: role,
-                ),
-                _buildPageWidget(state),
-              ],
-            ),
-          );
-        },
+            if (state.request == MemberType.UPDATE_OFFSET) {
+              MemberInputDTO dto = MemberInputDTO(
+                  merchantId: _merchant.id,
+                  value: _value,
+                  type: _type,
+                  page: state.offset);
+              bloc.add(FetchMembersEvent(dto));
+            }
+          },
+          builder: (context, state) {
+            return MemberHeaderWidget(
+              title: 'Danh sách nhân viên',
+              dto: _merchant,
+              onTap: () => _onChooseMerchant(state.merchants),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  MemberFilterWidget(
+                    stream: filterStream,
+                    callBack: _onReceive,
+                    onSearch: _onSearch,
+                    isOwner: false,
+                  ),
+                  const SizedBox(height: 24),
+                  CustomPaint(
+                    painter: HorizontalDashedLine(dashWidth: 5, dashSpace: 3),
+                    size: const Size(double.infinity, 1),
+                  ),
+                  const SizedBox(height: 12),
+                  TableMemberWidget(
+                    items: state.maps['${state.offset}'] ?? [],
+                    offset: state.offset - 1,
+                    isLoading: state.status == BlocStatus.LOADING,
+                    role: role,
+                  ),
+                  _buildPageWidget(state),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

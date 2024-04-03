@@ -26,7 +26,7 @@ class TransHeaderWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       decoration: BoxDecoration(
         color: AppColor.WHITE,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: SingleChildScrollView(
         child: Column(
