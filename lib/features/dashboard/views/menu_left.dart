@@ -236,7 +236,7 @@ class MenuLeft extends StatelessWidget {
               // ),
               ItemMenuHome(
                 title: 'Giới thiệu VietQR VN',
-                pathImage: AppImages.icMenuContactBlack,
+                iconId: AppImages.icMenuContactBlack,
                 isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
                 bold: true,
                 onTap: () {
