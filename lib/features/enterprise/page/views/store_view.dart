@@ -290,6 +290,7 @@ class _StoreViewState extends State<StoreView> {
                       color: Colors.white,
                     ),
                   ),
+                  const Padding(padding: EdgeInsets.only(left: 5)),
                 ],
               ),
             ),

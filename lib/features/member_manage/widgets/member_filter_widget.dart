@@ -195,6 +195,7 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
                   color: Colors.white,
                 ),
               ),
+              const Padding(padding: EdgeInsets.only(left: 5)),
             ],
           ),
         ),

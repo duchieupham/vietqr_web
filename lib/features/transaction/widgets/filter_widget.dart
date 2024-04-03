@@ -448,6 +448,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                   color: Colors.white,
                 ),
               ),
+              const Padding(padding: EdgeInsets.only(left: 5)),
             ],
           ),
         ),
