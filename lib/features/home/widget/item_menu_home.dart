@@ -31,7 +31,7 @@ class ItemMenuHome extends StatefulWidget {
       this.enableDropDownList = false,
       this.listItemDrop = const [],
       this.isDropDownItem = false,
-      this.titleSize = 13,
+      this.titleSize = 12,
       this.enableMenuCard = false,
       this.isOnlyIcon = false,
       this.isDefaultColor = false,
@@ -159,7 +159,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               openMenuCard = !openMenuCard;
             });
           }
-
+          print('widget.enableDropDownList: ${widget.enableDropDownList}');
           // if (widget.enableDropDownList) {
           //   onOpenDropDownList();
           // }
@@ -184,7 +184,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                         color: AppColor.BLACK,
                         height: 30,
                       ),
-                      const SizedBox(width: 19),
+                      const SizedBox(width: 10),
                       // const Spacer(),
                       if (widget.isLogout)
                         Text(

@@ -81,7 +81,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                 onTap: () => onTapMenu('0'),
               ),
               ItemDropDownMenu(
-                title: 'Quản lý  GD chờ xác nhận',
+                title: 'Quản lý GD chờ xác nhận',
                 isSelect: type == "1" ? true : false,
                 onTap: () => onTapMenu('1'),
               ),

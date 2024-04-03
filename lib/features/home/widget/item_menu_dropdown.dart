@@ -17,7 +17,7 @@ class ItemDropDownMenu extends StatefulWidget {
     required this.title,
     required this.onTap,
     this.listItemDrop = const [],
-    this.titleSize = 13,
+    this.titleSize = 12,
     this.isSelect = false,
   });
 
@@ -43,7 +43,7 @@ class _ItemDropDownMenuState extends State<ItemDropDownMenu> {
         height: heightItem,
         width: double.infinity,
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 20, right: 10),
         decoration: BoxDecoration(
           color: widget.isSelect
               ? AppColor.BLUE_CARD.withOpacity(0.3)

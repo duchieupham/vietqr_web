@@ -70,7 +70,7 @@ class MenuLeft extends StatelessWidget {
         builder: (context, provider, child) {
           double width = 0;
           if (provider.showMenu) {
-            width = 270;
+            width = 250;
           } else {
             width = 50;
           }
