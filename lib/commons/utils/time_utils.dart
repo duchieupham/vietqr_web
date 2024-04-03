@@ -1,16 +1,21 @@
 import 'package:VietQR/commons/utils/log.dart';
-import 'package:intl/intl.dart';
+import 'package:VietQR/main.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimeUtils {
   const TimeUtils._privateConsrtructor();
 
   static const TimeUtils _instance = TimeUtils._privateConsrtructor();
+
   static TimeUtils get instance => _instance;
 
   DateTime getDateFromString(String time) {
     List<String> times = time.split('/');
     DateTime result = DateTime.now();
+    if (time == '22/11/1970') {
+      return result;
+    }
     if (times.length == 3) {
       result = DateTime(
         int.parse(times[2]),
@@ -27,6 +32,37 @@ class TimeUtils {
     bool isValidDate = DateTime.tryParse(date.toString()) != null;
     if (date != '' && isValidDate) {
       result = format.format(DateTime.parse(date)).toString();
+    }
+    return result;
+  }
+
+  String getFormatMonth(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('yyyy-MM');
+    String formatted = format.format(now);
+    return formatted;
+  }
+
+  String formatMonthToString(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('MM/yyyy');
+    String formatted = format.format(now);
+    return formatted;
+  }
+
+  String formatTimeDateFromInt(num time, {bool oneLine = false}) {
+    String result = '';
+    try {
+      if (time != 0) {
+        DateTime timeConverted =
+            DateTime.fromMillisecondsSinceEpoch(time.toInt() * 1000);
+        DateFormat format = oneLine
+            ? DateFormat('HH:mm:ss dd/MM/yyyy ')
+            : DateFormat('HH:mm:ss \ndd/MM/yyyy ');
+        result = format.format(timeConverted).toString();
+      }
+    } catch (e) {
+      LOG.error(e.toString());
     }
     return result;
   }
@@ -52,12 +88,29 @@ class TimeUtils {
   }
 
   String formatDate(String date) {
+    if (!date.contains('-')) {
+      return date;
+    }
+
     String result = '';
     DateFormat format = DateFormat('dd/MM/yyyy');
+
     bool isValidDate = DateTime.tryParse(date.toString()) != null;
     if (date != '' && isValidDate) {
       result = format.format(DateTime.parse(date)).toString();
     }
+    return result;
+  }
+
+  String formatMonthYear(String date) {
+    if (!date.contains('-')) {
+      return date;
+    }
+
+    String result = '';
+    List<String> splitDate = date.split('-');
+
+    result = '${splitDate[1]}/${splitDate[0]}';
     return result;
   }
 
@@ -106,6 +159,26 @@ class TimeUtils {
     }
 
     return formattedTime;
+  }
+
+  String formatDateToString(DateTime? now, {bool isExport = false}) {
+    now ??= DateTime.now();
+    DateFormat format;
+    if (isExport) {
+      format = DateFormat('yyyy-MM-dd HH:mm:ss');
+    } else {
+      format = DateFormat('dd/MM/yyyy HH:mm:ss');
+    }
+
+    String formatted = format.format(now);
+    return formatted;
+  }
+
+  String getCurrentDate(DateTime? now) {
+    now ??= DateTime.now();
+    DateFormat format = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String formatted = format.format(now);
+    return formatted;
   }
 
   //get date in week to display dashboard
@@ -175,17 +248,17 @@ class TimeUtils {
   String formatDateOfWeek(String value) {
     String result = '';
     if (value == 'Monday') {
-      result = 'Thứ hai';
+      result = 'Thứ 2';
     } else if (value == 'Tuesday') {
-      result = 'Thứ ba';
+      result = 'Thứ 3';
     } else if (value == 'Wednesday') {
-      result = 'Thứ tư';
+      result = 'Thứ 4';
     } else if (value == 'Thursday') {
-      result = 'Thứ năm';
+      result = 'Thứ 5';
     } else if (value == 'Friday') {
-      result = 'Thứ sáu';
+      result = 'Thứ 6';
     } else if (value.contains('Saturday')) {
-      result = 'Thứ bảy';
+      result = 'Thứ 7';
     } else if (value == 'Sunday') {
       result = 'Chủ nhật';
     }
@@ -298,5 +371,56 @@ class TimeUtils {
       final formattedTime = formatter.format(time);
       return formattedTime;
     }
+  }
+
+  String convertDateString(String dateString) {
+    String day = dateString.substring(0, 2);
+    String month = dateString.substring(2, 4);
+    String year = dateString.substring(4, 8);
+    return '$day/$month/$year';
+  }
+
+  Future<DateTime?> showDateTimePicker({
+    required BuildContext context,
+    DateTime? initialDate,
+    DateTime? firstDate,
+    DateTime? lastDate,
+    bool isSelectedTime = true,
+  }) async {
+    initialDate ??= DateTime.now();
+    firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
+    lastDate ??= firstDate.add(const Duration(days: 365 * 200));
+
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+
+    if (selectedDate == null) return null;
+
+    bool mounted = NavigationService.navigatorKey.currentContext!.mounted;
+
+    if (!mounted) return selectedDate;
+
+    TimeOfDay? selectedTime;
+
+    if (isSelectedTime) {
+      selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDate),
+      );
+    }
+
+    return selectedTime == null
+        ? selectedDate
+        : DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
   }
 }

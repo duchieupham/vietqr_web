@@ -56,7 +56,7 @@ class ECOMBankRepository {
       phoneAuthenticated: '',
       businessDetails: [],
       transactions: [],
-      authenticated: false,
+      authenticated: false, caiValue: '',
     );
     try {
       final String url =

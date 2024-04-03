@@ -4,12 +4,13 @@ import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 
 class UserSettingRepository {
   const UserSettingRepository();
 
-  Future<bool> getGuideWeb(String userId) async {
-    bool result = false;
+  Future<SettingAccountDTO> getGuideWeb(String userId) async {
+    SettingAccountDTO result = SettingAccountDTO();
     try {
       String url = '${EnvConfig.getBaseUrl()}accounts/setting/$userId';
       final response = await BaseAPIClient.getAPI(
@@ -18,7 +19,7 @@ class UserSettingRepository {
       );
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        result = data['guideWeb'];
+        result = SettingAccountDTO.fromJson(data);
       }
     } catch (e) {
       LOG.error(e.toString());

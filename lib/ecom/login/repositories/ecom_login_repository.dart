@@ -5,10 +5,8 @@ import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/ecom/login/model/account_login_dto.dart';
 import 'package:VietQR/models/account_information_dto.dart';
-import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/services/shared_references/account_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
-import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -40,13 +38,14 @@ class ECOMLoginRepository {
         WebBrowserInfo webBrowserInfo = await deviceInfo.webBrowserInfo;
         device = webBrowserInfo.userAgent.toString();
       }
-      AccountLoginDTO loginDTO = AccountLoginDTO(
+      ECOMAccountLoginDTO loginDTO = ECOMAccountLoginDTO(
         phoneNo: dto.phoneNo,
         email: dto.email,
         password: dto.password,
         platform: platform,
         device: device,
         fcmToken: fcmToken,
+        hosting: dto.hosting,
       );
       final response = await BaseAPIClient.postAPI(
         url: url,
@@ -58,13 +57,10 @@ class ECOMLoginRepository {
         Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
         AccountInformationDTO accountInformationDTO =
             AccountInformationDTO.fromJson(decodedToken);
-        await AccountHelper.instance.setFcmToken('');
         await AccountHelper.instance.setToken(token);
-        await UserInformationHelper.instance.setPhoneNo(dto.phoneNo);
-        await UserInformationHelper.instance
-            .setUserECOMId(accountInformationDTO.userId);
-        await UserInformationHelper.instance
-            .setAccountInformation(accountInformationDTO);
+        Session.instance.updateUserECOMToken(token);
+        Session.instance.updateUserECOMId(accountInformationDTO.userId);
+
         result = true;
       }
     } catch (e) {

@@ -1,95 +1,52 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
-import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class VietQRWidget extends StatelessWidget {
-  final double width, horizontalInfoWidth;
+  final double horizontalInfoWidth;
   final double? height;
   final QRGeneratedDTO qrGeneratedDTO;
-  final String content;
   final bool? isStatistic;
   final bool? isCopy;
   final double? qrSize;
   final bool showQROnly;
   final bool horizontalInfo;
+  final bool showBankAccount;
 
   const VietQRWidget(
       {super.key,
-      required this.width,
       required this.qrGeneratedDTO,
-      required this.content,
       this.height,
       this.isStatistic,
       this.isCopy,
       this.qrSize,
       this.showQROnly = false,
       this.horizontalInfo = false,
-      this.horizontalInfoWidth = 500});
+      this.horizontalInfoWidth = 500,
+      this.showBankAccount = true});
 
   @override
   Widget build(BuildContext context) {
     if (horizontalInfo) {
-      return _buildHorizontalInfo();
+      return _buildHorizontalInfo(context);
     }
-    return (showQROnly)
-        ? _buildQR()
-        : BoxLayout(
-            width: width - 40,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildBankName(),
-                const Padding(padding: EdgeInsets.only(bottom: 10)),
-                DividerWidget(width: width),
-                _buildQR(),
-                // DividerWidget(width: width),
-                // const Padding(padding: EdgeInsets.only(bottom: 10)),
-                // _buildSection(
-                //     title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
-                // const Padding(padding: EdgeInsets.only(bottom: 5)),
-                // _buildSection(
-                //     title: 'Chủ thẻ: ',
-                //     description: qrGeneratedDTO.userBankName.toUpperCase()),
-                // const Padding(padding: EdgeInsets.only(bottom: 10)),
-                // if (qrGeneratedDTO.amount.isNotEmpty &&
-                //     qrGeneratedDTO.amount != '0') ...[
-                //   DividerWidget(width: width),
-                //   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                //   _buildSection(
-                //     title: 'Số tiền: ',
-                //     description:
-                //         '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-                //     descColor: DefaultTheme.GREEN,
-                //   ),
-                // ],
-                // if (qrGeneratedDTO.content.isNotEmpty) ...[
-                //   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                //   _buildSection(
-                //     title: 'Nội dung: ',
-                //     description: qrGeneratedDTO.content,
-                //     isUnbold: true,
-                //   ),
-                //   const Padding(padding: EdgeInsets.only(bottom: 10)),
-                // ],
-                _buildInfoCard()
-              ],
-            ),
-          );
+
+    return _buildQRInforWidthBg(context);
   }
 
-  Widget _buildHorizontalInfo() {
-    return SizedBox(
-      width: horizontalInfoWidth - 40,
+  Widget _buildHorizontalInfo(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: SizedBox(
+        width: horizontalInfoWidth - 40,
         child: Row(
           children: [
-            _buildQR(),
+            _buildQR(context),
             const SizedBox(
               width: 20,
             ),
@@ -130,29 +87,33 @@ class VietQRWidget extends StatelessWidget {
           Text(
             '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
             style: const TextStyle(
-              color: DefaultTheme.ORANGE,
+              color: AppColor.ORANGE,
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
         const Padding(padding: EdgeInsets.only(bottom: 10)),
-        DividerWidget(width: width),
-        const Padding(padding: EdgeInsets.only(bottom: 10)),
-        _buildSection(
-            title: 'Tài khoản: ', description: qrGeneratedDTO.bankAccount),
-        const Padding(padding: EdgeInsets.only(bottom: 5)),
-        _buildSection(
-          title: 'Chủ thẻ: ',
-          description: qrGeneratedDTO.userBankName.toUpperCase(),
-          isUnbold: true,
+        const DividerWidget(width: double.infinity),
+        SelectableText(
+          qrGeneratedDTO.userBankName.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        SelectableText(
+          qrGeneratedDTO.bankAccount,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         const Padding(padding: EdgeInsets.only(bottom: 10)),
         if (qrGeneratedDTO.content.isNotEmpty) ...[
-          DividerWidget(width: width),
+          const DividerWidget(width: double.infinity),
           const Padding(padding: EdgeInsets.only(bottom: 10)),
           _buildSection(
-            title: 'Nội dung: ',
             description: qrGeneratedDTO.content,
             isUnbold: true,
           ),
@@ -171,7 +132,7 @@ class VietQRWidget extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: DefaultTheme.WHITE,
+            color: AppColor.WHITE,
             image: (qrGeneratedDTO.imgId.isEmpty)
                 ? null
                 : DecorationImage(
@@ -196,44 +157,61 @@ class VietQRWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildQR() {
-    return BoxLayout(
-      width: width * 0.7,
-      height: width * 0.78,
-      enableShadow: true,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      margin: const EdgeInsets.symmetric(vertical: 20),
-      bgColor: DefaultTheme.WHITE,
+  Widget _buildQR(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: AppColor.WHITE,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 2,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          // Image(
+          //   image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
+          //   width: 110,
+          //   fit: BoxFit.fitWidth,
+          // ),
           QrImage(
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
-            size: width * 0.6,
             embeddedImage:
-                const AssetImage('assets/images/ic-viet-qr-small.png'),
+                ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             embeddedImageStyle: QrEmbeddedImageStyle(
               size: const Size(30, 30),
             ),
           ),
-          SizedBox(
-            width: width * 0.6,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  'assets/images/ic-viet-qr.png',
-                  width: width * 0.22,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image(
+                  image:
+                      ImageUtils.instance.getImageNetWork(AppImages.icNapas247),
+                  width: 95,
+                  fit: BoxFit.fitWidth),
+              Container(
+                width: 95,
+                height: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColor.WHITE,
+                  image: (qrGeneratedDTO.imgId.isEmpty)
+                      ? null
+                      : DecorationImage(
+                          image: ImageUtils.instance
+                              .getImageNetWork(qrGeneratedDTO.imgId),
+                          fit: BoxFit.fitWidth),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Image.asset(
-                    'assets/images/ic-napas247.png',
-                    width: width * 0.22,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -241,7 +219,6 @@ class VietQRWidget extends StatelessWidget {
   }
 
   Widget _buildSection({
-    required String title,
     required String description,
     Color? descColor,
     bool? isUnbold,
@@ -250,32 +227,148 @@ class VietQRWidget extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Padding(
         padding: const EdgeInsets.only(left: 10),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 80,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            Expanded(
-              child: SelectableText(
-                description,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: (isUnbold != null && isUnbold)
-                      ? FontWeight.normal
-                      : FontWeight.w500,
-                  color: descColor,
-                ),
-              ),
-            ),
-          ],
+        child: SelectableText(
+          description,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: (isUnbold != null && isUnbold)
+                ? FontWeight.normal
+                : FontWeight.w500,
+            color: descColor,
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildQRInforWidthBg(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/bg_napas_qr.png'),
+          fit: BoxFit.fill,
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(36, 40, 36, 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: AppColor.WHITE,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 2,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // Image(
+                //   image: ImageUtils.instance
+                //       .getImageNetWork(AppImages.logoVietqrVn),
+                //   width: 110,
+                // ),
+                QrImage(
+                  data: qrGeneratedDTO.qrCode,
+                  version: QrVersions.auto,
+                  embeddedImage:
+                      const AssetImage('assets/images/ic-viet-qr.png'),
+                  embeddedImageStyle: QrEmbeddedImageStyle(
+                    size: const Size(25, 25),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.icNapas247),
+                        width: 85,
+                        fit: BoxFit.fitWidth),
+                    Container(
+                      width: 85,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: AppColor.WHITE,
+                        image: (qrGeneratedDTO.imgId.isEmpty)
+                            ? null
+                            : DecorationImage(
+                                image: ImageUtils.instance
+                                    .getImageNetWork(qrGeneratedDTO.imgId),
+                                fit: BoxFit.fitWidth),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          _buildInfo()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfo() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Padding(padding: EdgeInsets.only(bottom: 25)),
+        if (qrGeneratedDTO.amount.isNotEmpty && qrGeneratedDTO.amount != '0')
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColor.ORANGE_Dark,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        SelectableText(
+          qrGeneratedDTO.userBankName.toUpperCase(),
+          style: const TextStyle(
+              fontSize: 14, fontWeight: FontWeight.w500, color: AppColor.BLACK),
+        ),
+        const Padding(padding: EdgeInsets.only(bottom: 5)),
+        SelectableText(
+          qrGeneratedDTO.bankAccount,
+          style: const TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w900, color: AppColor.BLACK),
+        ),
+        const Padding(padding: EdgeInsets.only(bottom: 5)),
+        Text(
+          qrGeneratedDTO.bankName,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w500, color: AppColor.BLACK),
+        ),
+        if (qrGeneratedDTO.content.isNotEmpty) ...[
+          const Padding(padding: EdgeInsets.only(bottom: 10)),
+          Text(
+            qrGeneratedDTO.content,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
+          ),
+        ],
+      ],
     );
   }
 }

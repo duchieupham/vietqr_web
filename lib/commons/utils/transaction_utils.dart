@@ -2,10 +2,11 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:flutter/material.dart';
 
 class TransactionUtils {
-  const TransactionUtils._privateConsrtructor();
+  const TransactionUtils._privateConstructor();
 
   static const TransactionUtils _instance =
-      TransactionUtils._privateConsrtructor();
+      TransactionUtils._privateConstructor();
+
   static TransactionUtils get instance => _instance;
 
   //status = 0 => not paid
@@ -32,19 +33,19 @@ class TransactionUtils {
   }
 
   Color getColorStatus(int status, int type, String transType) {
-    Color result = DefaultTheme.TRANSPARENT;
+    Color result = AppColor.TRANSPARENT;
     if (transType.trim() == 'D') {
-      result = DefaultTheme.RED_CALENDAR;
+      result = AppColor.RED_CALENDAR;
     } else {
       if (type == 2) {
-        result = DefaultTheme.BLUE_TEXT;
+        result = AppColor.BLUE_TEXT;
       } else {
         if (status == 0) {
-          result = DefaultTheme.ORANGE;
+          result = AppColor.ORANGE;
         } else if (status == 1) {
-          result = DefaultTheme.GREEN;
+          result = AppColor.GREEN;
         } else {
-          result = DefaultTheme.GREY_TEXT;
+          result = AppColor.GREY_TEXT;
         }
       }
     }

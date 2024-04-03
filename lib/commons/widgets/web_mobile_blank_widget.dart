@@ -1,11 +1,13 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
-import 'package:VietQR/commons/widgets/bottom_web.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -44,40 +46,44 @@ class WebMobileBlankWidget extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'assets/images/logo-vietqr-vn.png',
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(AppImages.logoVietqrVn),
                             width: 150,
                           ),
                           const Spacer(),
-                          BlocListener<LogoutBloc, LogoutState>(
-                            listener: (context, state) {
-                              if (state is LogoutLoadingState) {
-                                DialogWidget.instance.openLoadingDialog();
-                              }
-                              if (state is LogoutSuccessfulState) {
-                                Navigator.pop(context);
-                                context.push('/login');
-                              }
-                              if (state is LogoutFailedState) {
-                                Navigator.pop(context);
-                                DialogWidget.instance.openMsgDialog(
-                                  title: 'Không thể đăng xuất',
-                                  msg: 'Vui lòng thử lại sau.',
-                                );
-                              }
-                            },
-                            child: ButtonIconWidget(
-                              width: 120,
-                              height: 35,
-                              icon: Icons.logout_rounded,
-                              title: 'Đăng xuất',
-                              function: () {
-                                logoutBloc.add(const LogoutEventSubmit());
+                          if (UserInformationHelper.instance
+                              .getUserId()
+                              .isNotEmpty)
+                            BlocListener<LogoutBloc, LogoutState>(
+                              listener: (context, state) {
+                                if (state is LogoutLoadingState) {
+                                  DialogWidget.instance.openLoadingDialog();
+                                }
+                                if (state is LogoutSuccessfulState) {
+                                  Navigator.pop(context);
+                                  context.push('/login');
+                                }
+                                if (state is LogoutFailedState) {
+                                  Navigator.pop(context);
+                                  DialogWidget.instance.openMsgDialog(
+                                    title: 'Không thể đăng xuất',
+                                    msg: 'Vui lòng thử lại sau.',
+                                  );
+                                }
                               },
-                              bgColor: Theme.of(context).cardColor,
-                              textColor: DefaultTheme.RED_TEXT,
+                              child: ButtonIconWidget(
+                                width: 120,
+                                height: 35,
+                                icon: Icons.logout_rounded,
+                                title: 'Đăng xuất',
+                                function: () {
+                                  logoutBloc.add(const LogoutEventSubmit());
+                                },
+                                bgColor: Theme.of(context).cardColor,
+                                textColor: AppColor.RED_TEXT,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -94,14 +100,14 @@ class WebMobileBlankWidget extends StatelessWidget {
                       width: width * 0.45,
                       height: width * 0.45,
                       padding: const EdgeInsets.all(0),
-                      bgColor: DefaultTheme.WHITE,
+                      bgColor: AppColor.WHITE,
                       enableShadow: true,
                       child: UnconstrainedBox(
                         child: QrImage(
                           data: 'https://onelink.to/q7zwpe',
                           size: width * 0.4,
-                          embeddedImage: const AssetImage(
-                              'assets/images/ic-viet-qr-small.png'),
+                          embeddedImage: ImageUtils.instance
+                              .getImageNetWork(AppImages.icVietQrSmall),
                           embeddedImageStyle: QrEmbeddedImageStyle(
                             size: const Size(30, 30),
                           ),
@@ -125,20 +131,17 @@ class WebMobileBlankWidget extends StatelessWidget {
                           _buildButton(
                             width: width,
                             text: 'App Store',
-                            assetImage: 'assets/images/logo-app-store.png',
-                            onTap: () {
-                              DialogWidget.instance.openMsgDialog(
-                                title: 'Đang cập nhật',
-                                msg:
-                                    'Chúng tôi đang cập nhật ứng dụng VietQR trên iOS',
-                              );
+                            assetImage: AppImages.logoAppStore,
+                            onTap: () async {
+                              await launchUrl(Uri.parse(
+                                  'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
                             },
                           ),
                           const Padding(padding: EdgeInsets.only(left: 10)),
                           _buildButton(
                             width: width,
                             text: 'Google Play',
-                            assetImage: 'assets/images/logo-google-play.png',
+                            assetImage: AppImages.logoGooglePlay,
                             onTap: () async {
                               await launchUrl(Uri.parse(
                                   'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
@@ -151,7 +154,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                     const Text(
                       'VietQR chỉ hỗ trợ trình duyệt web cho PC.',
                       style: TextStyle(
-                        color: DefaultTheme.GREY_TEXT,
+                        color: AppColor.GREY_TEXT,
                       ),
                     ),
                   ],
@@ -160,9 +163,9 @@ class WebMobileBlankWidget extends StatelessWidget {
             ),
           ),
           const Padding(padding: EdgeInsets.only(top: 5)),
-          BottomWeb(
-            bgColor: Theme.of(context).cardColor,
-          ),
+          // BottomWeb(
+          //   bgColor: Theme.of(context).cardColor,
+          // ),
         ],
       ),
     );
@@ -180,14 +183,14 @@ class WebMobileBlankWidget extends StatelessWidget {
         width: width * 0.4,
         height: 45,
         padding: const EdgeInsets.all(0),
-        bgColor: DefaultTheme.BLACK,
+        bgColor: AppColor.BLACK,
         borderRadius: 5,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              assetImage,
+            Image(
+              image: ImageUtils.instance.getImageNetWork(assetImage),
               width: 30,
               height: 30,
             ),
@@ -200,12 +203,11 @@ class WebMobileBlankWidget extends StatelessWidget {
               children: [
                 const Text(
                   'Tải ứng dụng trên',
-                  style: TextStyle(color: DefaultTheme.WHITE, fontSize: 8),
+                  style: TextStyle(color: AppColor.WHITE, fontSize: 8),
                 ),
                 Text(
                   text,
-                  style:
-                      const TextStyle(color: DefaultTheme.WHITE, fontSize: 18),
+                  style: const TextStyle(color: AppColor.WHITE, fontSize: 18),
                 ),
               ],
             )

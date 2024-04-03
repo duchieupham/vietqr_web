@@ -78,9 +78,9 @@ class SelectBankTypeWidget extends StatelessWidget {
           ),
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
-        UnconstrainedBox(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: BoxLayout(
-            width: 500 - 40,
             height: 50,
             borderRadius: 50,
             bgColor: Theme.of(context).canvasColor,
@@ -148,7 +148,7 @@ class SelectBankTypeWidget extends StatelessWidget {
                   height: 200,
                   child: const Center(
                     child: CircularProgressIndicator(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                     ),
                   ),
                 );
@@ -199,7 +199,7 @@ class SelectBankTypeWidget extends StatelessWidget {
       child: BoxLayout(
         width: width,
         borderRadius: 0,
-        bgColor: DefaultTheme.TRANSPARENT,
+        bgColor: AppColor.TRANSPARENT,
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
         child: Row(
           children: [
@@ -208,7 +208,7 @@ class SelectBankTypeWidget extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 image: DecorationImage(
                   image: ImageUtils.instance.getImageNetWork(
                     dto.imageId,
@@ -225,8 +225,7 @@ class SelectBankTypeWidget extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 12,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ),
           ],

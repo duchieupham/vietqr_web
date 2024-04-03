@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:VietQR/commons/constants/configurations/numeral.dart';
 import 'package:VietQR/commons/enums/authentication_type.dart';
 import 'package:VietQR/commons/utils/log.dart';
@@ -105,8 +105,8 @@ class BaseAPIClient {
   }) async {
     final Uri uri = Uri.parse(url);
     final request = http.MultipartRequest('POST', uri);
-    final String _token = AccountHelper.instance.getToken();
-    request.headers['Authorization'] = 'Bearer $_token';
+    final String token = AccountHelper.instance.getToken();
+    request.headers['Authorization'] = 'Bearer $token';
     if (fields.isNotEmpty) {
       for (String key in fields.keys) {
         request.fields[key] = fields[key];
@@ -129,10 +129,13 @@ class BaseAPIClient {
       String? clientMessageId}) {
     Map<String, String>? result = {};
     type ??= AuthenticationType.NONE;
-    final String _token = AccountHelper.instance.getToken();
+    final String token = AccountHelper.instance.getToken();
+    print(token);
+    final String tokenFree = AccountHelper.instance.getTokenFree();
     switch (type) {
       case AuthenticationType.SYSTEM:
-        result['Authorization'] = 'Bearer $_token';
+        result['Authorization'] =
+            'Bearer ${tokenFree.isNotEmpty ? tokenFree : token}';
         result['Content-Type'] = 'application/json';
         result['Accept'] = '*/*';
         result['Access-Control-Allow-Origin'] = '*';

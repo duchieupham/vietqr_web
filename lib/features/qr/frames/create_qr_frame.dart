@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
+import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:flutter/material.dart';
 
 class CreateQRFrame extends StatelessWidget {
@@ -58,7 +59,7 @@ class CreateQRFrame extends StatelessWidget {
               ],
             )
           : (PlatformUtils.instance.resizeWhen(width, 700))
-              ? const SizedBox()
+              ? const WebMobileBlankWidget()
               // Column(
               //     children: [
               //       const HeaderWidget(
@@ -94,7 +95,7 @@ class CreateQRFrame extends StatelessWidget {
               //       ),
               //     ],
               //   )
-              : const SizedBox(),
+              : const WebMobileBlankWidget(),
     );
   }
 }

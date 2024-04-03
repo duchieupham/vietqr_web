@@ -1,0 +1,33 @@
+// ignore_for_file: constant_identifier_names
+
+enum MenuHomeType {
+  HOME,
+  TRANSACTION,
+  MEMBER,
+  BANK_ACCOUNT,
+  OPEN_BANK_MB_ACCOUNT,
+  SCAN_QR,
+  CREATE_QR,
+  QR_UTILITIES,
+  SCAN_CCCD,
+  MERCHANT,
+  MERCHANT_REQUEST,
+  MBH,
+  SCAN_BANK,
+  ADD_LINK_BANK_ACCOUNT,
+  WALLET_QR,
+  BUSINESS,
+  ENTERPRISE,
+  INTRO_VIET_QR,
+  SETTING,
+  LOGOUT,
+  OTHER,
+}
+
+enum SubMenuType {
+  LIST_TRANSACTION,
+  SYNTHESIS_REPORT,
+  BILL,
+  SERVICE_FEE,
+  OTHER,
+}

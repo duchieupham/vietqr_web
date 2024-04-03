@@ -1,8 +1,12 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
+import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/commons/widgets/viet_qr_widget.dart';
@@ -18,11 +22,17 @@ import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_bank_detail_dto.dart';
 import 'package:VietQR/models/qr_create_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
-import 'package:VietQR/services/providers/create_qr_provider.dart';
+import 'package:VietQR/services/providers/action_share_provider.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
+import '../../create_qr/provider/create_qr_provider.dart';
 
 class CreateQR extends StatelessWidget {
   final String bankId;
@@ -51,6 +61,7 @@ class CreateQR extends StatelessWidget {
     businessDetails: [],
     transactions: [],
     authenticated: false,
+    caiValue: '',
   );
 
   QRGeneratedDTO qrGeneratedDTO = const QRGeneratedDTO(
@@ -113,7 +124,7 @@ class CreateQR extends StatelessWidget {
                             height: 30,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: DefaultTheme.WHITE,
+                              color: AppColor.WHITE,
                               image: DecorationImage(
                                 image: ImageUtils.instance
                                     .getImageNetWork(bankDetailDTO.imgId),
@@ -218,6 +229,9 @@ class CreateQR extends StatelessWidget {
                                       fontSize: 12,
                                       controller: amountController,
                                       inputType: TextInputType.number,
+                                      inputFormatter: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
                                       keyboardAction: TextInputAction.next,
                                       onChange: (vavlue) {
                                         if (amountController.text.isNotEmpty) {
@@ -257,7 +271,7 @@ class CreateQR extends StatelessWidget {
                                 child: Text(
                                   'Số tiền không đúng định dạng',
                                   style: TextStyle(
-                                    color: DefaultTheme.RED_CALENDAR,
+                                    color: AppColor.RED_CALENDAR,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -368,60 +382,54 @@ class CreateQR extends StatelessWidget {
                     Consumer<CreateQRProvider>(
                       builder: (context, provider, child) {
                         return Container(
-                          width: width,
-                          alignment: Alignment.centerLeft,
-                          child: (provider.isValidCreate)
-                              ? ButtonIconWidget(
-                                  width: 300,
-                                  height: 40,
-                                  icon: Icons.add_rounded,
-                                  title: 'Tạo mã QR',
-                                  function: () {
-                                    if (amountController.text.isNotEmpty &&
-                                        StringUtils.instance
-                                            .isNumeric(amountController.text)) {
-                                      QRCreateDTO qrCreateDTO = QRCreateDTO(
-                                        bankId: bankDetailDTO.id,
-                                        amount: amountController.text,
-                                        content: StringUtils.instance
-                                            .removeDiacritic(
-                                                contentController.text),
-                                        branchId: (bankDetailDTO
-                                                .businessDetails.isNotEmpty)
-                                            ? bankDetailDTO
-                                                .businessDetails
-                                                .first
-                                                .branchDetails
-                                                .first
-                                                .branchId
-                                            : '',
-                                        businessId: (bankDetailDTO
-                                                .businessDetails.isNotEmpty)
-                                            ? bankDetailDTO.businessDetails
-                                                .first.businessId
-                                            : '',
-                                        userId: UserInformationHelper.instance
-                                            .getUserId(),
-                                      );
-                                      _qrBloc.add(
-                                          QREventGenerate(dto: qrCreateDTO));
-                                    }
-                                  },
-                                  bgColor: DefaultTheme.GREEN,
-                                  textColor: DefaultTheme.WHITE,
-                                )
-                              : ButtonIconWidget(
-                                  width: 300,
-                                  height: 40,
-                                  icon: Icons.add_rounded,
-                                  title: 'Tạo mã QR',
-                                  function: () {},
-                                  bgColor: Theme.of(context)
-                                      .cardColor
-                                      .withOpacity(0.4),
-                                  textColor: DefaultTheme.GREY_TEXT,
-                                ),
-                        );
+                            width: width,
+                            alignment: Alignment.centerLeft,
+                            child: ButtonIconWidget(
+                              width: 300,
+                              height: 40,
+                              icon: Icons.add_rounded,
+                              title: 'Tạo mã QR',
+                              function: () {
+                                if (amountController.text.isEmpty) {
+                                  DialogWidget.instance.openMsgDialog(
+                                      title: 'Số tiền không hợp lệ',
+                                      msg: 'Vui lòng nhập số tiền');
+                                }
+                                if (provider.amountErr) {
+                                  DialogWidget.instance.openMsgDialog(
+                                      title: 'Số tiền không hợp lệ',
+                                      msg: 'Vui lòng nhập lại số tiền');
+                                }
+                                // (provider.isValidCreate)
+                                if (amountController.text.isNotEmpty &&
+                                    StringUtils.instance
+                                        .isNumeric(amountController.text)) {
+                                  QRCreateDTO qrCreateDTO = QRCreateDTO(
+                                    bankId: bankDetailDTO.id,
+                                    amount: amountController.text,
+                                    content: StringUtils.instance
+                                        .removeDiacritic(
+                                            contentController.text),
+                                    branchId: (bankDetailDTO
+                                            .businessDetails.isNotEmpty)
+                                        ? bankDetailDTO.businessDetails.first
+                                            .branchDetails.first.branchId
+                                        : '',
+                                    businessId: (bankDetailDTO
+                                            .businessDetails.isNotEmpty)
+                                        ? bankDetailDTO
+                                            .businessDetails.first.businessId
+                                        : '',
+                                    userId: UserInformationHelper.instance
+                                        .getUserId(),
+                                  );
+                                  _qrBloc
+                                      .add(QREventGenerate(dto: qrCreateDTO));
+                                }
+                              },
+                              bgColor: AppColor.GREEN,
+                              textColor: AppColor.WHITE,
+                            ));
                       },
                     ),
                   ],
@@ -438,7 +446,7 @@ class CreateQR extends StatelessWidget {
                             width: 50,
                             height: 50,
                             child: CircularProgressIndicator(
-                              color: DefaultTheme.GREEN,
+                              color: AppColor.GREEN,
                             ),
                           ),
                         );
@@ -452,9 +460,125 @@ class CreateQR extends StatelessWidget {
                                     padding: EdgeInsets.only(top: 30)),
                                 UnconstrainedBox(
                                   child: VietQRWidget(
-                                    width: 400,
                                     qrGeneratedDTO: qrGeneratedDTO,
-                                    content: '',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                UnconstrainedBox(
+                                  child: SizedBox(
+                                    width: 350,
+                                    child: Row(
+                                      children: [
+                                        Tooltip(
+                                          message: 'In',
+                                          child: ButtonIconWidget(
+                                            width: 350 / 3 - (20 / 3),
+                                            height: 40,
+                                            icon: Icons.print_rounded,
+                                            title: '',
+                                            function: () {
+                                              String paramData = Session
+                                                  .instance
+                                                  .formatDataParamUrl(
+                                                      qrGeneratedDTO,
+                                                      action: 'PRINT');
+                                              int start = Uri.base
+                                                  .toString()
+                                                  .indexOf('/qr');
+                                              int end =
+                                                  Uri.base.toString().length;
+                                              html.window.open(
+                                                  Uri.base.toString().replaceRange(
+                                                      start,
+                                                      end,
+                                                      '/qr_generate$paramData'),
+                                                  'new tab');
+                                            },
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            textColor:
+                                                Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Tooltip(
+                                          message: 'Lưu ảnh',
+                                          child: ButtonIconWidget(
+                                            width: 350 / 3 - (20 / 3),
+                                            height: 40,
+                                            icon: Icons.photo_rounded,
+                                            title: '',
+                                            function: () {
+                                              Provider.of<ActionShareProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .updateAction(false);
+                                              String paramData = Session
+                                                  .instance
+                                                  .formatDataParamUrl(
+                                                      qrGeneratedDTO,
+                                                      action: 'SAVE');
+
+                                              int start = Uri.base
+                                                  .toString()
+                                                  .indexOf('/qr');
+                                              int end =
+                                                  Uri.base.toString().length;
+                                              html.window.open(
+                                                  Uri.base.toString().replaceRange(
+                                                      start,
+                                                      end,
+                                                      '/qr_generate$paramData'),
+                                                  'new tab');
+                                            },
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            textColor:
+                                                Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Tooltip(
+                                          message: 'Sao chép mã QR',
+                                          child: ButtonIconWidget(
+                                            width: 350 / 3 - (20 / 3),
+                                            height: 40,
+                                            icon: Icons.copy_rounded,
+                                            title: '',
+                                            function: () async {
+                                              await FlutterClipboard.copy(
+                                                      ShareUtils
+                                                          .instance
+                                                          .getTextSharing(
+                                                              qrGeneratedDTO))
+                                                  .then(
+                                                (value) =>
+                                                    Fluttertoast.showToast(
+                                                  msg: 'Đã sao chép',
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.CENTER,
+                                                  timeInSecForIosWeb: 1,
+                                                  backgroundColor:
+                                                      AppColor.WHITE,
+                                                  textColor: AppColor.BLACK,
+                                                  fontSize: 15,
+                                                  webBgColor:
+                                                      'rgba(255, 255, 255)',
+                                                  webPosition: 'center',
+                                                ),
+                                              );
+                                            },
+                                            bgColor:
+                                                Theme.of(context).cardColor,
+                                            textColor:
+                                                Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

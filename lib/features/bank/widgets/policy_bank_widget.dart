@@ -1,7 +1,8 @@
+import 'dart:html' as html;
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
-import 'dart:html' as html;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,7 @@ class PolicyBankWidget extends StatelessWidget {
                   TextSpan(
                     text: 'vietqr.vn',
                     style: const TextStyle(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.BLUE_TEXT,
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
@@ -95,7 +96,7 @@ class PolicyBankWidget extends StatelessWidget {
                   TextSpan(
                     text: 'https://vietqr.vn/mbbank-dkdv/',
                     style: const TextStyle(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.BLUE_TEXT,
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
@@ -125,7 +126,7 @@ class PolicyBankWidget extends StatelessWidget {
                 child: Consumer<BankTypeProvider>(
                   builder: (context, provider, child) {
                     return Checkbox(
-                      activeColor: DefaultTheme.GREEN,
+                      activeColor: AppColor.BLUE_TEXT,
                       value: provider.agreeWithPolicy,
                       shape: const CircleBorder(),
                       onChanged: (bool? value) {
@@ -153,11 +154,11 @@ class PolicyBankWidget extends StatelessWidget {
               width: 600 - 40,
               height: 40,
               borderRadius: 5,
-              text: 'Xác thực',
-              textColor: DefaultTheme.WHITE,
+              text: 'Xác nhận',
+              textColor: AppColor.WHITE,
               bgColor: (provider.agreeWithPolicy)
-                  ? DefaultTheme.GREEN
-                  : DefaultTheme.GREY_TOP_TAB_BAR,
+                  ? AppColor.BLUE_TEXT
+                  : AppColor.GREY_TOP_TAB_BAR,
               function: () {
                 Navigator.pop(context, true);
               },

@@ -4,6 +4,7 @@ import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/bank/blocs/bank_bloc.dart';
 import 'package:VietQR/features/bank/events/bank_event.dart';
 import 'package:VietQR/layouts/border_layout.dart';
+import 'package:VietQR/models/bank_account_remove_dto.dart';
 import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/confirm_otp_bank_dto.dart';
 import 'package:VietQR/services/providers/countdown_provider.dart';
@@ -13,15 +14,20 @@ import 'package:flutter/material.dart';
 class ConfirmOTPWidget extends StatefulWidget {
   final String requestId;
   final String phone;
+  final String bankAccount;
   final BankBloc bankBloc;
-  final BankCardRequestOTP dto;
-
+  final BankCardRequestOTP? dto;
+  final BankAccountUnlinkDTO? unlinkDTO;
+  final bool isUnlink;
   const ConfirmOTPWidget({
     super.key,
     required this.requestId,
     required this.phone,
     required this.bankBloc,
-    required this.dto,
+    this.dto,
+    this.bankAccount = '',
+    this.unlinkDTO,
+    this.isUnlink = false,
   });
 
   @override
@@ -149,7 +155,7 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
                         const TextSpan(text: 'Mã OTP có hiệu lực trong vòng '),
                         TextSpan(
                           text: value.toString(),
-                          style: const TextStyle(color: DefaultTheme.GREEN),
+                          style: const TextStyle(color: AppColor.GREEN),
                         ),
                         const TextSpan(text: 's.'),
                       ],
@@ -168,14 +174,22 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
                           text: 'Gửi lại',
                           style: const TextStyle(
                             decoration: TextDecoration.underline,
-                            color: DefaultTheme.GREEN,
+                            color: AppColor.GREEN,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               countdownProvider = CountdownProvider(120);
-                              widget.bankBloc.add(
-                                BankEventRequestOTP(dto: widget.dto),
-                              );
+                              if (widget.dto != null) {
+                                widget.bankBloc.add(
+                                  BankEventRequestOTP(dto: widget.dto!),
+                                );
+                              }
+                              if (widget.unlinkDTO != null) {
+                                widget.bankBloc.add(
+                                  BankEventUnlink(dto: widget.unlinkDTO!),
+                                );
+                              }
+
                               Navigator.pop(context);
                             },
                         ),
@@ -191,17 +205,24 @@ class _ConfirmOTPWidget extends State<ConfirmOTPWidget> {
             height: 40,
             borderRadius: 5,
             text: 'Xác thực',
-            textColor: DefaultTheme.WHITE,
-            bgColor: DefaultTheme.GREEN,
+            textColor: AppColor.WHITE,
+            bgColor: AppColor.GREEN,
             function: () {
               if (otpController.text.isNotEmpty) {
                 Navigator.pop(context);
                 ConfirmOTPBankDTO confirmDTO = ConfirmOTPBankDTO(
+                  bankAccount: widget.bankAccount,
                   requestId: widget.requestId,
                   otpValue: otpController.text,
                   applicationType: 'WEB_APP',
                 );
-                widget.bankBloc.add(BankEventConfirmOTP(dto: confirmDTO));
+                if (widget.isUnlink) {
+                  widget.bankBloc
+                      .add(BankEventConfirmUnlinkOTP(dto: confirmDTO));
+                } else {
+                  widget.bankBloc.add(BankEventConfirmOTP(dto: confirmDTO));
+                }
+                otpController.clear();
               }
             },
           ),

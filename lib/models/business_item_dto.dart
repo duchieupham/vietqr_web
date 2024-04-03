@@ -1,4 +1,4 @@
-import 'package:VietQR/models/related_transaction_receive_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 
 class BusinessItemDTO {
   final String businessId;
@@ -9,7 +9,7 @@ class BusinessItemDTO {
   final String name;
   final String address;
   final String taxCode;
-  final List<RelatedTransactionReceiveDTO> transactions;
+  final List<TransReceiveDTO> transactions;
   final int totalMember;
   final int totalBranch;
 
@@ -28,10 +28,10 @@ class BusinessItemDTO {
   });
 
   factory BusinessItemDTO.fromJson(Map<String, dynamic> json) {
-    List<RelatedTransactionReceiveDTO> transactions = [];
+    List<TransReceiveDTO> transactions = [];
     if (json['transactions'] != null) {
       json['transactions'].forEach((v) {
-        transactions.add(RelatedTransactionReceiveDTO.fromJson(v));
+        transactions.add(TransReceiveDTO.fromJson(v));
       });
     }
     return BusinessItemDTO(

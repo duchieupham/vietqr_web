@@ -1,7 +1,21 @@
+import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/features/home/repositories/home_repository.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/bank_card_request_otp.dart';
 import 'package:VietQR/models/bank_type_dto.dart';
+import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/widgets.dart';
 
 class BankTypeProvider with ChangeNotifier {
+  String _money = '';
+
+  String get money => _money;
+  void updateMoney(String value) {
+    int data = int.parse(value.replaceAll('.', ''));
+    _money = StringUtils.formatNumber(data);
+    notifyListeners();
+  }
+
   BankTypeDTO _bankType = const BankTypeDTO(
     id: '',
     bankCode: '',
@@ -12,11 +26,21 @@ class BankTypeProvider with ChangeNotifier {
     caiValue: '',
   );
 
+  BankCardRequestOTP bankCardRequestOTP = const BankCardRequestOTP();
+  String requestId = '';
+  String bankAccount = '';
+  String name = '';
+  String phone = '';
+  String nationalId = '';
+
   bool _isNameErr = false;
   bool _isBankAccountErr = false;
   bool _isNationalErr = false;
   bool _isPhoneErr = false;
   bool _isAgreeWithPolicy = false;
+  bool _isShowBankAccount = true;
+  bool _isAmountErr = false;
+  bool _isValidCreate = true;
 
   BankTypeDTO get bankType => _bankType;
   bool get nameErr => _isNameErr;
@@ -24,6 +48,58 @@ class BankTypeProvider with ChangeNotifier {
   bool get nationalErr => _isNationalErr;
   bool get phoneErr => _isPhoneErr;
   bool get agreeWithPolicy => _isAgreeWithPolicy;
+  bool get showBankAccount => _isShowBankAccount;
+  bool get isAmountErr => _isAmountErr;
+  bool get isValidCreate => _isValidCreate;
+
+  bool _showMoreOption = false;
+  bool get showMoreOption => _showMoreOption;
+  final homeRepository = const HomeRepository();
+  List<BankAccountDTO> bankAccounts = [];
+
+  updateShowMoreOption(bool value) async {
+    _showMoreOption = value;
+    notifyListeners();
+  }
+
+  getListBankAccount() async {
+    bankAccounts = await homeRepository
+        .getListBankAccount(UserInformationHelper.instance.getUserId());
+  }
+
+  void updateBankCardRequestOTP(BankCardRequestOTP dto) {
+    bankCardRequestOTP = dto;
+  }
+
+  void updateRequestId(String value) {
+    requestId = value;
+  }
+
+  void updateBankAccount(String value) {
+    bankAccount = value;
+  }
+
+  void updateName(String value) {
+    name = value;
+  }
+
+  void updatePhone(String value) {
+    phone = value;
+  }
+
+  void updateNationalId(String value) {
+    nationalId = value;
+  }
+
+  void updateShowBankAccount(bool value) {
+    _isShowBankAccount = value;
+    notifyListeners();
+  }
+
+  void updateValidCreate(bool value) {
+    _isValidCreate = value;
+    notifyListeners();
+  }
 
   void updateAgreePolicy(bool value) {
     _isAgreeWithPolicy = value;
@@ -54,6 +130,11 @@ class BankTypeProvider with ChangeNotifier {
 
   void updateBankAccountErr(bool value) {
     _isBankAccountErr = value;
+    notifyListeners();
+  }
+
+  void updateAmountErr(bool value) {
+    _isAmountErr = value;
     notifyListeners();
   }
 

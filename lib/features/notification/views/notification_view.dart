@@ -1,12 +1,9 @@
-import 'package:VietQR/commons/constants/configurations/route.dart';
 import 'package:VietQR/commons/constants/configurations/stringify.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
-import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
-import 'package:VietQR/features/transaction/widgets/transaction_detail_view.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/notification_dto.dart';
 import 'package:VietQR/models/notification_input_dto.dart';
@@ -97,7 +94,7 @@ class NotificationView extends StatelessWidget {
                                     width: 50,
                                     height: 50,
                                     child: CircularProgressIndicator(
-                                      color: DefaultTheme.GREEN,
+                                      color: AppColor.GREEN,
                                     ),
                                   ),
                                 )
@@ -126,16 +123,16 @@ class NotificationView extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: () {
-        if (dto.type == Stringify.NOTI_TYPE_NEW_TRANSACTION ||
-            dto.type == Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-          DialogWidget.instance.openPopup(
-            child: TransactionDetailView(
-              transactionId: dto.data,
-            ),
-            width: 500,
-            height: 500,
-          );
-        }
+        // if (dto.type == Stringify.NOTI_TYPE_NEW_TRANSACTION ||
+        //     dto.type == Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+        //   DialogWidget.instance.openPopup(
+        //     child: TransactionDetailView(
+        //       transactionId: dto.data,
+        //     ),
+        //     width: 500,
+        //     height: 500,
+        //   );
+        // }
       },
       child: Container(
         width: width,
@@ -153,7 +150,7 @@ class NotificationView extends StatelessWidget {
                     height: 5,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      color: DefaultTheme.BLUE_TEXT,
+                      color: AppColor.BLUE_TEXT,
                     ),
                   ),
             const Padding(padding: EdgeInsets.only(left: 5)),
@@ -183,8 +180,8 @@ class NotificationView extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10,
                       color: (dto.isRead)
-                          ? DefaultTheme.GREY_TEXT
-                          : DefaultTheme.BLUE_TEXT,
+                          ? AppColor.GREY_TEXT
+                          : AppColor.BLUE_TEXT,
                     ),
                   ),
                 ],
@@ -200,25 +197,25 @@ class NotificationView extends StatelessWidget {
     Icon result = const Icon(
       Icons.notifications_rounded,
       size: 18,
-      color: DefaultTheme.BLUE_TEXT,
+      color: AppColor.BLUE_TEXT,
     );
     if (type == Stringify.NOTI_TYPE_LOGIN) {
       result = const Icon(
         Icons.login_rounded,
         size: 18,
-        color: DefaultTheme.RED_CALENDAR,
+        color: AppColor.RED_CALENDAR,
       );
     } else if (type == Stringify.NOTI_TYPE_NEW_TRANSACTION) {
       result = const Icon(
         Icons.attach_money_rounded,
         size: 18,
-        color: DefaultTheme.ORANGE,
+        color: AppColor.ORANGE,
       );
     } else if (type == Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
       result = const Icon(
         Icons.check_rounded,
         size: 15,
-        color: DefaultTheme.GREEN,
+        color: AppColor.GREEN,
       );
     }
     return result;

@@ -1,3 +1,5 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -60,9 +62,9 @@ class DialogOpenBankAccount extends StatelessWidget {
           ButtonWidget(
             text: 'ĐĂNG KÝ NGAY',
             height: 40,
-            textColor: DefaultTheme.WHITE,
+            textColor: AppColor.WHITE,
             width: 160,
-            bgColor: DefaultTheme.MB_BLUE,
+            bgColor: AppColor.MB_BLUE,
             borderRadius: 8,
             function: () async {
               await launchUrl(
@@ -83,19 +85,19 @@ class DialogOpenBankAccount extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(
-          'assets/images/logo-mb.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoMb),
           width: 100,
           fit: BoxFit.contain,
         ),
         const SizedBox(
           width: 10,
         ),
-        Image.asset(
-          'assets/images/ic-viet-qr.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           width: 110,
           fit: BoxFit.contain,
-        )
+        ),
       ],
     );
   }
@@ -105,22 +107,20 @@ class DialogOpenBankAccount extends StatelessWidget {
       const Text(
         'Đăng kí xong ngay\nTiền về liền tay',
         style: TextStyle(
-            fontSize: 24,
-            color: DefaultTheme.MB_BLUE,
-            fontWeight: FontWeight.bold),
+            fontSize: 24, color: AppColor.MB_BLUE, fontWeight: FontWeight.bold),
       ),
       const Padding(
         padding: EdgeInsets.only(top: 20),
         child: Text(
           'Miễn phí chọn số tài khoản trùng số điện thoại',
-          style: TextStyle(color: DefaultTheme.MB_RED, fontSize: 16),
+          style: TextStyle(color: AppColor.MB_RED, fontSize: 16),
         ),
       ),
       const Padding(
         padding: EdgeInsets.only(top: 16),
         child: Text(
           'Nhận ngay 30.000 VND khi đăng ký thành công',
-          style: TextStyle(color: DefaultTheme.MB_BLUE, fontSize: 16),
+          style: TextStyle(color: AppColor.MB_BLUE, fontSize: 16),
         ),
       ),
       Padding(
@@ -128,14 +128,14 @@ class DialogOpenBankAccount extends StatelessWidget {
         child: RichText(
           text: const TextSpan(
             text: 'Cơ hội ',
-            style: TextStyle(color: DefaultTheme.MB_BLUE, fontSize: 16),
+            style: TextStyle(color: AppColor.MB_BLUE, fontSize: 16),
             children: <TextSpan>[
               TextSpan(
                   text: 'nhận thêm 10.000.000 VND++\n',
-                  style: TextStyle(color: DefaultTheme.MB_RED, fontSize: 16)),
+                  style: TextStyle(color: AppColor.MB_RED, fontSize: 16)),
               TextSpan(
                   text: 'khi giới thiệu bạn bè, người thân sử dụng App MBBank!',
-                  style: TextStyle(color: DefaultTheme.MB_BLUE, fontSize: 16)),
+                  style: TextStyle(color: AppColor.MB_BLUE, fontSize: 16)),
             ],
           ),
         ),
@@ -144,7 +144,7 @@ class DialogOpenBankAccount extends StatelessWidget {
         padding: EdgeInsets.only(top: 16),
         child: Text(
           'App MBBank - miễn phí chuyển khoản liên ngân hàng\ntrọn đời và lựa chọn tài khoản Số đẹp miễn phí.',
-          style: TextStyle(color: DefaultTheme.MB_BLUE, fontSize: 16),
+          style: TextStyle(color: AppColor.MB_BLUE, fontSize: 16),
         ),
       ),
     ];

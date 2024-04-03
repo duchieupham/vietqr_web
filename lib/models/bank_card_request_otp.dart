@@ -6,11 +6,11 @@ class BankCardRequestOTP {
   final String phoneNumber;
 
   const BankCardRequestOTP({
-    required this.nationalId,
-    required this.accountNumber,
-    required this.accountName,
-    required this.applicationType,
-    required this.phoneNumber,
+    this.nationalId = '',
+    this.accountNumber = '',
+    this.accountName = '',
+    this.applicationType = '',
+    this.phoneNumber = '',
   });
 
   factory BankCardRequestOTP.fromJson(Map<String, dynamic> json) {

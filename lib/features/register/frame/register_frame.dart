@@ -34,8 +34,8 @@ class RegisterFrame extends StatelessWidget {
       child: (PlatformUtils.instance.resizeWhen(width, 600))
           ? SingleChildScrollView(
               child: BoxLayout(
-                width: 400,
-                height: 450,
+                width: 450,
+                height: 550,
                 borderRadius: 5,
                 enableShadow: true,
                 child: webChildren,
@@ -43,7 +43,7 @@ class RegisterFrame extends StatelessWidget {
             )
           : BoxLayout(
               width: 400,
-              height: 450,
+              height: 550,
               borderRadius: 5,
               enableShadow: true,
               child: webChildren,

@@ -8,7 +8,11 @@ class AccountInformationDTO {
   final String address;
   final String email;
   final String imgId;
-
+  final String phoneNo;
+  final String nationalId;
+  final String oldNationalId;
+  final String nationalDate;
+  final String carrierTypeId;
   const AccountInformationDTO({
     required this.userId,
     required this.firstName,
@@ -19,6 +23,11 @@ class AccountInformationDTO {
     required this.address,
     required this.email,
     required this.imgId,
+    required this.phoneNo,
+    this.nationalDate = '',
+    this.nationalId = '',
+    this.oldNationalId = '',
+    this.carrierTypeId = '',
   });
 
   factory AccountInformationDTO.fromJson(Map<String, dynamic> json) {
@@ -32,6 +41,11 @@ class AccountInformationDTO {
       address: json['address'] ?? '',
       email: json['email'] ?? '',
       imgId: json['imgId'] ?? '',
+      phoneNo: json['phoneNo'] ?? '',
+      oldNationalId: json['oldNationalId'] ?? '',
+      nationalId: json['nationalId'] ?? '',
+      nationalDate: json['nationalDate'] ?? '',
+      carrierTypeId: json['carrierTypeId'] ?? '',
     );
   }
 
@@ -46,6 +60,11 @@ class AccountInformationDTO {
     data['address'] = address;
     data['email'] = email;
     data['imgId'] = imgId;
+    data['phoneNo'] = phoneNo;
+    data['oldNationalId'] = oldNationalId;
+    data['nationalId'] = nationalId;
+    data['nationalDate'] = nationalDate;
+    data['carrierTypeId'] = carrierTypeId;
     return data;
   }
 
@@ -60,6 +79,11 @@ class AccountInformationDTO {
     data['"address"'] = (address == '') ? '""' : '"$address"';
     data['"email"'] = (email == '') ? '""' : '"$email"';
     data['"imgId"'] = (imgId == '') ? '""' : '"$imgId"';
+    data['"phoneNo"'] = (phoneNo == '') ? '""' : '"$phoneNo"';
+    data['"oldNationalId"'] = (oldNationalId == '') ? '""' : '"$oldNationalId"';
+    data['"nationalId"'] = (nationalId == '') ? '""' : '"$nationalId"';
+    data['"nationalDate"'] = (nationalDate == '') ? '""' : '"$nationalDate"';
+    data['"carrierTypeId"'] = (carrierTypeId == '') ? '""' : '"$carrierTypeId"';
     return data;
   }
 }

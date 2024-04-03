@@ -1,220 +1,134 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
-import 'package:VietQR/commons/widgets/button_widget.dart';
+import 'package:VietQR/commons/widgets/footer_web.dart';
 import 'package:VietQR/commons/widgets/header/header_widget.dart';
-import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
-import 'package:VietQR/layouts/box_layout.dart';
-import 'package:VietQR/services/providers/guide_provider.dart';
-import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class HomeFrame extends StatelessWidget {
+class HomeFrame extends StatefulWidget {
   final Widget widget1;
   final Widget widget2;
+  final Widget widget3;
   final Widget menu;
-  static final List<String> guideAssets = [
-    'assets/images/ic-guide1.png',
-    'assets/images/ic-guide2.png',
-    'assets/images/ic-guide3.png',
-    'assets/images/ic-guide4.png',
-    'assets/images/ic-guide5.png',
-  ];
 
   const HomeFrame({
     super.key,
     required this.widget1,
     required this.widget2,
+    required this.widget3,
     required this.menu,
   });
 
-  void _initialService(BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 0), () {
-      Provider.of<GuideProvider>(context, listen: false).updateIndex(0);
-    });
-  }
+  @override
+  State<HomeFrame> createState() => _HomeFrameState();
+}
+
+class _HomeFrameState extends State<HomeFrame> {
+  final PageController pageController = PageController();
+  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    _initialService(context);
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: Image.asset('assets/images/bg-home-web.png').image,
+    return Material(
+      child: Container(
+        width: width,
+        height: height - 60,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColor.WHITE,
+              AppColor.BLUE_LIGHT,
+            ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
         ),
-      ),
-      child: (PlatformUtils.instance.resizeWhen(width, 600))
-          ? Stack(
-              children: [
-                SizedBox(
-                  width: width,
-                  height: height,
-                  child: Column(
-                    children: [
-                      const HeaderWidget(),
-                      Row(
-                        children: [
-                          Expanded(child: widget1),
-                          SizedBox(
-                            width: 400,
-                            height: height - 60,
-                            child: widget2,
+        child: (PlatformUtils.instance.resizeWhen(width, 550))
+            ? SizedBox(
+                width: width,
+                height: height,
+                child: Column(
+                  children: [
+                    const HeaderWidget(),
+                    Expanded(
+                        child: Row(
+                      children: [
+                        widget.menu,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 20),
+                                    Expanded(child: widget.widget1),
+                                    const SizedBox(width: 30),
+                                    widget.widget2,
+                                    const SizedBox(width: 30),
+                                    widget.widget3,
+                                    const SizedBox(width: 16),
+                                  ],
+                                ),
+                              ),
+                              const FooterWeb(),
+                            ],
                           ),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                      ],
+                    )),
+                  ],
                 ),
-                Consumer<MenuCardProvider>(
-                  builder: (context, provider, child) {
-                    return AnimatedPositioned(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      left: (provider.showMenu) ? 10 : -350,
-                      bottom: 10,
-                      child: BoxLayout(
-                        width: 350,
-                        height: height - 80,
-                        borderRadius: 10,
-                        bgColor: Theme.of(context).cardColor,
-                        child: menu,
-                      ),
-                    );
-                  },
-                ),
-                Consumer<GuideProvider>(
-                  builder: (context, provider, child) {
-                    return (!provider.guideDisabled)
-                        ? const SizedBox()
-                        : Container(
-                            width: width,
-                            height: height,
-                            color: DefaultTheme.BLACK.withOpacity(0.9),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // SizedBox(
-                                //   width: 500,
-                                //   child: Text(
-                                //     'Xin chào, ${UserInformationHelper.instance.getUserFullname().trim()}',
-                                //     style: const TextStyle(
-                                //       color: DefaultTheme.WHITE,
-                                //       fontSize: 20,
-                                //       fontWeight: FontWeight.bold,
-                                //     ),
-                                //   ),
-                                // ),
-                                Image.asset(
-                                  guideAssets[provider.index],
-                                  width: 540,
-                                ),
-                                _buildCheckBoxUpdateGuide(provider),
-                                SizedBox(
-                                  width: width,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      UnconstrainedBox(
-                                        child: Tooltip(
-                                          message: 'Bỏ qua hướng dẫn',
-                                          child: ButtonWidget(
-                                            width: 250,
-                                            height: 40,
-                                            borderRadius: 5,
-                                            // icon: Icons.close_rounded,
-                                            text: 'Bỏ qua hướng dẫn',
-                                            function: () {
-                                              provider.updateGuideDisabled();
-                                              provider.updateIndex(0);
-                                            },
-                                            bgColor: Theme.of(context)
-                                                .canvasColor
-                                                .withOpacity(0.3),
-                                            textColor: DefaultTheme.WHITE,
-                                          ),
-                                        ),
-                                      ),
-                                      const Padding(
-                                          padding: EdgeInsets.only(left: 30)),
-                                      UnconstrainedBox(
-                                        child: Tooltip(
-                                          message: (provider.index ==
-                                                  guideAssets.length - 1)
-                                              ? 'Xong'
-                                              : 'Tiếp theo',
-                                          child: ButtonWidget(
-                                            width: 250,
-                                            height: 40,
-                                            borderRadius: 5,
-                                            // icon: Icons.navigate_next_rounded,
-                                            text: (provider.index ==
-                                                    guideAssets.length - 1)
-                                                ? 'Xong'
-                                                : 'Tiếp theo',
-                                            function: () {
-                                              if (provider.index ==
-                                                  guideAssets.length - 1) {
-                                                provider.updateGuideDisabled();
-                                                provider.updateIndex(0);
-                                              } else {
-                                                provider.updateIndex(
-                                                    provider.index + 1);
-                                              }
-                                            },
-                                            bgColor: Theme.of(context)
-                                                .canvasColor
-                                                .withOpacity(0.3),
-                                            textColor: DefaultTheme.WHITE,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Padding(
-                                    padding: EdgeInsets.only(top: 30)),
-                              ],
-                            ),
-                          );
-                  },
-                ),
-              ],
-            )
-          : WebMobileBlankWidget(),
+              )
+            : _forMobile(),
+      ),
     );
   }
 
-  Widget _buildCheckBoxUpdateGuide(GuideProvider provider) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: SizedBox(
-        width: 540,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Checkbox(
-              checkColor: DefaultTheme.WHITE, // color of tick Mark
-              activeColor: DefaultTheme.GREY_LIGHT,
-              value: provider.guideWeb,
-              side: const BorderSide(color: DefaultTheme.GREY_LIGHT, width: 2),
-
-              onChanged: (bool? value) {
-                provider.changeGuideWeb(value!);
-              },
-            ),
-            const Text(
-              'Không hiển thị hướng dẫn cho lần đăng nhập tiếp theo',
-              style: TextStyle(color: DefaultTheme.WHITE),
-            ),
-          ],
+  Widget _forMobile() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Row(
+            children: ['Giao dịch', 'Mã QR'].map((e) {
+              int index = ['Giao dịch', 'Mã QR'].indexOf(e);
+              return GestureDetector(
+                onTap: () {
+                  pageController.animateToPage(index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease);
+                  setState(() {
+                    currentPage = index;
+                  });
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(right: 20),
+                  padding: const EdgeInsets.only(bottom: 4, top: 12),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              color: index == currentPage
+                                  ? AppColor.BLUE_TEXT
+                                  : Colors.transparent))),
+                  child: Text(
+                    e,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
-      ),
+        const SizedBox(
+          height: 12,
+        ),
+        Expanded(
+          child: PageView(
+            controller: pageController,
+            children: [widget.widget1, widget.widget2],
+          ),
+        )
+      ],
     );
   }
 }

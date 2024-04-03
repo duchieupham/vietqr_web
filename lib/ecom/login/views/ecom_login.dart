@@ -1,5 +1,7 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
@@ -11,11 +13,10 @@ import 'package:VietQR/ecom/login/frames/ecom_login_frame.dart';
 import 'package:VietQR/ecom/login/model/account_login_dto.dart';
 import 'package:VietQR/ecom/login/states/ecom_login_state.dart';
 import 'package:VietQR/layouts/border_layout.dart';
-import 'package:go_router/go_router.dart';
-import 'package:uuid/uuid.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 import '../blocs/ecom_login_bloc.dart';
 
@@ -30,15 +31,13 @@ class _Login extends State<ECOMLogin> {
   final TextEditingController phoneNoController = TextEditingController();
   final TextEditingController domainController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  late ECOMLoginBloc _loginBloc;
   String code = '';
   Uuid uuid = const Uuid();
-
+  final ECOMLoginBloc _ecomLoginBloc = ECOMLoginBloc();
   @override
   void initState() {
     super.initState();
     code = uuid.v1();
-    _loginBloc = BlocProvider.of(context);
     // _loginBloc.add(LoginEventInsertCode(code: code, loginBloc: _loginBloc));
   }
 
@@ -54,36 +53,41 @@ class _Login extends State<ECOMLogin> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: BlocListener<ECOMLoginBloc, ECOMLoginState>(
-        listener: ((context, state) {
-          if (state is ECOMLoginLoadingState) {
-            DialogWidget.instance.openLoadingDialog();
-          }
-          if (state is ECOMLoginSuccessfulState) {
-            Navigator.of(context).pop();
-            context.push('/ecom/home');
-          }
-          if (state is ECOMLoginFailedState) {
-            FocusManager.instance.primaryFocus?.unfocus();
-            //pop loading dialog
-            Navigator.of(context).pop();
+      body: BlocProvider<ECOMLoginBloc>(
+        create: (BuildContext context) => _ecomLoginBloc,
+        child: BlocListener<ECOMLoginBloc, ECOMLoginState>(
+          bloc: _ecomLoginBloc,
+          listener: ((context, state) {
+            if (state is ECOMLoginLoadingState) {
+              DialogWidget.instance.openLoadingDialog();
+            }
+            if (state is ECOMLoginSuccessfulState) {
+              Navigator.of(context).pop();
+              context.push('/ecom/home');
+            }
+            if (state is ECOMLoginFailedState) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              //pop loading dialog
+              Navigator.of(context).pop();
 
-            //show msg dialog
-            DialogWidget.instance.openMsgDialog(
-              title: 'Đăng nhập không thành công',
-              msg:
-                  'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.',
-            );
-          }
-        }),
-        child: ECOMLoginFrame(
-          width: width,
-          height: height,
-          widget1: _buildWidget1(
+              //show msg dialog
+              DialogWidget.instance.openMsgDialog(
+                title: 'Đăng nhập không thành công',
+                msg:
+                    'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.',
+              );
+            }
+          }),
+          child: ECOMLoginFrame(
             width: width,
-            isResized: PlatformUtils.instance.resizeWhen(width, 750),
+            height: height,
+            widget1: _buildWidget1(
+              context,
+              width: width,
+              isResized: PlatformUtils.instance.resizeWhen(width, 750),
+            ),
+            widget2: const SizedBox.shrink(),
           ),
-          widget2: const SizedBox.shrink(),
         ),
       ),
     );
@@ -121,13 +125,14 @@ class _Login extends State<ECOMLogin> {
           fcmToken: '',
           platform: '',
           hosting: domainController.text);
-      _loginBloc.add(
+      _ecomLoginBloc.add(
         ECOMLoginEventByPhone(dto: dto),
       );
     }
   }
 
-  Widget _buildWidget1({required bool isResized, required double width}) {
+  Widget _buildWidget1(BuildContext context,
+      {required bool isResized, required double width}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -135,11 +140,12 @@ class _Login extends State<ECOMLogin> {
         const SizedBox(
           height: 10,
         ),
-        Image.asset(
-          'assets/images/logo-vietqr-vn.png',
+        Image(
+          image: ImageUtils.instance.getImageNetWork(AppImages.logoVietqrVn),
           width: 200,
           fit: BoxFit.fitWidth,
         ),
+
         const SizedBox(
           height: 30,
         ),
@@ -208,8 +214,8 @@ class _Login extends State<ECOMLogin> {
                 height: 40,
                 text: 'Đăng nhập',
                 borderRadius: 5,
-                textColor: DefaultTheme.WHITE,
-                bgColor: DefaultTheme.GREEN,
+                textColor: AppColor.WHITE,
+                bgColor: AppColor.GREEN,
                 function: () {
                   login(context);
                 },
@@ -232,7 +238,7 @@ class _Login extends State<ECOMLogin> {
                   'hoặc',
                   style: TextStyle(
                     fontSize: 13,
-                    color: DefaultTheme.GREY_TEXT,
+                    color: AppColor.GREY_TEXT,
                   ),
                 ),
               ),
@@ -248,8 +254,8 @@ class _Login extends State<ECOMLogin> {
           height: 40,
           text: 'Đăng ký',
           borderRadius: 5,
-          textColor: DefaultTheme.WHITE,
-          bgColor: DefaultTheme.BLUE_TEXT,
+          textColor: AppColor.WHITE,
+          bgColor: AppColor.BLUE_TEXT,
           function: () {
             context.go('/ecom/register');
           },

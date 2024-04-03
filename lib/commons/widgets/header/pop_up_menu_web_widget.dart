@@ -1,10 +1,13 @@
+import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
 import 'package:VietQR/features/logout/events/log_out_event.dart';
 import 'package:VietQR/features/logout/states/log_out_state.dart';
-import 'package:VietQR/features/setting/widgets/theme_setting_widget.dart';
+import 'package:VietQR/features/setting/widgets/card_number_setting_widget.dart';
+import 'package:VietQR/features/setting/widgets/popup_setting.dart';
+import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +40,8 @@ class PopupMenuWebWidget {
                     fit: BoxFit.cover,
                     image: (imgId.trim().isNotEmpty)
                         ? ImageUtils.instance.getImageNetWork(imgId)
-                        : Image.asset('assets/images/ic-avatar.png').image,
+                        : ImageUtils.instance
+                            .getImageNetWork(AppImages.personalRelation),
                   ),
                 ),
               ),
@@ -53,17 +57,7 @@ class PopupMenuWebWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 5)),
-                    InkWell(
-                      onTap: () {},
-                      child: const Text(
-                        'Chi tiết',
-                        style: TextStyle(
-                          fontSize: 13,
-                          decoration: TextDecoration.underline,
-                          color: DefaultTheme.GREEN,
-                        ),
-                      ),
-                    ),
+                    _buildPoint()
                   ],
                 ),
               ),
@@ -76,26 +70,22 @@ class PopupMenuWebWidget {
           child: SizedBox(),
         ),
         PopupMenuItem<int>(
-          value: 2,
+          value: 1,
           height: 40,
           child: InkWell(
             onTap: () {
               Navigator.pop(context);
-              DialogWidget.instance.openPopup(
-                width: 600,
-                height: 350,
-                child: const ThemeSettingWidget(),
-              );
+              context.go('/user_information');
             },
             child: Row(
               children: const [
                 Icon(
-                  Icons.layers_outlined,
+                  Icons.account_circle_outlined,
                   size: 15,
                 ),
                 Padding(padding: EdgeInsets.only(left: 10)),
                 Text(
-                  'Giao diện',
+                  'Thông tin cá nhân',
                   style: TextStyle(
                     fontSize: 13,
                   ),
@@ -105,7 +95,65 @@ class PopupMenuWebWidget {
           ),
         ),
         PopupMenuItem<int>(
-            value: 3,
+          value: 1,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              DialogWidget.instance.openPopup(
+                width: 500,
+                height: 500,
+                child: CardNumberSettingWidget(),
+              );
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.wifi_tethering_sharp,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Cài đặt VietQR ID Card',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
+          value: 1,
+          height: 40,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              DialogWidget.instance.openPopup(
+                width: 800,
+                height: 650,
+                child: const PopupSetting(),
+              );
+            },
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.settings,
+                  size: 15,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Text(
+                  'Cài đặt',
+                  style: TextStyle(
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem<int>(
+            value: 2,
             height: 40,
             child: BlocListener<LogoutBloc, LogoutState>(
               listener: (context, state) {
@@ -114,7 +162,12 @@ class PopupMenuWebWidget {
                 }
                 if (state is LogoutSuccessfulState) {
                   Navigator.pop(context);
-                  context.push('/login');
+                  if (Session.instance.userECOMId.trim().isNotEmpty) {
+                    Session.instance.updateUserECOMId('');
+                    context.push('/ecom');
+                  } else {
+                    context.pushReplacement('/login');
+                  }
                 }
                 if (state is LogoutFailedState) {
                   Navigator.pop(context);
@@ -132,7 +185,7 @@ class PopupMenuWebWidget {
                   children: const [
                     Icon(
                       Icons.logout_rounded,
-                      color: DefaultTheme.RED_CALENDAR,
+                      color: AppColor.RED_CALENDAR,
                       size: 15,
                     ),
                     Padding(padding: EdgeInsets.only(left: 10)),
@@ -140,7 +193,7 @@ class PopupMenuWebWidget {
                       'Đăng xuất',
                       style: TextStyle(
                         fontSize: 13,
-                        color: DefaultTheme.RED_CALENDAR,
+                        color: AppColor.RED_CALENDAR,
                       ),
                     ),
                   ],
@@ -164,5 +217,23 @@ class PopupMenuWebWidget {
       offset & overlay.size,
     );
     return position;
+  }
+
+  Widget _buildPoint() {
+    return Row(
+      children: [
+        Text(
+          Session.instance.wallet.point ?? '',
+          style: const TextStyle(fontSize: 12),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.icPoint),
+            width: 20,
+          ),
+        )
+      ],
+    );
   }
 }

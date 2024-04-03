@@ -15,24 +15,27 @@ class AccountBankDetailDTO {
   final List<BusinessDetails> businessDetails;
   final List<Transactions> transactions;
   final bool authenticated;
+  final String caiValue;
 
-  const AccountBankDetailDTO(
-      {required this.id,
-      required this.bankAccount,
-      required this.userBankName,
-      required this.bankCode,
-      required this.bankName,
-      required this.imgId,
-      required this.type,
-      required this.userId,
-      required this.bankTypeId,
-      required this.bankTypeStatus,
-      required this.nationalId,
-      required this.qrCode,
-      required this.phoneAuthenticated,
-      required this.businessDetails,
-      required this.transactions,
-      required this.authenticated});
+  const AccountBankDetailDTO({
+    this.id = '',
+    this.bankAccount = '',
+    this.userBankName = '',
+    this.bankCode = '',
+    this.bankName = '',
+    this.imgId = '',
+    this.type = 0,
+    this.userId = '',
+    this.bankTypeId = '',
+    this.bankTypeStatus = 0,
+    this.nationalId = '',
+    this.qrCode = '',
+    this.phoneAuthenticated = '',
+    required this.businessDetails,
+    required this.transactions,
+    this.authenticated = false,
+    this.caiValue = '',
+  });
 
   factory AccountBankDetailDTO.fromJson(Map<String, dynamic> json) {
     final List<BusinessDetails> businessDetails = [];
@@ -58,6 +61,7 @@ class AccountBankDetailDTO {
       userId: json['userId'] ?? '',
       bankTypeId: json['bankTypeId'] ?? '',
       bankTypeStatus: json['bankTypeStatus'] ?? 0,
+      caiValue: json['caiValue'] ?? '',
       nationalId: json['nationalId'] ?? '',
       qrCode: json['qrCode'] ?? '',
       phoneAuthenticated: json['phoneAuthenticated'] ?? '',
@@ -80,13 +84,13 @@ class AccountBankDetailDTO {
     data['qrCode'] = qrCode;
     data['phoneAuthenticated'] = phoneAuthenticated;
 
-    data['businessDetails'] = (businessDetails.isEmpty)
+    data['businessDetails'] = (businessDetails?.isEmpty ?? false)
         ? []
-        : businessDetails.map((v) => v.toJson()).toList();
+        : businessDetails!.map((v) => v.toJson()).toList();
 
-    data['transactions'] = (transactions.isEmpty)
+    data['transactions'] = (transactions?.isEmpty ?? false)
         ? []
-        : transactions.map((v) => v.toJson()).toList();
+        : transactions!.map((v) => v.toJson()).toList();
 
     data['authenticated'] = authenticated;
     return data;

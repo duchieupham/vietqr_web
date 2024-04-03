@@ -43,3 +43,9 @@ class TokenFcmUpdateFailedState extends TokenState {}
 class TokenExpiredLogoutState extends TokenState {}
 
 class TokenLogoutFailedState extends TokenState {}
+
+class GetAccountSettingSuccess extends TokenState {
+  final int data;
+
+  const GetAccountSettingSuccess(this.data);
+}

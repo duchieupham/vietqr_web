@@ -27,6 +27,10 @@ class CheckUtils {
         result =
             'Không thể xoá TK. Tính năng đang bảo trì cho TK ngân hàng đã liên kết.';
         break;
+      case CheckType.C05:
+        result =
+            'VietQR ID này đã được gán cho tài khoản khác. Vui lòng thử lại sau.';
+        break;
       default:
         result = message;
     }

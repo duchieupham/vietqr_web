@@ -10,6 +10,8 @@ class BoxLayout extends StatelessWidget {
   final bool? enableShadow;
   final Alignment? alignment;
   final EdgeInsets? margin;
+  final String? bgImage;
+  final BoxBorder? border;
 
   const BoxLayout({
     super.key,
@@ -22,6 +24,8 @@ class BoxLayout extends StatelessWidget {
     this.enableShadow,
     this.alignment,
     this.margin,
+    this.bgImage,
+    this.border,
   });
 
   @override
@@ -36,6 +40,10 @@ class BoxLayout extends StatelessWidget {
           : const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: (bgColor != null) ? bgColor! : Theme.of(context).cardColor,
+        border: border,
+        image: bgImage != null
+            ? DecorationImage(image: AssetImage(bgImage!), fit: BoxFit.fill)
+            : null,
         borderRadius:
             BorderRadius.circular((borderRadius != null) ? borderRadius! : 15),
         boxShadow: (enableShadow != null && enableShadow!)

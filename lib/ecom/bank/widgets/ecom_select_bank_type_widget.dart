@@ -19,19 +19,15 @@ class ECOMSelectBankTypeWidget extends StatelessWidget {
   final SearchClearProvider _searchClearProvider = SearchClearProvider(false);
   final List<BankTypeDTO> bankTypesResult = [];
   final List<BankTypeDTO> bankTypes = [];
-  static late ECOMBankTypeBloc bankTypeBloc;
+
   final bool authenticated;
   ECOMSelectBankTypeWidget({super.key, this.authenticated = true});
-
+  static late ECOMBankTypeBloc bankTypeBloc;
   void initialServices(BuildContext context) {
+    bankTypeBloc = BlocProvider.of(context);
     bankTypesResult.clear();
     bankTypes.clear();
-    bankTypeBloc = BlocProvider.of(context);
-    if (authenticated) {
-      bankTypeBloc.add(const ECOMBankTypeEventGetList());
-    } else {
-      bankTypeBloc.add(const ECOMBankTypeEventGetListUnauthenticated());
-    }
+    bankTypeBloc.add(const ECOMBankTypeEventGetList());
   }
 
   @override
@@ -147,7 +143,7 @@ class ECOMSelectBankTypeWidget extends StatelessWidget {
                   height: 200,
                   child: const Center(
                     child: CircularProgressIndicator(
-                      color: DefaultTheme.GREEN,
+                      color: AppColor.GREEN,
                     ),
                   ),
                 );
@@ -198,7 +194,7 @@ class ECOMSelectBankTypeWidget extends StatelessWidget {
       child: BoxLayout(
         width: width,
         borderRadius: 0,
-        bgColor: DefaultTheme.TRANSPARENT,
+        bgColor: AppColor.TRANSPARENT,
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
         child: Row(
           children: [
@@ -207,7 +203,7 @@ class ECOMSelectBankTypeWidget extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: DefaultTheme.WHITE,
+                color: AppColor.WHITE,
                 image: DecorationImage(
                   image: ImageUtils.instance.getImageNetWork(
                     dto.imageId,

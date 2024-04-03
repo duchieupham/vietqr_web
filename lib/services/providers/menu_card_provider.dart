@@ -23,6 +23,7 @@ class MenuCardProvider with ChangeNotifier {
     businessDetails: [],
     transactions: [],
     authenticated: false,
+    caiValue: '',
   );
 
   QRGeneratedDTO _qrGeneratedDTO = const QRGeneratedDTO(
@@ -67,7 +68,6 @@ class MenuCardProvider with ChangeNotifier {
   }
 
   void reset() {
-    _isShowMenu = true;
     _index = 0;
     _bankDetailDTO = const AccountBankDetailDTO(
       id: '',
@@ -86,6 +86,7 @@ class MenuCardProvider with ChangeNotifier {
       businessDetails: [],
       transactions: [],
       authenticated: false,
+      caiValue: '',
     );
     _qrGeneratedDTO = const QRGeneratedDTO(
       bankCode: '',

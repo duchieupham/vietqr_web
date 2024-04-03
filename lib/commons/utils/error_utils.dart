@@ -86,6 +86,38 @@ class ErrorUtils {
       case ErrorType.E23:
         result = 'TK đã đăng ký nhận BĐSD';
         break;
+      case ErrorType.E46:
+        result = 'Invalid Request Body/Request Param';
+        break;
+      case ErrorType.E98:
+        result = 'Dịch vụ Active máy bán hàng không khả dụng';
+        break;
+      case ErrorType.E85:
+        result = 'Tên merchant đã tồn tại';
+        break;
+      case ErrorType.E86:
+        result = 'Thông tin merchant đã tồn tại';
+        break;
+      case ErrorType.E87:
+        result = 'Thông URL/IP+PORT không hợp lệ';
+        break;
+      case ErrorType.E84:
+        result =
+            'Tài khoản ngân hàng không tồn tại/chưa liên kết với hệ thống VietQR VN.';
+        break;
+      case ErrorType.C10:
+        result =
+            'Tài khoản ngân hàng không tồn tại/chưa liên kết với hệ thống VietQR VN.';
+        break;
+      case ErrorType.E99:
+        result = 'Token VHITEK không hợp lệ';
+        break;
+      case ErrorType.E100:
+        result = 'Check Valid user của VHITEK lỗi';
+        break;
+      case ErrorType.E105:
+        result = 'Tên Merchant đã tồn tại trong hệ thống.';
+        break;
       default:
         result = message;
     }
