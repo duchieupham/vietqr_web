@@ -349,12 +349,17 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                             size: const Size(double.infinity, 1),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'Danh sách GD thanh toán',
-                            style: TextStyle(
-                                color: AppColor.BLACK,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11),
+                          Row(
+                            children: [
+                              const Text(
+                                'Danh sách GD thanh toán',
+                                style: TextStyle(
+                                    color: AppColor.BLACK,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11),
+                              ),
+                              _refreshWidget(),
+                            ],
                           ),
                           const SizedBox(height: 12),
                           TableTransWidget(
@@ -571,8 +576,58 @@ class _StoreScreenState extends State<TransactionPaymentView> {
     );
   }
 
+  Widget _refreshWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 16,
+      ),
+      child: InkWell(
+        onTap: () => refreshState(),
+        child: Container(
+          width: 180,
+          height: 40,
+          // margin: const EdgeInsets.only(left: 16, right: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.blue, width: 0.5),
+            borderRadius: BorderRadius.circular(8),
+            color: AppColor.WHITE,
+          ),
+          child: Row(
+            children: const [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 8,
+                ),
+                child: Icon(
+                  Icons.refresh,
+                  color: AppColor.BLUE_TEXT,
+                  size: 16,
+                ),
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Cập nhật danh sách GD',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColor.BLUE_TEXT,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void updateState() {
     setState(() {});
+  }
+
+  void refreshState() {
+    setState(() {
+      TableTransWidget;
+    });
   }
 
   @override
