@@ -142,7 +142,7 @@ class TransReceiveDTO {
   Color get getColorStatus {
     if (transType.trim() == 'D') return AppColor.RED_CALENDAR;
 
-    if (status == 0) return AppColor.ORANGE_DARK;
+    if (status == 0) return AppColor.ORANGE;
 
     if (status == 1 && type == 2) return AppColor.BLUE_TEXT;
 
