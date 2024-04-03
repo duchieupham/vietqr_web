@@ -32,7 +32,8 @@ class ClockWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400),
                 ),
                 Text(
-                  DateFormat('MM-dd-yyyy').format(DateTime.now()),
+                  // DateFormat('MM-dd-yyyy').format(DateTime.now()),
+                  TimeUtils.instance.getCurentDate(),
                   style:
                       const TextStyle(fontSize: 10, color: AppColor.GREY_TEXT),
                 ),

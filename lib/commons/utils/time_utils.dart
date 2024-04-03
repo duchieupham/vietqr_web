@@ -192,13 +192,15 @@ class TimeUtils {
   }
 
   //get current date to display today_view
-  String getCurentDate(DateTime? now) {
+  String getCurentDate() {
     String result = '';
-    now ??= DateTime.now();
+    DateTime now = DateTime.now();
     String day = DateFormat.d(const Locale('en').countryCode).format(now);
     String month = formatMonthCalendar(
         DateFormat.M(const Locale('en').countryCode).format(now));
-    result = '$day $month';
+    DateFormat format = DateFormat('yyyy');
+    String year = format.format(now);
+    result = 'ngày $day $month, năm $year';
     return result;
   }
 
