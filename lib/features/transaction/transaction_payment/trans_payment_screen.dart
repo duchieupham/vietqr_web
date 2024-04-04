@@ -335,6 +335,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                           ),
                           const SizedBox(height: 16),
                           FilterWidget(
+                            dto: state.bankDTO,
                             stream: filterStream,
                             callBack: _onReceive,
                             onSearch: _onSearch,

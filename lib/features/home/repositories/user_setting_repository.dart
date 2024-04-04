@@ -6,6 +6,8 @@ import 'package:VietQR/commons/utils/base_api.dart';
 import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
 
+import '../../../services/shared_references/shared_pref.dart';
+
 class UserSettingRepository {
   const UserSettingRepository();
 
@@ -20,6 +22,7 @@ class UserSettingRepository {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         result = SettingAccountDTO.fromJson(data);
+        setUser(result);
       }
     } catch (e) {
       LOG.error(e.toString());

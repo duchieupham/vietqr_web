@@ -4,11 +4,14 @@ import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/transaction/repositories/transaction_repository.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/data_filter.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
+import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../services/shared_references/user_information_helper.dart';
 import 'dialog_pick_date.dart';
 import '../../../layouts/m_drop_widget.dart';
 import 'dart:html' as html;
@@ -17,8 +20,11 @@ class DialogExcelWidget extends StatefulWidget {
   final List<TerminalQRDTO> terminals;
   final String bankId;
 
-  const DialogExcelWidget(
-      {super.key, required this.terminals, required this.bankId});
+  const DialogExcelWidget({
+    super.key,
+    required this.terminals,
+    required this.bankId,
+  });
 
   @override
   State<DialogExcelWidget> createState() => _DialogExcelWidgetState();

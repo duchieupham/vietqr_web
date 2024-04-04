@@ -6,12 +6,15 @@ import 'package:VietQR/commons/utils/month_calculator.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 
 import '../../../models/transaction/data_filter.dart';
+import '../../../services/shared_references/shared_pref.dart';
 import 'dialog_excel_widget.dart';
 import '../../../layouts/m_drop_widget.dart';
 
@@ -21,6 +24,7 @@ class FilterWidget extends StatefulWidget {
   final Function(int) onSearch;
   final Stream<bool> stream;
   final List<TerminalQRDTO> terminals;
+  final BankAccountDTO? dto;
   final String bankId;
   final bool isOwner;
   final bool isPending;
@@ -34,6 +38,7 @@ class FilterWidget extends StatefulWidget {
     required this.terminals,
     required this.bankId,
     required this.isOwner,
+    required this.dto,
     this.isPending = false,
     this.shouldRefresh = false,
   });
@@ -43,6 +48,7 @@ class FilterWidget extends StatefulWidget {
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
+  List<TerminalQRDTO>? terminals;
   final monthCalculator = MonthCalculator();
   final searchController = TextEditingController();
 
@@ -137,17 +143,17 @@ class _FilterWidgetState extends State<FilterWidget> {
               ],
               _removeFilterWidget(),
               _searchWidget(),
-              if (widget.isOwner)
-                ButtonWidget(
-                  text: 'Xuất Excel',
-                  width: 100,
-                  border: Border.all(color: AppColor.GREEN),
-                  textColor: AppColor.GREEN,
-                  bgColor: AppColor.TRANSPARENT,
-                  function: _onExportExcel,
-                  borderRadius: 5,
-                  height: 34,
-                ),
+              // if (widget.isOwner)
+              ButtonWidget(
+                text: 'Xuất Excel',
+                width: 100,
+                border: Border.all(color: AppColor.GREEN),
+                textColor: AppColor.GREEN,
+                bgColor: AppColor.TRANSPARENT,
+                function: _onExportExcel,
+                borderRadius: 5,
+                height: 34,
+              ),
             ],
           ),
         ),
@@ -537,16 +543,37 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   void _onExportExcel() async {
-    await showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DialogExcelWidget(
-          terminals: widget.terminals,
-          bankId: widget.bankId,
-        );
-      },
-    );
+    SettingAccountDTO? userSetting;
+    userSetting = await getUser();
+    bool hasAllStore;
+
+    if (widget.isOwner == false) {
+      final merChantRole = userSetting!.merchantRoles
+          .firstWhere((element) => element.bankId == widget.dto?.bankId);
+      hasAllStore = merChantRole.roles
+          .any((element) => element.category == 3 && element.role == 5);
+    } else {
+      hasAllStore = true;
+    }
+
+    if (!hasAllStore) {
+      terminals = widget.terminals
+          .where((element) => !element.terminalName.contains("Tất cả cửa hàng"))
+          .toList();
+    } else {
+      terminals = widget.terminals;
+    }
+    if (userSetting != null)
+      await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return DialogExcelWidget(
+            terminals: terminals!,
+            bankId: widget.bankId,
+          );
+        },
+      );
   }
 
   void onChangedTerminal(String value) {

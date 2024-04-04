@@ -269,6 +269,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     FilterWidget(
+                      dto: state.bankDTO,
                       stream: filterStream,
                       terminals: state.terminals,
                       callBack: _onReceive,

@@ -69,8 +69,9 @@ class SettingAccountDTO {
         logoUrl: json["logoUrl"] ?? '',
         keepScreenOn: json["keepScreenOn"] ?? false,
         qrShowType: json["qrShowType"] ?? 0,
-        merchantRoles: List<MerchantRole>.from(
-            json["merchantRoles"].map((x) => MerchantRole.fromJson(x))),
+        merchantRoles: (json["merchantRoles"] as List)
+            .map((e) => MerchantRole.fromJson(e))
+            .toList(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -97,47 +98,48 @@ class SettingAccountDTO {
 class MerchantRole {
   final String merchantId;
   final String bankId;
-  final List<Role> datas;
-  final List<int> categories;
-  final List<int> roles;
+  final List<Role> roles;
+  // final List<int> categories;
+  // final List<int> roles;
 
   MerchantRole({
     this.merchantId = '',
     this.bankId = '',
-    this.datas = const [],
-    this.categories = const [],
     this.roles = const [],
+    // this.categories = const [],
+    // this.roles = const [],
   });
 
-  bool get isAdmin => categories.contains(0) && roles.contains(0);
+  bool get isAdmin => roles.any((role) => role.category == 0 && role.role == 0);
 
-  bool get isUnclassified =>
-      categories.contains(2) && (roles.contains(2) || roles.contains(4));
+  bool get isUnclassified => roles
+      .any((role) => role.category == 2 && (role.role == 2 || role.role == 4));
 
-  bool get isAllTab => categories.contains(2) && roles.contains(2);
+  bool get isAllTab =>
+      roles.any((role) => role.category == 2 && role.role == 2);
 
-  bool get disableTab => datas.isNotEmpty
-      ? datas[0].category == 2 && (datas[0].role == 4 || datas[0].role == 2)
-      : false;
+  bool get disableTab =>
+      roles.isNotEmpty &&
+      roles[0].category == 2 &&
+      (roles[0].role == 4 || roles[0].role == 2);
 
-  bool get isUpdateTrans => categories.contains(2);
+  bool get isUpdateTrans => roles.any((role) => role.category == 2);
 
   bool get isUpdateTransRequest => roles.contains(4);
 
   factory MerchantRole.fromJson(Map<String, dynamic> json) => MerchantRole(
         merchantId: json["merchantId"] ?? '',
         bankId: json["bankId"] ?? '',
-        roles: List<int>.from(json["roleData"].map((x) => x)),
-        categories: List<int>.from(json["categoryData"].map((x) => x)),
-        datas: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+        roles: (json["roles"] as List).map((e) => Role.fromJson(e)).toList(),
       );
 
   Map<String, dynamic> toJson() => {
         "merchantId": merchantId,
         "bankId": bankId,
-        "roles": List<dynamic>.from(datas.map((x) => x.toJson())),
-        "roleData": List<dynamic>.from(roles.map((x) => x)),
-        "categoryData": List<dynamic>.from(categories.map((x) => x)),
+        // "vouchers": vouchers != null
+        //     ? vouchers?.map((voucher) => voucher.voucherCode)?.toList()
+        //     : null,
+        "roles": roles,
       };
 }
 
