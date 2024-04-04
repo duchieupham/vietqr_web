@@ -127,7 +127,7 @@ class MenuLeft extends StatelessWidget {
                 bold: true,
                 onTap: () {
                   isVisible = true;
-                  context.go('/transactions', extra: {'type': '0'});
+                  context.go('/transactions/list');
                 },
               ),
               ItemMenuHome(

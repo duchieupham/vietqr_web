@@ -563,7 +563,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     } else {
       terminals = widget.terminals;
     }
-    if (userSetting != null)
+    if (userSetting != null) {
       await showDialog(
         barrierDismissible: false,
         context: context,
@@ -574,6 +574,7 @@ class _FilterWidgetState extends State<FilterWidget> {
           );
         },
       );
+    }
   }
 
   void onChangedTerminal(String value) {

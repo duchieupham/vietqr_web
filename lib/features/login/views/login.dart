@@ -150,12 +150,12 @@ class _Login extends State<Login> {
                   if (widget.pathHistory.isNotEmpty) {
                     context.push(widget.pathHistory);
                   } else {
-                    context.push('/transactions?type=0');
+                    context.push('/transactions/list');
                   }
                 }
                 if (state is LoginQRSuccessfulState) {
                   Navigator.of(context).pop();
-                  context.push('/transactions?type=0');
+                  context.push('/transactions/list');
                 }
                 if (state is ExistPhoneState) {
                   Navigator.of(context).pop();

@@ -195,7 +195,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       redirect: (context, state) {
-        return (userId.isNotEmpty) ? '/transactions?type=0' : '/login';
+        return (userId.isNotEmpty) ? '/transactions/list' : '/login';
       },
     ),
     GoRoute(
@@ -445,18 +445,41 @@ final GoRouter _router = GoRouter(
 
     /// Giao dịch
     GoRoute(
-        path: '/transactions',
+        path: '/transactions/list',
         redirect: (context, state) {
-          return (userId.isNotEmpty) ? '/transactions' : '/login';
+          return (userId.isNotEmpty) ? '/transactions/list' : '/login';
         },
         builder: (BuildContext context, GoRouterState state) {
-          return const TransactionScreen();
+          return const TransactionScreen(
+            type: "0",
+          );
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const TransactionScreen(),
+            child: const TransactionScreen(
+              type: "0",
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/transactions/uncategorized',
+        redirect: (context, state) {
+          return (userId.isNotEmpty) ? '/transactions/uncategorized' : '/login';
+        },
+        builder: (BuildContext context, GoRouterState state) {
+          return const TransactionScreen(
+            type: "1",
+          );
+        },
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const TransactionScreen(
+              type: "1",
+            ),
           );
         }),
 

@@ -228,10 +228,13 @@ class TransPendingScreenState extends State<TransPendingScreen> {
     if (state.request == TransType.GET_BANKS) {
       bloc.add(GetTerminalsEvent(state.bankDTO?.bankId ?? ''));
 
+      // html.window.history.pushState(
+      //     null,
+      //     '/transactions?type=1?bankId=${bank.bankId}',
+      //     '/transactions?type=1?bankId=${state.bankDTO?.bankId ?? ''}');
+
       html.window.history.pushState(
-          null,
-          '/transactions?type=1?bankId=${bank.bankId}',
-          '/transactions?type=1?bankId=${state.bankDTO?.bankId ?? ''}');
+          null, '/transactions/uncategorized', '/transactions/uncategorized');
 
       bank = state.bankDTO ?? bank;
       transType = TransPendingType.unclassified;
@@ -240,10 +243,13 @@ class TransPendingScreenState extends State<TransPendingScreen> {
     }
 
     if (state.request == TransType.UPDATE_BANK) {
+      // html.window.history.pushState(
+      //     null,
+      //     '/transactions?type=1?bankId=${bank.bankId}',
+      //     '/transactions?type=1?bankId=${state.bankDTO?.bankId ?? ''}');
+
       html.window.history.pushState(
-          null,
-          '/transactions?type=1?bankId=${bank.bankId}',
-          '/transactions?type=1?bankId=${state.bankDTO?.bankId ?? ''}');
+          null, '/transactions/uncategorized', '/transactions/uncategorized');
       bank = state.bankDTO ?? bank;
 
       onRole();

@@ -18,7 +18,8 @@ import 'transaction_payment/trans_payment_screen.dart';
 import 'dart:html' as html;
 
 class TransactionScreen extends StatefulWidget {
-  const TransactionScreen({super.key});
+  final String type;
+  const TransactionScreen({super.key, required this.type});
 
   @override
   State<TransactionScreen> createState() => _TransactionScreenState();
@@ -31,8 +32,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
   @override
   void initState() {
     super.initState();
+    type = widget.type;
     bloc = BlocProvider.of(context);
     bloc.add(const TokenEventCheckValid());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    type = '0';
   }
 
   @override
@@ -97,11 +105,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
   void onTapMenu(String value) {
     if (value == '0') {
       html.window.history
-          .pushState(value, '/transactions', '/transactions?type=$value');
+          .pushState(value, '/transactions', '/transactions/list');
       type = value;
     } else {
       html.window.history
-          .pushState(value, '/transactions', '/transactions?type=$value');
+          .pushState(value, '/transactions', '/transactions/uncategorized');
       type = value;
     }
     setState(() {});

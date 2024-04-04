@@ -250,10 +250,13 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                       _isOwner = state.bankDTO?.isOwner ?? false;
                     });
 
+                    // html.window.history.pushState(
+                    //     null,
+                    //     '/transactions?type=0?bankId=$_bankId',
+                    //     '/transactions?type=0?bankId=$_bankId');
+
                     html.window.history.pushState(
-                        null,
-                        '/transactions?type=0?bankId=$_bankId',
-                        '/transactions?type=0?bankId=$_bankId');
+                        null, '/transactions/list', '/transactions/list');
                     getTotalTransByDay();
                     loadAll();
                   }
@@ -424,10 +427,8 @@ class _StoreScreenState extends State<TransactionPaymentView> {
     if (data != null && data is BankAccountDTO) {
       _streamController.add(true);
       bloc.add(UpdateBankAccountEvent(data));
-      html.window.history.pushState(
-          null,
-          '/transactions?type=0?bankId=$_bankId',
-          '/transactions?type=0?bankId=${data.bankId}');
+      html.window.history
+          .pushState(null, '/transactions/list', '/transactions/list');
       _bankId = data.bankId;
       _isOwner = data.isOwner;
       loadAll();
