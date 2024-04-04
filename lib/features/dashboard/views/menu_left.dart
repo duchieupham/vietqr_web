@@ -72,7 +72,7 @@ class MenuLeft extends StatelessWidget {
           if (provider.showMenu) {
             width = 270;
           } else {
-            width = 50;
+            width = 80;
           }
 
           return Container(
@@ -277,110 +277,114 @@ class MenuLeft extends StatelessWidget {
 
   Widget _buildListIconItem(
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
-    return SizedBox(
-      width: 50,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      width: 100,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           ItemMenuHome(
-            title: 'Giao dịch',
-            paddingIcon: const EdgeInsets.all(4),
+            title: 'Quản lý giao dịch',
             iconId: AppImages.icMenuTransaction,
-            isOnlyIcon: true,
+            enableDropDownList: true,
+            // listItemDrop: subMenuTransaction,
             isSelect: currentType == MenuHomeType.TRANSACTION,
+            isOnlyIcon: true,
             onTap: () {
-              DialogWidget.instance.openMsgDialog(
-                  title: 'Bảo trì',
-                  msg:
-                      'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-              // context.go('/transaction');
-              // provider.updateShowMenu(true);
+              // isVisible = true;
+              // context.go('/transactions', extra: {'type': '0'});
             },
           ),
           ItemMenuHome(
-            title: 'Tạo mã VietQR',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuQR,
+            title: 'Quản lý TT Kinh Doanh',
+            iconId: AppImages.icMenuMerchant,
+            enableDropDownList: true,
+            // listItemDrop: subMenuEnterprise,
+            isSelect: currentType == MenuHomeType.ENTERPRISE,
             isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.CREATE_QR,
+            // bold: true,
             onTap: () {
-              provider.updateShowMenu(true);
-              context.go('/create-qr');
+              // context.go('/enterprise/store');
             },
           ),
           ItemMenuHome(
-            title: 'Trang chủ',
+            title: 'Quản lý nhân viên',
+            iconId: AppImages.icMenuEmployeeBlack,
+            enableDropDownList: true,
+            // listItemDrop: subMenuMember,
+            isSelect: currentType == MenuHomeType.MEMBER,
+
             isOnlyIcon: true,
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuHome,
-            isSelect: currentType == MenuHomeType.HOME,
             onTap: () {
-              context.go('/home');
-              provider.updateShowMenu(true);
+              // context.go('/member/list');
             },
           ),
 
           ItemMenuHome(
-            title: 'Doanh nghiệp',
-            iconId: AppImages.icMenuHome,
-            isSelect: currentType == MenuHomeType.ENTERPRISE,
+            title: 'Tiện ích QR',
+            iconId: AppImages.icMenuQrBlack,
+            isSelect: currentType == MenuHomeType.CREATE_QR,
+            enableDropDownList: true,
+            // listItemDrop: subMenuQr,
             isOnlyIcon: true,
             onTap: () {
-              context.go('/enterprise/store');
+              context.go('/create-qr');
             },
           ),
           if (provider.isAccountIsMerchant)
             ItemMenuHome(
               title: 'Đại lý',
-              paddingIcon: const EdgeInsets.all(4),
-              iconId: AppImages.icMenuBank,
-              isOnlyIcon: true,
+              iconId: AppImages.icMenuContactBlack,
+              enableDropDownList: true,
+              // listItemDrop: subMenuMerchant,
               isSelect: currentType == MenuHomeType.MERCHANT,
+              isOnlyIcon: true,
+              // bold: true,
               onTap: () {
-                DialogWidget.instance.openMsgDialog(
-                    title: 'Bảo trì',
-                    msg:
-                        'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-                // context.go('/merchant/report');
-                // provider.updateShowMenu(true);
+                // DialogWidget.instance.openMsgDialog(
+                //     title: 'Bảo trì',
+                //     msg:
+                //         'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                context.go('/merchant/report');
               },
             ),
           ItemMenuHome(
             title: 'Tích hợp và kết nối',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuMerchantRequest,
-            isOnlyIcon: true,
+            iconId: AppImages.icMenuIntergrated,
+            enableDropDownList: true,
+            // listItemDrop: subMenuMerchantRequest,
             isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+            // bold: true,
+            isOnlyIcon: true,
             onTap: () {
               context.go('/merchant/request');
-              provider.updateShowMenu(true);
             },
           ),
-          ItemMenuHome(
-            title: 'TK ngân hàng',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuContact,
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
-            onTap: () {
-              provider.updateShowMenu(true);
-              DialogWidget.instance.openMsgDialog(
-                title: 'Tính năng đang bảo trì',
-                msg: 'Vui lòng thử lại sau',
-              );
-            },
-          ),
-          ItemMenuHome(
-            title: 'Ví QR',
-            iconId: AppImages.icMenuWallet,
-            paddingIcon: const EdgeInsets.all(4),
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.WALLET_QR,
-            onTap: () {
-              provider.updateShowMenu(true);
-              context.go('/qr-wallet');
-            },
-          ),
+          // ItemMenuHome(
+          //   title: 'TK ngân hàng',
+          //   paddingIcon: const EdgeInsets.all(4),
+          //   iconId: AppImages.icMenuContact,
+          //   isOnlyIcon: true,
+          //   isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
+          //   onTap: () {
+          //     provider.updateShowMenu(true);
+          //     DialogWidget.instance.openMsgDialog(
+          //       title: 'Tính năng đang bảo trì',
+          //       msg: 'Vui lòng thử lại sau',
+          //     );
+          //   },
+          // ),
+          // ItemMenuHome(
+          //   title: 'Ví QR',
+          //   iconId: AppImages.icMenuWallet,
+          //   paddingIcon: const EdgeInsets.all(4),
+          //   isOnlyIcon: true,
+          //   isSelect: currentType == MenuHomeType.WALLET_QR,
+          //   onTap: () {
+          //     provider.updateShowMenu(true);
+          //     context.go('/qr-wallet');
+          //   },
+          // ),
           // ItemMenuHome(
           //   title: 'Chia sẻ BĐSD',
           //   paddingIcon: const EdgeInsets.all(4),
@@ -395,12 +399,11 @@ class MenuLeft extends StatelessWidget {
           // ),
           ItemMenuHome(
             title: 'Giới thiệu VietQR VN',
-            pathImage: 'assets/images/logo-small-round.png',
-            isOnlyIcon: true,
+            pathImage: AppImages.icMenuContactBlack,
             isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
-            isDefaultColor: true,
+            // bold: true,
+            isOnlyIcon: true,
             onTap: () {
-              provider.updateShowMenu(true);
               DialogWidget.instance.openPopup(
                 width: 500,
                 height: 300,

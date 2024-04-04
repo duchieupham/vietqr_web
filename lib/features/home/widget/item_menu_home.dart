@@ -103,6 +103,7 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
     if (widget.isOnlyIcon) {
       if (widget.pathImage != null && widget.pathImage != '') {
         return Tooltip(
+          // decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
           message: widget.title,
           textStyle:
               TextStyle(fontWeight: widget.bold ? FontWeight.bold : null),
@@ -126,9 +127,11 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: widget.paddingIcon,
-              color: widget.isSelect
-                  ? AppColor.ITEM_MENU_SELECTED
-                  : Colors.transparent,
+              decoration: BoxDecoration(
+                  color: widget.isSelect
+                      ? AppColor.ITEM_MENU_SELECTED
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(5)),
               width: 40,
               height: 40,
               child: Image(
