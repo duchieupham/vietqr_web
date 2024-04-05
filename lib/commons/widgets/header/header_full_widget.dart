@@ -22,6 +22,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../layouts/dialog/pop_up_menu_header_widget.dart';
+
 class HeaderFullWidget extends StatefulWidget {
   final bool? isSubHeader;
   //providers
@@ -156,6 +158,61 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             width: 12,
           ),
           Tooltip(
+            message: 'Menu_popup',
+            child: InkWell(
+              key: _buttonKey,
+              onTap: () {
+                // _showPopup(context);
+
+                //
+                // showPopupMenu(context);
+                //
+                // showMenu(
+                //     context: context,
+                //     position: _buttonMenuPosition(context),
+                //     items: const [PopupMenuItem(child: PopUpMenuWidget())]);
+                
+                  showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: PopUpMenuWidget(), // Sử dụng PopUpMenuWidget ở đây
+                    );
+                  },
+                );
+              },
+              child: SizedBox(
+                width: 40,
+                height: 60,
+                child: Stack(
+                  fit: StackFit.loose,
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: BoxLayout(
+                        width: 35,
+                        height: 35,
+                        borderRadius: 100,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(0),
+                        bgColor: AppColor.WHITE,
+                        border: Border.all(color: AppColor.BLACK, width: 0.5),
+                        child: Icon(
+                          Icons.menu,
+                          size: 20,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 12,
+          ),
+          Tooltip(
             message: 'Thông báo',
             child: InkWell(
               onTap: () {
@@ -286,6 +343,30 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
     );
   }
 
+  RelativeRect _buttonMenuPosition(BuildContext context) {
+    final RenderBox bar = context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    const Offset offset = Offset.zero;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        bar.localToGlobal(bar.size.bottomRight(offset), ancestor: overlay),
+        bar.localToGlobal(bar.size.bottomRight(offset), ancestor: overlay),
+      ),
+      offset & overlay.size,
+    );
+    return position;
+  }
+
+  Future<void> showPopupMenu(BuildContext context) async {
+    final RelativeRect position = _buttonMenuPosition(context);
+    await showMenu(
+      context: context,
+      position: position,
+      items: const [PopupMenuItem(child: PopUpMenuWidget())],
+    );
+  }
+
   Widget _buildInfoTelegram() {
     return InkWell(
       onTap: () {
@@ -377,5 +458,46 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
         ),
       );
     });
+  }
+
+  final GlobalKey _buttonKey = GlobalKey();
+
+  void _showPopup(BuildContext context) {
+    final RenderBox buttonRenderBox =
+        _buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
+
+    // Width and height of the button
+    final double buttonWidth = buttonRenderBox.size.width;
+    final double buttonHeight = buttonRenderBox.size.height;
+
+    // Popup content
+    const Widget popupContent = PopUpMenuWidget();
+
+    // Display popup
+    showOverlayPopup(context, buttonPosition, buttonWidth, buttonHeight, popupContent);
+  }
+
+  void showOverlayPopup(BuildContext context, Offset buttonPosition,
+      double buttonWidth, double buttonHeight, Widget content) {
+    OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        left: buttonPosition.dx - (buttonWidth / 2),
+        top: buttonPosition.dy + buttonHeight,
+        width: buttonWidth,
+        child: Material(
+          elevation: 4.0,
+          child: content,
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(overlayEntry);
+
+    // Close popup after 3 seconds
+    // Future.delayed(Duration(seconds: 3), () {
+    //   overlayEntry.remove();
+    // });
   }
 }

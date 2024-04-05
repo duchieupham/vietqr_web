@@ -43,8 +43,7 @@ class AppImages {
   static String logoTelegramDash = '39b493c7-e17f-4082-9612-906e54755088';
   static String logoTelegram = '7870c598-5d8b-4410-9e1f-2742d5d535fd';
   static String logoVietQr = 'e93c6dc4-94c5-40ce-b76c-9c12016493b9';
-  static String logoVietqrKiotDashboard =
-      '690fba29-c105-4532-845e-8b4639ed90c0';
+  static String logoVietqrKiotDashboard = '690fba29-c105-4532-845e-8b4639ed90c0';
   static String avtRawDataBot = '97c9f648-b60f-495a-8ad3-fc653ed0f4bd';
   static String colorType0 = 'c6e4c1e6-49d5-45e2-98ca-c65982e6608f';
   static String colorType1 = 'b3599f0d-d838-4946-ab4b-e9d71132ef6d';
@@ -62,8 +61,15 @@ class AppImages {
   static String logoGoogle = '6ce99cd8-f557-4e2d-8803-ec42b7dd4769';
   static String logoYoutube = 'cf9c166d-bbda-4555-b813-f69718500f0b';
   static String logoZalo = '2c521c64-6c7c-4c1a-8fb6-f6031dc2bb33';
+  static String logoBankPurple = '2d341009-e322-46c4-aa1d-bb1355133545';
 
   static String iconTransactionSuccess = 'a8a40f57-c23a-4f6f-aeba-4af1c0734d9d';
+  static String iconActiveMBH = '36cbccd5-5c90-410b-a003-43abf8d22ed4';
+  static String iconQRBox = '342d951b-ce9b-4ea0-b56b-c14a79867dfc';
+  static String iconLinkedBankAccount = '09a2e914-a182-453e-8208-5d36094189d3';
+  static String icVietQRKiotDash='4c6ee31a-5c42-4646-8948-45caa56e6fcb';
+  static String icToggleEyeOpenBlue = 'd439000f-b760-4c07-9edd-ea12df3997c0';
+  static String icToggleEyeCloseBlue = '42dff7bd-f643-4b66-a3e4-febf01a5cb7f';
 
   static String logoVietqrVn = '115a2a25-994b-4e53-bac9-64e6fc57651b';
   static String icCardNfc = '8f6a8e92-4f40-4965-8c0f-37ff21167b32';

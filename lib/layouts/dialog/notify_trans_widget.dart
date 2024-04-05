@@ -59,7 +59,7 @@ class _NotifyTransWidgetState extends State<NotifyTransWidget> {
       width: 250,
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 30),
           SizedBox(
