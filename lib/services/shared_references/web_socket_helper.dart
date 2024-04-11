@@ -14,10 +14,12 @@ import 'package:VietQR/services/shared_references/media_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../commons/constants/configurations/stringify.dart';
 import '../../commons/utils/log.dart';
+import '../../features/create_qr/provider/transaction_qr_provider.dart';
 
 class WebSocketHelper {
   WebSocketHelper._privateConstructor();
@@ -119,7 +121,9 @@ class WebSocketHelper {
   }
 
   void listenTransactionQRSocket(
-      String id, Function transactionSuccess, Function transactionCancel,
+      String id,
+      Function(Map<String, dynamic>) transactionSuccess,
+      Function transactionCancel,
       {bool isDev = false}) {
     late Uri wsUrl;
     try {
@@ -141,7 +145,7 @@ class WebSocketHelper {
           if (data['notificationType'] != null) {
             if (data['notificationType'] ==
                 Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-              transactionSuccess();
+              transactionSuccess(data);
             } else if (data['notificationType'] ==
                 Stringify.NOTI_TYPE_CANCEL_TRANSACTION) {
               transactionCancel();

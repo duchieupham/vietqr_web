@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
@@ -86,11 +87,13 @@ class _QrGenerateState extends State<_QrGenerate> {
   bool showBgNapas = true;
   int timeCountDown = 0;
   bool isSuccess = false;
+  late ValueNotifier<int> _valueNotifier;
 
   @override
   void initState() {
     Session.instance.updateQRGeneratePage(true);
     getData();
+
     super.initState();
   }
 
@@ -100,13 +103,17 @@ class _QrGenerateState extends State<_QrGenerate> {
   }
 
   void getData() {
+    _valueNotifier = ValueNotifier<int>(3);
+    _valueNotifier.value = 3;
     bankTypeBloc = BlocProvider.of(context);
     qrCodeUnUTBloc = BlocProvider.of(context);
     bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
     data['token'] = widget.params['token'] ?? '';
     qrCodeUnUTBloc.add(GetTransactionQRBytToken(token: data['token']));
     Future.delayed(const Duration(seconds: 1), () {
-      WebSocketHelper.instance.listenTransactionQRSocket(data['token'], () {
+      WebSocketHelper.instance.listenTransactionQRSocket(data['token'], (data) {
+        Provider.of<TransactionQRProvider>(context, listen: false)
+            .redirectUrl(data['urlLink']);
         setState(() {
           isSuccess = true;
         });
@@ -224,6 +231,16 @@ class _QrGenerateState extends State<_QrGenerate> {
                 if (provider.timeExpires || timeCountDown <= 0) {
                   return _buildWidgetTimeExpires();
                 }
+                if (provider.isRedirect) {
+                  Timer.periodic(const Duration(seconds: 1), (timer) {
+                    if (_valueNotifier.value > 0) {
+                      _valueNotifier.value--;
+                    } else {
+                      timer.cancel();
+                      html.window.location.href = provider.url;
+                    }
+                  });
+                }
 
                 return LayoutBuilder(builder: (context, constraints) {
                   if (constraints.maxWidth > 760) {
@@ -252,6 +269,32 @@ class _QrGenerateState extends State<_QrGenerate> {
                                     Expanded(child: _buildInfo(false)),
                                   ],
                                 ),
+                                const SizedBox(height: 20),
+                                provider.isRedirect
+                                    ? ValueListenableBuilder(
+                                        valueListenable: _valueNotifier,
+                                        builder: (context, value, child) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                  'Hệ thống tự điều hướng sau: '),
+                                              Text(
+                                                value.toString(),
+                                                style: const TextStyle(
+                                                    color: AppColor.BLUE_TEXT,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              const Text('giây'),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : const SizedBox.shrink(),
                                 const SizedBox(height: 20),
                                 _buildListBank(),
                                 DividerWidget(
