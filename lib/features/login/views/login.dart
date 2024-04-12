@@ -664,7 +664,8 @@ class _Login extends State<Login> {
           const SizedBox(
             width: 300,
             child: Text(
-              'Sử dụng ứng dụng VietQR trên điện thoại để quét mã đăng nhập.',
+              // 'Sử dụng ứng dụng VietQR trên điện thoại để quét mã đăng nhập.',
+              'Ứng dụng VietQR VN',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15),
             ),

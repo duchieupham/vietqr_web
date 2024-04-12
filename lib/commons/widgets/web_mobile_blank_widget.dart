@@ -89,7 +89,7 @@ class WebMobileBlankWidget extends StatelessWidget {
                     ),
                     const Padding(padding: EdgeInsets.only(top: 20)),
                     const Text(
-                      'Quét mã QR để tải ứng dụng VietQR',
+                      'Quét mã QR để tải ứng dụng VietQR VN',
                       style: TextStyle(
                         fontSize: 18,
                         // fontWeight: FontWeight.bold,

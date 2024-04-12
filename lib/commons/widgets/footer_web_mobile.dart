@@ -48,7 +48,7 @@ class _FooterWebState extends State<FooterMobileWeb> {
           const SizedBox(
             height: 12,
           ),
-          _buildUrlSystem(),
+          // _buildUrlSystem(),
           const SizedBox(
             height: 12,
           ),
