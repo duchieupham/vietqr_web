@@ -442,7 +442,7 @@ class _StoreScreenState extends State<TransUnclassifiedView> {
         right: 16,
       ),
       child: InkWell(
-        onTap: () => updateState(),
+        onTap: () => _onSearch(1),
         child: Container(
           width: 180,
           height: 34,

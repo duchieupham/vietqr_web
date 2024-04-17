@@ -294,11 +294,7 @@ class MenuLeft extends StatelessWidget {
 
   Widget _buildListIconItem(
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
-    final RenderBox button = context.findRenderObject() as RenderBox;
-    final Offset buttonPosition = button.localToGlobal(Offset.zero);
-    final double buttonWidth = button.size.width;
-    String type = '';
-    return Container(
+    return SizedBox(
       width: 80,
       child: ListView(
         padding: EdgeInsets.zero,
@@ -309,7 +305,10 @@ class MenuLeft extends StatelessWidget {
             isSelect: currentType == MenuHomeType.TRANSACTION,
             isOnlyIcon: true,
             onTap: () {
-              provider.selectType('');
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+              final double buttonWidth = button.size.width;
+              // provider.selectType('');
               showPopup(
                 context,
                 [
@@ -329,7 +328,6 @@ class MenuLeft extends StatelessWidget {
                       isSelect: provider.type == '1' ? true : false,
                       onTap: () {
                         provider.selectType('1');
-
                         context.go('/transactions/uncategorized');
                       },
                     ),
@@ -337,7 +335,7 @@ class MenuLeft extends StatelessWidget {
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,
-                  buttonPosition.dy,
+                  buttonPosition.dy * 1.7,
                   buttonPosition.dx + buttonWidth * 2,
                   buttonPosition.dy + button.size.height,
                 ),
@@ -353,16 +351,19 @@ class MenuLeft extends StatelessWidget {
             isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.ENTERPRISE,
             onTap: () {
-              provider.selectType('');
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+              final double buttonWidth = button.size.width;
+              // provider.selectType('');
               showPopup(
                 context,
                 [
                   PopupMenuItem(
                     child: ItemDropDownMenu(
                       title: 'Cửa hàng',
-                      isSelect: provider.type == '0' ? true : false,
+                      isSelect: provider.type == '2' ? true : false,
                       onTap: () {
-                        provider.selectType('0');
+                        provider.selectType('2');
 
                         context.go('/enterprise/store');
                       },
@@ -371,7 +372,7 @@ class MenuLeft extends StatelessWidget {
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,
-                  buttonPosition.dy,
+                  buttonPosition.dy * 2.6,
                   buttonPosition.dx + buttonWidth * 2,
                   buttonPosition.dy + button.size.height,
                 ),
@@ -384,32 +385,36 @@ class MenuLeft extends StatelessWidget {
             isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.MEMBER,
             onTap: () {
-              provider.selectType('');
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+              final double buttonWidth = button.size.width;
               showPopup(
                 context,
                 [
                   PopupMenuItem(
                     child: ItemDropDownMenu(
                       title: 'Danh sách nhân viên',
-                      isSelect: provider.type == '0' ? true : false,
+                      isSelect: provider.type == '3' ? true : false,
                       onTap: () {
-                        provider.selectType('0');
+                        provider.selectType('3');
+                        context.go('/member/list');
                       },
                     ),
                   ),
                   PopupMenuItem(
                     child: ItemDropDownMenu(
                       title: 'Thêm mới nhân viên',
-                      isSelect: provider.type == '1' ? true : false,
+                      isSelect: provider.type == '4' ? true : false,
                       onTap: () {
-                        provider.selectType('1');
+                        provider.selectType('4');
+                        context.go('/member/add-member');
                       },
                     ),
                   )
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,
-                  buttonPosition.dy,
+                  buttonPosition.dy * 3.6,
                   buttonPosition.dx + buttonWidth * 2,
                   buttonPosition.dy + button.size.height,
                 ),
@@ -424,7 +429,40 @@ class MenuLeft extends StatelessWidget {
             isOnlyIcon: true,
             bold: true,
             onTap: () {
-              // context.go('/create-qr');
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+              final double buttonWidth = button.size.width;
+              showPopup(
+                context,
+                [
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Tạo mã VietQR',
+                      isSelect: provider.type == '5' ? true : false,
+                      onTap: () {
+                        provider.selectType('5');
+                        context.go('/create-qr');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Ví QR',
+                      isSelect: provider.type == '6' ? true : false,
+                      onTap: () {
+                        provider.selectType('6');
+                        context.go('/qr-wallet');
+                      },
+                    ),
+                  )
+                ],
+                RelativeRect.fromLTRB(
+                  buttonPosition.dx + buttonWidth,
+                  buttonPosition.dy * 4.4,
+                  buttonPosition.dx + buttonWidth * 2,
+                  buttonPosition.dy + button.size.height,
+                ),
+              );
             },
           ),
           if (provider.isAccountIsMerchant)
@@ -440,6 +478,31 @@ class MenuLeft extends StatelessWidget {
                 //     msg:
                 //         'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
                 // context.go('/merchant/report');
+                final RenderBox button =
+                    context.findRenderObject() as RenderBox;
+                final Offset buttonPosition = button.localToGlobal(Offset.zero);
+                final double buttonWidth = button.size.width;
+                showPopup(
+                  context,
+                  [
+                    PopupMenuItem(
+                      child: ItemDropDownMenu(
+                        title: 'Đại lý',
+                        isSelect: provider.type == '7' ? true : false,
+                        onTap: () {
+                          provider.selectType('7');
+                          context.go('/merchant/report');
+                        },
+                      ),
+                    ),
+                  ],
+                  RelativeRect.fromLTRB(
+                    buttonPosition.dx + buttonWidth,
+                    buttonPosition.dy * 5.2,
+                    buttonPosition.dx + buttonWidth * 2,
+                    buttonPosition.dy + button.size.height,
+                  ),
+                );
               },
             ),
           ItemMenuHome(
@@ -450,6 +513,50 @@ class MenuLeft extends StatelessWidget {
             bold: true,
             onTap: () {
               // context.go('/merchant/request');
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+              final double buttonWidth = button.size.width;
+              showPopup(
+                context,
+                [
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'API SERVICE',
+                      isSelect: provider.type == '8' ? true : false,
+                      onTap: () {
+                        provider.selectType('8');
+                        context.go('/merchant/request');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'ECOMMERCE',
+                      isSelect: provider.type == '9' ? true : false,
+                      onTap: () {
+                        provider.selectType('9');
+                        context.go('/merchant/request/ecommerce');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'MÁY BÁN HÀNG',
+                      isSelect: provider.type == '10' ? true : false,
+                      onTap: () {
+                        provider.selectType('10');
+                        context.go('/merchant/request/mbh');
+                      },
+                    ),
+                  )
+                ],
+                RelativeRect.fromLTRB(
+                  buttonPosition.dx + buttonWidth,
+                  buttonPosition.dy * 5.2,
+                  buttonPosition.dx + buttonWidth * 2,
+                  buttonPosition.dy + button.size.height,
+                ),
+              );
             },
           ),
           ItemMenuHome(
