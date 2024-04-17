@@ -584,7 +584,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
         right: 16,
       ),
       child: InkWell(
-        onTap: () => refreshState(),
+        onTap: () => _onSearch(1),
         child: Container(
           width: 180,
           height: 34,
@@ -619,12 +619,6 @@ class _StoreScreenState extends State<TransactionPaymentView> {
 
   void updateState() {
     setState(() {});
-  }
-
-  void refreshState() {
-    setState(() {
-      TableTransWidget;
-    });
   }
 
   @override
