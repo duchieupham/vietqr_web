@@ -106,11 +106,15 @@ class TransReceiveDTO {
     return false;
   }
 
-  String get transactionType => type == 1
-      ? 'QR cửa hàng'
-      : type == 2
-          ? 'QR giao dịch'
-          : 'Khác';
+  String get transactionType {
+    if (type == 0 || type == 4 || type == 5) {
+      return 'QR giao dịch';
+    } else if (type == 1) {
+      return 'QR cửa hàng';
+    } else {
+      return 'Khác';
+    }
+  }
 
   String get timeCreate => time == 0
       ? '-'
