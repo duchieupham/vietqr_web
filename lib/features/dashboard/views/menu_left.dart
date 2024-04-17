@@ -294,6 +294,9 @@ class MenuLeft extends StatelessWidget {
 
   Widget _buildListIconItem(
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final Offset buttonPosition = button.localToGlobal(Offset.zero);
+    final double buttonWidth = button.size.width;
     String type = '';
     return Container(
       width: 80,
@@ -332,6 +335,12 @@ class MenuLeft extends StatelessWidget {
                     ),
                   )
                 ],
+                RelativeRect.fromLTRB(
+                  buttonPosition.dx + buttonWidth,
+                  buttonPosition.dy,
+                  buttonPosition.dx + buttonWidth * 2,
+                  buttonPosition.dy + button.size.height,
+                ),
               );
               // isVisible = true;
               // context.go('/transactions/list');
@@ -360,6 +369,12 @@ class MenuLeft extends StatelessWidget {
                     ),
                   ),
                 ],
+                RelativeRect.fromLTRB(
+                  buttonPosition.dx + buttonWidth,
+                  buttonPosition.dy,
+                  buttonPosition.dx + buttonWidth * 2,
+                  buttonPosition.dy + button.size.height,
+                ),
               );
             },
           ),
@@ -392,6 +407,12 @@ class MenuLeft extends StatelessWidget {
                     ),
                   )
                 ],
+                RelativeRect.fromLTRB(
+                  buttonPosition.dx + buttonWidth,
+                  buttonPosition.dy,
+                  buttonPosition.dx + buttonWidth * 2,
+                  buttonPosition.dy + button.size.height,
+                ),
               );
             },
           ),

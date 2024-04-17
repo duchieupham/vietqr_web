@@ -41,7 +41,7 @@ class _TableTransWidgetState extends State<TableTransWidget> {
     TransData(title: 'Mã điểm bán', width: 100),
     TransData(title: 'Loại GD', width: 100),
     TransData(title: 'Thời gian\ntạo GD', width: 80),
-    TransData(title: 'Tài khoản\nnhận', width: 200),
+    TransData(title: 'Tài khoản\nnhận', width: 100),
     TransData(title: 'Nội dung', width: 200),
     TransData(title: 'Ghi chú', width: 200),
     TransData(title: 'Trạng thái', padding: 0, width: 80),
@@ -124,9 +124,12 @@ class _TableTransWidgetState extends State<TableTransWidget> {
 
                                   /// Thời gian tạo
                                   DataCell(
-                                    _buildContent(
-                                      title: model.timePayment,
-                                      textAlign: TextAlign.right,
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: _buildContent(
+                                        title: model.timePayment,
+                                        textAlign: TextAlign.right,
+                                      ),
                                     ),
                                   ),
 
@@ -172,17 +175,22 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                   ),
 
                                   /// Thời gian tạo
-                                  DataCell(_buildContent(
-                                      title: model.timeCreate,
-                                      textAlign: TextAlign.right)),
+                                  DataCell(
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: _buildContent(
+                                          title: model.timeCreate,
+                                          textAlign: TextAlign.right),
+                                    ),
+                                  ),
 
                                   /// Tài khoản nhận
                                   DataCell(
                                     SizedBox(
-                                      width: 200,
+                                      width: 100,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                        // crossAxisAlignment:
+                                        //     CrossAxisAlignment.stretch,
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -211,10 +219,12 @@ class _TableTransWidgetState extends State<TableTransWidget> {
 
                                   /// Nội dung
                                   DataCell(
-                                    SizedBox(
+                                    Container(
+                                      alignment: Alignment.centerRight,
                                       width: 200,
-                                      child:
-                                          _buildContent(title: model.content),
+                                      child: _buildContent(
+                                          title: model.content,
+                                          textAlign: TextAlign.right),
                                     ),
                                   ),
 
@@ -311,7 +321,7 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                 'Trạng thái',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 11),
+                                    fontWeight: FontWeight.bold, fontSize: 10),
                               ),
                             ),
                             Column(
@@ -342,7 +352,8 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                             style: TextStyle(
                                               color: dto.getColorStatus,
                                               overflow: TextOverflow.ellipsis,
-                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
                                             ),
                                           ),
                                         ],
@@ -375,7 +386,7 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                 'Thao tác',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 11),
+                                    fontWeight: FontWeight.bold, fontSize: 10),
                               ),
                             ),
                             Column(

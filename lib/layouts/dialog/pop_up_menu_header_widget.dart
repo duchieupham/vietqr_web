@@ -54,7 +54,7 @@ class _PopUpMenuWidgetState extends State<PopUpMenuWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 680,
+      height: 600,
       width: 400,
       decoration: const BoxDecoration(color: AppColor.WHITE),
       child: Column(
@@ -175,7 +175,7 @@ class _PopUpMenuWidgetState extends State<PopUpMenuWidget> {
           ),
           Flex(
             direction: Axis.vertical,
-            children: [
+            children: const [
               MySeparator(color: Colors.grey),
             ],
           ),
@@ -323,16 +323,18 @@ class _PopUpMenuWidgetState extends State<PopUpMenuWidget> {
             height: 10,
           ),
           Container(
-            height: 322,
+            height: 250,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(
                 Radius.circular(8),
               ),
               color: AppColor.BLUE_BGR,
             ),
+            // alignment: Alignment.center,
             child: GridView.count(
-              // mainAxisSpacing: 10,
-              // crossAxisSpacing: 10,
+              physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
               crossAxisCount: 3,
               children: _buildGridContent(itemsName, itemsLogo),
             ),
@@ -344,34 +346,26 @@ class _PopUpMenuWidgetState extends State<PopUpMenuWidget> {
 
   Widget _buildItems({required itemName, required itemImage}) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Center(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: Image(
-                    image: ImageUtils.instance.getImageNetWork(itemImage),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                itemName,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColor.BLACK,
-                ),
-                textAlign: TextAlign.center,
-              )
-            ],
+        SizedBox(
+          height: 60,
+          width: 60,
+          child: Image(
+            image: ImageUtils.instance.getImageNetWork(itemImage),
+            fit: BoxFit.contain,
           ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          itemName,
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColor.BLACK,
+          ),
+          textAlign: TextAlign.center,
         )
       ],
     );

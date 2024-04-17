@@ -41,6 +41,7 @@ class HeaderFullWidget extends StatefulWidget {
 class _HeaderFullWidgetState extends State<HeaderFullWidget> {
   late NotificationBloc _notificationBloc;
   int _notificationCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -56,8 +57,34 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
     // listenNewNotification(userId);
   }
 
+  RelativeRect position() {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final Offset buttonPosition =
+        button.localToGlobal(Offset.zero); // Top left corner of the button
+    final double buttonWidth = button.size.width;
+    final double buttonHeight = button.size.height;
+
+    return RelativeRect.fromLTRB(
+      buttonPosition.dx + buttonWidth, // Left edge of the button
+      buttonPosition.dy + buttonHeight, // Bottom edge of the button
+      buttonPosition.dx + buttonWidth * 0.16, // Right edge of the button
+      buttonPosition.dy + buttonHeight, // Bottom edge of the button
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // final RenderBox button = context.findRenderObject() as RenderBox;
+    // final RenderBox overlay =
+    //     Overlay.of(context).context.findRenderObject() as RenderBox;
+    // final RelativeRect position = RelativeRect.fromRect(
+    //   Rect.fromPoints(
+    //     button.localToGlobal(Offset.zero, ancestor: overlay),
+    //     button.localToGlobal(button.size.bottomRight(Offset.zero),
+    //         ancestor: overlay),
+    //   ),
+    //   Offset.zero & overlay.size,
+    // );
     final double width = MediaQuery.of(context).size.width;
     final String imgId =
         UserInformationHelper.instance.getAccountInformation().imgId;
@@ -163,7 +190,20 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               key: _buttonKey,
               onTap: () {
                 // _showPopup(context);
-
+                showMenu(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  context: context,
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  position: position(),
+                  items: <PopupMenuEntry>[
+                    const PopupMenuItem(
+                      value: 0,
+                      height: 600,
+                      child: PopUpMenuWidget(),
+                    ),
+                  ],
+                );
                 //
                 // showPopupMenu(context);
                 //
@@ -171,15 +211,15 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                 //     context: context,
                 //     position: _buttonMenuPosition(context),
                 //     items: const [PopupMenuItem(child: PopUpMenuWidget())]);
-                
-                  showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: PopUpMenuWidget(), // Sử dụng PopUpMenuWidget ở đây
-                    );
-                  },
-                );
+
+                //   showDialog(
+                //   context: context,
+                //   builder: (BuildContext context) {
+                //     return AlertDialog(
+                //       content: PopUpMenuWidget(), // Sử dụng PopUpMenuWidget ở đây
+                //     );
+                //   },
+                // );
               },
               child: SizedBox(
                 width: 40,
@@ -475,7 +515,8 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
     const Widget popupContent = PopUpMenuWidget();
 
     // Display popup
-    showOverlayPopup(context, buttonPosition, buttonWidth, buttonHeight, popupContent);
+    showOverlayPopup(
+        context, buttonPosition, buttonWidth, buttonHeight, popupContent);
   }
 
   void showOverlayPopup(BuildContext context, Offset buttonPosition,
