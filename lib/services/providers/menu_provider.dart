@@ -4,6 +4,9 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
+  String _type = '';
+  String get type => _type;
+
   int _initPage = 0;
   int get initPage => _initPage;
 
@@ -19,6 +22,11 @@ class MenuProvider with ChangeNotifier {
 
   bool _isAccountIsMerchant = false;
   bool get isAccountIsMerchant => _isAccountIsMerchant;
+
+  void selectType(String select) {
+    _type = select;
+    notifyListeners();
+  }
 
   void selectMenu(MenuHomeType value) {
     _menuHomeType = value;

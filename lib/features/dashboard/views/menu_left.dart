@@ -2,6 +2,8 @@ import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/commons/widgets/pop_up_menu_left.dart';
+import 'package:VietQR/features/home/widget/item_menu_dropdown.dart';
 import 'package:VietQR/features/home/widget/item_menu_home.dart';
 import 'package:VietQR/features/information_user/widget/popup_share_code.dart';
 import 'package:VietQR/features/logout/blocs/log_out_bloc.dart';
@@ -15,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../../../commons/widgets/header/pop_up_menu_web_widget.dart';
 
 class MenuLeft extends StatelessWidget {
   final MenuHomeType currentType;
@@ -72,7 +76,7 @@ class MenuLeft extends StatelessWidget {
           if (provider.showMenu) {
             width = 250;
           } else {
-            width = 50;
+            width = 80;
           }
 
           return Container(
@@ -80,27 +84,40 @@ class MenuLeft extends StatelessWidget {
             color: AppColor.BLUE_BGR,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (provider.showMenu)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: Text(
-                      'Menu',
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          color: AppColor.BLUE_BGR),
-                    ),
-                  ),
-                if (provider.showMenu)
-                  Expanded(
-                    child: _buildListItem(provider, logoutBloc, context),
-                  )
-                else
-                  Expanded(
-                      child: _buildListIconItem(provider, logoutBloc, context))
-              ],
+              children: provider.showMenu
+                  ? [
+                      const SizedBox(height: 40),
+                      Expanded(
+                        child: _buildListItem(provider, logoutBloc, context),
+                      )
+                    ]
+                  : [
+                      const SizedBox(height: 40),
+                      Expanded(
+                          child:
+                              _buildListIconItem(provider, logoutBloc, context))
+                    ],
+              // children: [
+              //   if (provider.showMenu)
+              //     const Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              //       child: Text(
+              //         'Menu',
+              //         style: TextStyle(
+              //             fontSize: 15,
+              //             fontWeight: FontWeight.bold,
+              //             decoration: TextDecoration.underline,
+              //             color: AppColor.BLUE_BGR),
+              //       ),
+              //     ),
+              //   if (provider.showMenu)
+              //     Expanded(
+              //       child: _buildListItem(provider, logoutBloc, context),
+              //     )
+              //   else
+              //     Expanded(
+              //         child: _buildListIconItem(provider, logoutBloc, context))
+              // ],
             ),
           );
         },
@@ -277,108 +294,155 @@ class MenuLeft extends StatelessWidget {
 
   Widget _buildListIconItem(
       MenuProvider provider, LogoutBloc logoutBloc, BuildContext context) {
-    return SizedBox(
-      width: 50,
+    String type = '';
+    return Container(
+      width: 80,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           ItemMenuHome(
-            title: 'Giao dịch',
-            paddingIcon: const EdgeInsets.all(4),
+            title: 'Quản lý giao dịch',
             iconId: AppImages.icMenuTransaction,
-            isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.TRANSACTION,
-            onTap: () {
-              DialogWidget.instance.openMsgDialog(
-                  title: 'Bảo trì',
-                  msg:
-                      'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-              // context.go('/transaction');
-              // provider.updateShowMenu(true);
-            },
-          ),
-          ItemMenuHome(
-            title: 'Tạo mã VietQR',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuQR,
             isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.CREATE_QR,
             onTap: () {
-              provider.updateShowMenu(true);
-              context.go('/create-qr');
-            },
-          ),
-          ItemMenuHome(
-            title: 'Trang chủ',
-            isOnlyIcon: true,
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuHome,
-            isSelect: currentType == MenuHomeType.HOME,
-            onTap: () {
-              context.go('/home');
-              provider.updateShowMenu(true);
+              provider.selectType('');
+              showPopup(
+                context,
+                [
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Quản lý GD thanh toán',
+                      isSelect: provider.type == '0' ? true : false,
+                      onTap: () {
+                        provider.selectType('0');
+                        context.go('/transactions/list');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Quản lý GD chờ xác nhận',
+                      isSelect: provider.type == '1' ? true : false,
+                      onTap: () {
+                        provider.selectType('1');
+
+                        context.go('/transactions/uncategorized');
+                      },
+                    ),
+                  )
+                ],
+              );
+              // isVisible = true;
+              // context.go('/transactions/list');
             },
           ),
 
           ItemMenuHome(
-            title: 'Doanh nghiệp',
-            iconId: AppImages.icMenuHome,
-            isSelect: currentType == MenuHomeType.ENTERPRISE,
+            title: 'Quản lý TT Kinh Doanh',
+            iconId: AppImages.icMenuMerchant,
             isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.ENTERPRISE,
             onTap: () {
-              context.go('/enterprise/store');
+              provider.selectType('');
+              showPopup(
+                context,
+                [
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Cửa hàng',
+                      isSelect: provider.type == '0' ? true : false,
+                      onTap: () {
+                        provider.selectType('0');
+
+                        context.go('/enterprise/store');
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          ItemMenuHome(
+            title: 'Quản lý nhân viên',
+            iconId: AppImages.icMenuEmployeeBlack,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.MEMBER,
+            onTap: () {
+              provider.selectType('');
+              showPopup(
+                context,
+                [
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Danh sách nhân viên',
+                      isSelect: provider.type == '0' ? true : false,
+                      onTap: () {
+                        provider.selectType('0');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Thêm mới nhân viên',
+                      isSelect: provider.type == '1' ? true : false,
+                      onTap: () {
+                        provider.selectType('1');
+                      },
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+
+          ItemMenuHome(
+            title: 'Tiện ích QR',
+            iconId: AppImages.icMenuQrBlack,
+            isSelect: currentType == MenuHomeType.CREATE_QR,
+            isOnlyIcon: true,
+            bold: true,
+            onTap: () {
+              // context.go('/create-qr');
             },
           ),
           if (provider.isAccountIsMerchant)
             ItemMenuHome(
               title: 'Đại lý',
-              paddingIcon: const EdgeInsets.all(4),
-              iconId: AppImages.icMenuBank,
+              iconId: AppImages.icMenuContactBlack,
               isOnlyIcon: true,
               isSelect: currentType == MenuHomeType.MERCHANT,
+              bold: true,
               onTap: () {
-                DialogWidget.instance.openMsgDialog(
-                    title: 'Bảo trì',
-                    msg:
-                        'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                // DialogWidget.instance.openMsgDialog(
+                //     title: 'Bảo trì',
+                //     msg:
+                //         'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
                 // context.go('/merchant/report');
-                // provider.updateShowMenu(true);
               },
             ),
           ItemMenuHome(
             title: 'Tích hợp và kết nối',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuMerchantRequest,
+            iconId: AppImages.icMenuIntergrated,
             isOnlyIcon: true,
             isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+            bold: true,
             onTap: () {
-              context.go('/merchant/request');
-              provider.updateShowMenu(true);
+              // context.go('/merchant/request');
             },
           ),
           ItemMenuHome(
-            title: 'TK ngân hàng',
-            paddingIcon: const EdgeInsets.all(4),
-            iconId: AppImages.icMenuContact,
+            title: 'Giới thiệu VietQR VN',
+            iconId: AppImages.icMenuContactBlack,
+            isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
             isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.BANK_ACCOUNT,
+            bold: true,
             onTap: () {
-              provider.updateShowMenu(true);
-              DialogWidget.instance.openMsgDialog(
-                title: 'Tính năng đang bảo trì',
-                msg: 'Vui lòng thử lại sau',
+              DialogWidget.instance.openPopup(
+                width: 500,
+                height: 300,
+                child: const PopupShareCode(),
               );
-            },
-          ),
-          ItemMenuHome(
-            title: 'Ví QR',
-            iconId: AppImages.icMenuWallet,
-            paddingIcon: const EdgeInsets.all(4),
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.WALLET_QR,
-            onTap: () {
-              provider.updateShowMenu(true);
-              context.go('/qr-wallet');
             },
           ),
           // ItemMenuHome(
@@ -393,21 +457,21 @@ class MenuLeft extends StatelessWidget {
           //     context.go('/business');
           //   },
           // ),
-          ItemMenuHome(
-            title: 'Giới thiệu VietQR VN',
-            pathImage: 'assets/images/logo-small-round.png',
-            isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
-            isDefaultColor: true,
-            onTap: () {
-              provider.updateShowMenu(true);
-              DialogWidget.instance.openPopup(
-                width: 500,
-                height: 300,
-                child: const PopupShareCode(),
-              );
-            },
-          ),
+          // ItemMenuHome(
+          //   title: 'Giới thiệu VietQR VN',
+          //   pathImage: 'assets/images/logo-small-round.png',
+          //   isOnlyIcon: true,
+          //   isSelect: currentType == MenuHomeType.INTRO_VIET_QR,
+          //   isDefaultColor: true,
+          //   onTap: () {
+          //     provider.updateShowMenu(true);
+          //     DialogWidget.instance.openPopup(
+          //       width: 500,
+          //       height: 300,
+          //       child: const PopupShareCode(),
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

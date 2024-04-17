@@ -119,16 +119,17 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
           onTap: () {
             widget.onTap();
           },
-          child: Tooltip(
-            message: widget.title,
-            textStyle:
-                TextStyle(fontWeight: widget.bold ? FontWeight.bold : null),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: widget.paddingIcon,
-              color: widget.isSelect
-                  ? AppColor.ITEM_MENU_SELECTED
-                  : Colors.transparent,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: widget.isSelect
+                    ? AppColor.ITEM_MENU_SELECTED
+                    : Colors.transparent,
+              ),
               width: 40,
               height: 40,
               child: Image(
