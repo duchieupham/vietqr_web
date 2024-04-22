@@ -956,7 +956,7 @@ class _VietQRApp extends State<VietQRApp> {
           ],
           child: MaterialApp.router(
             onGenerateTitle: (context) =>
-                'VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam',
+                'VIETQR.VN - Phần mềm tạo mã QR và Đối soát giao dịch thanh toán qua mã VietQR',
             routerConfig: _router,
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
