@@ -137,7 +137,7 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                   DataCell(
                                     _buildContent(
                                         title:
-                                            '${model.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
+                                            '${model.statusAmount} ${model.amount.contains('*') ? model.amount : CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
                                         textAlign: TextAlign.right,
                                         textColor: model.getColorStatus,
                                         fontSize: 13,

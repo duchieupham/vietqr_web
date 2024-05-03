@@ -72,7 +72,8 @@ class _VhitekState extends State<_VhitekScreen> {
       userId = state['userId'];
       _vhitekBloc.add(LoginByUserIdEvent(userId: userId));
     } else {
-      if (UserInformationHelper.instance.getUserId().trim().isEmpty) {
+      String? userId = UserInformationHelper.instance.getUserId();
+      if (userId == null) {
         Map<String, dynamic> param = {};
         if (widget.path.isNotEmpty) {
           param['pathHistory'] = widget.path;
