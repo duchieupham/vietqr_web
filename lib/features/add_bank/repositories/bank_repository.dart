@@ -15,6 +15,7 @@ import 'package:VietQR/models/bank_name_search_dto.dart';
 import 'package:VietQR/models/confirm_otp_bank_dto.dart';
 import 'package:VietQR/models/register_authentication_dto.dart';
 import 'package:VietQR/models/response_message_dto.dart';
+import 'package:crypto/crypto.dart';
 
 class BankRepository {
   const BankRepository();
@@ -224,17 +225,59 @@ class BankRepository {
     return result;
   }
 
+  // Future<BankNameInformationDTO> searchBankName(BankNameSearchDTO dto) async {
+  //   BankNameInformationDTO result = const BankNameInformationDTO(
+  //     accountName: '',
+  //     customerName: '',
+  //     customerShortName: '',
+  //   );
+  //   try {
+  //     final String url =
+  //         '${EnvConfig.getUrl()}bank/api/account/info/${dto.bankCode}/${dto.accountNumber}/${dto.accountType}/${dto.transferType}';
+  //     final response = await BaseAPIClient.getAPI(
+  //       url: url,
+  //       type: AuthenticationType.SYSTEM,
+  //     );
+  //     if (response.statusCode == 200) {
+  //       var data = jsonDecode(response.body);
+  //       result = BankNameInformationDTO.fromJson(data);
+  //     }
+  //   } catch (e) {
+  //     LOG.error(e.toString());
+  //   }
+  //   return result;
+  // }
+
   Future<BankNameInformationDTO> searchBankName(BankNameSearchDTO dto) async {
+    String generateCheckSum(
+        String bankCode, String accountType, String accountNumber) {
+      String key = "VietQRAccesskey";
+      String toHash = bankCode + accountType + accountNumber + key;
+      // Tạo hash MD5
+      var bytes = utf8.encode(toHash);
+      var digest = md5.convert(bytes);
+      return digest.toString();
+    }
+
+    String checkSum =
+        generateCheckSum(dto.bankCode, dto.accountType, dto.accountNumber);
+
     BankNameInformationDTO result = const BankNameInformationDTO(
       accountName: '',
       customerName: '',
       customerShortName: '',
     );
     try {
-      final String url =
-          '${EnvConfig.getUrl()}bank/api/account/info/${dto.bankCode}/${dto.accountNumber}/${dto.accountType}/${dto.transferType}';
-      final response = await BaseAPIClient.getAPI(
+      final String url = '${EnvConfig.getUrl()}bank/api/account/info';
+      final response = await BaseAPIClient.postAPI(
         url: url,
+        body: {
+          'bankCode': dto.bankCode,
+          'accountNumber': dto.accountNumber,
+          'accountType': dto.accountType,
+          'transferType': dto.transferType,
+          'checkSum': checkSum,
+        },
         type: AuthenticationType.SYSTEM,
       );
       if (response.statusCode == 200) {
