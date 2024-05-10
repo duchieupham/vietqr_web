@@ -85,6 +85,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import 'commons/widgets/dynamic_link_widget.dart';
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'features/create_qr/provider/create_qr_provider.dart';
 import 'features/login/provider/menu_login_provider.dart';
@@ -197,6 +198,15 @@ final GoRouter _router = GoRouter(
       redirect: (context, state) {
         return (userId.isNotEmpty) ? '/transactions/list' : '/login';
       },
+    ),
+    GoRoute(
+      path: '/service-active',
+      redirect: (context, state) {
+        String keyActive = state.queryParams['key'] ?? '';
+        return '/service-active?key=$keyActive';
+      },
+      builder: (context, GoRouterState state) =>
+          DynamicLinkWidget(activeKey: state.queryParams['key'] ?? ''),
     ),
     GoRoute(
       path: '/login',
