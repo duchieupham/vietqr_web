@@ -13,7 +13,12 @@ import '../../commons/utils/share_utils.dart';
 import '../../commons/widgets/dashed_line.dart';
 import '../../commons/widgets/m_button_widget.dart';
 import '../../commons/widgets/repaint_boundary_widget.dart';
+import '../../models/bank_account_dto.dart';
+import '../../services/shared_references/session.dart';
+import '../bank/blocs/bank_type_bloc.dart';
+import '../bank/events/bank_type_event.dart';
 import 'blocs/create_qr_bloc.dart';
+import 'event/create_qr_event.dart';
 
 class CreateQrNewScreen extends StatelessWidget {
   const CreateQrNewScreen({super.key});
@@ -64,6 +69,27 @@ class __ScreenState extends State<_Screen> {
   bool _isExpanded = false;
   bool isFirstSelected = true;
   bool isEnableButton = false;
+  List<BankAccountDTO> bankAccounts = [];
+
+  late CreateQRBloc createQRBloc;
+  late BankTypeBloc bankTypeBloc;
+  FocusNode focusNodeWidget = FocusNode();
+
+  @override
+  void initState() {
+    createQRBloc = CreateQRBloc()..add(GetListBankAccount());
+    bankTypeBloc = BlocProvider.of(context);
+    bankTypeBloc.add(const BankTypeEventGetListUnauthenticated());
+    Session.instance.fetchAccountSetting();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    FocusScope.of(context).requestFocus(focusNodeWidget);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CreateQRProvider>(
@@ -71,7 +97,14 @@ class __ScreenState extends State<_Screen> {
       child: BlocProvider(
         create: (context) => CreateQRBloc(),
         child: BlocConsumer<CreateQRBloc, CreateQRState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is GetListBankAccountSuccessfulState) {
+              bankAccounts = state.list;
+              // context
+              //     .read<CreateQRProvider>()
+              //     .updateBankAccountDto(bankAccounts.first);
+            }
+          },
           builder: (context, state) {
             return Container(
               width: MediaQuery.of(context).size.width - 250,
