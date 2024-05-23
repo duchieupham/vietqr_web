@@ -97,27 +97,6 @@ class MenuLeft extends StatelessWidget {
                           child:
                               _buildListIconItem(provider, logoutBloc, context))
                     ],
-              // children: [
-              //   if (provider.showMenu)
-              //     const Padding(
-              //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              //       child: Text(
-              //         'Menu',
-              //         style: TextStyle(
-              //             fontSize: 15,
-              //             fontWeight: FontWeight.bold,
-              //             decoration: TextDecoration.underline,
-              //             color: AppColor.BLUE_BGR),
-              //       ),
-              //     ),
-              //   if (provider.showMenu)
-              //     Expanded(
-              //       child: _buildListItem(provider, logoutBloc, context),
-              //     )
-              //   else
-              //     Expanded(
-              //         child: _buildListIconItem(provider, logoutBloc, context))
-              // ],
             ),
           );
         },

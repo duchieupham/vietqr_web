@@ -781,7 +781,7 @@ final GoRouter _router = GoRouter(
         redirect: (context, state) =>
             (userId.isNotEmpty) ? '/qr-wallet' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
-            const WalletScreen(),
+            const CreateQrScreen(type: QrType.WALLET),
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
