@@ -147,7 +147,6 @@ class _QrGenerateState extends State<_QrGenerate> {
           webBgColor: 'rgba(255, 255, 255)',
           webPosition: 'center',
         );
-        // Navigator.pop(context);
       });
     });
   }
@@ -299,25 +298,11 @@ class _QrGenerateState extends State<_QrGenerate> {
                                         },
                                       )
                                     : const SizedBox.shrink(),
-                                // const SizedBox(height: 20),
-                                // _buildListBank(),
-                                // DividerWidget(
-                                //   width: double.infinity,
-                                //   color: AppColor.GREY_BUTTON.withOpacity(0.8),
-                                // ),
-                                // const Padding(
-                                //   padding: EdgeInsets.symmetric(horizontal: 12),
-                                //   child: FooterWeb(
-                                //     showListBank: true,
-                                //     bgColor: AppColor.WHITE,
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        // _buildListBank(),
                         DividerWidget(
                           width: double.infinity,
                           color: AppColor.GREY_BUTTON.withOpacity(0.8),
@@ -392,14 +377,6 @@ class _QrGenerateState extends State<_QrGenerate> {
             height: 50,
             fit: BoxFit.fitHeight,
           ),
-          // if (transactionQRdto.merchant.isNotEmpty)
-          //   Padding(
-          //     padding: const EdgeInsets.only(left: 20),
-          //     child: Text(
-          //       transactionQRdto.merchant,
-          //       style: const TextStyle(fontSize: 18),
-          //     ),
-          //   ),
           const Spacer(),
           if (!isSuccess) _buildTimeCountDown()
         ],
@@ -490,7 +467,6 @@ class _QrGenerateState extends State<_QrGenerate> {
                                       children: [
                                         Text(
                                           qrGeneratedDTO.bankAccount,
-                                          // 'widget.qrGeneratedDTO.bankAccount,',
                                           maxLines: 1,
                                           style: TextStyle(
                                               color: AppColor.BLACK,
@@ -498,8 +474,6 @@ class _QrGenerateState extends State<_QrGenerate> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          // 'widget.qrGeneratedDTO.userBankName'
-                                          //     .toUpperCase(),
                                           qrGeneratedDTO.userBankName
                                               .toUpperCase(),
                                           maxLines: 1,
@@ -601,58 +575,6 @@ class _QrGenerateState extends State<_QrGenerate> {
               ),
             )
           ],
-          // const SizedBox(height: 10),
-          // Container(
-          //   height: 50,
-          //   width: width,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Tooltip(
-          //         message: '',
-          //         child: MButtonIconWidget(
-          //           height: 50,
-          //           width: width / 2 - 10,
-          //           icon: Icons.image_outlined,
-          //           iconSize: 15,
-          //           textSize: 15,
-          //           iconColor: AppColor.BLUE_TEXT,
-          //           title: 'Lưu ảnh VietQR',
-          //           onTap: () {
-          //             saveImage();
-          //           },
-          //           border: Border.all(color: AppColor.BLUE_TEXT),
-          //           bgColor: AppColor.WHITE,
-          //           textColor: AppColor.BLUE_TEXT,
-          //         ),
-          //       ),
-          //       Tooltip(
-          //         message: '',
-          //         child: MButtonIconWidget(
-          //           height: 50,
-          //           width: width / 2 - 10,
-          //           icon: Icons.print_outlined,
-          //           iconSize: 15,
-          //           textSize: 15,
-          //           iconColor: AppColor.BLUE_TEXT,
-          //           title: 'In mã VietQR',
-          //           onTap: () async {
-          //             String paramData = Session.instance.formatDataParamUrl(
-          //                 qrGeneratedDTO,
-          //                 showBankAccount: 1);
-          //             html.window.open(
-          //                 Uri.base.toString().replaceFirst(
-          //                     '/qr-generate', '/qr-generate/print$paramData'),
-          //                 'new tab');
-          //           },
-          //           border: Border.all(color: AppColor.BLUE_TEXT),
-          //           bgColor: AppColor.WHITE,
-          //           textColor: AppColor.BLUE_TEXT,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
           LayoutBuilder(
             builder: (context, constraints) {
               if (maxWidth > 760) {
@@ -861,159 +783,16 @@ class _QrGenerateState extends State<_QrGenerate> {
               AppColor.BLACK),
           _buildItemData('Chủ tài khoản', qrGeneratedDTO.userBankName,
               FontWeight.normal, AppColor.BLACK),
-
           _buildItemData('Nhà cung cấp', transactionQRdto.merchant,
               FontWeight.normal, AppColor.BLACK),
-
           _buildItemData('Mã đơn hàng', transactionQRdto.orderId,
               FontWeight.normal, AppColor.BLACK),
-
           _buildItemData('Mã điểm bán', transactionQRdto.terminalCode,
               FontWeight.normal, AppColor.BLACK),
           _buildItemData('Nội dung thanh toán', qrGeneratedDTO.content,
               FontWeight.normal, AppColor.BLACK),
           const SizedBox(height: 30),
           _buildQrLink(),
-          // const Text(
-          //   'QR Link to Pay:',
-          //   style: TextStyle(fontSize: 18),
-          // ),
-          // const SizedBox(height: 10),
-          // Container(
-          //   height: 50,
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: AppColor.GREY_DADADA),
-          //     color: AppColor.BLUE_BGR,
-          //     borderRadius: BorderRadius.circular(5),
-          //   ),
-          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         child: Text(
-          //           Uri.base.toString(),
-          //           style: TextStyle(color: AppColor.BLUE_TEXT, fontSize: 18),
-          //           maxLines: 1,
-          //           overflow: TextOverflow.ellipsis,
-          //         ),
-          //       ),
-          //       InkWell(
-          // onTap: () async {
-          //   await FlutterClipboard.copy(Uri.base.toString()).then(
-          //     (value) => Fluttertoast.showToast(
-          //       msg: 'Đã sao chép',
-          //       toastLength: Toast.LENGTH_SHORT,
-          //       gravity: ToastGravity.CENTER,
-          //       timeInSecForIosWeb: 1,
-          //       backgroundColor: Theme.of(context).cardColor,
-          //       textColor: Theme.of(context).hintColor,
-          //       fontSize: 15,
-          //       webBgColor: 'rgba(255, 255, 255)',
-          //       webPosition: 'center',
-          //     ),
-          //   );
-          // },
-          //         child: Tooltip(
-          //           message: 'Sao chép',
-          //           child: Padding(
-          //             padding: const EdgeInsets.only(left: 18),
-          //             child: const Icon(
-          //               Icons.file_copy_outlined,
-          //               color: AppColor.BLUE_TEXT,
-          //               size: 18,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-
-          // if (qrGeneratedDTO.amount != '0') ...[
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 20, bottom: 8),
-          //     child: Text(
-          //       'Số tiền thanh toán',
-          //       style: TextStyle(fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          //   Text(
-          //     '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
-          //     style: TextStyle(
-          //       color: colorAmount,
-          //       fontSize: 20,
-          //       fontWeight: FontWeight.w500,
-          //     ),
-          //   ),
-          // ],
-          // const Padding(
-          //   padding: EdgeInsets.only(top: 20, bottom: 8),
-          //   child: Text(
-          //     'Tài khoản nhận',
-          //     style: TextStyle(fontWeight: FontWeight.bold),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 4,
-          // ),
-          // Text(
-          //   qrGeneratedDTO.bankAccount,
-          // ),
-          // Text(
-          //   '${qrGeneratedDTO.bankCode} - ${qrGeneratedDTO.bankName}',
-          // ),
-          // if (transactionQRdto.orderId.isNotEmpty) ...[
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 20, bottom: 8),
-          //     child: Text(
-          //       'Nhà cung cấp',
-          //       style: TextStyle(fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          //   Text(
-          //     transactionQRdto.merchant,
-          //   ),
-          // ],
-          // if (transactionQRdto.orderId.isNotEmpty) ...[
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 20, bottom: 8),
-          //     child: Text(
-          //       'Mã hóa đơn',
-          //       style: TextStyle(fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          //   Text(
-          //     transactionQRdto.orderId,
-          //   ),
-          // ],
-          // if (transactionQRdto.terminalCode.isNotEmpty) ...[
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 20, bottom: 8),
-          //     child: Text(
-          //       'Mã điểm bán',
-          //       style: TextStyle(fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          //   Text(
-          //     transactionQRdto.terminalCode,
-          //   ),
-          // ],
-          // if (qrGeneratedDTO.content.isNotEmpty) ...[
-          //   const Padding(
-          //     padding: EdgeInsets.only(top: 20, bottom: 8),
-          //     child: Text(
-          //       'Nội dung',
-          //       style: TextStyle(fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          //   Text(
-          //     qrGeneratedDTO.content,
-          //   ),
-          // ],
-          // const SizedBox(
-          //   height: 28,
-          // ),
-          // _buildRowButton()
         ],
       ),
     );

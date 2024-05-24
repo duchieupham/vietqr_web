@@ -287,9 +287,7 @@ class _FooterWebState extends State<FooterWeb> {
             const Spacer(),
             const Text(
               'Tải ứng dụng trên cửa hàng:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600
-                  // fontWeight: FontWeight.bold,
-                  ),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
             const Padding(padding: EdgeInsets.only(left: 10)),
             _buildButton(
@@ -357,9 +355,7 @@ class _FooterWebState extends State<FooterWeb> {
         children: [
           const Text(
             'Hệ thống VietQR VN:',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
-                // fontWeight: FontWeight.bold,
-                ),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
           const Padding(padding: EdgeInsets.only(top: 25)),
           const SizedBox(
@@ -394,9 +390,7 @@ class _FooterWebState extends State<FooterWeb> {
       children: [
         const Text(
           'Hệ thống VietQR VN:',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600
-              // fontWeight: FontWeight.bold,
-              ),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
         const Padding(padding: EdgeInsets.only(top: 25)),
         SizedBox(
@@ -602,9 +596,7 @@ class _FooterWebState extends State<FooterWeb> {
                   const Spacer(),
                   const Text(
                     'Tải ứng dụng trên cửa hàng:',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600
-                        // fontWeight: FontWeight.bold,
-                        ),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   const Padding(padding: EdgeInsets.only(left: 10)),
                   _buildButton(
