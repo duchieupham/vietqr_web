@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../commons/widgets/repaint_boundary_widget.dart';
+import '../utils/currency_utils.dart';
 
 class QrPrint extends StatefulWidget {
   final Map<String, String> params;
@@ -68,7 +69,7 @@ class _QrGenerateState extends State<QrPrint> {
     return Scaffold(
       backgroundColor: AppColor.WHITE,
       body: Padding(
-        padding: const EdgeInsets.only(left: 120),
+        padding: const EdgeInsets.only(left: 160),
         child: BlocConsumer<QRCodeUnUTBloc, QRCodeUnUTState>(
             listener: (context, state) {
           if (state is CreateSuccessfulState) {
@@ -88,9 +89,9 @@ class _QrGenerateState extends State<QrPrint> {
   }
 
   Widget _buildWidgetQr(QRCodeUnUTState state) {
-    if (data['content'].toString().length > 30) {
+    if (data['content'].toString().length > 65) {
       return _buildQRCodeBlank(
-          'Không thể tạo mã VietQR \n Nội dung chuyển khoản tối đa 30 ký tự');
+          'Không thể tạo mã VietQR \n Nội dung chuyển khoản tối đa 50 ký tự');
     }
 
     if (state is CreateQRLoadingState) {
@@ -114,7 +115,7 @@ class _QrGenerateState extends State<QrPrint> {
                 padding: EdgeInsets.only(top: 60),
               ),
               SizedBox(
-                width: 500,
+                width: 400,
                 child: RepaintBoundaryWidget(
                     globalKey: globalKey,
                     builder: (key) {
@@ -124,6 +125,41 @@ class _QrGenerateState extends State<QrPrint> {
                       );
                     }),
               ),
+              if (qrGeneratedDTO.amount.isNotEmpty &&
+                  qrGeneratedDTO.amount != '0') ...[
+                const SizedBox(height: 30),
+                Text(
+                  '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                  style: const TextStyle(
+                    color: AppColor.ORANGE_DARK,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  width: 400,
+                  height: 1,
+                  color: AppColor.GREY_DADADA,
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  width: 400,
+                  height: 45,
+                  child: Text(
+                    qrGeneratedDTO.content,
+                    style: TextStyle(fontSize: 18),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Spacer(),
+                Text(
+                  'VietQR VN',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                )
+              ],
             ],
           );
   }

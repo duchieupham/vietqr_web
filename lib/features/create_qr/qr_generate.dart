@@ -266,7 +266,8 @@ class _QrGenerateState extends State<_QrGenerate> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
-                                      child: _buildWidgetQr(state, false,
+                                      child: _buildWidgetQr(
+                                          state, false, constraints.maxWidth,
                                           width: 350),
                                     ),
                                     Expanded(child: _buildInfo(false)),
@@ -338,15 +339,15 @@ class _QrGenerateState extends State<_QrGenerate> {
                         const SizedBox(
                           height: 8,
                         ),
-                        DividerWidget(
+                        const DividerWidget(
                           width: double.infinity,
-                          color: AppColor.GREY_BUTTON.withOpacity(0.8),
+                          color: AppColor.GREY_DADADA,
                         ),
                         Expanded(
                           child: ListView(
                             padding: EdgeInsets.zero,
                             children: [
-                              _buildWidgetQr(state, true,
+                              _buildWidgetQr(state, true, constraints.maxWidth,
                                   width: widthScreen * 0.9),
                               const SizedBox(height: 20),
                               Padding(
@@ -355,9 +356,9 @@ class _QrGenerateState extends State<_QrGenerate> {
                                 child: _buildQrLink(),
                               ),
                               const SizedBox(height: 20),
-                              DividerWidget(
+                              const DividerWidget(
                                 width: double.infinity,
-                                color: AppColor.GREY_BUTTON.withOpacity(0.8),
+                                color: AppColor.GREY_DADADA,
                               ),
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 12),
@@ -391,14 +392,14 @@ class _QrGenerateState extends State<_QrGenerate> {
             height: 50,
             fit: BoxFit.fitHeight,
           ),
-          if (transactionQRdto.merchant.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                transactionQRdto.merchant,
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
+          // if (transactionQRdto.merchant.isNotEmpty)
+          //   Padding(
+          //     padding: const EdgeInsets.only(left: 20),
+          //     child: Text(
+          //       transactionQRdto.merchant,
+          //       style: const TextStyle(fontSize: 18),
+          //     ),
+          //   ),
           const Spacer(),
           if (!isSuccess) _buildTimeCountDown()
         ],
@@ -406,7 +407,7 @@ class _QrGenerateState extends State<_QrGenerate> {
     );
   }
 
-  Widget _buildWidgetQr(QRCodeUnUTState state, bool isVertical,
+  Widget _buildWidgetQr(QRCodeUnUTState state, bool isVertical, double maxWidth,
       {double width = 360}) {
     if (isSuccess) {
       return _buildTransactionSuccess(isVertical);
@@ -574,7 +575,7 @@ class _QrGenerateState extends State<_QrGenerate> {
               qrGeneratedDTO.amount != '0') ...[
             const SizedBox(height: 10),
             Text(
-              '${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+              '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
               style: const TextStyle(
                 color: AppColor.ORANGE_DARK,
                 fontSize: 35,
@@ -600,57 +601,205 @@ class _QrGenerateState extends State<_QrGenerate> {
               ),
             )
           ],
-          const SizedBox(height: 10),
-          Container(
-            height: 50,
-            width: width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Tooltip(
-                  message: '',
-                  child: MButtonIconWidget(
-                    height: 50,
-                    width: width / 2 - 10,
-                    icon: Icons.image_outlined,
-                    iconSize: 15,
-                    textSize: 15,
-                    iconColor: AppColor.BLUE_TEXT,
-                    title: 'Lưu ảnh VietQR',
-                    onTap: () {
-                      saveImage();
-                    },
-                    border: Border.all(color: AppColor.BLUE_TEXT),
-                    bgColor: AppColor.WHITE,
-                    textColor: AppColor.BLUE_TEXT,
+          // const SizedBox(height: 10),
+          // Container(
+          //   height: 50,
+          //   width: width,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Tooltip(
+          //         message: '',
+          //         child: MButtonIconWidget(
+          //           height: 50,
+          //           width: width / 2 - 10,
+          //           icon: Icons.image_outlined,
+          //           iconSize: 15,
+          //           textSize: 15,
+          //           iconColor: AppColor.BLUE_TEXT,
+          //           title: 'Lưu ảnh VietQR',
+          //           onTap: () {
+          //             saveImage();
+          //           },
+          //           border: Border.all(color: AppColor.BLUE_TEXT),
+          //           bgColor: AppColor.WHITE,
+          //           textColor: AppColor.BLUE_TEXT,
+          //         ),
+          //       ),
+          //       Tooltip(
+          //         message: '',
+          //         child: MButtonIconWidget(
+          //           height: 50,
+          //           width: width / 2 - 10,
+          //           icon: Icons.print_outlined,
+          //           iconSize: 15,
+          //           textSize: 15,
+          //           iconColor: AppColor.BLUE_TEXT,
+          //           title: 'In mã VietQR',
+          //           onTap: () async {
+          //             String paramData = Session.instance.formatDataParamUrl(
+          //                 qrGeneratedDTO,
+          //                 showBankAccount: 1);
+          //             html.window.open(
+          //                 Uri.base.toString().replaceFirst(
+          //                     '/qr-generate', '/qr-generate/print$paramData'),
+          //                 'new tab');
+          //           },
+          //           border: Border.all(color: AppColor.BLUE_TEXT),
+          //           bgColor: AppColor.WHITE,
+          //           textColor: AppColor.BLUE_TEXT,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (maxWidth > 760) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      height: 50,
+                      width: width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Tooltip(
+                            message: '',
+                            child: MButtonIconWidget(
+                              height: 50,
+                              width: width / 2 - 10,
+                              icon: Icons.image_outlined,
+                              iconSize: 15,
+                              textSize: 15,
+                              iconColor: AppColor.BLUE_TEXT,
+                              title: 'Lưu ảnh VietQR',
+                              onTap: () {
+                                saveImage();
+                              },
+                              border: Border.all(color: AppColor.BLUE_TEXT),
+                              bgColor: AppColor.WHITE,
+                              textColor: AppColor.BLUE_TEXT,
+                            ),
+                          ),
+                          Tooltip(
+                            message: '',
+                            child: MButtonIconWidget(
+                              height: 50,
+                              width: width / 2 - 10,
+                              icon: Icons.print_outlined,
+                              iconSize: 15,
+                              textSize: 15,
+                              iconColor: AppColor.BLUE_TEXT,
+                              title: 'In mã VietQR',
+                              onTap: () async {
+                                String paramData = Session.instance
+                                    .formatDataParamUrl(qrGeneratedDTO,
+                                        showBankAccount: 1);
+                                html.window.open(
+                                    Uri.base.toString().replaceFirst(
+                                        '/qr-generate',
+                                        '/qr-generate/print$paramData'),
+                                    'new tab');
+                              },
+                              border: Border.all(color: AppColor.BLUE_TEXT),
+                              bgColor: AppColor.WHITE,
+                              textColor: AppColor.BLUE_TEXT,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Container(
+                  padding: EdgeInsets.only(top: 20),
+                  height: 70,
+                  width: width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Tooltip(
+                        message: '',
+                        child: MButtonIconWidget(
+                          height: 50,
+                          width: width / 3 - 10,
+                          icon: Icons.image_outlined,
+                          iconSize: 12,
+                          textSize: 12,
+                          iconColor: AppColor.BLUE_TEXT,
+                          title: 'Sao chép',
+                          onTap: () async {
+                            await FlutterClipboard.copy(
+                                    qrGeneratedDTO.bankAccount)
+                                .then(
+                              (value) => Fluttertoast.showToast(
+                                msg: 'Đã sao chép',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Theme.of(context).cardColor,
+                                textColor: Theme.of(context).hintColor,
+                                fontSize: 15,
+                                webBgColor: 'rgba(255, 255, 255)',
+                                webPosition: 'center',
+                              ),
+                            );
+                          },
+                          border: Border.all(color: AppColor.BLUE_TEXT),
+                          bgColor: AppColor.WHITE,
+                          textColor: AppColor.BLUE_TEXT,
+                        ),
+                      ),
+                      Tooltip(
+                        message: '',
+                        child: MButtonIconWidget(
+                          height: 50,
+                          width: width / 3 - 10,
+                          icon: Icons.image_outlined,
+                          iconSize: 12,
+                          textSize: 12,
+                          iconColor: AppColor.BLUE_TEXT,
+                          title: 'Lưu ảnh',
+                          onTap: () {
+                            saveImage();
+                          },
+                          border: Border.all(color: AppColor.BLUE_TEXT),
+                          bgColor: AppColor.WHITE,
+                          textColor: AppColor.BLUE_TEXT,
+                        ),
+                      ),
+                      Tooltip(
+                        message: '',
+                        child: MButtonIconWidget(
+                          height: 50,
+                          width: width / 3 - 10,
+                          icon: Icons.print_outlined,
+                          iconSize: 12,
+                          textSize: 12,
+                          iconColor: AppColor.BLUE_TEXT,
+                          title: 'In QR',
+                          onTap: () async {
+                            String paramData = Session.instance
+                                .formatDataParamUrl(qrGeneratedDTO,
+                                    showBankAccount: 1);
+                            html.window.open(
+                                Uri.base.toString().replaceFirst('/qr-generate',
+                                    '/qr-generate/print$paramData'),
+                                'new tab');
+                          },
+                          border: Border.all(color: AppColor.BLUE_TEXT),
+                          bgColor: AppColor.WHITE,
+                          textColor: AppColor.BLUE_TEXT,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Tooltip(
-                  message: '',
-                  child: MButtonIconWidget(
-                    height: 50,
-                    width: width / 2 - 10,
-                    icon: Icons.print_outlined,
-                    iconSize: 15,
-                    textSize: 15,
-                    iconColor: AppColor.BLUE_TEXT,
-                    title: 'In mã VietQR',
-                    onTap: () async {
-                      String paramData = Session.instance.formatDataParamUrl(
-                          qrGeneratedDTO,
-                          showBankAccount: 1);
-                      html.window.open(
-                          Uri.base.toString().replaceFirst(
-                              '/qr-generate', '/qr-generate/print$paramData'),
-                          'new tab');
-                    },
-                    border: Border.all(color: AppColor.BLUE_TEXT),
-                    bgColor: AppColor.WHITE,
-                    textColor: AppColor.BLUE_TEXT,
-                  ),
-                ),
-              ],
-            ),
+                );
+              }
+            },
           ),
           const SizedBox(
             height: 10,
@@ -749,21 +898,21 @@ class _QrGenerateState extends State<_QrGenerate> {
           //         ),
           //       ),
           //       InkWell(
-          //         onTap: () async {
-          //           await FlutterClipboard.copy(Uri.base.toString()).then(
-          //             (value) => Fluttertoast.showToast(
-          //               msg: 'Đã sao chép',
-          //               toastLength: Toast.LENGTH_SHORT,
-          //               gravity: ToastGravity.CENTER,
-          //               timeInSecForIosWeb: 1,
-          //               backgroundColor: Theme.of(context).cardColor,
-          //               textColor: Theme.of(context).hintColor,
-          //               fontSize: 15,
-          //               webBgColor: 'rgba(255, 255, 255)',
-          //               webPosition: 'center',
-          //             ),
-          //           );
-          //         },
+          // onTap: () async {
+          //   await FlutterClipboard.copy(Uri.base.toString()).then(
+          //     (value) => Fluttertoast.showToast(
+          //       msg: 'Đã sao chép',
+          //       toastLength: Toast.LENGTH_SHORT,
+          //       gravity: ToastGravity.CENTER,
+          //       timeInSecForIosWeb: 1,
+          //       backgroundColor: Theme.of(context).cardColor,
+          //       textColor: Theme.of(context).hintColor,
+          //       fontSize: 15,
+          //       webBgColor: 'rgba(255, 255, 255)',
+          //       webPosition: 'center',
+          //     ),
+          //   );
+          // },
           //         child: Tooltip(
           //           message: 'Sao chép',
           //           child: Padding(

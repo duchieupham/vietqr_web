@@ -7,6 +7,8 @@ import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import 'dashed_line.dart';
+
 class VietQRWidget extends StatelessWidget {
   final double horizontalInfoWidth;
   final double? height;
@@ -243,78 +245,207 @@ class VietQRWidget extends StatelessWidget {
 
   Widget _buildQRInforWidthBg(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/bg_napas_qr.png'),
-          fit: BoxFit.fill,
-        ),
+      width: 350,
+      height: 400,
+      decoration: BoxDecoration(
+        image: const DecorationImage(
+            image: AssetImage('assets/images/bg-qr-vqr.png'),
+            fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(10),
       ),
-      padding: const EdgeInsets.fromLTRB(36, 40, 36, 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              color: AppColor.WHITE,
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).shadowColor.withOpacity(0.3),
-                  spreadRadius: 2,
-                  blurRadius: 2,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                // Image(
-                //   image: ImageUtils.instance
-                //       .getImageNetWork(AppImages.logoVietqrVn),
-                //   width: 110,
-                // ),
-                QrImage(
-                  data: qrGeneratedDTO.qrCode,
-                  version: QrVersions.auto,
-                  embeddedImage:
-                      const AssetImage('assets/images/ic-viet-qr.png'),
-                  embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: const Size(25, 25),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Container(
+              width: 300,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: AppColor.GREY_BG,
+              ),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image(
-                        image: ImageUtils.instance
-                            .getImageNetWork(AppImages.icNapas247),
-                        width: 85,
-                        fit: BoxFit.fitWidth),
                     Container(
-                      width: 85,
-                      height: 20,
+                      alignment: Alignment.center,
+                      width: 80,
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColor.WHITE,
-                        image: (qrGeneratedDTO.imgId.isEmpty)
-                            ? null
-                            : DecorationImage(
-                                image: ImageUtils.instance
-                                    .getImageNetWork(qrGeneratedDTO.imgId),
-                                fit: BoxFit.fitWidth),
+                        image: DecorationImage(
+                          image: ImageUtils.instance
+                              .getImageNetWork(qrGeneratedDTO.imgId),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 40,
+                      child: VerticalDashedLine(),
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 8),
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              qrGeneratedDTO.bankAccount,
+                              // 'widget.qrGeneratedDTO.bankAccount,',
+                              maxLines: 1,
+                              style: TextStyle(
+                                  color: AppColor.BLACK,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              // 'widget.qrGeneratedDTO.userBankName'
+                              //     .toUpperCase(),
+                              qrGeneratedDTO.userBankName.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColor.BLACK,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-          _buildInfo()
-        ],
+            const SizedBox(height: 10),
+            Container(
+              width: 300,
+              height: 300,
+              padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+              decoration: BoxDecoration(
+                color: AppColor.WHITE,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 240,
+                    height: 240,
+                    child: QrImage(
+                      data: qrGeneratedDTO.qrCode,
+                      size: 220,
+                      version: QrVersions.auto,
+                      embeddedImage:
+                          const AssetImage('assets/images/ic-viet-qr.png'),
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                        size: const Size(30, 30),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Image.asset(
+                            "assets/images/ic-viet-qr-code.png",
+                            height: 20,
+                          ),
+                        ),
+                        Image.asset(
+                          "assets/images/ic-napas247.png",
+                          height: 30,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
+    // return Container(
+    //   decoration: const BoxDecoration(
+    //     image: DecorationImage(
+    //       image: AssetImage('assets/images/bg_napas_qr.png'),
+    //       fit: BoxFit.fill,
+    //     ),
+    //   ),
+    //   padding: const EdgeInsets.fromLTRB(36, 40, 36, 20),
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.start,
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: [
+    //       Container(
+    //         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+    //         decoration: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(18),
+    //           color: AppColor.WHITE,
+    //           boxShadow: [
+    //             BoxShadow(
+    //               color: Theme.of(context).shadowColor.withOpacity(0.3),
+    //               spreadRadius: 2,
+    //               blurRadius: 2,
+    //               offset: const Offset(0, 3),
+    //             ),
+    //           ],
+    //         ),
+    //         child: Column(
+    //           children: [
+    //             // Image(
+    //             //   image: ImageUtils.instance
+    //             //       .getImageNetWork(AppImages.logoVietqrVn),
+    //             //   width: 110,
+    //             // ),
+    //             QrImage(
+    //               data: qrGeneratedDTO.qrCode,
+    //               version: QrVersions.auto,
+    //               embeddedImage:
+    //                   const AssetImage('assets/images/ic-viet-qr.png'),
+    //               embeddedImageStyle: QrEmbeddedImageStyle(
+    //                 size: const Size(25, 25),
+    //               ),
+    //             ),
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //               children: [
+    //                 Image(
+    //                     image: ImageUtils.instance
+    //                         .getImageNetWork(AppImages.icNapas247),
+    //                     width: 85,
+    //                     fit: BoxFit.fitWidth),
+    //                 Container(
+    //                   width: 85,
+    //                   height: 20,
+    //                   decoration: BoxDecoration(
+    //                     borderRadius: BorderRadius.circular(5),
+    //                     color: AppColor.WHITE,
+    //                     image: (qrGeneratedDTO.imgId.isEmpty)
+    //                         ? null
+    //                         : DecorationImage(
+    //                             image: ImageUtils.instance
+    //                                 .getImageNetWork(qrGeneratedDTO.imgId),
+    //                             fit: BoxFit.fitWidth),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //       _buildInfo()
+    //     ],
+    //   ),
+    // );
   }
 
   Widget _buildInfo() {
