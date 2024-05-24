@@ -42,110 +42,165 @@ class _FooterWebState extends State<FooterWeb> {
       if (constraints.maxWidth < 750) {
         return Container(
           width: constraints.maxWidth,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
           color: widget.bgColor ?? AppColor.BLUE_TEXT.withOpacity(0.2),
-          child: Wrap(
+          child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Text(
-                  'Thông tin liên hệ: ',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              BlocBuilder<BankTypeBloc, BankTypeState>(
+                  builder: (context, state) {
+                if (state is BankTypeGetListSuccessfulState) {
+                  return SizedBox(
+                    height: 70,
+                    width: width,
+                    child: CarouselSlider(
+                      items: state.list.map(
+                        (e) {
+                          return Image(
+                            image:
+                                ImageUtils.instance.getImageNetWork(e.imageId),
+                            height: 40,
+                          );
+                        },
+                      ).toList(),
+                      options: CarouselOptions(
+                          autoPlay: true,
+                          viewportFraction: 0.3,
+                          pageSnapping: false,
+                          autoPlayCurve: Curves.linear,
+                          autoPlayInterval: const Duration(seconds: 2),
+                          autoPlayAnimationDuration:
+                              const Duration(seconds: 2)),
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
               Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Email:   ',
-                    style: TextStyle(
-                      fontSize: 12,
+                  Container(
+                    height: 100,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Liên hệ:',
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Hotline:   ',
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                final Uri launchUri = Uri(
+                                  scheme: 'tel',
+                                  path: '19006234',
+                                );
+                                await launchUrl(launchUri);
+                              },
+                              child: const Text(
+                                '1900.6234',
+                                style: TextStyle(
+                                  color: AppColor.BLUE_TEXT,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            const Text('  -  '),
+                            InkWell(
+                              onTap: () async {
+                                final Uri launchUri = Uri(
+                                  scheme: 'tel',
+                                  path: '0922333636',
+                                );
+                                await launchUrl(launchUri);
+                              },
+                              child: const Text(
+                                '09.2233.3636',
+                                style: TextStyle(
+                                  color: AppColor.BLUE_TEXT,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'Email:     ',
+                              style: TextStyle(
+                                fontSize: 12,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                final Uri launchUri = Uri(
+                                  scheme: 'mailto',
+                                  path: 'sales@vietqr.vn',
+                                );
+                                await launchUrl(launchUri);
+                              },
+                              child: const Text(
+                                'sales@vietqr.vn',
+                                style: TextStyle(
+                                  color: AppColor.BLUE_TEXT,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            const Padding(padding: EdgeInsets.only(left: 12)),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'mailto',
-                        path: 'sales@vietqr.vn',
-                      );
-                      await launchUrl(launchUri);
-                    },
-                    child: const Text(
-                      'sales@vietqr.vn',
-                      style: TextStyle(
-                        color: AppColor.BLUE_TEXT,
-                        fontSize: 12,
-                        decoration: TextDecoration.underline,
-                      ),
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _buildButton(
+                          width: 260,
+                          text: 'App Store',
+                          assetImage: AppImages.logoAppStore,
+                          onTap: () async {
+                            await launchUrl(Uri.parse(
+                                'https://apps.apple.com/vn/app/vietqr-vn/id6447118484'));
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        _buildButton(
+                          width: 260,
+                          text: 'Google Play',
+                          assetImage: AppImages.logoGooglePlay,
+                          onTap: () async {
+                            await launchUrl(Uri.parse(
+                                'https://play.google.com/store/apps/details?id=com.vietqr.product&referrer=utm_source%3Dgoogle%26utm_medium%3Dcpc%26anid%3Dadmob'));
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                  const Padding(padding: EdgeInsets.only(left: 12)),
                 ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Hotline:   ',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'tel',
-                        path: '19006234',
-                      );
-                      await launchUrl(launchUri);
-                    },
-                    child: const Text(
-                      '1900.6234',
-                      style: TextStyle(
-                        color: AppColor.BLUE_TEXT,
-                        fontSize: 12,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                  const Text('  -  '),
-                  InkWell(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'tel',
-                        path: '0922333636',
-                      );
-                      await launchUrl(launchUri);
-                    },
-                    child: const Text(
-                      '09.2233.3636',
-                      style: TextStyle(
-                        color: AppColor.BLUE_TEXT,
-                        fontSize: 12,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 14),
-                    child: Text(
-                      'Tải ứng dụng trên cửa hàng:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  _buildButtonInstallApp(),
-                ],
-              )
             ],
           ),
         );

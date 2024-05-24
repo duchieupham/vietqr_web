@@ -348,12 +348,13 @@ class _QrGenerateState extends State<_QrGenerate> {
                             children: [
                               _buildWidgetQr(state, true,
                                   width: widthScreen * 0.9),
+                              const SizedBox(height: 20),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 12),
-                                child: _buildRowButton(),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: _buildQrLink(),
                               ),
-                              _buildListBank(forMobile: true),
+                              const SizedBox(height: 20),
                               DividerWidget(
                                 width: double.infinity,
                                 color: AppColor.GREY_BUTTON.withOpacity(0.8),
@@ -430,19 +431,6 @@ class _QrGenerateState extends State<_QrGenerate> {
             )
           else
             const SizedBox(height: 20),
-          // UnconstrainedBox(
-          //   child: SizedBox(
-          //     width: width,
-          //     child: RepaintBoundaryWidget(
-          //       globalKey: globalKey,
-          //       builder: (key) {
-          //         return VietQRWidget(
-          //           qrGeneratedDTO: qrGeneratedDTO,
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // ),
           RepaintBoundaryWidget(
               globalKey: globalKey,
               builder: (key) {
@@ -543,7 +531,6 @@ class _QrGenerateState extends State<_QrGenerate> {
                               Container(
                                 width: 240,
                                 height: 240,
-                                // color: AppColor.GREY_DADADA,
                                 child: QrImage(
                                   data: qrGeneratedDTO.qrCode,
                                   size: 220,
@@ -613,7 +600,6 @@ class _QrGenerateState extends State<_QrGenerate> {
               ),
             )
           ],
-
           const SizedBox(height: 10),
           Container(
             height: 50,
@@ -666,87 +652,6 @@ class _QrGenerateState extends State<_QrGenerate> {
               ],
             ),
           ),
-          // UnconstrainedBox(
-          //   child: SizedBox(
-          //     width: width,
-          //     height: 40,
-          //     child: Row(
-          //       crossAxisAlignment: CrossAxisAlignment.stretch,
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         Expanded(
-          //           child: ButtonIconWidget(
-          //             height: 36,
-          //             pathIcon: AppImages.icPrintBlue,
-          //             border: Border.all(
-          //                 width: 0.5,
-          //                 color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-          //             title: '',
-          //             function: () async {
-          //               String paramData = Session.instance.formatDataParamUrl(
-          //                   qrGeneratedDTO,
-          //                   showBankAccount: 1);
-          //               html.window.open(
-          //                   Uri.base.toString().replaceFirst(
-          //                       '/qr-generate', '/qr-generate/print$paramData'),
-          //                   'new tab');
-          //             },
-          //             bgColor: AppColor.WHITE,
-          //             textColor: AppColor.ORANGE,
-          //           ),
-          //         ),
-          //         const Padding(
-          //           padding: EdgeInsets.only(left: 10),
-          //         ),
-          //         Expanded(
-          //           child: ButtonIconWidget(
-          //             border: Border.all(
-          //                 width: 0.5,
-          //                 color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-          //             height: 36,
-          //             pathIcon: AppImages.icEditAvatarSetting,
-          //             title: '',
-          //             function: () {
-          //               saveImage();
-          //             },
-          //             bgColor: AppColor.WHITE,
-          //             textColor: AppColor.RED_CALENDAR,
-          //           ),
-          //         ),
-          //         const Padding(
-          //           padding: EdgeInsets.only(left: 10),
-          //         ),
-          //         Expanded(
-          //           child: ButtonIconWidget(
-          //             border: Border.all(
-          //                 width: 0.5,
-          //                 color: AppColor.BLACK_BUTTON.withOpacity(0.1)),
-          //             height: 36,
-          //             pathIcon: AppImages.icCopyBlue,
-          //             title: '',
-          //             function: () async {
-          //               await FlutterClipboard.copy(Uri.base.toString()).then(
-          //                 (value) => Fluttertoast.showToast(
-          //                   msg: 'Đã sao chép',
-          //                   toastLength: Toast.LENGTH_SHORT,
-          //                   gravity: ToastGravity.CENTER,
-          //                   timeInSecForIosWeb: 1,
-          //                   backgroundColor: Theme.of(context).cardColor,
-          //                   textColor: Theme.of(context).hintColor,
-          //                   fontSize: 15,
-          //                   webBgColor: 'rgba(255, 255, 255)',
-          //                   webPosition: 'center',
-          //                 ),
-          //               );
-          //             },
-          //             bgColor: AppColor.WHITE,
-          //             textColor: AppColor.BLUE_TEXT,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           const SizedBox(
             height: 10,
           ),
@@ -819,60 +724,61 @@ class _QrGenerateState extends State<_QrGenerate> {
           _buildItemData('Nội dung thanh toán', qrGeneratedDTO.content,
               FontWeight.normal, AppColor.BLACK),
           const SizedBox(height: 30),
-          const Text(
-            'QR Link to Pay:',
-            style: TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColor.GREY_DADADA),
-              color: AppColor.BLUE_BGR,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    Uri.base.toString(),
-                    style: TextStyle(color: AppColor.BLUE_TEXT, fontSize: 18),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    await FlutterClipboard.copy(Uri.base.toString()).then(
-                      (value) => Fluttertoast.showToast(
-                        msg: 'Đã sao chép',
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Theme.of(context).cardColor,
-                        textColor: Theme.of(context).hintColor,
-                        fontSize: 15,
-                        webBgColor: 'rgba(255, 255, 255)',
-                        webPosition: 'center',
-                      ),
-                    );
-                  },
-                  child: Tooltip(
-                    message: 'Sao chép',
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 18),
-                      child: const Icon(
-                        Icons.file_copy_outlined,
-                        color: AppColor.BLUE_TEXT,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildQrLink(),
+          // const Text(
+          //   'QR Link to Pay:',
+          //   style: TextStyle(fontSize: 18),
+          // ),
+          // const SizedBox(height: 10),
+          // Container(
+          //   height: 50,
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: AppColor.GREY_DADADA),
+          //     color: AppColor.BLUE_BGR,
+          //     borderRadius: BorderRadius.circular(5),
+          //   ),
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //         child: Text(
+          //           Uri.base.toString(),
+          //           style: TextStyle(color: AppColor.BLUE_TEXT, fontSize: 18),
+          //           maxLines: 1,
+          //           overflow: TextOverflow.ellipsis,
+          //         ),
+          //       ),
+          //       InkWell(
+          //         onTap: () async {
+          //           await FlutterClipboard.copy(Uri.base.toString()).then(
+          //             (value) => Fluttertoast.showToast(
+          //               msg: 'Đã sao chép',
+          //               toastLength: Toast.LENGTH_SHORT,
+          //               gravity: ToastGravity.CENTER,
+          //               timeInSecForIosWeb: 1,
+          //               backgroundColor: Theme.of(context).cardColor,
+          //               textColor: Theme.of(context).hintColor,
+          //               fontSize: 15,
+          //               webBgColor: 'rgba(255, 255, 255)',
+          //               webPosition: 'center',
+          //             ),
+          //           );
+          //         },
+          //         child: Tooltip(
+          //           message: 'Sao chép',
+          //           child: Padding(
+          //             padding: const EdgeInsets.only(left: 18),
+          //             child: const Icon(
+          //               Icons.file_copy_outlined,
+          //               color: AppColor.BLUE_TEXT,
+          //               size: 18,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
           // if (qrGeneratedDTO.amount != '0') ...[
           //   const Padding(
@@ -961,6 +867,68 @@ class _QrGenerateState extends State<_QrGenerate> {
           // _buildRowButton()
         ],
       ),
+    );
+  }
+
+  Widget _buildQrLink() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'QR Link to Pay:',
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          height: 50,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColor.GREY_DADADA),
+            color: AppColor.BLUE_BGR,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  Uri.base.toString(),
+                  style: TextStyle(color: AppColor.BLUE_TEXT, fontSize: 18),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  await FlutterClipboard.copy(Uri.base.toString()).then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Theme.of(context).cardColor,
+                      textColor: Theme.of(context).hintColor,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
+                child: Tooltip(
+                  message: 'Sao chép',
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 18),
+                    child: const Icon(
+                      Icons.file_copy_outlined,
+                      color: AppColor.BLUE_TEXT,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
