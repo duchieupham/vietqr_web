@@ -779,17 +779,21 @@ final GoRouter _router = GoRouter(
         }),
     GoRoute(
         path: '/create-vietqr',
-        redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/create-vietqr' : '/login',
+        // redirect: (context, state) =>
+        //     (userId.isNotEmpty) ? '/create-vietqr' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
-            const QrManageScreen(type: Qr_Manage.CREATE),
+            userId.isNotEmpty
+                ? const QrManageScreen(type: Qr_Manage.CREATE)
+                : const CreateQRLogin(),
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const QrManageScreen(
-              type: Qr_Manage.CREATE,
-            ),
+            child: userId.isNotEmpty
+                ? const QrManageScreen(
+                    type: Qr_Manage.CREATE,
+                  )
+                : const CreateQRLogin(),
           );
         }),
     GoRoute(

@@ -19,6 +19,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'dart:html' as html;
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/share_utils.dart';
@@ -180,6 +181,16 @@ class _ScreenState extends State<_Screen> {
             if (state.request == QrGenerate.GET_MERCHANTS &&
                 state.status == BlocStatus.UNLOADING) {
               provider.updateTerminals(state.listTerminal!);
+            }
+
+            if (state.request == QrGenerate.QR_GENERATE &&
+                state.status == BlocStatus.UNLOADING) {
+              if (_isChecked) {
+                html.window.open(
+                    Uri.base.toString().replaceFirst('/create-vietqr',
+                        '/qr-generated?token=${state.dto!.transactionRefId}'),
+                    'new tab');
+              }
             }
           },
           builder: (context, state) {
