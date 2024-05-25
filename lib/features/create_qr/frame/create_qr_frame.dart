@@ -153,7 +153,7 @@ class _HomeFrameState extends State<CreateQRFrame> {
     if (type == QrType.QR) {
       return createQrSection();
     }
-    return const WalletScreen();
+    return const SizedBox();
   }
 
   Widget _forMobile() {

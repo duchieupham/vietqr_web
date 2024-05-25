@@ -97,27 +97,6 @@ class MenuLeft extends StatelessWidget {
                           child:
                               _buildListIconItem(provider, logoutBloc, context))
                     ],
-              // children: [
-              //   if (provider.showMenu)
-              //     const Padding(
-              //       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              //       child: Text(
-              //         'Menu',
-              //         style: TextStyle(
-              //             fontSize: 15,
-              //             fontWeight: FontWeight.bold,
-              //             decoration: TextDecoration.underline,
-              //             color: AppColor.BLUE_BGR),
-              //       ),
-              //     ),
-              //   if (provider.showMenu)
-              //     Expanded(
-              //       child: _buildListItem(provider, logoutBloc, context),
-              //     )
-              //   else
-              //     Expanded(
-              //         child: _buildListIconItem(provider, logoutBloc, context))
-              // ],
             ),
           );
         },
@@ -177,7 +156,7 @@ class MenuLeft extends StatelessWidget {
                 listItemDrop: subMenuQr,
                 bold: true,
                 onTap: () {
-                  context.go('/create-qr');
+                  context.go('/create-vietqr');
                 },
               ),
               // ItemMenuHome(
@@ -441,7 +420,7 @@ class MenuLeft extends StatelessWidget {
                       isSelect: provider.type == '5' ? true : false,
                       onTap: () {
                         provider.selectType('5');
-                        context.go('/create-qr');
+                        context.go('/create-vietqr');
                       },
                     ),
                   ),

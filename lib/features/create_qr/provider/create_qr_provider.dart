@@ -1,4 +1,6 @@
 import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/models/bank_type_dto.dart';
+import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,8 +26,18 @@ class CreateQRProvider with ChangeNotifier {
   bool get nameErr => _isNameErr;
   bool get bankAccountErr => _isBankAccountErr;
 
-  BankAccountDTO _bankAccountDTO = BankAccountDTO();
-  BankAccountDTO get bankAccountDTO => _bankAccountDTO;
+  TerminalQRDTO? selectTerminal;
+  List<TerminalQRDTO>? listTerminal = [];
+  String? inputTerminal = '';
+
+  BankAccountDTO? bankAccountDTO;
+  List<BankAccountDTO> bankAccounts = [];
+  List<BankAccountDTO> filterBanks = [];
+  List<BankTypeDTO> listBankType = [];
+  List<BankTypeDTO> filterBankType = [];
+  BankTypeDTO? selectBankType;
+
+  bool isFilter = false;
 
   String bankId = '';
 
@@ -33,6 +45,83 @@ class CreateQRProvider with ChangeNotifier {
       NumberFormat.decimalPattern(_locale).format(int.tryParse(s) ?? '0');
 
   bool showFormBankAccountOther = false;
+  void selectTer(TerminalQRDTO ter) {
+    selectTerminal = ter;
+    notifyListeners();
+  }
+
+  void inputTer(String? value) {
+    inputTerminal = value;
+    notifyListeners();
+  }
+
+  void updateTerminals(List<TerminalQRDTO> list) {
+    listTerminal = [
+      TerminalQRDTO(
+          terminalCode: '0', terminalName: 'Nhập hoặc chọn mã cửa hàng'),
+      ...list
+    ];
+    selectTerminal = listTerminal?.first;
+    notifyListeners();
+  }
+
+  void filterBankList(String? filter) {
+    if (filter!.isNotEmpty) {
+      isFilter = true;
+      filterBanks = bankAccounts
+          .where((e) =>
+              e.bankAccount.toLowerCase().contains(filter.toLowerCase()) ||
+              e.userBankName.toLowerCase().contains(filter.toLowerCase()))
+          .toList();
+    } else {
+      isFilter = false;
+    }
+    notifyListeners();
+  }
+
+  void clear() {
+    selectTerminal = TerminalQRDTO(
+        terminalCode: '0', terminalName: 'Nhập hoặc chọn mã cửa hàng');
+    bankAccountDTO = null;
+    notifyListeners();
+  }
+
+  void selectBank(BankAccountDTO value) {
+    bankAccountDTO = value;
+    notifyListeners();
+  }
+
+  void updateBankList(List<BankAccountDTO> list) {
+    bankAccounts = list;
+    notifyListeners();
+  }
+
+  void bankTypeSelect(BankTypeDTO dto) {
+    selectBankType = dto;
+    notifyListeners();
+  }
+
+  void bankTypeFilter(String? filter) {
+    if (filter!.isNotEmpty) {
+      isFilter = true;
+      filterBankType = listBankType
+          .where(
+            (e) =>
+                e.bankShortName.toLowerCase().contains(filter.toLowerCase()) ||
+                e.bankCode.toLowerCase().contains(filter.toLowerCase()) ||
+                e.bankName.toLowerCase().contains(filter.toLowerCase()),
+          )
+          .toList();
+    } else {
+      isFilter = false;
+    }
+    notifyListeners();
+  }
+
+  void updateBankTypeList(List<BankTypeDTO> list) {
+    listBankType = list;
+    notifyListeners();
+  }
 
   void updateValidCreate(bool value) {
     _isValidCreate = value;
@@ -67,12 +156,12 @@ class CreateQRProvider with ChangeNotifier {
     }
   }
 
-  void updateBankAccountDto(BankAccountDTO value) {
-    _bankAccountDTO = value;
-    showFormBankAccountOther = false;
+  // void updateBankAccountDto(BankAccountDTO value) {
+  //   _bankAccountDTO = value;
+  //   showFormBankAccountOther = false;
 
-    voidChooseBank(_bankAccountDTO.bankId);
-  }
+  //   voidChooseBank(_bankAccountDTO.bankId);
+  // }
 
   voidChooseBank(String id) {
     bankId = id;

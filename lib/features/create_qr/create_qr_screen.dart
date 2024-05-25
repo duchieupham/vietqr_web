@@ -98,143 +98,88 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CreateQRProvider>(
-      create: (context) => CreateQRProvider(),
-      child: BlocProvider<CreateQRBloc>(
-        create: (context) => createQRBloc,
-        child: BlocConsumer<CreateQRBloc, CreateQRState>(
-            listener: (context, state) {
-          if (state is GetListBankAccountSuccessfulState) {
-            bankAccounts = state.list;
-            colors = state.colors;
-            if (widget.bankAccountId.isNotEmpty) {
-              createQRBloc
-                  .add(BankEventGetDetail(bankId: widget.bankAccountId));
-              for (var bank in bankAccounts) {
-                if (bank.bankId == widget.bankAccountId) {
-                  context.read<CreateQRProvider>().updateBankAccountDto(bank);
-                }
-              }
-            } else {
-              context
-                  .read<CreateQRProvider>()
-                  .updateBankAccountDto(bankAccounts.first);
-              createQRBloc
-                  .add(BankEventGetDetail(bankId: bankAccounts.first.bankId));
-            }
+    return BlocProvider<CreateQRBloc>(
+      create: (context) => createQRBloc,
+      child:
+          BlocConsumer<CreateQRBloc, CreateQRState>(listener: (context, state) {
+        if (state is GetListBankAccountSuccessfulState) {
+          bankAccounts = state.list;
+          Provider.of<CreateQRProvider>(context, listen: false)
+              .updateBankList(bankAccounts);
+          colors = state.colors;
+          if (widget.bankAccountId.isNotEmpty) {
+            createQRBloc.add(BankEventGetDetail(bankId: widget.bankAccountId));
+            // for (var bank in bankAccounts) {
+            //   if (bank.bankId == widget.bankAccountId) {
+            //     context.read<CreateQRProvider>().updateBankAccountDto(bank);
+            //   }
+            // }
+          } else {
+            // context
+            //     .read<CreateQRProvider>()
+            //     .updateBankAccountDto(bankAccounts.first);
+            createQRBloc
+                .add(BankEventGetDetail(bankId: bankAccounts.first.bankId));
           }
-          if (state is BankDetailSuccessState) {
-            bankDetailDTO = state.dto;
-            qrGeneratedDTO = QRGeneratedDTO(
-              bankCode: bankDetailDTO.bankCode,
-              bankName: bankDetailDTO.bankName,
-              bankAccount: bankDetailDTO.bankAccount,
-              userBankName: bankDetailDTO.userBankName,
-              amount: '',
-              content: '',
-              qrCode: bankDetailDTO.qrCode,
-              imgId: bankDetailDTO.imgId,
-            );
-            if (widget.bankAccountId.isNotEmpty) {}
-          }
-          if (state is QRGenerateSuccessState) {
-            if (EnvConfig.getEnv() == EnvType.PROD) {
-              if (widget.bankAccountId.isNotEmpty) {
-                html.window.open(
-                    Uri.base.toString().replaceFirst(
-                        '/create-qr/${widget.bankAccountId}',
-                        '/qr-generated?token=${state.dto.transactionRefId}'),
-                    'new tab');
-              } else {
-                html.window.open(
-                    Uri.base.toString().replaceFirst('/create-qr',
-                        '/qr-generated?token=${state.dto.transactionRefId}'),
-                    'new tab');
-              }
-
-              // context.go('/qr-generated?token=${state.dto.transactionRefId}',
-              //     extra: true);
-            } else {
-              if (widget.bankAccountId.isNotEmpty) {
-                html.window.open(
-                    Uri.base.toString().replaceFirst(
-                        '/create-qr/${widget.bankAccountId}',
-                        '/test/qr-generated?token=${state.dto.transactionRefId}'),
-                    'new tab');
-              } else {
-                html.window.open(
-                    Uri.base.toString().replaceFirst('/create-qr',
-                        '/test/qr-generated?token=${state.dto.transactionRefId}'),
-                    'new tab');
-              }
-            }
-          }
-          if (state is CreateUnAuthenSuccessfulState) {
-            qrGeneratedDTO = state.dto;
-          }
-        }, builder: (context, state) {
-          return RawKeyboardListener(
-            focusNode: focusNodeWidget,
-            autofocus: false,
-            onKey: (RawKeyEvent event) {
-              if (event.data.keyLabel == '*') {
-                context.push('/home');
-              }
-
-              focusKeyBroadListen++;
-
-              if (focusKeyBroadListen == 1) {
-                indexBankAccount =
-                    bankAccounts.indexOf(bankAccounts[indexBankAccount]);
-
-                if (event.data.keyLabel == '+') {
-                  if (indexBankAccount == bankAccounts.length - 1) {
-                    indexBankAccount = -1;
-                  }
-                  indexBankAccount++;
-                  context
-                      .read<CreateQRProvider>()
-                      .updateBankAccountDto(bankAccounts[indexBankAccount]);
-                  createQRBloc.add(BankEventGetDetail(
-                      bankId: bankAccounts[indexBankAccount].bankId));
-                }
-
-                if (event.data.keyLabel == '-') {
-                  if (indexBankAccount == 0) {
-                    indexBankAccount = bankAccounts.length;
-                    indexBankAccount--;
-                  } else {
-                    indexBankAccount--;
-                  }
-
-                  context
-                      .read<CreateQRProvider>()
-                      .updateBankAccountDto(bankAccounts[indexBankAccount]);
-                  createQRBloc.add(BankEventGetDetail(
-                      bankId: bankAccounts[indexBankAccount].bankId));
-                }
-                if (!focusAmount) {
-                  if (event.logicalKey == LogicalKeyboardKey.enter) {
-                    FocusScope.of(context).requestFocus(focusNode);
-                    focusAmount = true;
-                  }
-                }
-              }
-
-              if (focusKeyBroadListen == 2) {
-                focusKeyBroadListen = 0;
-              }
-            },
-            child: CreateQRFrame(
-              type: widget.type,
-              widget1: _buildListBank(),
-              widget2: _formCreate(),
-              widget3: _buildInfoAccount(state),
-              // widget3: _buildQRcode(state),
-            ),
+        }
+        if (state is BankDetailSuccessState) {
+          bankDetailDTO = state.dto;
+          qrGeneratedDTO = QRGeneratedDTO(
+            bankCode: bankDetailDTO.bankCode,
+            bankName: bankDetailDTO.bankName,
+            bankAccount: bankDetailDTO.bankAccount,
+            userBankName: bankDetailDTO.userBankName,
+            amount: '',
+            content: '',
+            qrCode: bankDetailDTO.qrCode,
+            imgId: bankDetailDTO.imgId,
           );
-        }),
-      ),
+          if (widget.bankAccountId.isNotEmpty) {}
+        }
+        if (state is QRGenerateSuccessState) {
+          if (EnvConfig.getEnv() == EnvType.PROD) {
+            if (widget.bankAccountId.isNotEmpty) {
+              html.window.open(
+                  Uri.base.toString().replaceFirst(
+                      '/create-qr/${widget.bankAccountId}',
+                      '/qr-generated?token=${state.dto.transactionRefId}'),
+                  'new tab');
+            } else {
+              html.window.open(
+                  Uri.base.toString().replaceFirst('/create-qr',
+                      '/qr-generated?token=${state.dto.transactionRefId}'),
+                  'new tab');
+            }
+
+            // context.go('/qr-generated?token=${state.dto.transactionRefId}',
+            //     extra: true);
+          } else {
+            if (widget.bankAccountId.isNotEmpty) {
+              html.window.open(
+                  Uri.base.toString().replaceFirst(
+                      '/create-qr/${widget.bankAccountId}',
+                      '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                  'new tab');
+            } else {
+              html.window.open(
+                  Uri.base.toString().replaceFirst('/create-qr',
+                      '/test/qr-generated?token=${state.dto.transactionRefId}'),
+                  'new tab');
+            }
+          }
+        }
+        if (state is CreateUnAuthenSuccessfulState) {
+          qrGeneratedDTO = state.dto;
+        }
+      }, builder: (context, state) {
+        return CreateQRFrame(
+          type: widget.type,
+          widget1: _buildListBank(),
+          widget2: _formCreate(),
+          widget3: _buildInfoAccount(state),
+          // widget3: _buildQRcode(state),
+        );
+      }),
     );
   }
 
@@ -256,7 +201,8 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               showTitle: false,
               fromUrl: '/create-qr',
               qrGeneratedDTO: qrGeneratedDTO,
-              bankId: provider.bankAccountDTO.bankId,
+              // bankId: provider.bankAccountDTO.bankId,
+              bankId: '',
             )
           : const SizedBox.shrink();
     });
@@ -518,39 +464,39 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                             amount = provider.money.replaceAll(',', '');
                           }
 
-                          if (provider.bankAccountDTO.bankId.isEmpty) {
-                            if (showDialog) {
-                              Navigator.pop(context);
-                              showDialog = false;
-                            } else {
-                              showDialog = true;
-                              DialogWidget.instance.openMsgDialog(
-                                  title: 'TK ngân hàng không hợp lệ',
-                                  msg: 'Vui lòng chọn tài khoản ngân hàng');
-                            }
-                          } else if (provider
-                              .bankAccountDTO.bankId.isNotEmpty) {
-                            QRCreateDTO qrCreateDTO = QRCreateDTO(
-                              bankId: bankDetailDTO.id,
-                              amount: amount,
-                              content: StringUtils.instance
-                                  .removeDiacritic(contentController.text),
-                              branchId:
-                                  (bankDetailDTO.businessDetails.isNotEmpty)
-                                      ? bankDetailDTO.businessDetails.first
-                                          .branchDetails.first.branchId
-                                      : '',
-                              businessId:
-                                  (bankDetailDTO.businessDetails.isNotEmpty)
-                                      ? bankDetailDTO
-                                          .businessDetails.first.businessId
-                                      : '',
-                              userId:
-                                  UserInformationHelper.instance.getUserId(),
-                            );
+                          // if (provider.bankAccountDTO.bankId.isEmpty) {
+                          //   if (showDialog) {
+                          //     Navigator.pop(context);
+                          //     showDialog = false;
+                          //   } else {
+                          //     showDialog = true;
+                          //     DialogWidget.instance.openMsgDialog(
+                          //         title: 'TK ngân hàng không hợp lệ',
+                          //         msg: 'Vui lòng chọn tài khoản ngân hàng');
+                          //   }
+                          // } else if (provider
+                          //     .bankAccountDTO.bankId.isNotEmpty) {
+                          //   QRCreateDTO qrCreateDTO = QRCreateDTO(
+                          //     bankId: bankDetailDTO.id,
+                          //     amount: amount,
+                          //     content: StringUtils.instance
+                          //         .removeDiacritic(contentController.text),
+                          //     branchId:
+                          //         (bankDetailDTO.businessDetails.isNotEmpty)
+                          //             ? bankDetailDTO.businessDetails.first
+                          //                 .branchDetails.first.branchId
+                          //             : '',
+                          //     businessId:
+                          //         (bankDetailDTO.businessDetails.isNotEmpty)
+                          //             ? bankDetailDTO
+                          //                 .businessDetails.first.businessId
+                          //             : '',
+                          //     userId:
+                          //         UserInformationHelper.instance.getUserId(),
+                          //   );
 
-                            createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
-                          }
+                          //   createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
+                          // }
                         },
                       ),
                     ),
@@ -692,40 +638,40 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       }
                     }
                   } else {
-                    if (provider.bankAccountDTO.bankId.isEmpty) {
-                      showDialog = true;
-                      DialogWidget.instance.openMsgDialog(
-                          title: 'TK ngân hàng không hợp lệ',
-                          msg: 'Vui lòng chọn tài khoản ngân hàng');
-                    } else if (provider.amountErr) {
-                      showDialog = true;
-                      DialogWidget.instance.openMsgDialog(
-                          title: 'Số tiền không hợp lệ',
-                          msg: 'Vui lòng nhập số tiền');
-                    } else {
-                      String amount = '0';
-                      if (provider.money.isNotEmpty) {
-                        amount = provider.money.replaceAll(',', '');
-                      }
-                      if (provider.bankAccountDTO.bankId.isNotEmpty) {
-                        QRCreateDTO qrCreateDTO = QRCreateDTO(
-                          bankId: bankDetailDTO.id,
-                          amount: amount,
-                          content: StringUtils.instance
-                              .removeDiacritic(contentController.text),
-                          branchId: (bankDetailDTO.businessDetails.isNotEmpty)
-                              ? bankDetailDTO.businessDetails.first
-                                  .branchDetails.first.branchId
-                              : '',
-                          businessId: (bankDetailDTO.businessDetails.isNotEmpty)
-                              ? bankDetailDTO.businessDetails.first.businessId
-                              : '',
-                          userId: UserInformationHelper.instance.getUserId(),
-                        );
+                    // if (provider.bankAccountDTO.bankId.isEmpty) {
+                    //   showDialog = true;
+                    //   DialogWidget.instance.openMsgDialog(
+                    //       title: 'TK ngân hàng không hợp lệ',
+                    //       msg: 'Vui lòng chọn tài khoản ngân hàng');
+                    // } else if (provider.amountErr) {
+                    //   showDialog = true;
+                    //   DialogWidget.instance.openMsgDialog(
+                    //       title: 'Số tiền không hợp lệ',
+                    //       msg: 'Vui lòng nhập số tiền');
+                    // } else {
+                    //   String amount = '0';
+                    //   if (provider.money.isNotEmpty) {
+                    //     amount = provider.money.replaceAll(',', '');
+                    //   }
+                    //   if (provider.bankAccountDTO.bankId.isNotEmpty) {
+                    //     QRCreateDTO qrCreateDTO = QRCreateDTO(
+                    //       bankId: bankDetailDTO.id,
+                    //       amount: amount,
+                    //       content: StringUtils.instance
+                    //           .removeDiacritic(contentController.text),
+                    //       branchId: (bankDetailDTO.businessDetails.isNotEmpty)
+                    //           ? bankDetailDTO.businessDetails.first
+                    //               .branchDetails.first.branchId
+                    //           : '',
+                    //       businessId: (bankDetailDTO.businessDetails.isNotEmpty)
+                    //           ? bankDetailDTO.businessDetails.first.businessId
+                    //           : '',
+                    //       userId: UserInformationHelper.instance.getUserId(),
+                    //     );
 
-                        createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
-                      }
-                    }
+                    //     createQRBloc.add(QREventGenerate(dto: qrCreateDTO));
+                    //   }
+                    // }
                   }
                 },
                 bgColor: AppColor.BLUE_TEXT,
@@ -804,7 +750,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                     content: '',
                     qrCode: '',
                   );
-                  provider.updateBankAccountDto(BankAccountDTO());
+                  // provider.updateBankAccountDto(BankAccountDTO());
                   provider.updateForm(true);
                 },
                 child: Container(
@@ -845,7 +791,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
                       BankAccountDTO dto = bankAccounts[index];
                       return GestureDetector(
                         onTap: () async {
-                          provider.updateBankAccountDto(dto);
+                          // provider.updateBankAccountDto(dto);
                           createQRBloc
                               .add(BankEventGetDetail(bankId: dto.bankId));
                           // _bloc.add(BankCardGetDetailEvent(bankId: dto.id));
