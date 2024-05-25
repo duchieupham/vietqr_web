@@ -89,6 +89,7 @@ import 'commons/widgets/dynamic_link_widget.dart';
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'features/create_qr/provider/create_qr_provider.dart';
 import 'features/login/provider/menu_login_provider.dart';
+import 'features/qr_manage/qr_manage_screen.dart';
 import 'features/vhitek/vhitek_screen.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
@@ -382,12 +383,12 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) =>
           const TopUpAccount(),
     ),
-    GoRoute(
-      path: '/create-vietqr',
-      redirect: (context, state) => '/create-vietqr',
-      builder: (BuildContext context, GoRouterState state) =>
-          const CreateQRUnAuthen(),
-    ),
+    // GoRoute(
+    //   path: '/create-vietqr',
+    //   redirect: (context, state) => '/create-vietqr',
+    //   builder: (BuildContext context, GoRouterState state) =>
+    //       const CreateQRUnAuthen(),
+    // ),
     GoRoute(
         path: '/mbbank-dkdv',
         redirect: (context, state) => '/mbbank-dkdv',
@@ -777,17 +778,32 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
-        path: '/qr-wallet',
+        path: '/create-vietqr',
         redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/qr-wallet' : '/login',
+            (userId.isNotEmpty) ? '/create-vietqr' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
-            const CreateQrScreen(type: QrType.WALLET),
+            const QrManageScreen(type: Qr_Manage.CREATE),
         pageBuilder: (BuildContext context, GoRouterState state) {
           return buildPageWithoutAnimation(
             context: context,
             state: state,
-            child: const CreateQrScreen(
-              type: QrType.WALLET,
+            child: const QrManageScreen(
+              type: Qr_Manage.CREATE,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/vietqr-wallet',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/qr-wallet' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const QrManageScreen(type: Qr_Manage.WALLET),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const QrManageScreen(
+              type: Qr_Manage.WALLET,
             ),
           );
         }),

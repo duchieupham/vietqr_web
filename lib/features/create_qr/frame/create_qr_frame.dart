@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'dart:html' as html;
 
 import '../../wallet/wallet_screen.dart';
-import '../create_qr_new_screen.dart';
 
 // ignore: constant_identifier_names
 enum QrType { QR, WALLET }
@@ -154,7 +153,7 @@ class _HomeFrameState extends State<CreateQRFrame> {
     if (type == QrType.QR) {
       return createQrSection();
     }
-    return const CreateQrNewScreen();
+    return const SizedBox();
   }
 
   Widget _forMobile() {

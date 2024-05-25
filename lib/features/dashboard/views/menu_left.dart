@@ -156,7 +156,7 @@ class MenuLeft extends StatelessWidget {
                 listItemDrop: subMenuQr,
                 bold: true,
                 onTap: () {
-                  context.go('/create-qr');
+                  context.go('/create-vietqr');
                 },
               ),
               // ItemMenuHome(
@@ -420,7 +420,7 @@ class MenuLeft extends StatelessWidget {
                       isSelect: provider.type == '5' ? true : false,
                       onTap: () {
                         provider.selectType('5');
-                        context.go('/create-qr');
+                        context.go('/create-vietqr');
                       },
                     ),
                   ),

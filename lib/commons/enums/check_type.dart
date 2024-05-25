@@ -39,6 +39,7 @@ enum BankType {
   SCAN,
   BANK,
   GET_BANK,
+  GET_BANK_TYPE,
   SCAN_ERROR,
   SCAN_NOT_FOUND,
   ERROR,
