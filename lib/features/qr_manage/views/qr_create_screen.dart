@@ -150,9 +150,7 @@ class _ScreenState extends State<_Screen> {
       builder: (context, provider, child) {
         bool isEnableButton = false;
         if (isFirstSelected) {
-          if (provider.bankAccountDTO != null &&
-              amountInput.isNotEmpty &&
-              contentLength != 0) {
+          if (provider.bankAccountDTO != null) {
             isEnableButton = true;
           }
         } else {
@@ -264,7 +262,10 @@ class _ScreenState extends State<_Screen> {
                                                     .selectBankType!.bankCode,
                                                 userBankName:
                                                     _userBankNameController
-                                                        .text),
+                                                        .text,
+                                                amount: amountInput,
+                                                content:
+                                                    _contentController.text),
                                           );
                                         }
                                       }
@@ -579,34 +580,34 @@ class _ScreenState extends State<_Screen> {
                 );
               }),
           const SizedBox(height: 20),
-          dto.amount != '0'
-              ? Text(
-                  '+ ${StringUtils.formatNumberAmount(dto.amount)}',
-                  style: const TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.ORANGE_DARK),
-                )
-              : const SizedBox.shrink(),
-          const SizedBox(height: 20),
-          Container(
-            width: 350,
-            height: 1,
-            color: AppColor.GREY_DADADA,
-          ),
-          const SizedBox(height: 20),
-          Container(
-            width: 350,
-            height: 45,
-            child: Text(
-              dto.content,
-              style: const TextStyle(fontSize: 18),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+          if (dto.amount != '0' && dto.amount.isNotEmpty) ...[
+            Text(
+              '+ ${StringUtils.formatNumberAmount(dto.amount)}',
+              style: const TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: AppColor.ORANGE_DARK,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            Container(
+              width: 350,
+              height: 1,
+              color: AppColor.GREY_DADADA,
+            ),
+            const SizedBox(height: 20),
+            Container(
+              width: 350,
+              height: 45,
+              child: Text(
+                dto.content,
+                style: const TextStyle(fontSize: 18),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
           Container(
             height: 50,
             width: 350,
@@ -641,7 +642,14 @@ class _ScreenState extends State<_Screen> {
                     textSize: 15,
                     iconColor: AppColor.BLUE_TEXT,
                     title: 'In mã VietQR',
-                    onTap: () {},
+                    onTap: () async {
+                      String paramData = Session.instance
+                          .formatDataParamUrl(dto, showBankAccount: 1);
+                      html.window.open(
+                          Uri.base.toString().replaceFirst(
+                              '/create-vietqr', '/qr-generate/print$paramData'),
+                          'new tab');
+                    },
                     border: Border.all(color: AppColor.BLUE_TEXT),
                     bgColor: AppColor.WHITE,
                     textColor: AppColor.BLUE_TEXT,
@@ -791,18 +799,26 @@ class _ScreenState extends State<_Screen> {
                                   ),
                                 ),
                                 const SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(provider.selectBankType!.bankShortName,
-                                        style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 4),
-                                    Text(provider.selectBankType!.bankName,
-                                        style: const TextStyle(fontSize: 12)),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          provider
+                                              .selectBankType!.bankShortName,
+                                          style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        provider.selectBankType!.bankName,
+                                        style: const TextStyle(fontSize: 12),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
