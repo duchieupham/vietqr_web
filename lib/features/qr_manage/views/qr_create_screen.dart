@@ -264,7 +264,10 @@ class _ScreenState extends State<_Screen> {
                                                     .selectBankType!.bankCode,
                                                 userBankName:
                                                     _userBankNameController
-                                                        .text),
+                                                        .text,
+                                                amount: amountInput,
+                                                content:
+                                                    _contentController.text),
                                           );
                                         }
                                       }
@@ -641,7 +644,14 @@ class _ScreenState extends State<_Screen> {
                     textSize: 15,
                     iconColor: AppColor.BLUE_TEXT,
                     title: 'In mã VietQR',
-                    onTap: () {},
+                    onTap: () async {
+                      String paramData = Session.instance
+                          .formatDataParamUrl(dto, showBankAccount: 1);
+                      html.window.open(
+                          Uri.base.toString().replaceFirst(
+                              '/create-vietqr', '/qr-generate/print$paramData'),
+                          'new tab');
+                    },
                     border: Border.all(color: AppColor.BLUE_TEXT),
                     bgColor: AppColor.WHITE,
                     textColor: AppColor.BLUE_TEXT,
