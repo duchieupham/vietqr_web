@@ -264,7 +264,10 @@ class _ScreenState extends State<_Screen> {
                                                     .selectBankType!.bankCode,
                                                 userBankName:
                                                     _userBankNameController
-                                                        .text),
+                                                        .text,
+                                                amount: amountInput,
+                                                content:
+                                                    _contentController.text),
                                           );
                                         }
                                       }
