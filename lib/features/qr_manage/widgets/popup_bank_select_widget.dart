@@ -184,6 +184,7 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
                                   if (selectBank != null) {
                                     widget.onDone(selectBank?.bankId);
                                     provider.selectBank(selectBank!);
+                                    provider.bankTypeFilter('');
                                     Navigator.of(context).pop();
                                   }
                                 }
@@ -191,6 +192,7 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
                                   if (selectBankType != null) {
                                     widget.onDone(selectBankType?.id);
                                     provider.bankTypeSelect(selectBankType!);
+                                    provider.filterBankList('');
                                     Navigator.of(context).pop();
                                   }
                                 },
@@ -234,6 +236,7 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
                 right: 20,
                 child: InkWell(
                   onTap: () {
+                    controller.clear();
                     Navigator.of(context).pop();
                   },
                   child: const Icon(
