@@ -799,18 +799,26 @@ class _ScreenState extends State<_Screen> {
                                   ),
                                 ),
                                 const SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(provider.selectBankType!.bankShortName,
-                                        style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 4),
-                                    Text(provider.selectBankType!.bankName,
-                                        style: const TextStyle(fontSize: 12)),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                          provider
+                                              .selectBankType!.bankShortName,
+                                          style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        provider.selectBankType!.bankName,
+                                        style: const TextStyle(fontSize: 12),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
