@@ -150,9 +150,7 @@ class _ScreenState extends State<_Screen> {
       builder: (context, provider, child) {
         bool isEnableButton = false;
         if (isFirstSelected) {
-          if (provider.bankAccountDTO != null &&
-              amountInput.isNotEmpty &&
-              contentLength != 0) {
+          if (provider.bankAccountDTO != null) {
             isEnableButton = true;
           }
         } else {
@@ -582,34 +580,34 @@ class _ScreenState extends State<_Screen> {
                 );
               }),
           const SizedBox(height: 20),
-          dto.amount != '0'
-              ? Text(
-                  '+ ${StringUtils.formatNumberAmount(dto.amount)}',
-                  style: const TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.ORANGE_DARK),
-                )
-              : const SizedBox.shrink(),
-          const SizedBox(height: 20),
-          Container(
-            width: 350,
-            height: 1,
-            color: AppColor.GREY_DADADA,
-          ),
-          const SizedBox(height: 20),
-          Container(
-            width: 350,
-            height: 45,
-            child: Text(
-              dto.content,
-              style: const TextStyle(fontSize: 18),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+          if (dto.amount != '0' && dto.amount.isNotEmpty) ...[
+            Text(
+              '+ ${StringUtils.formatNumberAmount(dto.amount)}',
+              style: const TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: AppColor.ORANGE_DARK,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            Container(
+              width: 350,
+              height: 1,
+              color: AppColor.GREY_DADADA,
+            ),
+            const SizedBox(height: 20),
+            Container(
+              width: 350,
+              height: 45,
+              child: Text(
+                dto.content,
+                style: const TextStyle(fontSize: 18),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
           Container(
             height: 50,
             width: 350,

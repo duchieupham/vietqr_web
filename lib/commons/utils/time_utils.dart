@@ -200,7 +200,7 @@ class TimeUtils {
         DateFormat.M(const Locale('en').countryCode).format(now));
     DateFormat format = DateFormat('yyyy');
     String year = format.format(now);
-    result = 'ngày $day $month, năm $year';
+    result = ' Ngày $day $month, Năm $year';
     return result;
   }
 
