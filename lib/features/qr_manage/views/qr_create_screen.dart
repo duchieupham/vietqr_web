@@ -106,7 +106,8 @@ class _ScreenState extends State<_Screen> {
 
   String ic_linked_bank = '3e985867-7e93-4b3c-8164-945b7265752c';
   String ic_share_bank = '98d70358-a82e-4bf5-84f8-02cb563c685b';
-
+  // 3e985867-7e93-4b3c-8164-945b7265752c
+  // 98d70358-a82e-4bf5-84f8-02cb563c685b
   @override
   void initState() {
     _provider = Provider.of<CreateQRProvider>(context, listen: false);
@@ -206,72 +207,79 @@ class _ScreenState extends State<_Screen> {
                   const Divider(),
                   Expanded(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           width: 410,
+                          height: MediaQuery.of(context).size.height,
                           padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Thông tin thiết lập mã VietQR",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  _buildOption(
-                                      "Tài khoản đã thêm", isFirstSelected),
-                                  const SizedBox(width: 20),
-                                  _buildOption(
-                                      "Tài khoản khác", !isFirstSelected),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              _conditionalWidget(),
-                              const Spacer(),
-                              _buildCheckBox(
-                                isEnable: isEnableButton,
-                                onTap: isEnableButton
-                                    ? () {
-                                        if (isFirstSelected == true) {
-                                          _qrCreateBloc.add(QRGenerateEvent(
-                                            bankId:
-                                                provider.bankAccountDTO!.bankId,
-                                            amount: amountInput,
-                                            content: _contentController.text,
-                                            terminalCode:
-                                                provider.inputTerminal!.isEmpty
-                                                    ? (provider.selectTerminal!
-                                                                .terminalCode ==
-                                                            '0'
-                                                        ? ''
-                                                        : provider
-                                                            .selectTerminal!
-                                                            .terminalCode)
-                                                    : provider.inputTerminal,
-                                            orderId: _invoiceController.text,
-                                          ));
-                                        } else {
-                                          _qrCreateBloc.add(
-                                            UnAuthQRGenerateEvent(
-                                                bankAccount:
-                                                    _bankAccountController.text,
-                                                bankCode: provider
-                                                    .selectBankType!.bankCode,
-                                                userBankName:
-                                                    _userBankNameController
-                                                        .text,
-                                                amount: amountInput,
-                                                content:
-                                                    _contentController.text),
-                                          );
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Thông tin thiết lập mã VietQR",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  children: [
+                                    _buildOption(
+                                        "Tài khoản đã thêm", isFirstSelected),
+                                    const SizedBox(width: 20),
+                                    _buildOption(
+                                        "Tài khoản khác", !isFirstSelected),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                _conditionalWidget(),
+                                // const Spacer(),
+                                const SizedBox(height: 30),
+                                _buildCheckBox(
+                                  isEnable: isEnableButton,
+                                  onTap: isEnableButton
+                                      ? () {
+                                          if (isFirstSelected == true) {
+                                            _qrCreateBloc.add(QRGenerateEvent(
+                                              bankId: provider
+                                                  .bankAccountDTO!.bankId,
+                                              amount: amountInput,
+                                              content: _contentController.text,
+                                              terminalCode: provider
+                                                      .inputTerminal!.isEmpty
+                                                  ? (provider.selectTerminal!
+                                                              .terminalCode ==
+                                                          '0'
+                                                      ? ''
+                                                      : provider.selectTerminal!
+                                                          .terminalCode)
+                                                  : provider.inputTerminal,
+                                              orderId: _invoiceController.text,
+                                            ));
+                                          } else {
+                                            _qrCreateBloc.add(
+                                              UnAuthQRGenerateEvent(
+                                                  bankAccount:
+                                                      _bankAccountController
+                                                          .text,
+                                                  bankCode: provider
+                                                      .selectBankType!.bankCode,
+                                                  userBankName:
+                                                      _userBankNameController
+                                                          .text,
+                                                  amount: amountInput,
+                                                  content:
+                                                      _contentController.text),
+                                            );
+                                          }
                                         }
-                                      }
-                                    : null,
-                              ),
-                            ],
+                                      : null,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         if (state.request == QrGenerate.QR_GENERATE &&
@@ -1064,7 +1072,7 @@ class _ScreenState extends State<_Screen> {
                                                       ic_linked_bank),
                                               width: 28,
                                             )),
-                                      if (provider.bankAccountDTO!.isOwner)
+                                      if (!provider.bankAccountDTO!.isOwner)
                                         Positioned(
                                             top: 0,
                                             right: 0,

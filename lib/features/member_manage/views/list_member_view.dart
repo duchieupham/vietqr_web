@@ -125,48 +125,47 @@ class _ListMemberViewState extends State<ListMemberView> {
   }
 
   void _onChooseMerchant(List<MerchantDTO> list) async {
-    DialogWidget.instance.showDialogTrans(
-      child: NotifyTransWidget(
-        dto: NotifyTransDTO.fromJson(
-          {
-            "bankAccount": "0373568944",
-            "traceId": "VQR90c509a729",
-            "bankCode": "MB",
-            "amount": "5000",
-            "orderId": "",
-            "bankName": "Ngân hàng TMCP Quân đội",
-            "notificationType": "N05",
-            "content": "VQR90c509a729.Thanh toan",
-            "terminalName": "Cuahang Demo",
-            "bankId": "95364bee-3bc5-4070-96b1-1dbc3c9b8c19",
-            "transType": "C",
-            "rawTerminalCode": "",
-            "referenceNumber": "",
-            "notificationId": "b92651a8-071b-4339-9d8c-35c1be675df0",
-            "terminalCode": "atrRnGNO4O",
-            "time": "1711854283",
-            "refId": "d9d97dbd-4aa1-424b-ad81-d3f6d849d16f",
-            "transactionReceiveId": "ec698efe-addf-4258-8c56-536bc6d694b6",
-            "status": "1"
-          },
-        ),
-      ),
-    );
-
-    // final data = await showDialog(
-    //   barrierDismissible: false,
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return ChooseMerchantWidget(items: list);
-    //   },
+    // DialogWidget.instance.showDialogTrans(
+    //   child: NotifyTransWidget(
+    //     dto: NotifyTransDTO.fromJson(
+    //       {
+    //         "bankAccount": "0373568944",
+    //         "traceId": "VQR90c509a729",
+    //         "bankCode": "MB",
+    //         "amount": "5000",
+    //         "orderId": "",
+    //         "bankName": "Ngân hàng TMCP Quân đội",
+    //         "notificationType": "N05",
+    //         "content": "VQR90c509a729.Thanh toan",
+    //         "terminalName": "Cuahang Demo",
+    //         "bankId": "95364bee-3bc5-4070-96b1-1dbc3c9b8c19",
+    //         "transType": "C",
+    //         "rawTerminalCode": "",
+    //         "referenceNumber": "",
+    //         "notificationId": "b92651a8-071b-4339-9d8c-35c1be675df0",
+    //         "terminalCode": "atrRnGNO4O",
+    //         "time": "1711854283",
+    //         "refId": "d9d97dbd-4aa1-424b-ad81-d3f6d849d16f",
+    //         "transactionReceiveId": "ec698efe-addf-4258-8c56-536bc6d694b6",
+    //         "status": "1"
+    //       },
+    //     ),
+    //   ),
     // );
-    //
-    // if (data != null && data is MerchantDTO) {
-    //   _merchant = data;
-    //   MemberInputDTO dto = MemberInputDTO(merchantId: _merchant.id);
-    //   bloc.add(GetMembersEvent(dto));
-    //   onRole(data);
-    // }
+
+    final data = await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return ChooseMerchantWidget(items: list);
+      },
+    );
+    if (data != null && data is MerchantDTO) {
+      _merchant = data;
+      MemberInputDTO dto = MemberInputDTO(merchantId: _merchant.id);
+      bloc.add(GetMembersEvent(dto));
+      onRole(data);
+    }
   }
 
   void _onSearch() {

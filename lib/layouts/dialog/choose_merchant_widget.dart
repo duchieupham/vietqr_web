@@ -112,14 +112,13 @@ class _ChooseMerchantWidgetState extends State<ChooseMerchantWidget> {
                                           Text(
                                             dto.name,
                                             style: const TextStyle(
-                                                fontSize: 10,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
                                             dto.vsoCode,
-                                            style: const TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
+                                            style:
+                                                const TextStyle(fontSize: 10),
                                           ),
                                         ],
                                       ),

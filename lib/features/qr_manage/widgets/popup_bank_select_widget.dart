@@ -203,15 +203,15 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
                               color: widget.isAuthBank == true
                                   ? (selectBank != null
                                       ? AppColor.BLUE_TEXT
-                                      : AppColor.WHITE)
+                                      : AppColor.GREY_BUTTON)
                                   : (selectBankType != null
                                       ? AppColor.BLUE_TEXT
-                                      : AppColor.WHITE),
+                                      : AppColor.GREY_BUTTON),
                               borderRadius: BorderRadius.circular(5),
                             ),
                             child: Center(
                               child: Text(
-                                'Hoàn thành',
+                                'Xác nhận',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: widget.isAuthBank == true
@@ -296,7 +296,7 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
                               .getImageNetWork(ic_linked_bank),
                           width: 28,
                         )),
-                  if (dto.isOwner)
+                  if (!dto.isOwner)
                     Positioned(
                         top: 0,
                         right: 0,

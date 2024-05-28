@@ -43,7 +43,7 @@ class _QrStoreWidgetState extends State<QrStoreWidget> {
                 _buildTextButton(
                   title: 'Tạo mã VietQR giao dịch',
                   onTap: () {
-                    context.go('/create-qr/${widget.dto.id}');
+                    context.go('/create-vietqr');
                   },
                 ),
                 _buildTextButton(
