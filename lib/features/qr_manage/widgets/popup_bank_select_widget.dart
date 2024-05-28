@@ -296,7 +296,7 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
                               .getImageNetWork(ic_linked_bank),
                           width: 28,
                         )),
-                  if (dto.isOwner)
+                  if (!dto.isOwner)
                     Positioned(
                         top: 0,
                         right: 0,
