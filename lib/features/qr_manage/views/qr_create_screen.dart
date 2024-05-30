@@ -855,7 +855,7 @@ class _ScreenState extends State<_Screen> {
   Widget _buildCheckBox({required bool isEnable, Function()? onTap}) {
     return Container(
       alignment: Alignment.bottomCenter,
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+      padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
