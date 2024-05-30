@@ -39,8 +39,8 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
         child: Container(
           padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
           color: AppColor.WHITE,
-          width: MediaQuery.of(context).size.width * 0.3,
-          height: MediaQuery.of(context).size.height * 0.75,
+          width: 500,
+          height: 700,
           child: Stack(
             children: [
               Consumer<CreateQRProvider>(

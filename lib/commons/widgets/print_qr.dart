@@ -89,11 +89,6 @@ class _QrGenerateState extends State<QrPrint> {
   }
 
   Widget _buildWidgetQr(QRCodeUnUTState state) {
-    if (data['content'].toString().length > 65) {
-      return _buildQRCodeBlank(
-          'Không thể tạo mã VietQR \n Nội dung chuyển khoản tối đa 50 ký tự');
-    }
-
     if (state is CreateQRLoadingState) {
       return const UnconstrainedBox(
         child: SizedBox(
@@ -183,6 +178,7 @@ class _QrGenerateState extends State<QrPrint> {
                 child: QrImageView(
                   data: 'https://vietqr.vn',
                   size: 250,
+                  version: QrVersions.auto,
                   eyeStyle: const QrEyeStyle(
                       color: AppColor.BLACK, eyeShape: QrEyeShape.square),
                   dataModuleStyle: const QrDataModuleStyle(

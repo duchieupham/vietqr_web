@@ -906,7 +906,6 @@ class VietQRApp extends StatefulWidget {
 
 class _VietQRApp extends State<VietQRApp> {
   late WebSocketChannel channel;
-  final FlutterLocalization localization = FlutterLocalization.instance;
 
   @override
   void initState() {
@@ -992,9 +991,7 @@ class _VietQRApp extends State<VietQRApp> {
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
             theme: DefaultThemeData(context: context).lightTheme,
-            // localizationsDelegates: localization.localizationsDelegates,
             localizationsDelegates: const <LocalizationsDelegate<Object>>[
-              // ... app-specific localization delegate(s) here
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

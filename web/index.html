@@ -38,7 +38,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    {{flutter_service_worker_version}}
+    var serviceWorkerVersion = '{{flutter_service_worker_version}}';
 
   </script>
   <!-- This script adds the flutter initialization JS code -->
@@ -76,10 +76,13 @@
       entrypointUrl: "/main.dart.js",
         _flutter.loader({
           serviceWorker: {
-            serviceWorkerVersion: '{{flutter_service_worker_version}}',
+            serviceWorkerVersion: serviceWorkerVersion,
           },
           onEntrypointLoaded: function (engineInitializer) {
-            engineInitializer.initializeEngine().then(function (appRunner) {
+            let config = {
+              renderer: useHtml ? "html" : "canvaskit",
+            };
+            engineInitializer.initializeEngine(config).then(function (appRunner) {
               appRunner.runApp();
             });
           }

@@ -581,198 +581,195 @@ class _ScreenState extends State<_Screen> {
   }
 
   Widget _buildQrCode(QRGeneratedDTO dto) {
-    return Container(
-      width: 400,
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            "Mã VietQR của bạn",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 5),
-          const Text(
-            "Nhận tiền từ mọi ngân hàng và ví điện tử có hỗ trợ VietQR",
-            style: TextStyle(fontSize: 13),
-          ),
-          const SizedBox(height: 20),
-          RepaintBoundaryWidget(
-              globalKey: globalKey,
-              builder: (key) {
-                return Container(
-                  width: 350,
-                  height: 430,
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                        image: AssetImage('assets/images/bg-qr-vqr.png'),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        Container(
-                          width: 300,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: AppColor.GREY_BG,
+    return SingleChildScrollView(
+      child: Container(
+        width: 400,
+        padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              "Mã VietQR của bạn",
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 5),
+            const Text(
+              "Nhận tiền từ mọi ngân hàng và ví điện tử có hỗ trợ VietQR",
+              style: TextStyle(fontSize: 13),
+            ),
+            const SizedBox(height: 20),
+            RepaintBoundaryWidget(
+                globalKey: globalKey,
+                builder: (key) {
+                  return Container(
+                    width: 350,
+                    height: 430,
+                    decoration: BoxDecoration(
+                      image: const DecorationImage(
+                          image: AssetImage('assets/images/bg-qr-vqr.png'),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Container(
+                            width: 300,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: AppColor.GREY_BG,
+                            ),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 80,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: ImageUtils.instance
+                                            .getImageNetWork(dto.imgId),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 40,
+                                    child: VerticalDashedLine(),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 8),
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            dto.bankAccount,
+                                            maxLines: 1,
+                                            style: const TextStyle(
+                                                color: AppColor.BLACK,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            dto.userBankName.toUpperCase(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              color: AppColor.BLACK,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                          const SizedBox(height: 10),
+                          Container(
+                            width: 300,
+                            height: 300,
+                            padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                            decoration: BoxDecoration(
+                              color: AppColor.WHITE,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  alignment: Alignment.center,
-                                  width: 80,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24),
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: ImageUtils.instance
-                                          .getImageNetWork(dto.imgId),
+                                  width: 240,
+                                  height: 240,
+                                  // color: AppColor.GREY_DADADA,
+                                  child: QrImageView(
+                                    data: dto.qrCode,
+                                    size: 220,
+                                    version: QrVersions.auto,
+                                    embeddedImage: const AssetImage(
+                                        'assets/images/ic-viet-qr.png'),
+                                    embeddedImageStyle:
+                                        const QrEmbeddedImageStyle(
+                                      size: const Size(30, 30),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 40,
-                                  child: VerticalDashedLine(),
-                                ),
+                                const SizedBox(height: 8),
                                 Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 8),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          dto.bankAccount,
-                                          maxLines: 1,
-                                          style: const TextStyle(
-                                              color: AppColor.BLACK,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 8),
+                                        child: Image.asset(
+                                          "assets/images/ic-viet-qr-code.png",
+                                          height: 20,
                                         ),
-                                        Text(
-                                          dto.userBankName.toUpperCase(),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            color: AppColor.BLACK,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      Image.asset(
+                                        "assets/images/ic-napas247.png",
+                                        height: 30,
+                                      ),
+                                    ],
                                   ),
-                                ),
+                                )
                               ],
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          width: 300,
-                          height: 300,
-                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                          decoration: BoxDecoration(
-                            color: AppColor.WHITE,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 240,
-                                height: 240,
-                                // color: AppColor.GREY_DADADA,
-                                child: QrImageView(
-                                  data: dto.qrCode,
-                                  size: 220,
-                                  version: QrVersions.auto,
-                                  embeddedImage: const AssetImage(
-                                      'assets/images/ic-viet-qr.png'),
-                                  embeddedImageStyle:
-                                      const QrEmbeddedImageStyle(
-                                    size: const Size(30, 30),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Image.asset(
-                                        "assets/images/ic-viet-qr-code.png",
-                                        height: 20,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "assets/images/ic-napas247.png",
-                                      height: 30,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }),
-          const SizedBox(height: 20),
-          if (dto.amount != '0' && dto.amount.isNotEmpty) ...[
-            Text(
-              '+ ${StringUtils.formatNumberAmount(dto.amount)}',
-              style: const TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-                color: AppColor.ORANGE_DARK,
-              ),
-            ),
-            Container(
-              width: 350,
-              height: 1,
-              color: AppColor.GREY_DADADA,
-            ),
+                  );
+                }),
             const SizedBox(height: 20),
-            Container(
-              width: 350,
-              height: 45,
-              child: Text(
-                dto.content,
-                style: const TextStyle(fontSize: 18),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
+            if (dto.amount != '0' && dto.amount.isNotEmpty) ...[
+              Text(
+                '+ ${StringUtils.formatNumberAmount(dto.amount)}',
+                style: const TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.ORANGE_DARK,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-          ],
-          Container(
-            height: 50,
-            width: 350,
-            child: Row(
+              Container(
+                width: 350,
+                height: 1,
+                color: AppColor.GREY_DADADA,
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: 350,
+                child: Text(
+                  dto.content,
+                  style: const TextStyle(fontSize: 18),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Tooltip(
                   message: '',
                   child: MButtonIconWidget(
-                    height: 50,
-                    width: 170,
+                    height: 40,
+                    width: 165,
                     icon: Icons.image_outlined,
                     iconSize: 15,
                     textSize: 15,
@@ -808,8 +805,8 @@ class _ScreenState extends State<_Screen> {
                     ),
                   ],
                   child: Container(
-                    height: 50,
-                    width: 170,
+                    height: 40,
+                    width: 165,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: AppColor.BLUE_TEXT),
@@ -864,8 +861,8 @@ class _ScreenState extends State<_Screen> {
                 // ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

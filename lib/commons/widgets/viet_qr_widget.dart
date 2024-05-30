@@ -185,6 +185,11 @@ class VietQRWidget extends StatelessWidget {
           QrImageView(
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
+            eyeStyle: const QrEyeStyle(
+                color: AppColor.BLACK, eyeShape: QrEyeShape.square),
+            dataModuleStyle: const QrDataModuleStyle(
+                color: AppColor.BLACK,
+                dataModuleShape: QrDataModuleShape.square),
             embeddedImage:
                 ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
             embeddedImageStyle: const QrEmbeddedImageStyle(
