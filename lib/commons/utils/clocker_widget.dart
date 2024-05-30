@@ -16,8 +16,8 @@ class ClockWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              DateFormat('hh:mm:ss').format(DateTime.now()),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+              DateFormat('HH:mm:ss').format(DateTime.now()),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 2,

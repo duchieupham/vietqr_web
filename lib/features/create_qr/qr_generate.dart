@@ -654,8 +654,8 @@ class _QrGenerateState extends State<_QrGenerate> {
                           iconColor: AppColor.BLUE_TEXT,
                           title: 'Sao chép',
                           onTap: () async {
-                            await FlutterClipboard.copy(
-                                    qrGeneratedDTO.bankAccount)
+                            await FlutterClipboard.copy(ShareUtils.instance
+                                    .getTextCoppy(qrGeneratedDTO))
                                 .then(
                               (value) => Fluttertoast.showToast(
                                 msg: 'Đã sao chép',

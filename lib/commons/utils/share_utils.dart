@@ -33,6 +33,40 @@ class ShareUtils {
     return result;
   }
 
+  String getTextCoppy(QRGeneratedDTO dto) {
+    String result = '';
+    if (dto.type == 4) {
+      String bankAccount = '';
+      String name = '';
+      String email = '';
+      if (dto.userBankName.isNotEmpty) {
+        name = '${dto.userBankName}';
+      }
+      if (dto.bankAccount.isNotEmpty) {
+        bankAccount = '\nSĐT: ${dto.bankAccount}';
+      }
+      if (dto.email.isNotEmpty) {
+        email = '\nEmail: ${dto.email}';
+      }
+
+      result = '$name $bankAccount $email\nBy VietQR VN';
+    } else {
+      String prefix =
+          '${dto.bankAccount}\n${dto.userBankName}\n${dto.bankCode}${dto.bankName.isNotEmpty ? ' - ${dto.bankName}' : ''}';
+      String suffix = '';
+      if (dto.amount.isNotEmpty && dto.amount != '0') {
+        suffix =
+            '\n${CurrencyUtils.instance.getCurrencyFormatted(dto.amount)} VND\n';
+        if (dto.content.isNotEmpty) {
+          suffix += dto.content;
+        }
+      }
+      result = '$prefix$suffix\nBy VietQR VN';
+    }
+
+    return result;
+  }
+
   Future<bool> shareImage(
       {required GlobalKey key, required String textSharing}) async {
     bool result = false;
