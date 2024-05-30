@@ -171,6 +171,12 @@ class _QrGenerateState extends State<_QrGenerate> {
                   crossAxisAlignment: pw.CrossAxisAlignment.center,
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
+                    pw.Text(
+                      "Nhận tiền từ mọi ngân hàng và ví điện tử có hỗ trợ VietQR",
+                      textAlign: pw.TextAlign.center,
+                      style: pw.TextStyle(fontSize: 8, font: font),
+                    ),
+                    pw.SizedBox(height: 20),
                     pw.BarcodeWidget(
                       barcode: pw.Barcode.qrCode(),
                       data: dto.qrCode,

@@ -170,6 +170,12 @@ class _ScreenState extends State<_Screen> {
                   crossAxisAlignment: pw.CrossAxisAlignment.center,
                   mainAxisAlignment: pw.MainAxisAlignment.start,
                   children: [
+                    pw.Text(
+                      "Nhận tiền từ mọi ngân hàng và ví điện tử có hỗ trợ VietQR",
+                      textAlign: pw.TextAlign.center,
+                      style: pw.TextStyle(fontSize: 8, font: font),
+                    ),
+                    pw.SizedBox(height: 20),
                     pw.BarcodeWidget(
                       barcode: pw.Barcode.qrCode(),
                       data: dto.qrCode,
@@ -590,11 +596,13 @@ class _ScreenState extends State<_Screen> {
           children: [
             const Text(
               "Mã VietQR của bạn",
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             const Text(
               "Nhận tiền từ mọi ngân hàng và ví điện tử có hỗ trợ VietQR",
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13),
             ),
             const SizedBox(height: 20),
