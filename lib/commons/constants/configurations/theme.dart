@@ -18,6 +18,8 @@ class AppColor {
   static const Color GREY_BORDER = Color(0XFFC4C4C4);
   static const Color GREY_LIGHT = Color(0xFF9BA5B9);
   static const Color GREY_BG = Color(0xFFF4F4F4);
+  static const Color GREY_979797 = Color(0xff979797);
+
   static const Color GREY_HIGHLIGHT = Color(0xFF222222);
   static const Color RED_TEXT = Color(0xFFFF0A0A);
   static const Color RED_EC1010 = Color(0xffEC1010);
@@ -94,18 +96,21 @@ class DefaultThemeData {
       scaffoldBackgroundColor: AppColor.GREY_BG,
       colorScheme: const ColorScheme.light(primary: AppColor.BLUE_TEXT),
       canvasColor: AppColor.GREY_BG,
-      buttonColor: AppColor.GREY_VIEW,
+      buttonTheme: const ButtonThemeData(
+          colorScheme: ColorScheme.light(primary: AppColor.GREY_VIEW)),
+      // buttonColor: AppColor.GREY_VIEW,
+
       primaryColor: AppColor.WHITE,
       hoverColor: AppColor.TRANSPARENT,
-      toggleableActiveColor: AppColor.WHITE,
+      // toggleableActiveColor: AppColor.WHITE,
       // focusColor: DefaultTheme.BLUE_DARK,
-      accentColor: AppColor.GREY_TEXT,
+      // accentColor: AppColor.GREY_TEXT,
       cardColor: AppColor.WHITE,
       shadowColor: AppColor.GREY_TOP_TAB_BAR,
       indicatorColor: AppColor.DARK_PINK,
       hintColor: AppColor.BLACK,
       splashColor: AppColor.TRANSPARENT,
-      highlightColor: AppColor.TRANSPARENT,
+      highlightColor: AppColor.GREY_VIEW,
       textTheme: Theme.of(context).textTheme.apply(
             bodyColor: AppColor.BLACK,
           ),

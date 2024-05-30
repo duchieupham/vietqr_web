@@ -182,13 +182,13 @@ class VietQRWidget extends StatelessWidget {
           //   width: 110,
           //   fit: BoxFit.fitWidth,
           // ),
-          QrImage(
+          QrImageView(
             data: qrGeneratedDTO.qrCode,
             version: QrVersions.auto,
             embeddedImage:
                 ImageUtils.instance.getImageNetWork(AppImages.icVietQrSmall),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: const Size(30, 30),
+            embeddedImageStyle: const QrEmbeddedImageStyle(
+              size: Size(30, 30),
             ),
           ),
           Row(
@@ -297,7 +297,7 @@ class VietQRWidget extends StatelessWidget {
                               qrGeneratedDTO.bankAccount,
                               // 'widget.qrGeneratedDTO.bankAccount,',
                               maxLines: 1,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: AppColor.BLACK,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold),
@@ -308,7 +308,7 @@ class VietQRWidget extends StatelessWidget {
                               qrGeneratedDTO.userBankName.toUpperCase(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: AppColor.BLACK,
                                 fontSize: 13,
                               ),
@@ -336,14 +336,14 @@ class VietQRWidget extends StatelessWidget {
                   Container(
                     width: 240,
                     height: 240,
-                    child: QrImage(
+                    child: QrImageView(
                       data: qrGeneratedDTO.qrCode,
                       size: 220,
                       version: QrVersions.auto,
                       embeddedImage:
                           const AssetImage('assets/images/ic-viet-qr.png'),
-                      embeddedImageStyle: QrEmbeddedImageStyle(
-                        size: const Size(30, 30),
+                      embeddedImageStyle: const QrEmbeddedImageStyle(
+                        size: Size(30, 30),
                       ),
                     ),
                   ),

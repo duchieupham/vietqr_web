@@ -103,13 +103,13 @@ class WebMobileBlankWidget extends StatelessWidget {
                       bgColor: AppColor.WHITE,
                       enableShadow: true,
                       child: UnconstrainedBox(
-                        child: QrImage(
+                        child: QrImageView(
                           data: 'https://onelink.to/q7zwpe',
                           size: width * 0.4,
                           embeddedImage: ImageUtils.instance
                               .getImageNetWork(AppImages.icVietQrSmall),
-                          embeddedImageStyle: QrEmbeddedImageStyle(
-                            size: const Size(30, 30),
+                          embeddedImageStyle: const QrEmbeddedImageStyle(
+                            size: Size(30, 30),
                           ),
                         ),
                       ),

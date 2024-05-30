@@ -392,7 +392,9 @@ class _FilterWidgetState extends State<FilterWidget> {
       updateFromDate(endDate);
       updateToDate(fromDate);
     } else if (_filterByTime.id == TypeTimeFilter.THREE_MONTH_LAST_DAY.id) {
-      DateTime fromDate = Jiffy(endDate).subtract(months: 3).dateTime;
+      // DateTime fromDate = Jiffy(endDate).subtract(months: 3).dateTime;
+      DateTime fromDate =
+          Jiffy.parseFromDateTime(endDate).subtract(months: 3).dateTime;
       fromDate = fromDate
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));

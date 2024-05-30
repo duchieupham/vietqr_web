@@ -9,12 +9,12 @@ import 'package:VietQR/features/merchant/events/merchant_event.dart';
 import 'package:VietQR/features/merchant/provider/synthesis_repor_provider.dart';
 import 'package:VietQR/features/merchant/states/merchant_state.dart';
 import 'package:VietQR/features/merchant/widget/line_chart_static.dart';
+import 'package:VietQR/features/transaction/widgets/dialog_pick_date.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/synthesis_report_dto.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 
 class SynthesisReport extends StatefulWidget {
@@ -548,13 +548,27 @@ class _SaleReportState extends State<SynthesisReport> {
             if (provider.valueTimeFilter.id == 1)
               InkWell(
                 onTap: () async {
-                  final selected = await showMonthYearPicker(
+                  // final selected = await showMonthYearPicker(
+                  //   context: context,
+                  //   initialDate: provider.timeCurrent,
+                  //   firstDate: DateTime(2022),
+                  //   lastDate: DateTime.now(),
+                  // );
+                  DateTime selected = await showDialog(
+                    barrierDismissible: false,
                     context: context,
-                    initialDate: provider.timeCurrent,
-                    firstDate: DateTime(2022),
-                    lastDate: DateTime.now(),
+                    builder: (BuildContext context) {
+                      return Material(
+                        color: AppColor.TRANSPARENT,
+                        child: Center(
+                          child: DialogPickDate(
+                            dateTime: DateTime.now(),
+                          ),
+                        ),
+                      );
+                    },
                   );
-                  provider.updateCurrentTime(selected!);
+                  provider.updateCurrentTime(selected);
 
                   merchantBloc.add(GetSynthesisReportEvent(
                       customerSyncId:

@@ -172,7 +172,12 @@ class _QrGenerateState extends State<QrCardGenerate> {
                 decoration: const BoxDecoration(color: AppColor.WHITE),
                 child: Stack(
                   children: [
-                    QrImage(
+                    // QrImage(
+                    //   data: contactDetailDTO.value,
+                    //   version: QrVersions.auto,
+                    //   size: 240,
+                    // ),
+                    QrImageView(
                       data: contactDetailDTO.value,
                       version: QrVersions.auto,
                       size: 240,
@@ -362,13 +367,17 @@ class _QrGenerateState extends State<QrCardGenerate> {
               padding: const EdgeInsets.all(20),
               child: Opacity(
                 opacity: 0.5,
-                child: QrImage(
+                child: QrImageView(
                   data: 'https://vietqr.vn',
                   size: 250,
-                  foregroundColor: AppColor.BLACK,
+                  eyeStyle: const QrEyeStyle(
+                      color: AppColor.BLACK, eyeShape: QrEyeShape.square),
+                  dataModuleStyle: const QrDataModuleStyle(
+                      color: AppColor.BLACK,
+                      dataModuleShape: QrDataModuleShape.square),
                   embeddedImage: ImageUtils.instance
                       .getImageNetWork(AppImages.icVietQrSmall),
-                  embeddedImageStyle: QrEmbeddedImageStyle(
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
                     size: const Size(30, 30),
                   ),
                 ),

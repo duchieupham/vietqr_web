@@ -706,13 +706,13 @@ class DialogWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  QrImage(
+                  QrImageView(
                     data: 'https://onelink.to/q7zwpe',
                     size: 260,
                     embeddedImage: ImageUtils.instance
                         .getImageNetWork(AppImages.icVietQrLogin),
-                    embeddedImageStyle: QrEmbeddedImageStyle(
-                      size: const Size(30, 30),
+                    embeddedImageStyle: const QrEmbeddedImageStyle(
+                      size: Size(30, 30),
                     ),
                   ),
                   const Padding(

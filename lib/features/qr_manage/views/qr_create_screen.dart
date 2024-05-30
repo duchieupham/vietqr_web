@@ -3,6 +3,8 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button/m_button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
+import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
+import 'package:VietQR/commons/widgets/pop_up_menu_left.dart';
 import 'package:VietQR/features/create_qr/provider/create_qr_provider.dart';
 import 'package:VietQR/features/qr_manage/blocs/qr_create_bloc.dart';
 import 'package:VietQR/features/qr_manage/event/qr_create_events.dart';
@@ -17,6 +19,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:popover/popover.dart';
+import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:html' as html;
@@ -145,6 +151,115 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
+  Future<void> printBill(QRGeneratedDTO dto) async {
+    final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+    final font = await PdfGoogleFonts.interLight();
+    await Printing.layoutPdf(
+      format: PdfPageFormat.roll80,
+      onLayout: (format) {
+        pdf.addPage(
+          pw.Page(
+            pageFormat: format,
+            orientation: pw.PageOrientation.natural,
+            build: (context) {
+              return pw.SizedBox(
+                width: double.infinity,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.BarcodeWidget(
+                      barcode: pw.Barcode.qrCode(),
+                      data: dto.qrCode,
+                      width: 100,
+                      height: 100,
+                    ),
+                    pw.SizedBox(height: 20),
+                    dto.amount.isNotEmpty
+                        ? pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                                pw.Text('Số tiền:',
+                                    style:
+                                        pw.TextStyle(font: font, fontSize: 10)),
+                                pw.Text(
+                                    StringUtils.formatNumberAmount(dto.amount),
+                                    style: const pw.TextStyle(fontSize: 10)),
+                              ])
+                        : pw.SizedBox.shrink(),
+                    if (_contentController.text.isNotEmpty) ...[
+                      pw.SizedBox(height: 10),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Nội dung:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(dto.content,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    pw.SizedBox(height: 10),
+                    pw.LayoutBuilder(
+                      builder: (context, constraints) {
+                        final boxWidth = constraints!.constrainWidth();
+                        const dashWidth = 2.0;
+                        final dashCount = (boxWidth / (2 * dashWidth)).floor();
+                        return pw.Flex(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          direction: pw.Axis.horizontal,
+                          children: List.generate(dashCount, (_) {
+                            return pw.SizedBox(
+                              width: dashWidth,
+                              height: 1,
+                              child: pw.DecoratedBox(
+                                decoration: const pw.BoxDecoration(
+                                    color: PdfColors.black),
+                              ),
+                            );
+                          }),
+                        );
+                      },
+                    ),
+                    if (_invoiceController.text.isNotEmpty) ...[
+                      pw.SizedBox(height: 10),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Mã đơn hàng:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(_invoiceController.text,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    if (dto.terminalCode.isNotEmpty) ...[
+                      pw.SizedBox(height: 10),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Mã điểm bán:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(dto.terminalCode,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    pw.SizedBox(height: 60),
+                    pw.Text('By VietQR VN',
+                        style: pw.TextStyle(
+                            font: font,
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold))
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+        return pdf.save();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<CreateQRProvider>(
@@ -211,21 +326,26 @@ class _ScreenState extends State<_Screen> {
                       children: [
                         Container(
                           width: 410,
-                          height: MediaQuery.of(context).size.height,
-                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Text(
+                          // height: MediaQuery.of(context).size.height,
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 30, right: 30),
+                                child: Text(
                                   "Thông tin thiết lập mã VietQR",
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                const SizedBox(height: 20),
-                                Row(
+                              ),
+                              const SizedBox(height: 20),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, right: 30),
+                                child: Row(
                                   children: [
                                     _buildOption(
                                         "Tài khoản đã thêm", isFirstSelected),
@@ -234,11 +354,18 @@ class _ScreenState extends State<_Screen> {
                                         "Tài khoản khác", !isFirstSelected),
                                   ],
                                 ),
-                                const SizedBox(height: 20),
-                                _conditionalWidget(),
-                                // const Spacer(),
-                                const SizedBox(height: 30),
-                                _buildCheckBox(
+                              ),
+                              const SizedBox(height: 20),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                    child: _conditionalWidget()),
+                              ),
+                              // const Spacer(),
+                              const SizedBox(height: 30),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, right: 30),
+                                child: _buildCheckBox(
                                   isEnable: isEnableButton,
                                   onTap: isEnableButton
                                       ? () {
@@ -278,8 +405,8 @@ class _ScreenState extends State<_Screen> {
                                         }
                                       : null,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         if (state.request == QrGenerate.QR_GENERATE &&
@@ -548,13 +675,14 @@ class _ScreenState extends State<_Screen> {
                                 width: 240,
                                 height: 240,
                                 // color: AppColor.GREY_DADADA,
-                                child: QrImage(
+                                child: QrImageView(
                                   data: dto.qrCode,
                                   size: 220,
                                   version: QrVersions.auto,
                                   embeddedImage: const AssetImage(
                                       'assets/images/ic-viet-qr.png'),
-                                  embeddedImageStyle: QrEmbeddedImageStyle(
+                                  embeddedImageStyle:
+                                      const QrEmbeddedImageStyle(
                                     size: const Size(30, 30),
                                   ),
                                 ),
@@ -640,29 +768,82 @@ class _ScreenState extends State<_Screen> {
                     textColor: AppColor.BLUE_TEXT,
                   ),
                 ),
-                Tooltip(
-                  message: '',
-                  child: MButtonIconWidget(
+                PopupMenuButton(
+                  offset: const Offset(115, 0),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: () {
+                        String paramData = Session.instance
+                            .formatDataParamUrl(dto, showBankAccount: 1);
+                        html.window.open(
+                            Uri.base.toString().replaceFirst('/create-vietqr',
+                                '/qr-generate/print$paramData'),
+                            'new tab');
+                      },
+                      child: const Text('In khổ A4'),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {
+                        printBill(dto);
+                      },
+                      child: const Text('In bill'),
+                    ),
+                  ],
+                  child: Container(
                     height: 50,
                     width: 170,
-                    icon: Icons.print_outlined,
-                    iconSize: 15,
-                    textSize: 15,
-                    iconColor: AppColor.BLUE_TEXT,
-                    title: 'In mã VietQR',
-                    onTap: () async {
-                      String paramData = Session.instance
-                          .formatDataParamUrl(dto, showBankAccount: 1);
-                      html.window.open(
-                          Uri.base.toString().replaceFirst(
-                              '/create-vietqr', '/qr-generate/print$paramData'),
-                          'new tab');
-                    },
-                    border: Border.all(color: AppColor.BLUE_TEXT),
-                    bgColor: AppColor.WHITE,
-                    textColor: AppColor.BLUE_TEXT,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: AppColor.BLUE_TEXT),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.print_outlined,
+                            color: AppColor.BLUE_TEXT, size: 15),
+                        SizedBox(width: 4),
+                        Text(
+                          'In mã VietQR',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: AppColor.BLUE_TEXT,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                )
+                // Tooltip(
+                //   message: '',
+                //   child: MButtonIconWidget(
+                //     height: 50,
+                //     width: 170,
+                //     icon: Icons.print_outlined,
+                //     iconSize: 15,
+                //     textSize: 15,
+                //     iconColor: AppColor.BLUE_TEXT,
+                //     title: 'In mã VietQR',
+                //     onTap: () async {
+                //
+                //       PopupMenuButton(
+                //         itemBuilder: (context) => [
+                //           PopupMenuItem(
+                //             onTap: () {},
+                //             child: Text('In khổ A4'),
+                //           ),
+                //           PopupMenuItem(
+                //             onTap: () {},
+                //             child: Text('In bill'),
+                //           ),
+                //         ],
+                //       );
+
+                //     },
+                //     border: Border.all(color: AppColor.BLUE_TEXT),
+                //     bgColor: AppColor.WHITE,
+                //     textColor: AppColor.BLUE_TEXT,
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -685,33 +866,17 @@ class _ScreenState extends State<_Screen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Theme(
-                    data: Theme.of(context).copyWith(
-                      checkboxTheme: CheckboxThemeData(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        fillColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.blue;
-                          }
-                          return Colors.grey;
-                        }),
-                        checkColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                    ),
-                    child: Checkbox(
-                      value: _isChecked,
-                      onChanged: (bool? newValue) {
-                        setState(() {
-                          if (newValue != null) {
-                            _isChecked = newValue;
-                          }
-                        });
-                      },
-                    ),
+                  Checkbox(
+                    side: const BorderSide(color: AppColor.GREY, width: 1.5),
+                    shape: const CircleBorder(),
+                    value: _isChecked,
+                    onChanged: (bool? newValue) {
+                      setState(() {
+                        if (newValue != null) {
+                          _isChecked = newValue;
+                        }
+                      });
+                    },
                   ),
                   const Text("Hiển thị mã VietQR ở tab mới"),
                 ],
@@ -734,7 +899,10 @@ class _ScreenState extends State<_Screen> {
   }
 
   Widget _conditionalWidget() {
-    return isFirstSelected ? _buildBankAccount() : _buildOtherAccount();
+    return Container(
+      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
+      child: isFirstSelected ? _buildBankAccount() : _buildOtherAccount(),
+    );
   }
 
   Widget _buildOtherAccount() {
@@ -845,9 +1013,9 @@ class _ScreenState extends State<_Screen> {
                                     const BorderRadius.all(Radius.circular(5)),
                                 border:
                                     Border.all(color: AppColor.GREY_DADADA)),
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              children: [
                                 Text(
                                   'Chọn tại khoản ngân hàng',
                                   style: TextStyle(
@@ -962,12 +1130,9 @@ class _ScreenState extends State<_Screen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const SizedBox(
-                    height: 15,
-                    child: Text(
-                      'Không dấu tiếng Việt, không chứa ký tự đặc biệt.',
-                      style: TextStyle(fontSize: 13),
-                    ),
+                  const Text(
+                    'Không dấu tiếng Việt, không chứa ký tự đặc biệt.',
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),
@@ -1199,12 +1364,9 @@ class _ScreenState extends State<_Screen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          const SizedBox(
-                            height: 15,
-                            child: Text(
-                              'Không dấu tiếng Việt, không chứa ký tự đặc biệt.',
-                              style: TextStyle(fontSize: 13),
-                            ),
+                          const Text(
+                            'Không dấu tiếng Việt, không chứa ký tự đặc biệt.',
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -1441,12 +1603,9 @@ class _ScreenState extends State<_Screen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const SizedBox(
-                    height: 15,
-                    child: Text(
-                      'Không dấu tiếng Việt, không chứa ký tự đặc biệt.',
-                      style: TextStyle(fontSize: 13),
-                    ),
+                  const Text(
+                    'Không dấu tiếng Việt, không chứa ký tự đặc biệt.',
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),

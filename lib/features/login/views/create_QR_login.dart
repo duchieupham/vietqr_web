@@ -41,8 +41,6 @@ import 'package:VietQR/features/login/states/qrcode_un_authen_state.dart';
 import 'package:VietQR/features/bank/widgets/select_bank_type_widget.dart';
 import 'package:VietQR/features/login/provider/create_qr_login_provider.dart';
 
-
-
 class CreateQRLogin extends StatefulWidget {
   const CreateQRLogin({super.key});
 
@@ -1190,7 +1188,7 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                         decoration: const BoxDecoration(color: AppColor.WHITE),
                         child: Stack(
                           children: [
-                            QrImage(
+                            QrImageView(
                               data: vcardGenerateDto.qr,
                               version: QrVersions.auto,
                               size: 200,
@@ -1372,14 +1370,19 @@ class _CreateQRCodeState extends State<CreateQRLogin> {
                               color: AppColor.BLACK.withOpacity(0.2))),
                       child: Opacity(
                         opacity: 0.5,
-                        child: QrImage(
+                        child: QrImageView(
                           data: 'https://vietqr.vn',
                           size: 260,
-                          foregroundColor: AppColor.BLACK,
+                          eyeStyle: const QrEyeStyle(
+                              color: AppColor.BLACK,
+                              eyeShape: QrEyeShape.square),
+                          dataModuleStyle: const QrDataModuleStyle(
+                              color: AppColor.BLACK,
+                              dataModuleShape: QrDataModuleShape.square),
                           embeddedImage: ImageUtils.instance
                               .getImageNetWork(AppImages.icVietQrSmall),
-                          embeddedImageStyle: QrEmbeddedImageStyle(
-                            size: const Size(30, 30),
+                          embeddedImageStyle: const QrEmbeddedImageStyle(
+                            size: Size(30, 30),
                           ),
                         ),
                       ),

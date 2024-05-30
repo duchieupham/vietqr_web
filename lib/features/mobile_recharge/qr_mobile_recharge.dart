@@ -110,13 +110,13 @@ class _QRMobileRechargeScreenState extends State<QRMobileRechargeScreen>
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: QrImage(
+                              child: QrImageView(
                                 data: widget.dto.qrCode,
                                 version: QrVersions.auto,
                                 embeddedImage: ImageUtils.instance
                                     .getImageNetWork(AppImages.icVietQrLogin),
-                                embeddedImageStyle: QrEmbeddedImageStyle(
-                                  size: const Size(30, 30),
+                                embeddedImageStyle: const QrEmbeddedImageStyle(
+                                  size: Size(30, 30),
                                 ),
                               ),
                             ),

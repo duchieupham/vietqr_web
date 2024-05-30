@@ -78,9 +78,9 @@ import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -906,6 +906,7 @@ class VietQRApp extends StatefulWidget {
 
 class _VietQRApp extends State<VietQRApp> {
   late WebSocketChannel channel;
+  final FlutterLocalization localization = FlutterLocalization.instance;
 
   @override
   void initState() {
@@ -991,11 +992,12 @@ class _VietQRApp extends State<VietQRApp> {
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
             theme: DefaultThemeData(context: context).lightTheme,
-            localizationsDelegates: const [
+            // localizationsDelegates: localization.localizationsDelegates,
+            localizationsDelegates: const <LocalizationsDelegate<Object>>[
+              // ... app-specific localization delegate(s) here
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
-              MonthYearPickerLocalizations.delegate,
             ],
             supportedLocales: const [
               //  Locale('en'), // English

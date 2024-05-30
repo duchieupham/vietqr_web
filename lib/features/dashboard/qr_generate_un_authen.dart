@@ -399,14 +399,18 @@ class _QrGenerateState extends State<QrGenerateUnAuthen> {
               padding: const EdgeInsets.all(20),
               child: Opacity(
                 opacity: 0.5,
-                child: QrImage(
+                child: QrImageView(
                   data: 'https://vietqr.vn',
                   size: 250,
-                  foregroundColor: AppColor.BLACK,
+                  eyeStyle: const QrEyeStyle(
+                      color: AppColor.BLACK, eyeShape: QrEyeShape.square),
+                  dataModuleStyle: const QrDataModuleStyle(
+                      color: AppColor.BLACK,
+                      dataModuleShape: QrDataModuleShape.square),
                   embeddedImage: ImageUtils.instance
                       .getImageNetWork(AppImages.icVietQrSmall),
-                  embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: const Size(30, 30),
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
+                    size: Size(30, 30),
                   ),
                 ),
               ),

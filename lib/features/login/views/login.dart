@@ -645,13 +645,13 @@ class _Login extends State<Login> {
             alignment: Alignment.center,
             bgColor: AppColor.WHITE,
             padding: const EdgeInsets.all(8),
-            child: QrImage(
+            child: QrImageView(
               data: qrValue,
               size: 305,
               embeddedImage:
                   const AssetImage('assets/images/ic-viet-qr-small.png'),
-              embeddedImageStyle: QrEmbeddedImageStyle(
-                size: const Size(30, 30),
+              embeddedImageStyle: const QrEmbeddedImageStyle(
+                size: Size(30, 30),
               ),
             ),
           ),
