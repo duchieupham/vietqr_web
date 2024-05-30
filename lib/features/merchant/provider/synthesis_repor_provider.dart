@@ -50,6 +50,19 @@ class SynthesisReportProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  DateTime getPreviousMonth() {
+    DateTime now = DateTime.now();
+    int newMonth = now.month - 1;
+    int newYear = now.year;
+
+    if (newMonth < 1) {
+      newMonth = 12; // Set month to December
+      newYear--; // Decrement year
+    }
+
+    return DateTime(newYear, newMonth);
+  }
+
   getListBankAccount() async {
     getListYear();
     String userId = UserInformationHelper.instance.getUserId();

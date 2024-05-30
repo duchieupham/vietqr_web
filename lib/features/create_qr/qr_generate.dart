@@ -5,6 +5,7 @@ import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/button_icon_widget.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
@@ -32,7 +33,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
+import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import '../../commons/utils/image_utils.dart';
 import '../../commons/widgets/button/m_button_icon_widget.dart';
 import '../../commons/widgets/dashed_line.dart';
@@ -149,6 +152,115 @@ class _QrGenerateState extends State<_QrGenerate> {
         );
       });
     });
+  }
+
+  Future<void> printBill(QRGeneratedDTO dto) async {
+    final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+    final font = await PdfGoogleFonts.interLight();
+    await Printing.layoutPdf(
+      format: PdfPageFormat.roll80,
+      onLayout: (format) {
+        pdf.addPage(
+          pw.Page(
+            pageFormat: format,
+            orientation: pw.PageOrientation.natural,
+            build: (context) {
+              return pw.SizedBox(
+                width: double.infinity,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.BarcodeWidget(
+                      barcode: pw.Barcode.qrCode(),
+                      data: dto.qrCode,
+                      width: 100,
+                      height: 100,
+                    ),
+                    pw.SizedBox(height: 20),
+                    dto.amount.isNotEmpty
+                        ? pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                                pw.Text('Số tiền:',
+                                    style:
+                                        pw.TextStyle(font: font, fontSize: 10)),
+                                pw.Text(
+                                    StringUtils.formatNumberAmount(dto.amount),
+                                    style: const pw.TextStyle(fontSize: 10)),
+                              ])
+                        : pw.SizedBox.shrink(),
+                    if (dto.content.isNotEmpty) ...[
+                      pw.SizedBox(height: 10),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Nội dung:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(dto.content,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    pw.SizedBox(height: 10),
+                    pw.LayoutBuilder(
+                      builder: (context, constraints) {
+                        final boxWidth = constraints!.constrainWidth();
+                        const dashWidth = 2.0;
+                        final dashCount = (boxWidth / (2 * dashWidth)).floor();
+                        return pw.Flex(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          direction: pw.Axis.horizontal,
+                          children: List.generate(dashCount, (_) {
+                            return pw.SizedBox(
+                              width: dashWidth,
+                              height: 1,
+                              child: pw.DecoratedBox(
+                                decoration: const pw.BoxDecoration(
+                                    color: PdfColors.black),
+                              ),
+                            );
+                          }),
+                        );
+                      },
+                    ),
+                    if (transactionQRdto.orderId.isNotEmpty) ...[
+                      pw.SizedBox(height: 10),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Mã đơn hàng:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(transactionQRdto.orderId,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    if (dto.terminalCode.isNotEmpty) ...[
+                      pw.SizedBox(height: 10),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Mã điểm bán:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(dto.terminalCode,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    pw.SizedBox(height: 60),
+                    pw.Text('By VietQR VN',
+                        style: pw.TextStyle(
+                            font: font,
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold))
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+        return pdf.save();
+      },
+    );
   }
 
   @override
@@ -506,14 +618,15 @@ class _QrGenerateState extends State<_QrGenerate> {
                               Container(
                                 width: 240,
                                 height: 240,
-                                child: QrImage(
+                                child: QrImageView(
                                   data: qrGeneratedDTO.qrCode,
                                   size: 220,
                                   version: QrVersions.auto,
                                   embeddedImage: const AssetImage(
                                       'assets/images/ic-viet-qr.png'),
-                                  embeddedImageStyle: QrEmbeddedImageStyle(
-                                    size: const Size(30, 30),
+                                  embeddedImageStyle:
+                                      const QrEmbeddedImageStyle(
+                                    size: Size(30, 30),
                                   ),
                                 ),
                               ),
@@ -605,31 +718,53 @@ class _QrGenerateState extends State<_QrGenerate> {
                               textColor: AppColor.BLUE_TEXT,
                             ),
                           ),
-                          Tooltip(
-                            message: '',
-                            child: MButtonIconWidget(
+                          PopupMenuButton(
+                            offset: const Offset(165, 0),
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                onTap: () {
+                                  String paramData = Session.instance
+                                      .formatDataParamUrl(qrGeneratedDTO,
+                                          showBankAccount: 1);
+                                  html.window.open(
+                                      Uri.base.toString().replaceFirst(
+                                          '/qr-generate',
+                                          '/qr-generate/print$paramData'),
+                                      'new tab');
+                                },
+                                child: const Text('In khổ A4'),
+                              ),
+                              PopupMenuItem(
+                                onTap: () {
+                                  printBill(qrGeneratedDTO);
+                                },
+                                child: const Text('In bill'),
+                              ),
+                            ],
+                            child: Container(
                               height: 50,
                               width: width / 2 - 10,
-                              icon: Icons.print_outlined,
-                              iconSize: 15,
-                              textSize: 15,
-                              iconColor: AppColor.BLUE_TEXT,
-                              title: 'In mã VietQR',
-                              onTap: () async {
-                                String paramData = Session.instance
-                                    .formatDataParamUrl(qrGeneratedDTO,
-                                        showBankAccount: 1);
-                                html.window.open(
-                                    Uri.base.toString().replaceFirst(
-                                        '/qr-generate',
-                                        '/qr-generate/print$paramData'),
-                                    'new tab');
-                              },
-                              border: Border.all(color: AppColor.BLUE_TEXT),
-                              bgColor: AppColor.WHITE,
-                              textColor: AppColor.BLUE_TEXT,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: AppColor.BLUE_TEXT),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.print_outlined,
+                                      color: AppColor.BLUE_TEXT, size: 15),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'In mã VietQR',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: AppColor.BLUE_TEXT,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -637,7 +772,7 @@ class _QrGenerateState extends State<_QrGenerate> {
                 );
               } else {
                 return Container(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 20),
                   height: 70,
                   width: width,
                   child: Row(
@@ -876,14 +1011,19 @@ class _QrGenerateState extends State<_QrGenerate> {
               padding: const EdgeInsets.all(20),
               child: Opacity(
                 opacity: 0.5,
-                child: QrImage(
+                child: QrImageView(
                   data: 'https://vietqr.vn',
                   size: 250,
-                  foregroundColor: AppColor.BLACK,
+                  eyeStyle: const QrEyeStyle(
+                      color: AppColor.BLACK, eyeShape: QrEyeShape.square),
+                  dataModuleStyle: const QrDataModuleStyle(
+                      color: AppColor.BLACK,
+                      dataModuleShape: QrDataModuleShape.square),
+                  // foregroundColor: AppColor.BLACK,
                   embeddedImage: ImageUtils.instance
                       .getImageNetWork(AppImages.icVietQrSmall),
-                  embeddedImageStyle: QrEmbeddedImageStyle(
-                    size: const Size(30, 30),
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
+                    size: Size(30, 30),
                   ),
                 ),
               ),

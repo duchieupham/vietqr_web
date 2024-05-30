@@ -16,7 +16,6 @@ import 'package:VietQR/models/vietqr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:vcard_maintained/vcard_maintained.dart';
 
 import '../../../commons/constants/configurations/stringify.dart';
 import '../../../commons/enums/check_type.dart';
@@ -66,7 +65,7 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> with BaseManager {
 
   final repository = ContactRepository();
 
-  var vCard = VCard();
+  // var vCard = VCard();
 
   void _getListContact(ContactEvent event, Emitter emit) async {
     try {

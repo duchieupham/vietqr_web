@@ -596,7 +596,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     decoration: const BoxDecoration(color: AppColor.WHITE),
                     child: Stack(
                       children: [
-                        QrImage(
+                        QrImageView(
                           data: contactDetailDTO.value,
                           version: QrVersions.auto,
                           size: 200,

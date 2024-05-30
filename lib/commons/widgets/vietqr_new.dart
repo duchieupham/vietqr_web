@@ -58,13 +58,13 @@ class _VietQrState extends State<VietQrNew> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          QrImage(
+          QrImageView(
             data: widget.qrGeneratedDTO?.qrCode ?? widget.qrCode ?? '',
             size: widget.width ?? 250,
             version: QrVersions.auto,
             embeddedImage: const AssetImage('assets/images/ic-viet-qr.png'),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: const Size(30, 30),
+            embeddedImageStyle: const QrEmbeddedImageStyle(
+              size: Size(30, 30),
             ),
           ),
           Container(

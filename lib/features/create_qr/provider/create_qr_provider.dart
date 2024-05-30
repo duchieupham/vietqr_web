@@ -83,7 +83,7 @@ class CreateQRProvider with ChangeNotifier {
     selectTerminal = TerminalQRDTO(
         terminalCode: '0', terminalName: 'Nhập hoặc chọn mã cửa hàng');
     bankAccountDTO = null;
-    notifyListeners();
+    // notifyListeners();
   }
 
   void selectBank(BankAccountDTO value) {
