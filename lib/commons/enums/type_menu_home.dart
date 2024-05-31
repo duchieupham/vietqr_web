@@ -18,6 +18,7 @@ enum MenuHomeType {
   WALLET_QR,
   BUSINESS,
   ENTERPRISE,
+  INVOICE,
   INTRO_VIET_QR,
   SETTING,
   LOGOUT,

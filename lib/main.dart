@@ -88,6 +88,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'commons/widgets/dynamic_link_widget.dart';
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'features/create_qr/provider/create_qr_provider.dart';
+import 'features/invoice_manage/invoice_manage_screen.dart';
 import 'features/login/provider/menu_login_provider.dart';
 import 'features/qr_manage/qr_manage_screen.dart';
 import 'features/vhitek/vhitek_screen.dart';
@@ -797,9 +798,39 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
+        path: '/invoice',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/invoice' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const InvoiceManageScreen(type: Invoice_Type.LIST),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const InvoiceManageScreen(
+              type: Invoice_Type.LIST,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/service-fee',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/service-fee' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const InvoiceManageScreen(type: Invoice_Type.SERVICE_FEE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const InvoiceManageScreen(
+              type: Invoice_Type.SERVICE_FEE,
+            ),
+          );
+        }),
+    GoRoute(
         path: '/vietqr-wallet',
         redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/qr-wallet' : '/login',
+            (userId.isNotEmpty) ? '/vietqr-wallet' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const QrManageScreen(type: Qr_Manage.WALLET),
         pageBuilder: (BuildContext context, GoRouterState state) {

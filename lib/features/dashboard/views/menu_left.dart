@@ -29,20 +29,23 @@ class MenuLeft extends StatelessWidget {
   final List<Widget> subMenuTransaction;
   final List<Widget> subMenuMember;
   final List<Widget> subMenuQr;
+  final List<Widget> subMenuInvoice;
 
   final Function(int)? onSelectMenu;
 
-  const MenuLeft(
-      {super.key,
-      required this.currentType,
-      this.onSelectMenu,
-      this.subMenuTransactionUser = const [],
-      this.subMenuMerchantRequest = const [],
-      this.subMenuEnterprise = const [],
-      this.subMenuTransaction = const [],
-      this.subMenuMember = const [],
-      this.subMenuQr = const [],
-      this.subMenuMerchant = const []});
+  const MenuLeft({
+    super.key,
+    required this.currentType,
+    this.onSelectMenu,
+    this.subMenuTransactionUser = const [],
+    this.subMenuMerchantRequest = const [],
+    this.subMenuEnterprise = const [],
+    this.subMenuTransaction = const [],
+    this.subMenuMember = const [],
+    this.subMenuQr = const [],
+    this.subMenuMerchant = const [],
+    this.subMenuInvoice = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +149,17 @@ class MenuLeft extends StatelessWidget {
                 bold: true,
                 onTap: () {
                   context.go('/member/list');
+                },
+              ),
+              ItemMenuHome(
+                title: 'Quản lý hoá đơn',
+                iconId: AppImages.icMenuInvoiceBlack,
+                enableDropDownList: true,
+                listItemDrop: subMenuInvoice,
+                isSelect: currentType == MenuHomeType.MEMBER,
+                bold: true,
+                onTap: () {
+                  context.go('/invoice');
                 },
               ),
               ItemMenuHome(
@@ -400,6 +414,48 @@ class MenuLeft extends StatelessWidget {
               );
             },
           ),
+          ItemMenuHome(
+            title: 'Quản lý hoá đơn',
+            iconId: AppImages.icMenuInvoiceBlack,
+            isOnlyIcon: true,
+            isSelect: currentType == MenuHomeType.INVOICE,
+            onTap: () {
+              final RenderBox button = context.findRenderObject() as RenderBox;
+              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+              final double buttonWidth = button.size.width;
+              showPopup(
+                context,
+                [
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Danh sách hoá đơn',
+                      isSelect: provider.type == '5' ? true : false,
+                      onTap: () {
+                        provider.selectType('5');
+                        context.go('/invoice');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Thu phí dịch vụ',
+                      isSelect: provider.type == '6' ? true : false,
+                      onTap: () {
+                        provider.selectType('6');
+                        context.go('/service-fee');
+                      },
+                    ),
+                  )
+                ],
+                RelativeRect.fromLTRB(
+                  buttonPosition.dx + buttonWidth,
+                  buttonPosition.dy * 4.4,
+                  buttonPosition.dx + buttonWidth * 2,
+                  buttonPosition.dy + button.size.height,
+                ),
+              );
+            },
+          ),
 
           ItemMenuHome(
             title: 'Tiện ích QR',
@@ -417,9 +473,9 @@ class MenuLeft extends StatelessWidget {
                   PopupMenuItem(
                     child: ItemDropDownMenu(
                       title: 'Tạo mã VietQR',
-                      isSelect: provider.type == '5' ? true : false,
+                      isSelect: provider.type == '7' ? true : false,
                       onTap: () {
-                        provider.selectType('5');
+                        provider.selectType('7');
                         context.go('/create-vietqr');
                       },
                     ),
@@ -427,17 +483,17 @@ class MenuLeft extends StatelessWidget {
                   PopupMenuItem(
                     child: ItemDropDownMenu(
                       title: 'Ví QR',
-                      isSelect: provider.type == '6' ? true : false,
+                      isSelect: provider.type == '8' ? true : false,
                       onTap: () {
-                        provider.selectType('6');
-                        context.go('/qr-wallet');
+                        provider.selectType('8');
+                        context.go('/vietqr-wallet');
                       },
                     ),
                   )
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,
-                  buttonPosition.dy * 4.4,
+                  buttonPosition.dy * 5.2,
                   buttonPosition.dx + buttonWidth * 2,
                   buttonPosition.dy + button.size.height,
                 ),
@@ -467,9 +523,9 @@ class MenuLeft extends StatelessWidget {
                     PopupMenuItem(
                       child: ItemDropDownMenu(
                         title: 'Đại lý',
-                        isSelect: provider.type == '7' ? true : false,
+                        isSelect: provider.type == '9' ? true : false,
                         onTap: () {
-                          provider.selectType('7');
+                          provider.selectType('9');
                           context.go('/merchant/report');
                         },
                       ),
@@ -477,7 +533,7 @@ class MenuLeft extends StatelessWidget {
                   ],
                   RelativeRect.fromLTRB(
                     buttonPosition.dx + buttonWidth,
-                    buttonPosition.dy * 5.2,
+                    buttonPosition.dy * 6.2,
                     buttonPosition.dx + buttonWidth * 2,
                     buttonPosition.dy + button.size.height,
                   ),
@@ -531,7 +587,8 @@ class MenuLeft extends StatelessWidget {
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,
-                  buttonPosition.dy * 5.2,
+                  buttonPosition.dy *
+                      (provider.isAccountIsMerchant ? 7.2 : 6.2),
                   buttonPosition.dx + buttonWidth * 2,
                   buttonPosition.dy + button.size.height,
                 ),
