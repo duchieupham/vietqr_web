@@ -51,3 +51,14 @@ class NotificationGetCounterEvent extends NotificationEvent {
   @override
   List<Object?> get props => [userId];
 }
+
+class NotificationGetInvoiceEvent extends NotificationEvent {
+  final String userId;
+
+  const NotificationGetInvoiceEvent({
+    required this.userId,
+  });
+
+  @override
+  List<Object?> get props => [userId];
+}

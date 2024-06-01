@@ -7,6 +7,8 @@ import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/models/notification_dto.dart';
 import 'package:VietQR/models/notification_input_dto.dart';
 
+import '../../../models/noti_invoice_dto.dart';
+
 class NotificationRepository {
   const NotificationRepository();
 
@@ -26,6 +28,25 @@ class NotificationRepository {
       LOG.error(e.toString());
     }
     return result;
+  }
+
+  Future<NotificationInvoiceDTO?> getInvoice(String userId) async {
+    try {
+      // final String url = '${EnvConfig.getBaseUrl()}invoice-unpaid/$userId';
+      final String url =
+          'https://dev.vietqr.org/vqr/mock/api/invoice-unpaid/$userId';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return NotificationInvoiceDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return null;
   }
 
   Future<List<NotificationDTO>> getNotificationsByUserId(

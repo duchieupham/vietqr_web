@@ -13,6 +13,7 @@ import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/models/noti_invoice_dto.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
@@ -41,6 +42,8 @@ class HeaderFullWidget extends StatefulWidget {
 class _HeaderFullWidgetState extends State<HeaderFullWidget> {
   late NotificationBloc _notificationBloc;
   int _notificationCount = 0;
+  int _notiInvoice = 0;
+  NotificationInvoiceDTO? notiDto;
 
   @override
   void initState() {
@@ -48,6 +51,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
     _notificationBloc = BlocProvider.of(context);
     String userId = UserInformationHelper.instance.getUserId();
     _notificationBloc.add(NotificationGetCounterEvent(userId: userId));
+    _notificationBloc.add(NotificationGetInvoiceEvent(userId: userId));
     Session.instance.registerEventListener(EventTypes.updateCountNotification,
         () {
       Future.delayed(const Duration(milliseconds: 1000), () {
@@ -141,42 +145,90 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               ),
             ),
           ),
-          // _buildTitle('Trang chủ'),
-          //time
-
-          // ButtonIconWidget(
-          //   title: 'Thêm TK ngân hàng',
-          //   function: () {
-          //     context.go('/add-bank/step1');
-          //   },
-          //   height: 32,
-          //   textSize: 11,
-          //   bgColor: AppColor.WHITE.withOpacity(0.7),
-          //   textColor: AppColor.BLUE_TEXT,
-          // ),
           const Spacer(),
-          // ButtonIconWidget(
-          //   title: 'Quét QR',
-          //   function: () {},
-          //   height: 32,
-          //   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          //   icon: Icons.qr_code_outlined,
-          //   textSize: 11,
-          //   bgColor: AppColor.WHITE.withOpacity(0.7),
-          //   textColor: AppColor.BLUE_TEXT,
-          // ),
-          // _buildInfoTelegram(),
-          // const SizedBox(
-          //   width: 12,
-          // ),
-          // _buildWallet(),
-          // const SizedBox(
-          //   width: 12,
-          // ),
+          BlocConsumer<NotificationBloc, NotificationState>(
+            listener: (context, state) {
+              if (state is NotificationInvoiceSuccessState) {
+                notiDto = state.noti;
+              }
+            },
+            builder: (context, state) {
+              if (notiDto == null || notiDto!.totalInvoice == 0) {
+                return const SizedBox.shrink();
+              }
+              return Container(
+                width: 300,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColor.WHITE,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: AppColor.ORANGE_DARK.withOpacity(0.3),
+                      ),
+                      height: 30,
+                      child: const Center(
+                        child: Icon(
+                          Icons.receipt_long_outlined,
+                          color: AppColor.ORANGE_DARK,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${notiDto!.totalInvoice}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' hoá đơn chưa thanh toán!',
+                          ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        width: 60,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppColor.ORANGE_DARK.withOpacity(0.3),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Truy cập',
+                            style: TextStyle(
+                              color: AppColor.ORANGE_DARK,
+                              fontSize: 13,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 30),
           Container(
-              // padding: const EdgeInsets.only(top: 21, bottom: 21),
-              // padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-              // margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
               ),

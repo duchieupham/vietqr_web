@@ -1,6 +1,8 @@
 import 'package:VietQR/models/notification_dto.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../models/noti_invoice_dto.dart';
+
 class NotificationState extends Equatable {
   const NotificationState();
 
@@ -21,6 +23,21 @@ class NotificationCountSuccessState extends NotificationState {
 
   @override
   List<Object?> get props => [count];
+}
+
+class NotificationInvoiceLoadingState extends NotificationState {}
+
+class NotificationInvoiceFailedState extends NotificationState {}
+
+class NotificationInvoiceSuccessState extends NotificationState {
+  final NotificationInvoiceDTO noti;
+
+  const NotificationInvoiceSuccessState({
+    required this.noti,
+  });
+
+  @override
+  List<Object?> get props => [noti];
 }
 
 class NotificationCountFailedState extends NotificationState {}
