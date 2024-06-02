@@ -64,9 +64,21 @@ class _ScreenState extends State<_Screen> {
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 30),
-                      _buildOption("Chưa thanh toán", isFirstSelected),
+                      _buildOption("Chưa thanh toán", isFirstSelected,
+                          (selected) {
+                        if (!isFirstSelected) {
+                          isFirstSelected = true;
+                          setState(() {});
+                        }
+                      }),
                       const SizedBox(width: 20),
-                      _buildOption("Đã thanh toán", !isFirstSelected),
+                      _buildOption("Đã thanh toán", !isFirstSelected,
+                          (selected) {
+                        if (isFirstSelected) {
+                          isFirstSelected = false;
+                          setState(() {});
+                        }
+                      }),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -94,10 +106,12 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  Widget _buildOption(String title, bool isSelected) {
+  Widget _buildOption(
+      String title, bool isSelected, Function(bool) onSelected) {
     return GestureDetector(
       onTap: () {
-        isFirstSelected = !isFirstSelected;
+        onSelected(!isSelected);
+        // isFirstSelected = !isFirstSelected;
         setState(() {});
       },
       child: Container(
