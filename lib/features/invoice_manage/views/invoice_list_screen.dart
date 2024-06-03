@@ -52,7 +52,7 @@ class _ScreenState extends State<_Screen> {
   late InvoiceBloc _bloc;
   late InvoiceProvider _provider;
 
-  String? invoiceId;
+  // String? invoiceId;
   String? selectBankId;
   int? type = 9;
   DateTime? selectDate;
@@ -101,13 +101,10 @@ class _ScreenState extends State<_Screen> {
         dto: dto,
         showButton: true,
         onPop: (id) {
-          setState(() {
-            invoiceId = id;
-          });
-          Navigator.of(context).pop();
           // _bloc.add(GetInvoiceDetail(id, false));
-
+          _bloc.add(GetInvoiceDetail(id, false));
           _provider.onPageChange(PageInvoice.DETAIL);
+          // Navigator.of(context).pop();
 
           // _model.getInvoiceDetail(id);
         },
@@ -219,7 +216,7 @@ class _ScreenState extends State<_Screen> {
                       Expanded(
                         child: InvoiceDetailScreen(
                           bloc: _bloc,
-                          invoiceId: invoiceId!,
+                          // invoiceId: invoiceId!,
                           callback: () {
                             provider.onPageChange(PageInvoice.LIST);
                           },
@@ -421,10 +418,11 @@ class _ScreenState extends State<_Screen> {
                                             // );
                                           },
                                           onShowDetail: () {
-                                            invoiceId = e.invoiceId;
+                                            // invoiceId = e.invoiceId;
+                                            _bloc.add(GetInvoiceDetail(
+                                                e.invoiceId!, false));
                                             _provider.onPageChange(
                                                 PageInvoice.DETAIL);
-                                            setState(() {});
                                           },
                                         ),
                                       )

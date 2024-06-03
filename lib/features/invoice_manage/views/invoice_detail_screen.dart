@@ -18,13 +18,12 @@ import 'package:provider/provider.dart';
 
 class InvoiceDetailScreen extends StatefulWidget {
   final InvoiceBloc bloc;
-  final String invoiceId;
+  // final String invoiceId;
   final Function() callback;
 
   const InvoiceDetailScreen({
     super.key,
     required this.bloc,
-    required this.invoiceId,
     required this.callback,
   });
 
@@ -49,7 +48,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
 
-    widget.bloc.add(GetInvoiceDetail(widget.invoiceId, false));
+    // widget.bloc.add(GetInvoiceDetail(widget.invoiceId, false));
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
@@ -1237,7 +1236,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   onTap: isEnable
                       ? () async {
                           widget.bloc.add(RequestPaymentInvoiceItemEvent(
-                              widget.invoiceId,
+                              dto.invoiceId,
                               List<String>.from(_provider.listSelectInvoice
                                   .where((e) =>
                                       e.isSelect == true &&

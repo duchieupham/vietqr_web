@@ -141,46 +141,32 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
 
   Widget _buildReqPayment(List<PaymentRequestDTO> listReq, bool isEnable) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // const Text(
-              //   'Tài khoản nhận tiền',
-              //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              // ),
-              // const SizedBox(height: 10),
-              // SizedBox(
-              //   height: 56,
-              //   width: 600,
-              //   child: ListView.separated(
-              //       scrollDirection: Axis.horizontal,
-              //       itemBuilder: (context, index) {
-              //         return SelectBankRecieveItem(
-              //           dto: listPaymentBank[index],
-              //           onChange: (value) {
-              //             // _model.selectPayment(index);
-              //             for (var e in listPaymentBank) {
-              //               e.isChecked = false;
-              //             }
-              //             listPaymentBank[index].isChecked = true;
-              //             setState(() {});
-              //           },
-              //         );
-              //       },
-              //       separatorBuilder: (context, index) =>
-              //           const SizedBox(width: 20),
-              //       itemCount: listReq.length),
-              // ),
-            ],
-          ),
+        MButtonWidget(
+          onTap: () {
+            widget.bloc.add(GetInvoiceDetail(widget.dto.invoiceId!, false));
+            _provider.onPageChange(PageInvoice.DETAIL);
+            Navigator.of(context).pop();
+          },
+          title: 'Chi tiết hoá đơn',
+          isEnable: true,
+          margin: EdgeInsets.zero,
+          colorEnableBgr: AppColor.WHITE,
+          colorEnableText: AppColor.BLUE_TEXT,
+          width: 350,
+          border: Border.all(color: AppColor.BLUE_TEXT),
+          height: 50,
+        ),
+        const SizedBox(
+          width: 50,
         ),
         MButtonWidget(
           colorDisableBgr: AppColor.GREY_DADADA,
           width: 350,
           height: 50,
-          title: 'Yêu cầu thanh toán',
+          title: 'Thanh toán',
           isEnable: isEnable,
           margin: EdgeInsets.zero,
           onTap: isEnable
@@ -196,19 +182,6 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
                           )),
                       true));
                   Navigator.of(context).pop();
-                  // final result = await _model.requestPayment(
-                  //     invoiceId: widget.dto.invoiceId);
-                  // if (result != null) {
-                  //   if (!mounted) return;
-                  //   Navigator.of(context).pop();
-                  //   await showDialog(
-                  //     context: context,
-                  //     builder: (context) => PopupQrCodeInvoice(
-                  //       onPop: widget.onPop,
-                  //       invoiceId: result.invoiceId,
-                  //     ),
-                  //   );
-                  // }
                 }
               : null,
         ),
