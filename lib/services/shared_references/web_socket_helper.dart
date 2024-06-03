@@ -71,7 +71,7 @@ class WebSocketHelper {
         try {
           setListenWs(true);
           final wsUrl =
-              Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
+              Uri.parse('wss://dev.vietqr.org/vqr/socket?userId=$userId');
           _channelTransaction = WebSocketChannel.connect(wsUrl);
 
           if (_channelTransaction.closeCode == null) {
@@ -79,73 +79,75 @@ class WebSocketHelper {
               var data = jsonDecode(event);
 
               print('------------------------------- $data');
-              // if (data['notificationType'] != null &&
-              //     data['notificationType'] ==
-              //         Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-              //   // Timer.periodic(
-              //   toastification.showCustom(
-              //     // context: context,
-              //     animationDuration: const Duration(milliseconds: 500),
-              //     autoCloseDuration: const Duration(seconds: 4),
-              //     alignment: Alignment.topRight,
-              //     dismissDirection: DismissDirection.horizontal,
-              //     builder: (context, holder) {
-              //       return Container(
-              //         margin: const EdgeInsets.all(8),
-              //         decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(5),
-              //             color: AppColor.WHITE,
-              //             boxShadow: [
-              //               BoxShadow(
-              //                   color: AppColor.BLACK.withOpacity(0.1),
-              //                   blurRadius: 12,
-              //                   offset: const Offset(0, 5)),
-              //             ]),
-              //         child: Column(
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           children: [
-              //             Container(
-              //               width: double.infinity,
-              //               padding: const EdgeInsets.all(10),
-              //               child: Row(
-              //                 crossAxisAlignment: CrossAxisAlignment.center,
-              //                 children: [
-              //                   Image.asset(
-              //                     'assets/images/ic-noti-invoice.png',
-              //                     width: 40,
-              //                     height: 40,
-              //                     fit: BoxFit.contain,
-              //                   ),
-              //                   const SizedBox(width: 10),
-              //                   Html(
-              //                     data: '',
-              //                     shrinkWrap: true,
-              //                   ),
-              //                 ],
-              //               ),
-              //             ),
-              //             const MySeparator(color: AppColor.GREY_DADADA),
-              //             Container(
-              //               padding: const EdgeInsets.all(12),
-              //               child: const Center(
-              //                 child: Text(
-              //                   'Thanh toán ngay',
-              //                   style: TextStyle(
-              //                     fontSize: 12,
-              //                     decoration: TextDecoration.underline,
-              //                     decorationColor: AppColor.ORANGE_C02,
-              //                     color: AppColor.ORANGE_C02,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       );
-              //     },
-              //   );
-              // }
+              if (data['notificationType'] != null &&
+                  data['notificationType'] ==
+                      Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
+                String html = jsonDecode(data['html']);
+                toastification.showCustom(
+                  // context: context,
+                  animationDuration: const Duration(milliseconds: 500),
+                  autoCloseDuration: const Duration(seconds: 4),
+                  alignment: Alignment.topRight,
+                  dismissDirection: DismissDirection.horizontal,
+                  builder: (context, holder) {
+                    return Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppColor.WHITE,
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColor.BLACK.withOpacity(0.1),
+                                blurRadius: 12,
+                                offset: const Offset(0, 5)),
+                          ]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/ic-noti-invoice.png',
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(width: 10),
+                                Html(
+                                  data: '"$html"',
+                                  shrinkWrap: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (data['status'] == 0) ...[
+                            const MySeparator(color: AppColor.GREY_DADADA),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              child: const Center(
+                                child: Text(
+                                  'Thanh toán ngay',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: AppColor.ORANGE_C02,
+                                    color: AppColor.ORANGE_C02,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ]
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {

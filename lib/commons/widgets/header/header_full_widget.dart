@@ -245,7 +245,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                     ),
                     InkWell(
                       onTap: () {
-                        context.go('/invoice');
+                        context.go('/invoice-list');
                       },
                       child: Container(
                         width: 60,

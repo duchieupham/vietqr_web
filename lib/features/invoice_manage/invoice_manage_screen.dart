@@ -3,8 +3,11 @@ import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/widget/item_menu_dropdown.dart';
 import 'package:VietQR/features/invoice_manage/views/invoice_list_screen.dart';
 import 'package:VietQR/features/qr_manage/frame/qr_frame.dart';
+import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 import 'dart:html' as html;
+
+import 'package:provider/provider.dart';
 
 // ignore: camel_case_types, constant_identifier_names
 enum Invoice_Type { LIST, SERVICE_FEE }
@@ -51,6 +54,8 @@ class _InvoiceManageScreenState extends State<InvoiceManageScreen> {
   }
 
   void onTapMenu(Invoice_Type value) {
+    Provider.of<InvoiceProvider>(context, listen: false)
+        .onPageChange(PageInvoice.LIST);
     if (value == Invoice_Type.LIST) {
       html.window.history.pushState(null, '/invoice', '/invoice');
       type = value;
