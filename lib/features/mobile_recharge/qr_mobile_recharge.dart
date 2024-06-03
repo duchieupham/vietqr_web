@@ -168,7 +168,7 @@ class _QRMobileRechargeScreenState extends State<QRMobileRechargeScreen>
             function: () async {
               await Future.delayed(const Duration(milliseconds: 300), () async {
                 await ShareUtils.instance
-                    .saveImageToGallery(globalKey)
+                    .saveImageToGallery(globalKey, '')
                     .then((value) {
                   Fluttertoast.showToast(
                     msg: 'Đã lưu ảnh',

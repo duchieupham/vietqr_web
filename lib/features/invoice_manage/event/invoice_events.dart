@@ -28,6 +28,21 @@ class GetInvoiceList extends InvoiceEvent {
 
 class GetListBankAccountEvent extends InvoiceEvent {}
 
+class RequestPaymentInvoiceItemEvent extends InvoiceEvent {
+  final String invoiceId;
+  final List<String> itemItemIds;
+  final String? bankIdRecharge;
+
+  const RequestPaymentInvoiceItemEvent(
+    this.invoiceId,
+    this.itemItemIds,
+    this.bankIdRecharge,
+  );
+
+  @override
+  List<Object?> get props => [invoiceId, itemItemIds, bankIdRecharge];
+}
+
 class GetInvoiceDetail extends InvoiceEvent {
   final String invoiceId;
 

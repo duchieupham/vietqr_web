@@ -357,7 +357,7 @@ class _ScreenState extends State<_Screen> {
                                         (e) => ItemRightWidget(
                                           dto: e,
                                           onShowQR: () {
-                                            onShowPopup();
+                                            // onShowPopup();
                                           },
                                           onShowDetail: () {
                                             invoiceId = e.invoiceId;
@@ -382,12 +382,12 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  void onShowPopup() async {
-    return await showDialog(
-      context: context,
-      builder: (context) => PopupQrCodeInvoice(),
-    );
-  }
+  // void onShowPopup() async {
+  //   return await showDialog(
+  //     context: context,
+  //     builder: (context) => PopupQrCodeInvoice(),
+  //   );
+  // }
 
   Widget _filterWidget() {
     return Consumer<InvoiceProvider>(

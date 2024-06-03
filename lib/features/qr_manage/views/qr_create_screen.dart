@@ -77,7 +77,7 @@ class _ScreenState extends State<_Screen> {
     await Future.delayed(
       const Duration(milliseconds: 200),
       () async {
-        await ShareUtils.instance.saveImageToGallery(globalKey).then(
+        await ShareUtils.instance.saveImageToGallery(globalKey, '').then(
           (value) {
             Fluttertoast.showToast(
               msg: 'Đã lưu ảnh',

@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
+import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:equatable/equatable.dart';
 import '../../../models/bank_account_dto.dart';
 import '../../../models/invoice_fee_dto.dart';
@@ -13,6 +14,7 @@ class InvoiceStates extends Equatable {
   final MetaDataDTO? metaDataDTO;
   final List<BankAccountDTO>? listBank;
   final InvoiceDetailDTO? invoiceDetailDTO;
+  final InvoiceDetailQrDTO? invoiceDetailQrDTO;
 
   const InvoiceStates({
     this.msg,
@@ -22,6 +24,7 @@ class InvoiceStates extends Equatable {
     this.listBank,
     this.metaDataDTO,
     this.invoiceDetailDTO,
+    this.invoiceDetailQrDTO,
   });
 
   InvoiceStates copyWith({
@@ -32,6 +35,7 @@ class InvoiceStates extends Equatable {
     List<BankAccountDTO>? listBank,
     MetaDataDTO? metaDataDTO,
     InvoiceDetailDTO? invoiceDetailDTO,
+    InvoiceDetailQrDTO? invoiceDetailQrDTO,
   }) {
     return InvoiceStates(
       status: status ?? this.status,
@@ -41,6 +45,7 @@ class InvoiceStates extends Equatable {
       listBank: listBank ?? this.listBank,
       metaDataDTO: metaDataDTO ?? this.metaDataDTO,
       invoiceDetailDTO: invoiceDetailDTO ?? this.invoiceDetailDTO,
+      invoiceDetailQrDTO: invoiceDetailQrDTO ?? this.invoiceDetailQrDTO,
     );
   }
 
@@ -51,6 +56,7 @@ class InvoiceStates extends Equatable {
         listInvoice,
         listBank,
         invoiceDetailDTO,
+        invoiceDetailQrDTO,
         metaDataDTO,
       ];
 }

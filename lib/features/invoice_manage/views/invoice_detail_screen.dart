@@ -8,7 +8,9 @@ import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
 import 'package:VietQR/features/invoice_manage/widgets/bank_account_item.dart';
 import 'package:VietQR/features/invoice_manage/widgets/item_title_widget.dart';
+import 'package:VietQR/features/invoice_manage/widgets/popup_qr_widget.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
+import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +41,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   late InvoiceProvider _provider;
 
   InvoiceDetailDTO? _invoiceDetailDTO;
+  List<PaymentRequestDTO> listPaymentBank = [];
 
   @override
   void initState() {
@@ -49,6 +52,23 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     widget.bloc.add(GetInvoiceDetail(widget.invoiceId));
   }
 
+  void onShowQRPopup(InvoiceDetailQrDTO dto) async {
+    await showDialog(
+      context: context,
+      // builder: (context) => PopupQrCodeInvoice(invoiceId: dto.invoiceId),
+      builder: (context) => PopupQrCodeInvoice(
+        dto: dto,
+        showButton: false,
+        onPop: (id) {
+          Navigator.of(context).pop();
+          widget.bloc.add(GetInvoiceDetail(id));
+          // _model.getInvoiceDetail(id);
+        },
+        invoiceId: dto.invoiceId,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InvoiceBloc, InvoiceStates>(
@@ -57,6 +77,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             state.status == BlocStatus.SUCCESS) {
           _invoiceDetailDTO = state.invoiceDetailDTO;
           _provider.setListSelectItem(_invoiceDetailDTO!.invoiceItemDetailDTOS);
+        }
+
+        if (state.request == InvoiceType.REQUEST_PAYMENT &&
+            state.status == BlocStatus.SUCCESS) {
+          onShowQRPopup(state.invoiceDetailQrDTO!);
         }
       },
       builder: (context, state) {
@@ -332,7 +357,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                       child: ListView.separated(
                                           scrollDirection: Axis.horizontal,
                                           itemBuilder: (context, index) {
-                                            final listPaymentBank = state
+                                            listPaymentBank = state
                                                 .invoiceDetailDTO!
                                                 .paymentRequestDTOS;
 
@@ -1211,6 +1236,20 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   isEnable: isEnable,
                   onTap: isEnable
                       ? () async {
+                          widget.bloc.add(RequestPaymentInvoiceItemEvent(
+                              widget.invoiceId,
+                              List<String>.from(_provider.listSelectInvoice
+                                  .where((e) =>
+                                      e.isSelect == true &&
+                                      e.invoiceItem.status == 0)
+                                  .toList()
+                                  .map(
+                                    (x) => x.invoiceItem.invoiceItemId,
+                                  )),
+                              listPaymentBank
+                                  .firstWhere(
+                                      (element) => element.isChecked == true)
+                                  .bankId));
                           // final result = await _model.requestPayment(
                           //     invoiceId: dto.invoiceId);
                           // if (result != null) {

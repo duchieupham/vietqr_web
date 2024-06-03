@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:VietQR/features/invoice_manage/repository/base_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
+import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -45,6 +46,33 @@ class InvoiceRepository extends BaseRepo {
       LOG.error(e.toString());
     }
     return result;
+  }
+
+  Future<InvoiceDetailQrDTO?> requestPaymnet({
+    required String invoiceId,
+    required List<String> itemItemIds,
+    String? bankIdRecharge,
+  }) async {
+    try {
+      Map<String, dynamic> param = {};
+      param['invoiceId'] = invoiceId;
+      param['itemItemIds'] = itemItemIds;
+      param['bankIdRecharge'] = bankIdRecharge;
+
+      String url = 'https://dev.vietqr.org/vqr/api/invoice/request-payment';
+      final response = await BaseAPIClient.postAPI(
+        body: param,
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return InvoiceDetailQrDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error("Failed to request payment: ${e.toString()}");
+    }
+    return null;
   }
 
   Future<InvoiceDetailDTO?> getInvoiceDetail(String invoiceId) async {

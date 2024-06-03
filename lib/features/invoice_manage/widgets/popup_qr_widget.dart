@@ -1,17 +1,25 @@
+import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
+import 'package:VietQR/commons/widgets/m_button_widget.dart';
+import 'package:VietQR/commons/widgets/repaint_boundary_widget.dart';
+import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../../commons/constants/configurations/theme.dart';
-import '../../../commons/utils/share_utils.dart';
-import '../../../commons/widgets/dot_dash_widget.dart';
-import '../../../commons/widgets/m_button_widget.dart';
-import '../../../commons/widgets/repaint_boundary_widget.dart';
-
 class PopupQrCodeInvoice extends StatefulWidget {
-  const PopupQrCodeInvoice({
-    super.key,
-  });
+  final InvoiceDetailQrDTO dto;
+  final String invoiceId;
+  final Function(String) onPop;
+  final bool showButton;
+  const PopupQrCodeInvoice(
+      {super.key,
+      required this.dto,
+      required this.invoiceId,
+      required this.onPop,
+      this.showButton = true});
 
   @override
   State<PopupQrCodeInvoice> createState() => _PopupQrCodeInvoiceState();
@@ -20,11 +28,13 @@ class PopupQrCodeInvoice extends StatefulWidget {
 class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
   final globalKey = GlobalKey();
 
-  void onSaveImage(BuildContext context) async {
+  void onSaveImage(BuildContext context, String bankAccount) async {
     await Future.delayed(
       const Duration(milliseconds: 200),
       () async {
-        await ShareUtils.instance.saveImageToGallery(globalKey).then(
+        await ShareUtils.instance
+            .saveImageToGallery(globalKey, bankAccount)
+            .then(
           (value) {
             Fluttertoast.showToast(
               msg: 'Đã lưu ảnh',
@@ -41,6 +51,16 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -64,7 +84,7 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                     const Text(
                       'Mã VietQR hoá đơn thanh toán',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     InkWell(
                       onTap: () {
@@ -125,14 +145,16 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                                           height: 240,
                                           // color: AppColor.GREY_DADADA,
                                           child: QrImageView(
-                                            data: '',
+                                            data: widget.dto.qrCode.isNotEmpty
+                                                ? widget.dto.qrCode
+                                                : '',
                                             size: 220,
                                             version: QrVersions.auto,
                                             embeddedImage: const AssetImage(
                                                 'assets/images/ic-viet-qr.png'),
                                             embeddedImageStyle:
-                                                QrEmbeddedImageStyle(
-                                              size: const Size(30, 30),
+                                                const QrEmbeddedImageStyle(
+                                              size: Size(30, 30),
                                             ),
                                           ),
                                         ),
@@ -166,21 +188,21 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                         const SizedBox(
                           height: 140,
                         ),
-                        MButtonWidget(
+                        InkWell(
                           onTap: () {
-                            onSaveImage(
-                              context,
-                            );
+                            onSaveImage(context, widget.dto.bankAccount);
                           },
-                          title: 'Lưu ảnh QR',
-                          isEnable: true,
-                          margin: EdgeInsets.zero,
-                          width: 400,
-                          colorEnableBgr: AppColor.WHITE,
-                          colorEnableText: AppColor.BLUE_TEXT,
-                          border: Border.all(color: AppColor.BLUE_TEXT),
-                          radius: 100,
-                          height: 50,
+                          child: MButtonWidget(
+                            title: 'Lưu ảnh QR',
+                            isEnable: true,
+                            margin: EdgeInsets.zero,
+                            width: 400,
+                            colorEnableBgr: AppColor.WHITE,
+                            colorEnableText: AppColor.BLUE_TEXT,
+                            border: Border.all(color: AppColor.BLUE_TEXT),
+                            radius: 100,
+                            height: 50,
+                          ),
                         ),
                       ],
                     ),
@@ -195,15 +217,14 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                       children: [
                         SizedBox(
                           width: 660,
-                          height: 70,
+                          height: 60,
                           child: Text(
                             // widget.dto.invoiceName,
-                            // model.detailQrDTO!.invoiceName,
-                            'Hoá đơn thu phí dịch vụ phần mềm VietQR tháng 03-04/2024 Hoá đơn thu phí dịch vụ phần mềm VietQR tháng 03-04/2024 Hoá đơn thu phí dịch vụ phần mềm VietQR tháng 03-04/2024',
+                            widget.dto.invoiceName,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 25),
-                            overflow: TextOverflow.ellipsis,
                             maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(
@@ -213,9 +234,8 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                           width: double.infinity,
                           height: 40,
                           child: Text(
-                            '324,000 VND',
-                            // StringUtils.formatNumber(
-                            //     model.detailQrDTO?.totalAmountAfterVat),
+                            StringUtils.formatNumberAmount(
+                                widget.dto.totalAmountAfterVat),
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30,
@@ -225,25 +245,46 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                         const SizedBox(
                           height: 50,
                         ),
+                        _buildItem('Mã hoá đơn', widget.dto.invoiceNumber),
+                        if (widget.dto.vso.isNotEmpty &&
+                            widget.dto.midName.isNotEmpty)
+                          _buildItem('Khách hàng thanh toán',
+                              '${widget.dto.vso} - ${widget.dto.midName}')
+                        else
+                          _buildItem(
+                              'Tài khoản ngân hàng',
+                              widget.dto.bankAccount.isNotEmpty
+                                  ? '${widget.dto.bankShortName} - ${widget.dto.bankAccount} - ${widget.dto.userBankName}'
+                                  : '-'),
                         _buildItem(
-                            'Mã hoá đơn', 'model.detailQrDTO!.invoiceNumber'),
-                        _buildItem('Tài khoản ngân hàng',
-                            'nasdnasdn - 28391239- anjsdnjasd'),
-                        _buildItem('Tổng tiền', '128391239'),
-                        _buildItem('Tiền thuế GTGT (VAT)', '18239'),
-                        _buildItem('Tổng tiền thanh toán', '38192381'),
+                            'Tổng tiền',
+                            StringUtils.formatNumberAmount(
+                                widget.dto.totalAmount)),
+                        _buildItem('Tiền thuế GTGT (VAT)',
+                            '${widget.dto.vat}% - ${StringUtils.formatNumberAmount(widget.dto.vatAmount)}'),
+                        _buildItem(
+                            'Tổng tiền thanh toán',
+                            StringUtils.formatNumberAmount(
+                                widget.dto.totalAmountAfterVat)),
                         const Spacer(),
-                        Center(
-                          child: MButtonWidget(
-                            onTap: () {},
-                            title: 'Chi tiết hoá đơn',
-                            isEnable: true,
-                            margin: EdgeInsets.only(bottom: 50),
-                            width: 400,
-                            border: Border.all(color: AppColor.BLUE_TEXT),
-                            height: 50,
+                        if (widget.showButton)
+                          Center(
+                            child: MButtonWidget(
+                              onTap: () {
+                                // _model.onChangePage(PageInvoice.DETAIL);
+                                // Navigator.of(context)
+                                //     .pop(widget.invoiceId);
+                                widget.onPop(widget.invoiceId);
+                                Navigator.of(context).pop();
+                              },
+                              title: 'Chi tiết hoá đơn',
+                              isEnable: true,
+                              margin: const EdgeInsets.only(bottom: 50),
+                              width: 400,
+                              border: Border.all(color: AppColor.BLUE_TEXT),
+                              height: 50,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
