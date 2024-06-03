@@ -32,24 +32,29 @@ class RequestPaymentInvoiceItemEvent extends InvoiceEvent {
   final String invoiceId;
   final List<String> itemItemIds;
   final String? bankIdRecharge;
+  final bool isShowPopup;
 
   const RequestPaymentInvoiceItemEvent(
     this.invoiceId,
     this.itemItemIds,
     this.bankIdRecharge,
+    this.isShowPopup,
   );
 
   @override
-  List<Object?> get props => [invoiceId, itemItemIds, bankIdRecharge];
+  List<Object?> get props =>
+      [invoiceId, itemItemIds, bankIdRecharge, isShowPopup];
 }
 
 class GetInvoiceDetail extends InvoiceEvent {
   final String invoiceId;
+  final bool isShowPopup;
 
   const GetInvoiceDetail(
     this.invoiceId,
+    this.isShowPopup,
   );
 
   @override
-  List<Object?> get props => [invoiceId];
+  List<Object?> get props => [invoiceId, isShowPopup];
 }

@@ -15,6 +15,7 @@ class InvoiceStates extends Equatable {
   final List<BankAccountDTO>? listBank;
   final InvoiceDetailDTO? invoiceDetailDTO;
   final InvoiceDetailQrDTO? invoiceDetailQrDTO;
+  final bool? isShow;
 
   const InvoiceStates({
     this.msg,
@@ -25,6 +26,7 @@ class InvoiceStates extends Equatable {
     this.metaDataDTO,
     this.invoiceDetailDTO,
     this.invoiceDetailQrDTO,
+    this.isShow,
   });
 
   InvoiceStates copyWith({
@@ -36,6 +38,7 @@ class InvoiceStates extends Equatable {
     MetaDataDTO? metaDataDTO,
     InvoiceDetailDTO? invoiceDetailDTO,
     InvoiceDetailQrDTO? invoiceDetailQrDTO,
+    bool? isShow,
   }) {
     return InvoiceStates(
       status: status ?? this.status,
@@ -46,6 +49,7 @@ class InvoiceStates extends Equatable {
       metaDataDTO: metaDataDTO ?? this.metaDataDTO,
       invoiceDetailDTO: invoiceDetailDTO ?? this.invoiceDetailDTO,
       invoiceDetailQrDTO: invoiceDetailQrDTO ?? this.invoiceDetailQrDTO,
+      isShow: isShow ?? this.isShow,
     );
   }
 
@@ -57,6 +61,7 @@ class InvoiceStates extends Equatable {
         listBank,
         invoiceDetailDTO,
         invoiceDetailQrDTO,
+        isShow,
         metaDataDTO,
       ];
 }

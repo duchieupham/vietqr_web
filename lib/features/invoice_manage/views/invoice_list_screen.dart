@@ -7,6 +7,8 @@ import 'package:VietQR/features/invoice_manage/widgets/popup_bank_select_widget.
 import 'package:VietQR/features/invoice_manage/widgets/popup_payment_request_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_qr_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/title_invoice_widget.dart';
+import 'package:VietQR/models/invoice_detail_dto.dart';
+import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
@@ -57,6 +59,7 @@ class _ScreenState extends State<_Screen> {
   bool isFirstSelected = true;
 
   List<InvoiceFeeDTO>? listInvoice = [];
+  InvoiceFeeDTO? selectInvoiceFee;
 
   @override
   void initState() {
@@ -91,6 +94,23 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
+  void onShowQRPopup(InvoiceDetailQrDTO dto) async {
+    await showDialog(
+      context: context,
+      // builder: (context) => PopupQrCodeInvoice(invoiceId: dto.invoiceId),
+      builder: (context) => PopupQrCodeInvoice(
+        dto: dto,
+        showButton: false,
+        onPop: (id) {
+          Navigator.of(context).pop();
+          // _bloc.add(GetInvoiceDetail(id, false));
+          // _model.getInvoiceDetail(id);
+        },
+        invoiceId: dto.invoiceId,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InvoiceBloc, InvoiceStates>(
@@ -103,6 +123,24 @@ class _ScreenState extends State<_Screen> {
         if (state.request == InvoiceType.GET_INVOICE_LIST &&
             state.status == BlocStatus.SUCCESS) {
           listInvoice = state.listInvoice;
+        }
+
+        if (state.request == InvoiceType.INVOICE_DETAIL &&
+            state.status == BlocStatus.SUCCESS) {
+          if (state.isShow == true) {
+            _provider.setListSelectItem(
+                state.invoiceDetailDTO!.invoiceItemDetailDTOS);
+            onShowPopup(
+              selectInvoiceFee!,
+              state.invoiceDetailDTO!,
+            );
+          }
+        }
+        if (state.request == InvoiceType.REQUEST_PAYMENT &&
+            state.status == BlocStatus.SUCCESS) {
+          if (state.isShow == true) {
+            onShowQRPopup(state.invoiceDetailQrDTO!);
+          }
         }
       },
       builder: (context, state) {
@@ -246,6 +284,9 @@ class _ScreenState extends State<_Screen> {
         ),
       ));
     }
+    if (listInvoice!.isEmpty) {
+      return const SizedBox.shrink();
+    }
     // if (state.listInvoice!.isEmpty || state.listInvoice == null) {
     //   return const SizedBox.shrink();
     // }
@@ -256,17 +297,18 @@ class _ScreenState extends State<_Screen> {
             width: MediaQuery.of(context).size.width - 220,
             child: Stack(
               children: [
-                SingleChildScrollView(
+                Scrollbar(
+                  controller: controller1,
                   child: SingleChildScrollView(
-                    controller: controller1,
-                    scrollDirection: Axis.horizontal,
-                    child: SizedBox(
-                      width: 1570,
-                      child: Column(
-                        children: [
-                          const TitleItemInvoiceWidget(),
-                          if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                              state.status == BlocStatus.SUCCESS)
+                    child: SingleChildScrollView(
+                      controller: controller1,
+                      scrollDirection: Axis.horizontal,
+                      child: SizedBox(
+                        width: 1570,
+                        child: Column(
+                          children: [
+                            const TitleItemInvoiceWidget(),
+                            // if (listInvoice!.isNotEmpty || listInvoice != null)
                             ...state.listInvoice!
                                 .asMap()
                                 .map(
@@ -281,11 +323,12 @@ class _ScreenState extends State<_Screen> {
                                 )
                                 .values
                                 .toList(),
-                          // if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                          //     state.status == BlocStatus.NONE)
-                          //   const Expanded(
-                          //       child: Center(child: Text('Trống..')))
-                        ],
+                            // if (state.request == InvoiceType.GET_INVOICE_LIST &&
+                            //     state.status == BlocStatus.NONE)
+                            //   const Expanded(
+                            //       child: Center(child: Text('Trống..')))
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -355,28 +398,33 @@ class _ScreenState extends State<_Screen> {
                                     ],
                                   ),
                                 ),
-                                if (state.request ==
-                                        InvoiceType.GET_INVOICE_LIST &&
-                                    state.status == BlocStatus.SUCCESS)
-                                  ...state.listInvoice!
-                                      .map(
-                                        (e) => ItemRightWidget(
-                                          dto: e,
-                                          onShowQR: () {
-                                            onShowPopup(
-                                              e,
-                                              e.invoiceId!,
-                                            );
-                                          },
-                                          onShowDetail: () {
-                                            invoiceId = e.invoiceId;
-                                            _provider.onPageChange(
-                                                PageInvoice.DETAIL);
-                                            setState(() {});
-                                          },
-                                        ),
-                                      )
-                                      .toList(),
+                                // if (listInvoice!.isNotEmpty ||
+                                //     listInvoice != null)
+                                ...state.listInvoice!
+                                    .map(
+                                      (e) => ItemRightWidget(
+                                        dto: e,
+                                        onShowQR: () {
+                                          setState(() {
+                                            selectInvoiceFee = e;
+                                          });
+                                          _bloc.add(GetInvoiceDetail(
+                                              e.invoiceId!, true));
+                                          // onShowPopup(
+                                          //   state,
+                                          //   e,
+                                          //   e.invoiceId!,
+                                          // );
+                                        },
+                                        onShowDetail: () {
+                                          invoiceId = e.invoiceId;
+                                          _provider
+                                              .onPageChange(PageInvoice.DETAIL);
+                                          setState(() {});
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
                               ],
                             ),
                           ),
@@ -393,12 +441,12 @@ class _ScreenState extends State<_Screen> {
 
   void onShowPopup(
     InvoiceFeeDTO dto,
-    String invoiceId,
+    InvoiceDetailDTO detail,
   ) async {
     await showDialog(
       context: context,
       builder: (context) => PopupPaymentRequestWidget(
-        invoiceId: invoiceId,
+        invoiceDetailDTO: detail,
         bloc: _bloc,
         dto: dto,
       ),

@@ -71,6 +71,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
             bankIdRecharge: event.bankIdRecharge ?? '');
         if (result != null) {
           emit(state.copyWith(
+              isShow: event.isShowPopup,
               invoiceDetailQrDTO: result,
               status: BlocStatus.SUCCESS,
               request: InvoiceType.REQUEST_PAYMENT));
@@ -107,11 +108,13 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
           emit(state.copyWith(
               status: BlocStatus.SUCCESS,
               invoiceDetailDTO: result,
-              request: InvoiceType.INVOICE_DETAIL));
+              request: InvoiceType.INVOICE_DETAIL,
+              isShow: event.isShowPopup));
           // callback(result);
         } else {
           emit(state.copyWith(
               invoiceDetailDTO: null,
+              isShow: event.isShowPopup,
               request: InvoiceType.INVOICE_DETAIL,
               status: BlocStatus.NONE));
         }

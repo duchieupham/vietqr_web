@@ -49,7 +49,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
 
-    widget.bloc.add(GetInvoiceDetail(widget.invoiceId));
+    widget.bloc.add(GetInvoiceDetail(widget.invoiceId, false));
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
@@ -61,7 +61,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         showButton: false,
         onPop: (id) {
           Navigator.of(context).pop();
-          widget.bloc.add(GetInvoiceDetail(id));
+          widget.bloc.add(GetInvoiceDetail(id, false));
           // _model.getInvoiceDetail(id);
         },
         invoiceId: dto.invoiceId,
@@ -1249,24 +1249,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                               listPaymentBank
                                   .firstWhere(
                                       (element) => element.isChecked == true)
-                                  .bankId));
-                          // final result = await _model.requestPayment(
-                          //     invoiceId: dto.invoiceId);
-                          // if (result != null) {
-                          //   if (!mounted) return;
-                          //   await showDialog(
-                          //     context: context,
-                          //     // builder: (context) => PopupQrCodeInvoice(invoiceId: dto.invoiceId),
-                          //     builder: (context) => PopupQrCodeInvoice(
-                          //       showButton: false,
-                          //       onPop: (id) {
-                          //         Navigator.of(context).pop();
-                          //         _model.getInvoiceDetail(id);
-                          //       },
-                          //       invoiceId: result.invoiceId,
-                          //     ),
-                          //   );
-                          // }
+                                  .bankId,
+                              false));
+                          // Navigator.of(context).pop();
                         }
                       : null,
                 ),

@@ -59,7 +59,7 @@ class InvoiceRepository extends BaseRepo {
       param['itemItemIds'] = itemItemIds;
       param['bankIdRecharge'] = bankIdRecharge;
 
-      String url = 'https://dev.vietqr.org/vqr/api/invoice/request-payment';
+      String url = '${EnvConfig.getBaseUrl()}invoice/request-payment';
       final response = await BaseAPIClient.postAPI(
         body: param,
         url: url,
@@ -77,8 +77,7 @@ class InvoiceRepository extends BaseRepo {
 
   Future<InvoiceDetailDTO?> getInvoiceDetail(String invoiceId) async {
     try {
-      // String url = 'https://api.vietqr.org/vqr/api/invoice/detail/$invoiceId';
-      String url = 'https://dev.vietqr.org/vqr/api/invoice/detail/$invoiceId';
+      String url = '${EnvConfig.getBaseUrl()}invoice/detail/$invoiceId';
       final response = await BaseAPIClient.getAPI(
         url: url,
         type: AuthenticationType.SYSTEM,

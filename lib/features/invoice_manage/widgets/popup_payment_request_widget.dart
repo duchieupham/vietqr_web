@@ -18,13 +18,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class PopupPaymentRequestWidget extends StatefulWidget {
+  final InvoiceDetailDTO invoiceDetailDTO;
   final InvoiceBloc bloc;
   final InvoiceFeeDTO dto;
-  final String invoiceId;
   const PopupPaymentRequestWidget({
     super.key,
+    required this.invoiceDetailDTO,
     required this.bloc,
-    required this.invoiceId,
     required this.dto,
   });
 
@@ -44,8 +44,9 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
     super.initState();
 
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
-
-    widget.bloc.add(GetInvoiceDetail(widget.invoiceId));
+    _invoiceDetailDTO = widget.invoiceDetailDTO;
+    listPaymentBank = _invoiceDetailDTO!.paymentRequestDTOS;
+    // widget.bloc.add(GetInvoiceDetail(widget.invoiceId));
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
@@ -57,7 +58,7 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
         showButton: false,
         onPop: (id) {
           Navigator.of(context).pop();
-          widget.bloc.add(GetInvoiceDetail(id));
+          widget.bloc.add(GetInvoiceDetail(id, false));
           // _model.getInvoiceDetail(id);
         },
         invoiceId: dto.invoiceId,
@@ -67,95 +68,74 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<InvoiceBloc, InvoiceStates>(
-      listener: (context, state) {
-        if (state.request == InvoiceType.INVOICE_DETAIL &&
-            state.status == BlocStatus.SUCCESS) {
-          _invoiceDetailDTO = state.invoiceDetailDTO;
-          _provider.setListSelectItem(_invoiceDetailDTO!.invoiceItemDetailDTOS);
+    return Consumer<InvoiceProvider>(
+      builder: (context, provider, child) {
+        bool isEnable = false;
+        if (provider.listSelectInvoice.isNotEmpty) {
+          isEnable =
+              provider.listSelectInvoice.any((x) => x.isSelect == true) &&
+                  _invoiceDetailDTO!.paymentRequestDTOS.any(
+                    (x) => x.isChecked,
+                  );
         }
-
-        if (state.request == InvoiceType.REQUEST_PAYMENT &&
-            state.status == BlocStatus.SUCCESS) {
-          onShowQRPopup(state.invoiceDetailQrDTO!);
-        }
-      },
-      builder: (context, state) {
-        if (state.request == InvoiceType.INVOICE_DETAIL &&
-            state.status == BlocStatus.LOADING) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return Consumer<InvoiceProvider>(
-          builder: (context, provider, child) {
-            bool isEnable = false;
-            if (provider.listSelectInvoice.isNotEmpty) {
-              isEnable =
-                  provider.listSelectInvoice.any((x) => x.isSelect == true) &&
-                      state.invoiceDetailDTO!.paymentRequestDTOS.any(
-                        (x) => x.isChecked,
-                      );
-            }
-            return Material(
-              color: AppColor.TRANSPARENT,
-              child: Center(
-                child: Container(
-                  color: AppColor.WHITE,
-                  width: 1150,
-                  height: 750,
-                  padding: const EdgeInsets.all(20),
-                  child: Stack(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Tạo mã VietQR để yêu cầu thanh toán',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 40),
-                          const Text(
-                            'Tạo mã VietQR để yêu cầu thanh toán',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                          _buildInvoiceDetailWidget(state.invoiceDetailDTO!),
-                          const MySeparator(color: AppColor.GREY_DADADA),
-                          const SizedBox(height: 30),
-                          const Text(
-                            'Danh mục hàng hoá / dịch vụ',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                          _buildInvoiceWidget(state, provider),
-                          const SizedBox(height: 50),
-                          if (state.invoiceDetailDTO != null)
-                            _buildReqPayment(
-                                state.invoiceDetailDTO!.paymentRequestDTOS,
-                                isEnable),
-                        ],
-                      ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.black,
-                            size: 20,
-                          ),
+        return Material(
+          color: AppColor.TRANSPARENT,
+          child: Center(
+            child: Container(
+              color: AppColor.WHITE,
+              width: 1150,
+              height: 750,
+              padding: const EdgeInsets.all(20),
+              child: Stack(
+                children: [
+                  if (_invoiceDetailDTO != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Tạo mã VietQR để yêu cầu thanh toán',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                      )
-                    ],
-                  ),
-                ),
+                        const SizedBox(height: 40),
+                        const Text(
+                          'Tạo mã VietQR để yêu cầu thanh toán',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        _buildInvoiceDetailWidget(_invoiceDetailDTO!),
+                        const MySeparator(color: AppColor.GREY_DADADA),
+                        const SizedBox(height: 30),
+                        const Text(
+                          'Danh mục hàng hoá / dịch vụ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        _buildInvoiceWidget(provider),
+                        const SizedBox(height: 50),
+                        if (_invoiceDetailDTO != null)
+                          _buildReqPayment(
+                              _invoiceDetailDTO!.paymentRequestDTOS, isEnable),
+                      ],
+                    ),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                    ),
+                  )
+                ],
               ),
-            );
-          },
+            ),
+          ),
         );
       },
     );
@@ -174,7 +154,8 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
               ),
               const SizedBox(height: 10),
               SizedBox(
-                height: 50,
+                height: 56,
+                width: 600,
                 child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
@@ -207,7 +188,7 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
           onTap: isEnable
               ? () async {
                   widget.bloc.add(RequestPaymentInvoiceItemEvent(
-                      widget.invoiceId,
+                      widget.invoiceDetailDTO.invoiceId,
                       List<String>.from(_provider.listSelectInvoice
                           .where((e) =>
                               e.isSelect == true && e.invoiceItem.status == 0)
@@ -217,7 +198,9 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
                           )),
                       listPaymentBank
                           .firstWhere((element) => element.isChecked == true)
-                          .bankId));
+                          .bankId,
+                      true));
+                  Navigator.of(context).pop();
                   // final result = await _model.requestPayment(
                   //     invoiceId: widget.dto.invoiceId);
                   // if (result != null) {
@@ -238,16 +221,9 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
     );
   }
 
-  Widget _buildInvoiceWidget(InvoiceStates state, InvoiceProvider provider) {
-    if (state.status == BlocStatus.LOADING &&
-        state.request == InvoiceType.INVOICE_DETAIL) {
-      return const Expanded(
-          child: Center(
-        child: CircularProgressIndicator(),
-      ));
-    }
-    if (state.invoiceDetailDTO == null ||
-        state.invoiceDetailDTO!.invoiceItemDetailDTOS.isEmpty) {
+  Widget _buildInvoiceWidget(InvoiceProvider provider) {
+    if (_invoiceDetailDTO == null ||
+        _invoiceDetailDTO!.invoiceItemDetailDTOS.isEmpty) {
       return const SizedBox.shrink();
     }
     bool isAllApplied =
@@ -332,9 +308,8 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
                               color: AppColor.GREY_DADADA, width: 1)))),
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
-                bool isAlreadyPay = state.invoiceDetailDTO!
-                        .invoiceItemDetailDTOS[index].status ==
-                    1;
+                bool isAlreadyPay =
+                    _invoiceDetailDTO!.invoiceItemDetailDTOS[index].status == 1;
                 if (isAlreadyPay) {
                   provider.appliedInvoiceItem(isAlreadyPay, index);
                 }
