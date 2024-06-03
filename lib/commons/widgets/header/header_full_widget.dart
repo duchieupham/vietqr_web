@@ -172,6 +172,15 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               ),
             ),
           ),
+          const SizedBox(
+            width: 12,
+          ),
+          Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const ClockWidget()),
+
           const Spacer(),
           BlocConsumer<NotificationBloc, NotificationState>(
             listener: (context, state) {
@@ -263,14 +272,6 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
             },
           ),
           const SizedBox(width: 30),
-          Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: const ClockWidget()),
-          const SizedBox(
-            width: 12,
-          ),
           Tooltip(
             message: 'Menu_popup',
             child: InkWell(
