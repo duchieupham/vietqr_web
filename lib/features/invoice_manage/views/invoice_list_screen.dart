@@ -245,7 +245,9 @@ class _ScreenState extends State<_Screen> {
         ),
       ));
     }
-
+    // if (state.listInvoice!.isEmpty || state.listInvoice == null) {
+    //   return const SizedBox.shrink();
+    // }
     return Expanded(
       child: Padding(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -262,8 +264,9 @@ class _ScreenState extends State<_Screen> {
                       child: Column(
                         children: [
                           const TitleItemInvoiceWidget(),
-                          if (listInvoice!.isNotEmpty)
-                            ...listInvoice!
+                          if (state.request == InvoiceType.GET_INVOICE_LIST &&
+                              state.status == BlocStatus.SUCCESS)
+                            ...state.listInvoice!
                                 .asMap()
                                 .map(
                                   (index, x) {
@@ -351,8 +354,10 @@ class _ScreenState extends State<_Screen> {
                                     ],
                                   ),
                                 ),
-                                if (listInvoice!.isNotEmpty)
-                                  ...listInvoice!
+                                if (state.request ==
+                                        InvoiceType.GET_INVOICE_LIST &&
+                                    state.status == BlocStatus.SUCCESS)
+                                  ...state.listInvoice!
                                       .map(
                                         (e) => ItemRightWidget(
                                           dto: e,
