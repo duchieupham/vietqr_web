@@ -4,6 +4,7 @@ import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
 import 'package:VietQR/features/invoice_manage/widgets/item_right_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_bank_select_widget.dart';
+import 'package:VietQR/features/invoice_manage/widgets/popup_payment_request_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_qr_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/title_invoice_widget.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
@@ -362,7 +363,10 @@ class _ScreenState extends State<_Screen> {
                                         (e) => ItemRightWidget(
                                           dto: e,
                                           onShowQR: () {
-                                            // onShowPopup();
+                                            onShowPopup(
+                                              e,
+                                              e.invoiceId!,
+                                            );
                                           },
                                           onShowDetail: () {
                                             invoiceId = e.invoiceId;
@@ -384,6 +388,20 @@ class _ScreenState extends State<_Screen> {
               ],
             ),
           )),
+    );
+  }
+
+  void onShowPopup(
+    InvoiceFeeDTO dto,
+    String invoiceId,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) => PopupPaymentRequestWidget(
+        invoiceId: invoiceId,
+        bloc: _bloc,
+        dto: dto,
+      ),
     );
   }
 

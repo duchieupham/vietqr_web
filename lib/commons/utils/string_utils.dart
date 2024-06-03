@@ -138,6 +138,20 @@ class StringUtils {
     return null;
   }
 
+  static String formatNumberWithOutVND(dynamic value) {
+    if (value == null || value == '') {
+      return '0 VND';
+    }
+
+    if (value is String) {
+      if (value.isNotEmpty) {
+        value = int.parse(value);
+      }
+    }
+    var numberFormat = NumberFormat.decimalPattern('vi-VI');
+    return numberFormat.format(value).replaceAll('.', ',');
+  }
+
   String formatPhoneNumberVN(String phoneNumber) {
     String numericString = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
 
