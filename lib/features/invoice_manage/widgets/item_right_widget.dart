@@ -40,7 +40,7 @@ class ItemRightWidget extends StatelessWidget {
                   ? 'Chờ thanh toán'
                   : dto.status == 1
                       ? 'Đã thanh toán'
-                      : 'Khoản thu lệch',
+                      : 'Chưa TT hết',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,

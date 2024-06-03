@@ -97,13 +97,14 @@ class _ScreenState extends State<_Screen> {
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
     await showDialog(
       context: context,
-      // builder: (context) => PopupQrCodeInvoice(invoiceId: dto.invoiceId),
       builder: (context) => PopupQrCodeInvoice(
         dto: dto,
-        showButton: false,
+        showButton: true,
         onPop: (id) {
           Navigator.of(context).pop();
-          // _bloc.add(GetInvoiceDetail(id, false));
+          _bloc.add(GetInvoiceDetail(id, false));
+          _provider.onPageChange(PageInvoice.DETAIL);
+
           // _model.getInvoiceDetail(id);
         },
         invoiceId: dto.invoiceId,
@@ -295,11 +296,11 @@ class _ScreenState extends State<_Screen> {
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 220,
-            child: Stack(
-              children: [
-                Scrollbar(
-                  controller: controller1,
-                  child: SingleChildScrollView(
+            child: SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Scrollbar(
+                    controller: controller1,
                     child: SingleChildScrollView(
                       controller: controller1,
                       scrollDirection: Axis.horizontal,
@@ -332,108 +333,108 @@ class _ScreenState extends State<_Screen> {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 1570,
-                  child: Row(
-                    children: [
-                      const Expanded(child: SizedBox()),
-                      SingleChildScrollView(
-                        controller: controller2,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColor.WHITE,
-                              boxShadow: [
-                                BoxShadow(
-                                    color:
-                                        AppColor.GREY_BORDER.withOpacity(0.8),
-                                    blurRadius: 5,
-                                    spreadRadius: 1,
-                                    offset: const Offset(0, 0)),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
+                  SizedBox(
+                    width: 1570,
+                    child: Row(
+                      children: [
+                        const Expanded(child: SizedBox()),
+                        SingleChildScrollView(
+                          controller: controller2,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColor.WHITE,
+                                boxShadow: [
+                                  BoxShadow(
                                       color:
-                                          AppColor.BLUE_TEXT.withOpacity(0.3)),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                          height: 50,
-                                          width: 120,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: AppColor.GREY_TEXT
-                                                      .withOpacity(0.3))),
-                                          child: const Text(
-                                            'Trạng thái',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppColor.BLACK,
-                                                fontWeight: FontWeight.bold),
-                                          )),
-                                      Container(
-                                          height: 50,
-                                          width: 140,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: AppColor.GREY_TEXT
-                                                      .withOpacity(0.3))),
-                                          child: const Text(
-                                            'Thao tác',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppColor.BLACK,
-                                                fontWeight: FontWeight.bold),
-                                          )),
-                                    ],
+                                          AppColor.GREY_BORDER.withOpacity(0.8),
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                      offset: const Offset(0, 0)),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: AppColor.BLUE_TEXT
+                                            .withOpacity(0.3)),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            height: 50,
+                                            width: 120,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: AppColor.GREY_TEXT
+                                                        .withOpacity(0.3))),
+                                            child: const Text(
+                                              'Trạng thái',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColor.BLACK,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                        Container(
+                                            height: 50,
+                                            width: 140,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: AppColor.GREY_TEXT
+                                                        .withOpacity(0.3))),
+                                            child: const Text(
+                                              'Thao tác',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColor.BLACK,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                // if (listInvoice!.isNotEmpty ||
-                                //     listInvoice != null)
-                                ...state.listInvoice!
-                                    .map(
-                                      (e) => ItemRightWidget(
-                                        dto: e,
-                                        onShowQR: () {
-                                          setState(() {
-                                            selectInvoiceFee = e;
-                                          });
-                                          _bloc.add(GetInvoiceDetail(
-                                              e.invoiceId!, true));
-                                          // onShowPopup(
-                                          //   state,
-                                          //   e,
-                                          //   e.invoiceId!,
-                                          // );
-                                        },
-                                        onShowDetail: () {
-                                          invoiceId = e.invoiceId;
-                                          _provider
-                                              .onPageChange(PageInvoice.DETAIL);
-                                          setState(() {});
-                                        },
-                                      ),
-                                    )
-                                    .toList(),
-                              ],
+                                  // if (listInvoice!.isNotEmpty ||
+                                  //     listInvoice != null)
+                                  ...state.listInvoice!
+                                      .map(
+                                        (e) => ItemRightWidget(
+                                          dto: e,
+                                          onShowQR: () {
+                                            setState(() {
+                                              selectInvoiceFee = e;
+                                            });
+                                            _bloc.add(GetInvoiceDetail(
+                                                e.invoiceId!, true));
+                                            // onShowPopup(
+                                            //   state,
+                                            //   e,
+                                            //   e.invoiceId!,
+                                            // );
+                                          },
+                                          onShowDetail: () {
+                                            invoiceId = e.invoiceId;
+                                            _provider.onPageChange(
+                                                PageInvoice.DETAIL);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      )
+                                      .toList(),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );

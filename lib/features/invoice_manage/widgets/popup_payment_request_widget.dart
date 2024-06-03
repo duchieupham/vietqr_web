@@ -52,14 +52,12 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
     await showDialog(
       context: context,
-      // builder: (context) => PopupQrCodeInvoice(invoiceId: dto.invoiceId),
       builder: (context) => PopupQrCodeInvoice(
         dto: dto,
-        showButton: false,
+        showButton: true,
         onPop: (id) {
           Navigator.of(context).pop();
           widget.bloc.add(GetInvoiceDetail(id, false));
-          // _model.getInvoiceDetail(id);
         },
         invoiceId: dto.invoiceId,
       ),

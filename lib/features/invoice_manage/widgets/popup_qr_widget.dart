@@ -13,13 +13,13 @@ class PopupQrCodeInvoice extends StatefulWidget {
   final InvoiceDetailQrDTO dto;
   final String invoiceId;
   final Function(String) onPop;
-  final bool showButton;
+  final bool? showButton;
   const PopupQrCodeInvoice(
       {super.key,
       required this.dto,
       required this.invoiceId,
       required this.onPop,
-      this.showButton = true});
+      this.showButton});
 
   @override
   State<PopupQrCodeInvoice> createState() => _PopupQrCodeInvoiceState();
@@ -55,6 +55,7 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
 
   @override
   void initState() {
+    print("Show button: ${widget.showButton}");
     super.initState();
   }
 
@@ -267,7 +268,7 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
                             StringUtils.formatNumberAmount(
                                 widget.dto.totalAmountAfterVat)),
                         const Spacer(),
-                        if (widget.showButton)
+                        if (widget.showButton!)
                           Center(
                             child: MButtonWidget(
                               onTap: () {
