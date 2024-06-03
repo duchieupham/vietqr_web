@@ -34,7 +34,7 @@ class NotificationRepository {
     try {
       // final String url = '${EnvConfig.getBaseUrl()}invoice-unpaid/$userId';
       final String url =
-          'https://dev.vietqr.org/vqr/mock/api/invoice-unpaid/$userId';
+          'https://dev.vietqr.org/vqr/api/invoice-unpaid/$userId';
       final response = await BaseAPIClient.getAPI(
         url: url,
         type: AuthenticationType.SYSTEM,
