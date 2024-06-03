@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/env_type.dart';
 import 'package:VietQR/commons/enums/event_type.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
 import 'package:VietQR/features/mobile_recharge/widget/pop_up_top_up_sucsess.dart';
 import 'package:VietQR/features/transaction/widgets/transaction_success_widget.dart';
 import 'package:VietQR/layouts/dialog/notify_trans_widget.dart';
@@ -14,7 +17,9 @@ import 'package:VietQR/services/shared_references/media_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../commons/constants/configurations/stringify.dart';
@@ -77,30 +82,97 @@ class WebSocketHelper {
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-                Session.instance.sendEvent(EventTypes.refreshListTransaction);
-                Session.instance.sendEvent(EventTypes.updateCountNotification);
-                if (!Session.instance.inQRGeneratePage) {
-                  MediaHelper.instance.playAudio(data);
-                  DialogWidget.instance.showDialogTrans(
-                    child: NotifyTransWidget(
-                      dto: NotifyTransDTO.fromJson(data),
-                    ),
-                  );
-                }
+                // Timer.periodic(
+                toastification.showCustom(
+                  // context: context,
+                  animationDuration: const Duration(milliseconds: 500),
+                  autoCloseDuration: const Duration(seconds: 4),
+                  alignment: Alignment.topRight,
+                  dismissDirection: DismissDirection.horizontal,
+                  builder: (context, holder) {
+                    return Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppColor.WHITE,
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColor.BLACK.withOpacity(0.1),
+                                blurRadius: 12,
+                                offset: const Offset(0, 5)),
+                          ]),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/ic-noti-invoice.png',
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(width: 10),
+                                Html(
+                                  data: '',
+                                  shrinkWrap: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const MySeparator(color: AppColor.GREY_DADADA),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            child: const Center(
+                              child: Text(
+                                'Thanh toán ngay',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: AppColor.ORANGE_C02,
+                                  color: AppColor.ORANGE_C02,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
               }
-              if (data['notificationType'] != null &&
-                  data['notificationType'] ==
-                      Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
-                if (data['paymentMethod'] == "1") {
-                  DialogWidget.instance.openWidgetDialog(
-                    width: 500,
-                    height: 540,
-                    child: PopupTopUpSuccess(
-                      dto: TopUpSuccessDTO.fromJson(data),
-                    ),
-                  );
-                }
-              }
+              // if (data['notificationType'] != null &&
+              //     data['notificationType'] ==
+              //         Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
+              //   Session.instance.sendEvent(EventTypes.refreshListTransaction);
+              //   Session.instance.sendEvent(EventTypes.updateCountNotification);
+              //   if (!Session.instance.inQRGeneratePage) {
+              //     MediaHelper.instance.playAudio(data);
+              //     DialogWidget.instance.showDialogTrans(
+              //       child: NotifyTransWidget(
+              //         dto: NotifyTransDTO.fromJson(data),
+              //       ),
+              //     );
+              //   }
+              // }
+              // if (data['notificationType'] != null &&
+              //     data['notificationType'] ==
+              //         Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
+              //   if (data['paymentMethod'] == "1") {
+              //     DialogWidget.instance.openWidgetDialog(
+              //       width: 500,
+              //       height: 540,
+              //       child: PopupTopUpSuccess(
+              //         dto: TopUpSuccessDTO.fromJson(data),
+              //       ),
+              //     );
+              //   }
+              // }
             });
           } else {
             setListenWs(false);

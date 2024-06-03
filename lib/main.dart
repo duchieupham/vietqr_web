@@ -1023,8 +1023,8 @@ class _VietQRApp extends State<VietQRApp> {
           child: ToastificationWrapper(
             child: ToastificationConfigProvider(
               config: const ToastificationConfig(
-                alignment: Alignment.center,
-                itemWidth: 440,
+                // alignment: Alignment.center,
+                itemWidth: 350,
                 animationDuration: Duration(milliseconds: 500),
               ),
               child: MaterialApp.router(

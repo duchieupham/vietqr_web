@@ -9,6 +9,7 @@ import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
@@ -22,6 +23,8 @@ import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
@@ -93,6 +96,12 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
       buttonPosition.dy + buttonHeight, // Bottom edge of the button
     );
   }
+
+  String htmlString = """
+            <div>
+             <span style="font-size: 12;">Bạn có 1 hóa đơn<strong>450,000,000 VND</strong><br>cần thanh toán!</span>
+            </div>
+            """;
 
   @override
   Widget build(BuildContext context) {
@@ -185,20 +194,26 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    // Container(
+                    //   width: 30,
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(5),
+                    //     color: AppColor.ORANGE_DARK.withOpacity(0.3),
+                    //   ),
+                    //   height: 30,
+                    //   child: const Center(
+                    //     child: Icon(
+                    //       Icons.receipt_long_outlined,
+                    //       color: AppColor.ORANGE_DARK,
+                    //       size: 24,
+                    //     ),
+                    //   ),
+                    // ),
+                    Image.asset(
+                      'assets/images/ic-noti-invoice.png',
                       width: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppColor.ORANGE_DARK.withOpacity(0.3),
-                      ),
                       height: 30,
-                      child: const Center(
-                        child: Icon(
-                          Icons.receipt_long_outlined,
-                          color: AppColor.ORANGE_DARK,
-                          size: 24,
-                        ),
-                      ),
+                      fit: BoxFit.contain,
                     ),
                     RichText(
                       text: TextSpan(
