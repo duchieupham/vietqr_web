@@ -1,3 +1,4 @@
+import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/bank_account_dto.dart';
@@ -9,6 +10,7 @@ class InvoiceProvider extends ChangeNotifier {
 
   List<BankAccountDTO> listBank = [];
   List<BankAccountDTO> filterBanks = [];
+  List<SelectInvoiceItem> listSelectInvoice = [];
 
   List<InvoiceStatus> statusList = [
     const InvoiceStatus(id: 0, name: 'Chưa thanh toán'),
@@ -73,6 +75,26 @@ class InvoiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setListSelectItem(List<InvoiceItemDetailDTO> items) {
+    listSelectInvoice = items
+        .map((e) => SelectInvoiceItem(isSelect: false, invoiceItem: e))
+        .toList();
+    notifyListeners();
+  }
+
+  void appliedInvoiceItem(bool value, int index) {
+    listSelectInvoice[index].isSelect = value;
+
+    notifyListeners();
+  }
+
+  void appliedAllItem(bool value) {
+    for (var e in listSelectInvoice) {
+      e.isSelect = value;
+    }
+    notifyListeners();
+  }
+
   void filterBankList(String? filter) {
     if (filter!.isNotEmpty) {
       isFilter = true;
@@ -100,6 +122,16 @@ class InvoiceProvider extends ChangeNotifier {
     invoiceMonth = null;
     notifyListeners();
   }
+}
+
+class SelectInvoiceItem {
+  bool? isSelect;
+  final InvoiceItemDetailDTO invoiceItem;
+
+  SelectInvoiceItem({
+    this.isSelect,
+    required this.invoiceItem,
+  });
 }
 
 class InvoiceTime {

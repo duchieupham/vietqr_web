@@ -67,8 +67,8 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
               status: BlocStatus.LOADING, request: InvoiceType.INVOICE_DETAIL));
         }
 
-        final result = await _invoiceRepository.getInvoiceDetail(
-            invoiceId: event.invoiceId);
+        final result =
+            await _invoiceRepository.getInvoiceDetail(event.invoiceId);
         if (result != null) {
           emit(state.copyWith(
               status: BlocStatus.SUCCESS,

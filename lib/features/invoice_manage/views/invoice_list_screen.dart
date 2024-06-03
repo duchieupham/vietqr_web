@@ -172,11 +172,14 @@ class _ScreenState extends State<_Screen> {
                       _pagingWidget(state),
                       const SizedBox(height: 10),
                     ] else if (provider.pageInvoice == PageInvoice.DETAIL)
-                      InvoiceDetailScreen(
-                        invoiceId: invoiceId!,
-                        callback: () {
-                          provider.onPageChange(PageInvoice.LIST);
-                        },
+                      Expanded(
+                        child: InvoiceDetailScreen(
+                          bloc: _bloc,
+                          invoiceId: invoiceId!,
+                          callback: () {
+                            provider.onPageChange(PageInvoice.LIST);
+                          },
+                        ),
                       ),
                   ],
                 ),
@@ -242,9 +245,7 @@ class _ScreenState extends State<_Screen> {
         ),
       ));
     }
-    // if (state.listInvoice!.isEmpty || state.listInvoice == null) {
-    //   return const SizedBox.shrink();
-    // }
+
     return Expanded(
       child: Padding(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -261,9 +262,8 @@ class _ScreenState extends State<_Screen> {
                       child: Column(
                         children: [
                           const TitleItemInvoiceWidget(),
-                          if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                              state.status == BlocStatus.SUCCESS)
-                            ...state.listInvoice!
+                          if (listInvoice!.isNotEmpty)
+                            ...listInvoice!
                                 .asMap()
                                 .map(
                                   (index, x) {
@@ -351,10 +351,8 @@ class _ScreenState extends State<_Screen> {
                                     ],
                                   ),
                                 ),
-                                if (state.request ==
-                                        InvoiceType.GET_INVOICE_LIST &&
-                                    state.status == BlocStatus.SUCCESS)
-                                  ...state.listInvoice!
+                                if (listInvoice!.isNotEmpty)
+                                  ...listInvoice!
                                       .map(
                                         (e) => ItemRightWidget(
                                           dto: e,
