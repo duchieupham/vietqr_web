@@ -819,7 +819,7 @@ class _ScreenState extends State<_Screen> {
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: AppColor.BLUE_TEXT),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.print_outlined,
@@ -1036,7 +1036,7 @@ class _ScreenState extends State<_Screen> {
                                     const BorderRadius.all(Radius.circular(5)),
                                 border:
                                     Border.all(color: AppColor.GREY_DADADA)),
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(

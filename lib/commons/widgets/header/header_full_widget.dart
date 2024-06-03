@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
@@ -6,6 +7,7 @@ import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/utils/clocker_widget.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
@@ -22,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../layouts/dialog/pop_up_menu_header_widget.dart';
 
@@ -58,6 +61,21 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
         _notificationBloc.add(NotificationGetCounterEvent(userId: userId));
       });
     });
+    // Timer.periodic(
+    //   const Duration(seconds: 1),
+    //   (timer) {
+    //     toastification.show(
+    //       context: context,
+    //       type: ToastificationType.success,
+    //       style: ToastificationStyle.flat,
+    //       title: const Text('Thanh toán thàng công số tiền'),
+    //       description: Text(StringUtils.formatNumberAmount(3500000)),
+    //       alignment: Alignment.topRight,
+    //       autoCloseDuration: const Duration(seconds: 4),
+    //       boxShadow: lowModeShadow,
+    //     );
+    //   },
+    // );
     // listenNewNotification(userId);
   }
 

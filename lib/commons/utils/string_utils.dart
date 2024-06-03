@@ -44,7 +44,7 @@ class StringUtils {
     if (money.length > 2) {
       var value = money;
       value = value.replaceAll(RegExp(r'\D'), '');
-      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
       return value;
     }
     return money;

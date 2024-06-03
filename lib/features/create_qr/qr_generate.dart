@@ -754,7 +754,7 @@ class _QrGenerateState extends State<_QrGenerate> {
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(color: AppColor.BLUE_TEXT),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.print_outlined,

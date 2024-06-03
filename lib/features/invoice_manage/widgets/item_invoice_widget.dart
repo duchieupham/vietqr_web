@@ -1,3 +1,5 @@
+import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -6,12 +8,35 @@ import 'package:intl/intl.dart';
 import '../../../../commons/constants/configurations/theme.dart';
 
 class ItemInvoiceWidget extends StatelessWidget {
+  final int index;
+  final InvoiceFeeDTO dto;
   const ItemInvoiceWidget({
     super.key,
+    required this.index,
+    required this.dto,
   });
 
   @override
   Widget build(BuildContext context) {
+    String formattedDateTimePaid = dto.timePaid != null &&
+            dto.timePaid.toString().isNotEmpty
+        ? DateFormat('yyyy-MM-dd HH:mm:ss')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timePaid! * 1000))
+        : '-';
+    Color color = AppColor.WHITE;
+    switch (dto.status) {
+      case 0:
+        color = AppColor.ORANGE_DARK;
+        break;
+      case 1:
+        color = AppColor.GREEN;
+        break;
+      case 3:
+        color = AppColor.GREEN_2D9D92;
+        break;
+      default:
+        break;
+    }
     return Container(
       alignment: Alignment.center,
       child: Row(
@@ -27,7 +52,7 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 50,
             child: SelectionArea(
               child: Text(
-                '1',
+                index.toString(),
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12),
               ),
@@ -44,12 +69,12 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 150,
             child: SelectionArea(
               child: Text(
-                // StringUtils.formatNumberWithOutVND(dto.amount.toString()),
-                '123123',
+                StringUtils.formatMoney(dto.totalAmount.toString()),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
+                  color: color,
                   // color: dto.status == 1
                   //     ? AppColor.GREEN
                   //     : AppColor.ORANGE_DARK),
@@ -59,8 +84,7 @@ class ItemInvoiceWidget extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            // alignment:
-            //     dto.vso.isNotEmpty ? Alignment.centerLeft : Alignment.center,
+            alignment: Alignment.centerLeft,
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: AppColor.GREY_BUTTON),
@@ -69,8 +93,8 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 150,
             child: SelectionArea(
               child: Text(
-                // dto.midName.isNotEmpty ? dto.midName : '-',
-                'aasdasd',
+                dto.invoiceNumber!.isNotEmpty ? dto.invoiceNumber! : '-',
+                // 'aasdasd',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
               ),
@@ -87,8 +111,7 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 250,
             child: SelectionArea(
               child: Text(
-                // dto.invoiceName,
-                '123123123qeddsa',
+                dto.invoiceName!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,
@@ -108,8 +131,8 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 120,
             child: SelectionArea(
               child: Text(
-                // dto.midName.isNotEmpty ? dto.midName : '-',
-                'aasdasd',
+                dto.vso!.isNotEmpty ? dto.vso! : '-',
+                // 'aasdasd',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
               ),
@@ -127,8 +150,8 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 120,
             child: SelectionArea(
               child: Text(
-                // dto.midName.isNotEmpty ? dto.midName : '-',
-                'aasdasd',
+                dto.midName!.isNotEmpty ? dto.midName! : '-',
+                // 'aasdasd',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
               ),
@@ -150,13 +173,13 @@ class ItemInvoiceWidget extends StatelessWidget {
                 children: [
                   Text(
                     // dto.bankAccount,
-                    '1239012930123',
+                    dto.bankAccount!.isNotEmpty ? dto.bankAccount! : '-',
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
                   ),
                   Text(
                     // dto.bankShortName,
-                    'MB',
+                    dto.bankShortName!.isNotEmpty ? dto.bankShortName! : '-',
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
                   ),
@@ -175,8 +198,7 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 200,
             child: SelectionArea(
               child: Text(
-                // dto.fullName.isNotEmpty ? dto.fullName : '-',
-                'nguyenla',
+                dto.userBankName!.isNotEmpty ? dto.userBankName! : '-',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
               ),
@@ -193,10 +215,8 @@ class ItemInvoiceWidget extends StatelessWidget {
             width: 120,
             child: SelectionArea(
               child: Text(
-                // dto.timePaid.toString() != '0'
-                //     ? formattedDateTimePaid
-                //     : '-',
-                '182938192381293',
+                dto.timePaid.toString() != '0' ? formattedDateTimePaid : '-',
+                // '182938192381293',
                 textAlign: TextAlign.end,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
               ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
@@ -63,6 +65,7 @@ import 'package:VietQR/services/providers/add_business_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/guide_provider.dart';
+import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
@@ -95,6 +98,7 @@ import 'features/vhitek/vhitek_screen.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:toastification/toastification.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -1004,6 +1008,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => ECOMBankTypeProvider()),
             ChangeNotifierProvider(
                 create: (context) => UserInformationProvider()),
+            ChangeNotifierProvider(create: (context) => InvoiceProvider()),
             ChangeNotifierProvider(create: (context) => AddBusinessProvider()),
             ChangeNotifierProvider(
                 create: (context) => BusinessInformationProvider()),
@@ -1015,22 +1020,31 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => MenuLoginProvider()),
             ChangeNotifierProvider(create: (context) => WalletHomeProvider()),
           ],
-          child: MaterialApp.router(
-            onGenerateTitle: (context) =>
-                'VIETQR.VN - Phần mềm tạo mã QR và Đối soát giao dịch thanh toán qua mã VietQR',
-            routerConfig: _router,
-            debugShowCheckedModeBanner: false,
-            themeMode: ThemeMode.light,
-            theme: DefaultThemeData(context: context).lightTheme,
-            localizationsDelegates: const <LocalizationsDelegate<Object>>[
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              //  Locale('en'), // English
-              Locale('vi'), // Vietnamese
-            ],
+          child: ToastificationWrapper(
+            child: ToastificationConfigProvider(
+              config: const ToastificationConfig(
+                alignment: Alignment.center,
+                itemWidth: 440,
+                animationDuration: Duration(milliseconds: 500),
+              ),
+              child: MaterialApp.router(
+                onGenerateTitle: (context) =>
+                    'VIETQR.VN - Phần mềm tạo mã QR và Đối soát giao dịch thanh toán qua mã VietQR',
+                routerConfig: _router,
+                debugShowCheckedModeBanner: false,
+                themeMode: ThemeMode.light,
+                theme: DefaultThemeData(context: context).lightTheme,
+                localizationsDelegates: const <LocalizationsDelegate<Object>>[
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  //  Locale('en'), // English
+                  Locale('vi'), // Vietnamese
+                ],
+              ),
+            ),
           ),
         ),
       ),
