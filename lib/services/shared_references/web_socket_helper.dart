@@ -82,7 +82,7 @@ class WebSocketHelper {
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
-                String html = jsonDecode(data['html']);
+                // String html = jsonDecode();
                 toastification.showCustom(
                   // context: context,
                   animationDuration: const Duration(milliseconds: 500),
@@ -119,7 +119,7 @@ class WebSocketHelper {
                                 ),
                                 const SizedBox(width: 10),
                                 Html(
-                                  data: '"$html"',
+                                  data: data['html'],
                                   shrinkWrap: true,
                                 ),
                               ],
