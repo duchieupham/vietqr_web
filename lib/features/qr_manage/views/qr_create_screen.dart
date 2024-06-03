@@ -328,7 +328,9 @@ class _ScreenState extends State<_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _headerWidget(),
-                  const Divider(),
+                  const Divider(
+                    color: AppColor.GREY_DADADA,
+                  ),
                   Expanded(
                     child: Scrollbar(
                       controller: _horizontal,
@@ -366,10 +368,20 @@ class _ScreenState extends State<_Screen> {
                                       child: Row(
                                         children: [
                                           _buildOption("Tài khoản đã thêm",
-                                              isFirstSelected),
+                                              isFirstSelected, (selected) {
+                                            if (!isFirstSelected) {
+                                              isFirstSelected = true;
+                                              setState(() {});
+                                            }
+                                          }),
                                           const SizedBox(width: 20),
                                           _buildOption("Tài khoản khác",
-                                              !isFirstSelected),
+                                              !isFirstSelected, (selected) {
+                                            if (isFirstSelected) {
+                                              isFirstSelected = false;
+                                              setState(() {});
+                                            }
+                                          }),
                                         ],
                                       ),
                                     ),
@@ -1690,12 +1702,13 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  Widget _buildOption(String title, bool isSelected) {
+  Widget _buildOption(
+      String title, bool isSelected, Function(bool) onSelected) {
     return GestureDetector(
       onTap: () {
         _amountController.clear();
         _contentController.clear();
-        isFirstSelected = !isFirstSelected;
+        onSelected(!isSelected);
         setState(() {});
       },
       child: Container(
