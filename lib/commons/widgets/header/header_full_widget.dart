@@ -217,18 +217,18 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                     ),
                     RichText(
                       text: TextSpan(
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 13,
                           color: Colors.black,
                         ),
                         children: <TextSpan>[
                           TextSpan(
                             text: '${notiDto!.totalInvoice}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          TextSpan(
+                          const TextSpan(
                             text: ' hoá đơn chưa thanh toán!',
                           ),
                         ],
