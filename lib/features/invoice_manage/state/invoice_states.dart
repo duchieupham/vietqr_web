@@ -50,6 +50,7 @@ class InvoiceStates extends Equatable {
         msg,
         listInvoice,
         listBank,
+        invoiceDetailDTO,
         metaDataDTO,
       ];
 }

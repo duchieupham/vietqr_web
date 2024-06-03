@@ -47,12 +47,10 @@ class InvoiceRepository extends BaseRepo {
     return result;
   }
 
-  Future<InvoiceDetailDTO?> getInvoiceDetail({
-    required String invoiceId,
-  }) async {
-    InvoiceDetailDTO? result;
+  Future<InvoiceDetailDTO?> getInvoiceDetail(String invoiceId) async {
     try {
-      final String url = '${EnvConfig.getBaseUrl()}invoice-detail/$invoiceId';
+      // String url = 'https://api.vietqr.org/vqr/api/invoice/detail/$invoiceId';
+      String url = 'https://dev.vietqr.org/vqr/api/invoice/detail/$invoiceId';
       final response = await BaseAPIClient.getAPI(
         url: url,
         type: AuthenticationType.SYSTEM,
@@ -62,9 +60,9 @@ class InvoiceRepository extends BaseRepo {
         return InvoiceDetailDTO.fromJson(data);
       }
     } catch (e) {
-      LOG.error(e.toString());
+      LOG.error("Failed to fetch Invoice detail: ${e.toString()}");
     }
-    return result;
+    return null;
   }
 
   Future<List<BankAccountDTO>> getListBankAccount() async {
