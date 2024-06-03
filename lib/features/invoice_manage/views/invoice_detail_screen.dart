@@ -1246,10 +1246,6 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                   .map(
                                     (x) => x.invoiceItem.invoiceItemId,
                                   )),
-                              listPaymentBank
-                                  .firstWhere(
-                                      (element) => element.isChecked == true)
-                                  .bankId,
                               false));
                           // Navigator.of(context).pop();
                         }

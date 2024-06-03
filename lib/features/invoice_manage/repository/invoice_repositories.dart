@@ -51,13 +51,13 @@ class InvoiceRepository extends BaseRepo {
   Future<InvoiceDetailQrDTO?> requestPaymnet({
     required String invoiceId,
     required List<String> itemItemIds,
-    String? bankIdRecharge,
+    // String? bankIdRecharge,
   }) async {
     try {
       Map<String, dynamic> param = {};
       param['invoiceId'] = invoiceId;
       param['itemItemIds'] = itemItemIds;
-      param['bankIdRecharge'] = bankIdRecharge;
+      // param['bankIdRecharge'] = bankIdRecharge;
 
       String url = '${EnvConfig.getBaseUrl()}invoice/request-payment';
       final response = await BaseAPIClient.postAPI(

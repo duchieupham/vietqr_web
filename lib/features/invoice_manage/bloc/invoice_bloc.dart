@@ -66,9 +66,9 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
         emit(state.copyWith(
             status: BlocStatus.LOADING, request: InvoiceType.REQUEST_PAYMENT));
         final result = await _invoiceRepository.requestPaymnet(
-            invoiceId: event.invoiceId,
-            itemItemIds: event.itemItemIds,
-            bankIdRecharge: event.bankIdRecharge ?? '');
+          invoiceId: event.invoiceId,
+          itemItemIds: event.itemItemIds,
+        );
         if (result != null) {
           emit(state.copyWith(
               isShow: event.isShowPopup,

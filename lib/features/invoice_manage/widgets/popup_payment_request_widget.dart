@@ -194,9 +194,6 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
                           .map(
                             (x) => x.invoiceItem.invoiceItemId,
                           )),
-                      listPaymentBank
-                          .firstWhere((element) => element.isChecked == true)
-                          .bankId,
                       true));
                   Navigator.of(context).pop();
                   // final result = await _model.requestPayment(
