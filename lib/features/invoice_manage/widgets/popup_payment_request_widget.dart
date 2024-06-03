@@ -146,33 +146,33 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Tài khoản nhận tiền',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 56,
-                width: 600,
-                child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return SelectBankRecieveItem(
-                        dto: listPaymentBank[index],
-                        onChange: (value) {
-                          // _model.selectPayment(index);
-                          for (var e in listPaymentBank) {
-                            e.isChecked = false;
-                          }
-                          listPaymentBank[index].isChecked = true;
-                          setState(() {});
-                        },
-                      );
-                    },
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(width: 20),
-                    itemCount: listReq.length),
-              ),
+              // const Text(
+              //   'Tài khoản nhận tiền',
+              //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              // ),
+              // const SizedBox(height: 10),
+              // SizedBox(
+              //   height: 56,
+              //   width: 600,
+              //   child: ListView.separated(
+              //       scrollDirection: Axis.horizontal,
+              //       itemBuilder: (context, index) {
+              //         return SelectBankRecieveItem(
+              //           dto: listPaymentBank[index],
+              //           onChange: (value) {
+              //             // _model.selectPayment(index);
+              //             for (var e in listPaymentBank) {
+              //               e.isChecked = false;
+              //             }
+              //             listPaymentBank[index].isChecked = true;
+              //             setState(() {});
+              //           },
+              //         );
+              //       },
+              //       separatorBuilder: (context, index) =>
+              //           const SizedBox(width: 20),
+              //       itemCount: listReq.length),
+              // ),
             ],
           ),
         ),

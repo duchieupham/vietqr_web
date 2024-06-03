@@ -55,7 +55,6 @@ class _PopupQrCodeInvoiceState extends State<PopupQrCodeInvoice> {
 
   @override
   void initState() {
-    print("Show button: ${widget.showButton}");
     super.initState();
   }
 

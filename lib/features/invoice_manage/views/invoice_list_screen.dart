@@ -101,8 +101,12 @@ class _ScreenState extends State<_Screen> {
         dto: dto,
         showButton: true,
         onPop: (id) {
+          setState(() {
+            invoiceId = id;
+          });
           Navigator.of(context).pop();
-          _bloc.add(GetInvoiceDetail(id, false));
+          // _bloc.add(GetInvoiceDetail(id, false));
+
           _provider.onPageChange(PageInvoice.DETAIL);
 
           // _model.getInvoiceDetail(id);

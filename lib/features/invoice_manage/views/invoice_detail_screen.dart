@@ -339,46 +339,46 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                   const MySeparator(
                                       color: AppColor.GREY_DADADA),
                                   const SizedBox(height: 30),
-                                  const SizedBox(
-                                    width: double.infinity,
-                                    height: 20,
-                                    child: Text(
-                                      'Tài khoản nhận tiền',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  if (state.invoiceDetailDTO!.paymentRequestDTOS
-                                      .isNotEmpty)
-                                    SizedBox(
-                                      height: 70,
-                                      child: ListView.separated(
-                                          scrollDirection: Axis.horizontal,
-                                          itemBuilder: (context, index) {
-                                            listPaymentBank = state
-                                                .invoiceDetailDTO!
-                                                .paymentRequestDTOS;
+                                  // const SizedBox(
+                                  //   width: double.infinity,
+                                  //   height: 20,
+                                  //   child: Text(
+                                  //     'Tài khoản nhận tiền',
+                                  //     style: TextStyle(
+                                  //         fontSize: 15,
+                                  //         fontWeight: FontWeight.bold),
+                                  //   ),
+                                  // ),
+                                  // const SizedBox(height: 30),
+                                  // if (state.invoiceDetailDTO!.paymentRequestDTOS
+                                  //     .isNotEmpty)
+                                  //   SizedBox(
+                                  //     height: 70,
+                                  //     child: ListView.separated(
+                                  //         scrollDirection: Axis.horizontal,
+                                  //         itemBuilder: (context, index) {
+                                  //           listPaymentBank = state
+                                  //               .invoiceDetailDTO!
+                                  //               .paymentRequestDTOS;
 
-                                            return SelectBankRecieveItem(
-                                              dto: listPaymentBank[index],
-                                              onChange: (value) {
-                                                for (var e in listPaymentBank) {
-                                                  e.isChecked = false;
-                                                }
-                                                listPaymentBank[index]
-                                                    .isChecked = true;
-                                                setState(() {});
-                                                // model.selectPayment(index);
-                                              },
-                                            );
-                                          },
-                                          separatorBuilder: (context, index) =>
-                                              const SizedBox(width: 20),
-                                          itemCount: state.invoiceDetailDTO!
-                                              .paymentRequestDTOS.length),
-                                    ),
+                                  //           return SelectBankRecieveItem(
+                                  //             dto: listPaymentBank[index],
+                                  //             onChange: (value) {
+                                  //               for (var e in listPaymentBank) {
+                                  //                 e.isChecked = false;
+                                  //               }
+                                  //               listPaymentBank[index]
+                                  //                   .isChecked = true;
+                                  //               setState(() {});
+                                  //               // model.selectPayment(index);
+                                  //             },
+                                  //           );
+                                  //         },
+                                  //         separatorBuilder: (context, index) =>
+                                  //             const SizedBox(width: 20),
+                                  //         itemCount: state.invoiceDetailDTO!
+                                  //             .paymentRequestDTOS.length),
+                                  //   ),
                                   const SizedBox(height: 200),
                                 ],
                               ),
@@ -769,7 +769,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             width: 150,
             child: SelectionArea(
               child: Text(
-                StringUtils.formatMoney(dto.percentFee.toString()),
+                (dto.percentFee.toString()),
                 // textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 15),
                 maxLines: 2,

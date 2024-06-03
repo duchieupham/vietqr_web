@@ -71,7 +71,7 @@ class ItemRightWidget extends StatelessWidget {
                     ? MainAxisAlignment.center
                     : MainAxisAlignment.spaceBetween,
                 children: [
-                  if (dto.status == 0)
+                  if (dto.status == 0 || dto.status == 3)
                     Tooltip(
                       message: 'Mã QR',
                       child: InkWell(
