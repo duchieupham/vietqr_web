@@ -10,6 +10,8 @@ class AppImages {
   static String icMenuShareBDSD = 'aea13c59-f430-4411-a285-74e900fcc53e';
   static String icMenuMerchant = '16827735-95b7-4e6e-8348-1c75bc580947';
   static String icMenuEmployeeBlack = '9579d333-891c-46c9-b756-8c0a67855b92';
+  static String icMenuInvoiceBlack = 'a7695ab4-563b-42ef-a6ab-1914b1483c84';
+
   static String icMenuQrBlack = 'cfe8225e-ac60-4f94-8fe2-ddbc12d5492d';
   static String icMenuIntergrated = 'd8bc527f-ea1c-4e3d-9d2a-3b49e7b324b6';
   static String icMenuContactBlack = '12d4f2fc-eb56-49d3-b733-dec573acab4b';
@@ -43,7 +45,8 @@ class AppImages {
   static String logoTelegramDash = '39b493c7-e17f-4082-9612-906e54755088';
   static String logoTelegram = '7870c598-5d8b-4410-9e1f-2742d5d535fd';
   static String logoVietQr = 'e93c6dc4-94c5-40ce-b76c-9c12016493b9';
-  static String logoVietqrKiotDashboard = '690fba29-c105-4532-845e-8b4639ed90c0';
+  static String logoVietqrKiotDashboard =
+      '690fba29-c105-4532-845e-8b4639ed90c0';
   static String avtRawDataBot = '97c9f648-b60f-495a-8ad3-fc653ed0f4bd';
   static String colorType0 = 'c6e4c1e6-49d5-45e2-98ca-c65982e6608f';
   static String colorType1 = 'b3599f0d-d838-4946-ab4b-e9d71132ef6d';
@@ -67,7 +70,7 @@ class AppImages {
   static String iconActiveMBH = '36cbccd5-5c90-410b-a003-43abf8d22ed4';
   static String iconQRBox = '342d951b-ce9b-4ea0-b56b-c14a79867dfc';
   static String iconLinkedBankAccount = '09a2e914-a182-453e-8208-5d36094189d3';
-  static String icVietQRKiotDash='4c6ee31a-5c42-4646-8948-45caa56e6fcb';
+  static String icVietQRKiotDash = '4c6ee31a-5c42-4646-8948-45caa56e6fcb';
   static String icToggleEyeOpenBlue = 'd439000f-b760-4c07-9edd-ea12df3997c0';
   static String icToggleEyeCloseBlue = '42dff7bd-f643-4b66-a3e4-febf01a5cb7f';
 

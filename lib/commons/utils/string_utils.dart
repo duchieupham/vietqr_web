@@ -44,7 +44,7 @@ class StringUtils {
     if (money.length > 2) {
       var value = money;
       value = value.replaceAll(RegExp(r'\D'), '');
-      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), '.');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
       return value;
     }
     return money;
@@ -136,6 +136,20 @@ class StringUtils {
       return 'Số điện thoại không đúng định dạng.';
     }
     return null;
+  }
+
+  static String formatNumberWithOutVND(dynamic value) {
+    if (value == null || value == '') {
+      return '0 VND';
+    }
+
+    if (value is String) {
+      if (value.isNotEmpty) {
+        value = int.parse(value);
+      }
+    }
+    var numberFormat = NumberFormat.decimalPattern('vi-VI');
+    return numberFormat.format(value).replaceAll('.', ',');
   }
 
   String formatPhoneNumberVN(String phoneNumber) {

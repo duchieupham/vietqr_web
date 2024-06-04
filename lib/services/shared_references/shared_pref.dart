@@ -8,6 +8,16 @@ Future<void> setUser(SettingAccountDTO dto) async {
   await prefs.setString('USER', jsonEncode(dto.toJson()));
 }
 
+Future<void> setDialog(bool value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('IS_DIALOG_OPEN', value);
+}
+
+Future<bool?> getDialog() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('IS_DIALOG_OPEN') ?? false;
+}
+
 Future<SettingAccountDTO?> getUser() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   String? encodedCart = prefs.getString('USER');

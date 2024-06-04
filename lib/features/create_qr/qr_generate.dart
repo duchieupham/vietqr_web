@@ -138,7 +138,7 @@ class _QrGenerateState extends State<_QrGenerate> {
     _waterMarkProvider.updateWaterMark(true);
     await Future.delayed(const Duration(milliseconds: 1000), () async {
       _waterMarkProvider.updateWaterMark(false);
-      await ShareUtils.instance.saveImageToGallery(globalKey).then((value) {
+      await ShareUtils.instance.saveImageToGallery(globalKey, '').then((value) {
         Fluttertoast.showToast(
           msg: 'Đã lưu ảnh',
           toastLength: Toast.LENGTH_SHORT,
@@ -754,7 +754,7 @@ class _QrGenerateState extends State<_QrGenerate> {
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(color: AppColor.BLUE_TEXT),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.print_outlined,

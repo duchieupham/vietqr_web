@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
@@ -6,21 +7,27 @@ import 'package:VietQR/commons/enums/event_type.dart';
 import 'package:VietQR/commons/utils/clocker_widget.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
+import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
 import 'package:VietQR/commons/widgets/header/pop_up_menu_web_widget.dart';
 import 'package:VietQR/features/home/provider/wallet_home_provider.dart';
 import 'package:VietQR/features/notification/blocs/notification_bloc.dart';
 import 'package:VietQR/features/notification/events/notification_event.dart';
 import 'package:VietQR/features/notification/states/notification_state.dart';
 import 'package:VietQR/layouts/box_layout.dart';
+import 'package:VietQR/models/noti_invoice_dto.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/shared_references/session.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../layouts/dialog/pop_up_menu_header_widget.dart';
 
@@ -41,6 +48,8 @@ class HeaderFullWidget extends StatefulWidget {
 class _HeaderFullWidgetState extends State<HeaderFullWidget> {
   late NotificationBloc _notificationBloc;
   int _notificationCount = 0;
+  int _notiInvoice = 0;
+  NotificationInvoiceDTO? notiDto;
 
   @override
   void initState() {
@@ -48,12 +57,28 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
     _notificationBloc = BlocProvider.of(context);
     String userId = UserInformationHelper.instance.getUserId();
     _notificationBloc.add(NotificationGetCounterEvent(userId: userId));
+    _notificationBloc.add(NotificationGetInvoiceEvent(userId: userId));
     Session.instance.registerEventListener(EventTypes.updateCountNotification,
         () {
       Future.delayed(const Duration(milliseconds: 1000), () {
         _notificationBloc.add(NotificationGetCounterEvent(userId: userId));
       });
     });
+    // Timer.periodic(
+    //   const Duration(seconds: 1),
+    //   (timer) {
+    //     toastification.show(
+    //       context: context,
+    //       type: ToastificationType.success,
+    //       style: ToastificationStyle.flat,
+    //       title: const Text('Thanh toán thàng công số tiền'),
+    //       description: Text(StringUtils.formatNumberAmount(3500000)),
+    //       alignment: Alignment.topRight,
+    //       autoCloseDuration: const Duration(seconds: 4),
+    //       boxShadow: lowModeShadow,
+    //     );
+    //   },
+    // );
     // listenNewNotification(userId);
   }
 
@@ -71,6 +96,12 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
       buttonPosition.dy + buttonHeight, // Bottom edge of the button
     );
   }
+
+  String htmlString = """
+            <div>
+             <span style="font-size: 12;">Bạn có 1 hóa đơn<strong>450,000,000 VND</strong><br>cần thanh toán!</span>
+            </div>
+            """;
 
   @override
   Widget build(BuildContext context) {
@@ -141,49 +172,106 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               ),
             ),
           ),
-          // _buildTitle('Trang chủ'),
-          //time
-
-          // ButtonIconWidget(
-          //   title: 'Thêm TK ngân hàng',
-          //   function: () {
-          //     context.go('/add-bank/step1');
-          //   },
-          //   height: 32,
-          //   textSize: 11,
-          //   bgColor: AppColor.WHITE.withOpacity(0.7),
-          //   textColor: AppColor.BLUE_TEXT,
-          // ),
-          const Spacer(),
-          // ButtonIconWidget(
-          //   title: 'Quét QR',
-          //   function: () {},
-          //   height: 32,
-          //   contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          //   icon: Icons.qr_code_outlined,
-          //   textSize: 11,
-          //   bgColor: AppColor.WHITE.withOpacity(0.7),
-          //   textColor: AppColor.BLUE_TEXT,
-          // ),
-          // _buildInfoTelegram(),
-          // const SizedBox(
-          //   width: 12,
-          // ),
-          // _buildWallet(),
-          // const SizedBox(
-          //   width: 12,
-          // ),
+          const SizedBox(
+            width: 12,
+          ),
           Container(
-              // padding: const EdgeInsets.only(top: 21, bottom: 21),
-              // padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-              // margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
               ),
               child: const ClockWidget()),
-          const SizedBox(
-            width: 12,
+
+          const Spacer(),
+          BlocConsumer<NotificationBloc, NotificationState>(
+            listener: (context, state) {
+              if (state is NotificationInvoiceSuccessState) {
+                notiDto = state.noti;
+              }
+            },
+            builder: (context, state) {
+              if (notiDto == null || notiDto!.totalInvoice == 0) {
+                return const SizedBox.shrink();
+              }
+              return Container(
+                width: 300,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColor.WHITE,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Container(
+                    //   width: 30,
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(5),
+                    //     color: AppColor.ORANGE_DARK.withOpacity(0.3),
+                    //   ),
+                    //   height: 30,
+                    //   child: const Center(
+                    //     child: Icon(
+                    //       Icons.receipt_long_outlined,
+                    //       color: AppColor.ORANGE_DARK,
+                    //       size: 24,
+                    //     ),
+                    //   ),
+                    // ),
+                    Image.asset(
+                      'assets/images/ic-noti-invoice.png',
+                      width: 30,
+                      height: 30,
+                      fit: BoxFit.contain,
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${notiDto!.totalInvoice}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const TextSpan(
+                            text: ' hoá đơn chưa thanh toán!',
+                          ),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        context.go('/invoice');
+                      },
+                      child: Container(
+                        width: 60,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: AppColor.ORANGE_DARK.withOpacity(0.3),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Truy cập',
+                            style: TextStyle(
+                              color: AppColor.ORANGE_DARK,
+                              fontSize: 13,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
+          const SizedBox(width: 30),
           Tooltip(
             message: 'Menu_popup',
             child: InkWell(
@@ -238,7 +326,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                         bgColor: AppColor.WHITE,
                         border: Border.all(color: AppColor.BLACK, width: 0.5),
                         child: Icon(
-                          Icons.menu,
+                          Icons.menu_outlined,
                           size: 20,
                           color: Theme.of(context).hintColor,
                         ),

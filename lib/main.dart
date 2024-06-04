@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/constants/env/url_strategy.dart';
@@ -63,6 +65,7 @@ import 'package:VietQR/services/providers/add_business_provider.dart';
 import 'package:VietQR/services/providers/bank_type_provider.dart';
 import 'package:VietQR/services/providers/card_number_setting_provider.dart';
 import 'package:VietQR/services/providers/guide_provider.dart';
+import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:VietQR/services/providers/menu_card_provider.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
 import 'package:VietQR/services/providers/pin_provider.dart';
@@ -88,12 +91,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'commons/widgets/dynamic_link_widget.dart';
 import 'ecom/bank/provider/ecom_bank_type_provider.dart';
 import 'features/create_qr/provider/create_qr_provider.dart';
+import 'features/invoice_manage/invoice_manage_screen.dart';
 import 'features/login/provider/menu_login_provider.dart';
 import 'features/qr_manage/qr_manage_screen.dart';
 import 'features/vhitek/vhitek_screen.dart';
 import 'services/providers/business_inforamtion_provider.dart';
 import 'services/providers/setting_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:toastification/toastification.dart';
 
 //Share Preferences
 late SharedPreferences sharedPrefs;
@@ -118,6 +123,10 @@ Future<void> _initialServiceHelper() async {
       sharedPrefs.getString('THEME_SYSTEM') == null) {
     await ThemeHelper.instance.initialTheme();
   }
+  // if (!sharedPrefs.containsKey('IS_DIALOG_OPEN') ||
+  //     sharedPrefs.getString('IS_DIALOG_OPEN') != null) {
+  //   await sharedPrefs.setBool('IS_DIALOG_OPEN', false);
+  // }
   if (!sharedPrefs.containsKey('USER_ID') ||
       sharedPrefs.getString('USER_ID') == null) {
     await UserInformationHelper.instance.initialUserInformationHelper();
@@ -727,7 +736,7 @@ final GoRouter _router = GoRouter(
           return const NewsView();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
               context: context, state: state, child: const NewsView());
@@ -738,7 +747,7 @@ final GoRouter _router = GoRouter(
           return const ContactView();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
               context: context, state: state, child: const ContactView());
@@ -749,7 +758,7 @@ final GoRouter _router = GoRouter(
           return const IntroduceView();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
               context: context, state: state, child: const IntroduceView());
@@ -766,7 +775,7 @@ final GoRouter _router = GoRouter(
           }
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
           return buildPageWithoutAnimation(
             context: context,
             state: state,
@@ -797,9 +806,54 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
+        path: '/invoice',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/invoice' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const InvoiceManageScreen(type: Invoice_Type.LIST),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const InvoiceManageScreen(
+              type: Invoice_Type.LIST,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/invoice-list',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/invoice-list' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const InvoiceManageScreen(type: Invoice_Type.LIST),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const InvoiceManageScreen(
+              type: Invoice_Type.LIST,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/service-fee',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/service-fee' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const InvoiceManageScreen(type: Invoice_Type.SERVICE_FEE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const InvoiceManageScreen(
+              type: Invoice_Type.SERVICE_FEE,
+            ),
+          );
+        }),
+    GoRoute(
         path: '/vietqr-wallet',
         redirect: (context, state) =>
-            (userId.isNotEmpty) ? '/qr-wallet' : '/login',
+            (userId.isNotEmpty) ? '/vietqr-wallet' : '/login',
         builder: (BuildContext context, GoRouterState state) =>
             const QrManageScreen(type: Qr_Manage.WALLET),
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -973,6 +1027,7 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => ECOMBankTypeProvider()),
             ChangeNotifierProvider(
                 create: (context) => UserInformationProvider()),
+            ChangeNotifierProvider(create: (context) => InvoiceProvider()),
             ChangeNotifierProvider(create: (context) => AddBusinessProvider()),
             ChangeNotifierProvider(
                 create: (context) => BusinessInformationProvider()),
@@ -984,22 +1039,31 @@ class _VietQRApp extends State<VietQRApp> {
             ChangeNotifierProvider(create: (context) => MenuLoginProvider()),
             ChangeNotifierProvider(create: (context) => WalletHomeProvider()),
           ],
-          child: MaterialApp.router(
-            onGenerateTitle: (context) =>
-                'VIETQR.VN - Phần mềm tạo mã QR và Đối soát giao dịch thanh toán qua mã VietQR',
-            routerConfig: _router,
-            debugShowCheckedModeBanner: false,
-            themeMode: ThemeMode.light,
-            theme: DefaultThemeData(context: context).lightTheme,
-            localizationsDelegates: const <LocalizationsDelegate<Object>>[
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              //  Locale('en'), // English
-              Locale('vi'), // Vietnamese
-            ],
+          child: ToastificationWrapper(
+            child: ToastificationConfigProvider(
+              config: const ToastificationConfig(
+                // alignment: Alignment.center,
+                itemWidth: 350,
+                animationDuration: Duration(milliseconds: 500),
+              ),
+              child: MaterialApp.router(
+                onGenerateTitle: (context) =>
+                    'VIETQR.VN - Phần mềm tạo mã QR và Đối soát giao dịch thanh toán qua mã VietQR',
+                routerConfig: _router,
+                debugShowCheckedModeBanner: false,
+                themeMode: ThemeMode.light,
+                theme: DefaultThemeData(context: context).lightTheme,
+                localizationsDelegates: const <LocalizationsDelegate<Object>>[
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  //  Locale('en'), // English
+                  Locale('vi'), // Vietnamese
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -5,12 +5,15 @@ import 'package:VietQR/features/notification/states/notification_state.dart';
 import 'package:VietQR/models/notification_dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../models/noti_invoice_dto.dart';
+
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationBloc() : super(NotificationInitialState()) {
     on<NotificationGetCounterEvent>(_getCounter);
     on<NotificationGetListEvent>(_getNotifications);
     on<NotificationFetchEvent>(_fetchNotifications);
     on<NotificationUpdateStatusEvent>(_updateNotificationStatus);
+    on<NotificationGetInvoiceEvent>(_getInvoice);
   }
 }
 
@@ -26,6 +29,19 @@ void _getCounter(NotificationEvent event, Emitter emit) async {
   } catch (e) {
     LOG.error(e.toString());
     emit(NotificationCountFailedState());
+  }
+}
+
+void _getInvoice(NotificationEvent event, Emitter emit) async {
+  try {
+    if (event is NotificationGetInvoiceEvent) {
+      emit(NotificationInvoiceLoadingState());
+      final result = await notificationRepository.getInvoice(event.userId);
+      emit(NotificationInvoiceSuccessState(noti: result!));
+    }
+  } catch (e) {
+    LOG.error(e.toString());
+    emit(NotificationInvoiceFailedState());
   }
 }
 

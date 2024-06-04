@@ -98,7 +98,8 @@ class ShareUtils {
     return result;
   }
 
-  Future<void> saveImageToGallery(GlobalKey globalKey) async {
+  Future<void> saveImageToGallery(
+      GlobalKey globalKey, String bankAccount) async {
     try {
       RenderRepaintBoundary boundary =
           globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
@@ -107,7 +108,7 @@ class ShareUtils {
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       await WebImageDownloader.downloadImageFromUInt8List(
-          uInt8List: pngBytes, name: 'vietqr');
+          uInt8List: pngBytes, name: 'VietQr-$bankAccount');
       // await ImageGallerySaver.saveImage(
       //   pngBytes,
       //   quality: 100,

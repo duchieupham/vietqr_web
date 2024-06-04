@@ -30,7 +30,19 @@ enum BlocStatus {
   NONE,
   LOADING,
   UNLOADING,
+  SUCCESS,
+  LOAD_MORE,
   ERROR,
+}
+
+enum InvoiceType {
+  NONE,
+  GET_BANKS,
+  GET_INVOICE_LIST,
+  INVOICE_DETAIL,
+  REQUEST_PAYMENT,
+  FILTER_INVOICE,
+  DIALOG,
 }
 
 enum BankType {

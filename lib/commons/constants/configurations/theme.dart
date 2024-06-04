@@ -19,7 +19,8 @@ class AppColor {
   static const Color GREY_LIGHT = Color(0xFF9BA5B9);
   static const Color GREY_BG = Color(0xFFF4F4F4);
   static const Color GREY_979797 = Color(0xff979797);
-
+  static const Color GREEN_2D9D92 = Color(0xFF2D9D92);
+  static const Color GREEN_STATUS = Color(0xFF2D9D92);
   static const Color GREY_HIGHLIGHT = Color(0xFF222222);
   static const Color RED_TEXT = Color(0xFFFF0A0A);
   static const Color RED_EC1010 = Color(0xffEC1010);
@@ -51,6 +52,7 @@ class AppColor {
   static const Color WARM_COLOR = Color(0xFF75F181);
   static const Color COOL_COLOR = Color(0xFF7EE4A7);
   static const Color ORANGE_DARK = Color(0xFFff5c01);
+  static const Color ORANGE_C02 = Color(0xFFFF5C02);
   static const Color COLD_COLOR = Color(0xFF52B5D3);
   static const Color WINTER_COLOR = Color(0xFF338AED);
   static const Color RED_NOTI_1 = Color(0xFFFAC4DF);
