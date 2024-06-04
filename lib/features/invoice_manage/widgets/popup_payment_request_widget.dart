@@ -146,8 +146,9 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
       children: [
         MButtonWidget(
           onTap: () {
-            widget.bloc.add(GetInvoiceDetail(widget.dto.invoiceId!, false));
-            _provider.onPageChange(PageInvoice.DETAIL);
+            // widget.bloc.add(GetInvoiceDetail(widget.dto.invoiceId!, false));
+            _provider.onPageChange(PageInvoice.DETAIL,
+                invoiceId: widget.dto.invoiceId!);
             Navigator.of(context).pop();
           },
           title: 'Chi tiết hoá đơn',

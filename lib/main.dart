@@ -817,6 +817,21 @@ final GoRouter _router = GoRouter(
           );
         }),
     GoRoute(
+        path: '/invoice-list',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/invoice-list' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const InvoiceManageScreen(type: Invoice_Type.LIST),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const InvoiceManageScreen(
+              type: Invoice_Type.LIST,
+            ),
+          );
+        }),
+    GoRoute(
         path: '/service-fee',
         redirect: (context, state) =>
             (userId.isNotEmpty) ? '/service-fee' : '/login',

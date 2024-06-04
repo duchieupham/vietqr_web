@@ -48,7 +48,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
 
-    // widget.bloc.add(GetInvoiceDetail(widget.invoiceId, false));
+    widget.bloc.add(GetInvoiceDetail(_provider.invoiceId!, false));
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {

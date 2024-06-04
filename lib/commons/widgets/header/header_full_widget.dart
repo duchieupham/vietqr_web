@@ -245,7 +245,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                     ),
                     InkWell(
                       onTap: () {
-                        context.go('/invoice-list');
+                        context.go('/invoice');
                       },
                       child: Container(
                         width: 60,
@@ -326,7 +326,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
                         bgColor: AppColor.WHITE,
                         border: Border.all(color: AppColor.BLACK, width: 0.5),
                         child: Icon(
-                          Icons.menu,
+                          Icons.menu_outlined,
                           size: 20,
                           color: Theme.of(context).hintColor,
                         ),

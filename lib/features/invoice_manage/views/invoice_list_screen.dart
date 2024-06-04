@@ -102,8 +102,8 @@ class _ScreenState extends State<_Screen> {
         showButton: true,
         onPop: (id) {
           // _bloc.add(GetInvoiceDetail(id, false));
-          _bloc.add(GetInvoiceDetail(id, false));
-          _provider.onPageChange(PageInvoice.DETAIL);
+          // _bloc.add(GetInvoiceDetail(id, false));
+          _provider.onPageChange(PageInvoice.DETAIL, invoiceId: dto.invoiceId);
           // Navigator.of(context).pop();
 
           // _model.getInvoiceDetail(id);
@@ -125,6 +125,11 @@ class _ScreenState extends State<_Screen> {
         if (state.request == InvoiceType.GET_INVOICE_LIST &&
             state.status == BlocStatus.SUCCESS) {
           listInvoice = state.listInvoice;
+        }
+
+        if (state.request == InvoiceType.GET_INVOICE_LIST &&
+            state.status == BlocStatus.NONE) {
+          listInvoice = [];
         }
 
         if (state.request == InvoiceType.INVOICE_DETAIL &&
@@ -286,9 +291,15 @@ class _ScreenState extends State<_Screen> {
         ),
       ));
     }
-    if (listInvoice!.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    // if (listInvoice!.isEmpty) {
+    //   return Expanded(
+    //       child: Container(
+    //     padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+    //     child: const Center(
+    //       child: Text('Trông'),
+    //     ),
+    //   ));
+    // }
     // if (state.listInvoice!.isEmpty || state.listInvoice == null) {
     //   return const SizedBox.shrink();
     // }
@@ -310,21 +321,22 @@ class _ScreenState extends State<_Screen> {
                         child: Column(
                           children: [
                             const TitleItemInvoiceWidget(),
-                            // if (listInvoice!.isNotEmpty || listInvoice != null)
-                            ...state.listInvoice!
-                                .asMap()
-                                .map(
-                                  (index, x) {
-                                    return MapEntry(
-                                        index,
-                                        ItemInvoiceWidget(
-                                          index: index + 1,
-                                          dto: x,
-                                        ));
-                                  },
-                                )
-                                .values
-                                .toList(),
+                            if (listInvoice!.isNotEmpty || listInvoice != null)
+                              ...listInvoice!
+                                  .asMap()
+                                  .map(
+                                    (index, x) {
+                                      return MapEntry(
+                                          index,
+                                          ItemInvoiceWidget(
+                                            index: index + 1,
+                                            dto: x,
+                                          ));
+                                    },
+                                  )
+                                  .values
+                                  .toList()
+
                             // if (state.request == InvoiceType.GET_INVOICE_LIST &&
                             //     state.status == BlocStatus.NONE)
                             //   const Expanded(
@@ -399,34 +411,35 @@ class _ScreenState extends State<_Screen> {
                                       ],
                                     ),
                                   ),
-                                  // if (listInvoice!.isNotEmpty ||
-                                  //     listInvoice != null)
-                                  ...state.listInvoice!
-                                      .map(
-                                        (e) => ItemRightWidget(
-                                          dto: e,
-                                          onShowQR: () {
-                                            setState(() {
-                                              selectInvoiceFee = e;
-                                            });
-                                            _bloc.add(GetInvoiceDetail(
-                                                e.invoiceId!, true));
-                                            // onShowPopup(
-                                            //   state,
-                                            //   e,
-                                            //   e.invoiceId!,
-                                            // );
-                                          },
-                                          onShowDetail: () {
-                                            // invoiceId = e.invoiceId;
-                                            _bloc.add(GetInvoiceDetail(
-                                                e.invoiceId!, false));
-                                            _provider.onPageChange(
-                                                PageInvoice.DETAIL);
-                                          },
-                                        ),
-                                      )
-                                      .toList(),
+                                  if (listInvoice!.isNotEmpty ||
+                                      listInvoice != null)
+                                    ...listInvoice!
+                                        .map(
+                                          (e) => ItemRightWidget(
+                                            dto: e,
+                                            onShowQR: () {
+                                              setState(() {
+                                                selectInvoiceFee = e;
+                                              });
+                                              _bloc.add(GetInvoiceDetail(
+                                                  e.invoiceId!, true));
+                                              // onShowPopup(
+                                              //   state,
+                                              //   e,
+                                              //   e.invoiceId!,
+                                              // );
+                                            },
+                                            onShowDetail: () {
+                                              // invoiceId = e.invoiceId;
+                                              // _bloc.add(GetInvoiceDetail(
+                                              //     e.invoiceId!, false));
+                                              _provider.onPageChange(
+                                                  PageInvoice.DETAIL,
+                                                  invoiceId: e.invoiceId);
+                                            },
+                                          ),
+                                        )
+                                        .toList(),
                                 ],
                               ),
                             ),

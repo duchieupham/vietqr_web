@@ -57,7 +57,7 @@ class _InvoiceManageScreenState extends State<InvoiceManageScreen> {
     Provider.of<InvoiceProvider>(context, listen: false)
         .onPageChange(PageInvoice.LIST);
     if (value == Invoice_Type.LIST) {
-      html.window.history.pushState(null, '/invoice', '/invoice');
+      html.window.history.pushState(null, '/invoice', '/invoice-list');
       type = value;
     } else if (value == Invoice_Type.SERVICE_FEE) {
       html.window.history.pushState(null, '/invoice', '/service-fee');

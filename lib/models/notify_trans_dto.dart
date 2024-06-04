@@ -16,9 +16,12 @@ class NotifyTransDTO {
   final String businessName;
   final String notificationId;
   final int time;
+  final int type;
   final String refId;
   final String transactionReceiveId;
   final String content;
+  final String html;
+
   final int status;
   final String transType;
   final String audioLink;
@@ -40,9 +43,11 @@ class NotifyTransDTO {
     required this.businessName,
     required this.notificationId,
     required this.time,
+    required this.type,
     required this.refId,
     required this.transactionReceiveId,
     required this.content,
+    required this.html,
     required this.status,
     required this.transType,
     required this.audioLink,
@@ -98,9 +103,11 @@ class NotifyTransDTO {
       businessName: json['businessName'] ?? '',
       notificationId: json['notificationId'] ?? '',
       time: int.tryParse(json['time'] ?? '') ?? 0,
+      type: json['type'] ?? 0,
       refId: json['refId'] ?? '',
       transactionReceiveId: json['transactionReceiveId'] ?? '',
       content: json['content'] ?? '',
+      html: json['html'] ?? '',
       status: int.tryParse(json['status'] ?? '') ?? 0,
       transType: json['transType'] ?? '',
       audioLink: json['audioLink'] ?? '',
@@ -121,6 +128,7 @@ class NotifyTransDTO {
     data['bankCode'] = bankCode;
     data['amount'] = amount;
     data['bankId'] = bankId;
+    data['type'] = type;
     data['branchName'] = branchName;
     data['businessName'] = businessName;
     data['notificationId'] = notificationId;

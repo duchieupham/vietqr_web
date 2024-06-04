@@ -39,7 +39,14 @@ class InvoiceProvider extends ChangeNotifier {
 
   int? selectedStatus = 0;
 
-  void onPageChange(PageInvoice page) {
+  String _invoiceId = '';
+  String? get invoiceId => _invoiceId;
+
+  void onPageChange(PageInvoice page, {String? invoiceId}) {
+    if (page == PageInvoice.DETAIL) {
+      _invoiceId = invoiceId!;
+    }
+
     pageInvoice = page;
     notifyListeners();
   }
