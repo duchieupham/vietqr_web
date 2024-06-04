@@ -12,6 +12,7 @@ import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
+import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -60,6 +61,7 @@ class _ScreenState extends State<_Screen> {
   int? type = 9;
   DateTime? selectDate;
   bool isFirstSelected = true;
+  bool isQrShow = false;
 
   List<InvoiceFeeDTO>? listInvoice = [];
   InvoiceFeeDTO? selectInvoiceFee;
@@ -83,10 +85,6 @@ class _ScreenState extends State<_Screen> {
         status: _provider.invoiceStatus.id, bankId: '', filterBy: 1, page: 1));
   }
 
-  bool isOpenDialog() {
-    return sharedPrefs.getBool('IS_DIALOG_OPEN') ?? false;
-  }
-
   void onPopupBankSelect() async {
     return await showDialog(
       context: context,
@@ -103,25 +101,24 @@ class _ScreenState extends State<_Screen> {
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
-    sharedPrefs.setBool('IS_DIALOG_OPEN', true);
+    setState(() {
+      isQrShow = true;
+    });
     await showDialog(
       context: context,
       builder: (context) => PopupQrCodeInvoice(
         dto: dto,
         showButton: true,
         onPop: (id) {
-          // _bloc.add(GetInvoiceDetail(id, false));
-          // _bloc.add(GetInvoiceDetail(id, false));
           _provider.onPageChange(PageInvoice.DETAIL, invoiceId: dto.invoiceId);
-          // Navigator.of(context).pop();
-
-          // _model.getInvoiceDetail(id);
         },
         invoiceId: dto.invoiceId,
       ),
     ).then(
-      (value) async {
-        await sharedPrefs.setBool('IS_DIALOG_OPEN', false);
+      (value) {
+        setState(() {
+          isQrShow = false;
+        });
         _bloc.add(GetInvoiceList(
             status: _provider.invoiceStatus.id,
             bankId: selectBankId ?? '',
@@ -170,10 +167,22 @@ class _ScreenState extends State<_Screen> {
             onShowQRPopup(state.invoiceDetailQrDTO!);
           }
         }
+
+        // if (state.request == InvoiceType.DIALOG) {
+
+        // }
       },
       builder: (context, state) {
         return Consumer<InvoiceProvider>(
           builder: (context, provider, child) {
+            // if (provider.closeDialog) {
+            //   if (isQrShow) {
+            //     Navigator.of(context).pop();
+            //   }
+
+            //   provider.isCloseDialog(false);
+            // }
+
             return Scaffold(
               backgroundColor: AppColor.BLUE_BGR,
               body: Container(

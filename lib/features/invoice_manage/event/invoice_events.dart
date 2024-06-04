@@ -43,6 +43,8 @@ class RequestPaymentInvoiceItemEvent extends InvoiceEvent {
   List<Object?> get props => [invoiceId, itemItemIds, isShowPopup];
 }
 
+class CloseDialogEvent extends InvoiceEvent {}
+
 class GetInvoiceDetail extends InvoiceEvent {
   final String invoiceId;
   final bool isShowPopup;

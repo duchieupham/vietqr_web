@@ -11,6 +11,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ToastNotiWidget extends StatefulWidget {
   final dynamic data;
@@ -23,12 +24,31 @@ class ToastNotiWidget extends StatefulWidget {
 class _ToastNotiWidgetState extends State<ToastNotiWidget> {
   // late InvoiceBloc _bloc;
   // GoRouter? _router;
+  late InvoiceProvider _provider;
   @override
   void initState() {
     super.initState();
+    // _provider = Provider.of<InvoiceProvider>(context, listen: false);
+    // _provider.isCloseDialog(true);
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   closeDialog();
+    // });
+
     // _bloc = BlocProvider.of(context);
     // _router = GoRouter.of(context);
   }
+
+  // bool isOpenDialog() {
+  //   return widget.sharedPrefs.getBool('IS_DIALOG_OPEN') ?? false;
+  // }
+
+  // void closeDialog(BuildContext context) async {
+  //   if (widget.data['notificationType'] == Stringify.NOTI_INVOICE_SUCCESS) {
+  //     Provider.of<InvoiceProvider>(context, listen: false).isCloseDialog(true);
+  //     // context.read<InvoiceBloc>().add(CloseDialogEvent());
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +74,20 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
         }
         break;
       case Stringify.NOTI_INVOICE_CREATE:
-        if (widget.data['status'] != 0) {
+        if (widget.data['invoiceId'].isNotEmpty) {
           icLogo = 'assets/images/ic-noti-invoice.png';
           actionText = 'Thanh toán ngay';
+          color = AppColor.ORANGE_C02;
+        } else {
+          icLogo = 'assets/images/ic-noti-invoice.png';
+          actionText = 'Danh sách hóa đơn';
           color = AppColor.ORANGE_C02;
         }
         break;
       case Stringify.NOTI_INVOICE_SUCCESS:
         if (widget.data['status'] != 0) {
           icLogo = 'assets/images/ic-noti-invoice.png';
-          actionText = 'Thanh toán ngay';
+          actionText = 'Danh sách hóa đơn';
           color = AppColor.ORANGE_C02;
         }
         break;
@@ -113,7 +137,7 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
                       'span': Style(
                           textOverflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          fontSize: FontSize(12)),
+                          fontSize: FontSize(15)),
                     },
                   ),
                 ],
@@ -124,16 +148,15 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
               const MySeparator(color: AppColor.GREY_DADADA),
               InkWell(
                 onTap: () {
-                  // if (context. == '/invoice') {
-                  //   context.go('/invoice-list');
-                  // } else {
-                  //   context.go('/invoice');
-                  // }
-                  context.pushReplacement('/invoice-list');
+                  if (widget.data['invoiceId'].isNotEmpty) {
+                    context.pushReplacement('/invoice-list');
 
-                  Provider.of<InvoiceProvider>(context, listen: false)
-                      .onPageChange(PageInvoice.DETAIL,
-                          invoiceId: widget.data['invoiceId']);
+                    Provider.of<InvoiceProvider>(context, listen: false)
+                        .onPageChange(PageInvoice.DETAIL,
+                            invoiceId: widget.data['invoiceId']);
+                  } else {
+                    context.pushReplacement('/invoice-list');
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(12),
@@ -141,7 +164,7 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
                     child: Text(
                       actionText,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 15,
                         decoration: TextDecoration.underline,
                         decorationColor: color,
                         color: color,

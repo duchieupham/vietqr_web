@@ -20,6 +20,7 @@ import 'package:VietQR/models/top_up_sucsess_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:VietQR/services/shared_references/media_helper.dart';
 import 'package:VietQR/services/shared_references/session.dart';
+import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -68,7 +69,7 @@ class WebSocketHelper {
     _channelTransaction.sink.close();
   }
 
-  void listenTransactionSocket({BuildContext? context}) {
+  void listenTransactionSocket({BuildContext? context}) async {
     context ??= NavigationService.navigatorKey.currentContext;
     String userId = UserInformationHelper.instance.getUserId();
     print(userId);
@@ -91,26 +92,26 @@ class WebSocketHelper {
                       Stringify.NOTI_TYPE_MOBILE_RECHARGE &&
                   data['notificationType'] !=
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-                if (data['notificationType'] !=
-                    Stringify.NOTI_INVOICE_SUCCESS) {
-                  context!.pushReplacement('/invoice-list');
-                }
-                toastification.showCustom(
-                  callbacks: ToastificationCallbacks(
-                    onTap: (ToastificationItem value) {
-                      // value.stop()
-                    },
-                  ),
+                // if (data['notificationType'] ==
+                //     Stringify.NOTI_INVOICE_SUCCESS) {
+                //   Provider.of<InvoiceProvider>(context!, listen: false)
+                //       .isCloseDialog(true);
+                // }
+
+                Toastification().showCustom(
                   context: context,
                   animationDuration: const Duration(milliseconds: 500),
                   autoCloseDuration: const Duration(seconds: 10),
                   alignment: Alignment.topRight,
                   dismissDirection: DismissDirection.horizontal,
                   builder: (context, holder) {
-                    return ToastNotiWidget(data: data);
+                    return ToastNotiWidget(
+                      data: data,
+                    );
                   },
                 );
               }
+
               if (data['notificationType'] != null &&
                   data['notificationType'] ==
                       Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {

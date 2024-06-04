@@ -123,10 +123,10 @@ Future<void> _initialServiceHelper() async {
       sharedPrefs.getString('THEME_SYSTEM') == null) {
     await ThemeHelper.instance.initialTheme();
   }
-  if (!sharedPrefs.containsKey('IS_DIALOG_OPEN') ||
-      sharedPrefs.getString('IS_DIALOG_OPEN') != null) {
-    await sharedPrefs.setBool('IS_DIALOG_OPEN', false);
-  }
+  // if (!sharedPrefs.containsKey('IS_DIALOG_OPEN') ||
+  //     sharedPrefs.getString('IS_DIALOG_OPEN') != null) {
+  //   await sharedPrefs.setBool('IS_DIALOG_OPEN', false);
+  // }
   if (!sharedPrefs.containsKey('USER_ID') ||
       sharedPrefs.getString('USER_ID') == null) {
     await UserInformationHelper.instance.initialUserInformationHelper();
@@ -736,7 +736,7 @@ final GoRouter _router = GoRouter(
           return const NewsView();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
               context: context, state: state, child: const NewsView());
@@ -747,7 +747,7 @@ final GoRouter _router = GoRouter(
           return const ContactView();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
               context: context, state: state, child: const ContactView());
@@ -758,7 +758,7 @@ final GoRouter _router = GoRouter(
           return const IntroduceView();
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
 
           return buildPageWithoutAnimation(
               context: context, state: state, child: const IntroduceView());
@@ -775,7 +775,7 @@ final GoRouter _router = GoRouter(
           }
         },
         pageBuilder: (BuildContext context, GoRouterState state) {
-          Map<String, String> params = state.queryParams;
+          // Map<String, String> params = state.queryParams;
           return buildPageWithoutAnimation(
             context: context,
             state: state,

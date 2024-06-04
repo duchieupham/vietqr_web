@@ -23,6 +23,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
     on<GetInvoiceList>(_getListInvoice);
     on<GetListBankAccountEvent>(_getBanks);
     on<RequestPaymentInvoiceItemEvent>(_reqPayment);
+    on<CloseDialogEvent>(_closeDialog);
   }
   final InvoiceRepository _invoiceRepository = InvoiceRepository();
 
@@ -161,6 +162,24 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
     } catch (e) {
       LOG.error(e.toString());
       emit(state.copyWith(status: BlocStatus.ERROR, msg: 'Đã có lỗi xảy ra.'));
+    }
+  }
+
+  void _closeDialog(InvoiceEvent event, Emitter emit) async {
+    try {
+      if (event is CloseDialogEvent) {
+        emit(state.copyWith(
+          isOpenDialog: true,
+          status: BlocStatus.SUCCESS,
+          request: InvoiceType.DIALOG,
+        ));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          request: InvoiceType.DIALOG,
+          msg: 'Đã có lỗi xảy ra.'));
     }
   }
 }

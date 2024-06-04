@@ -16,6 +16,7 @@ class InvoiceStates extends Equatable {
   final InvoiceDetailDTO? invoiceDetailDTO;
   final InvoiceDetailQrDTO? invoiceDetailQrDTO;
   final bool? isShow;
+  final bool isOpenDialog;
 
   const InvoiceStates({
     this.msg,
@@ -27,6 +28,7 @@ class InvoiceStates extends Equatable {
     this.invoiceDetailDTO,
     this.invoiceDetailQrDTO,
     this.isShow,
+    this.isOpenDialog = false,
   });
 
   InvoiceStates copyWith({
@@ -39,6 +41,7 @@ class InvoiceStates extends Equatable {
     InvoiceDetailDTO? invoiceDetailDTO,
     InvoiceDetailQrDTO? invoiceDetailQrDTO,
     bool? isShow,
+    bool? isOpenDialog,
   }) {
     return InvoiceStates(
       status: status ?? this.status,
@@ -50,6 +53,7 @@ class InvoiceStates extends Equatable {
       invoiceDetailDTO: invoiceDetailDTO ?? this.invoiceDetailDTO,
       invoiceDetailQrDTO: invoiceDetailQrDTO ?? this.invoiceDetailQrDTO,
       isShow: isShow ?? this.isShow,
+      isOpenDialog: isOpenDialog ?? this.isOpenDialog,
     );
   }
 
@@ -62,6 +66,7 @@ class InvoiceStates extends Equatable {
         invoiceDetailDTO,
         invoiceDetailQrDTO,
         isShow,
+        isOpenDialog,
         metaDataDTO,
       ];
 }

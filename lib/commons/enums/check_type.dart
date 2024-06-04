@@ -42,6 +42,7 @@ enum InvoiceType {
   INVOICE_DETAIL,
   REQUEST_PAYMENT,
   FILTER_INVOICE,
+  DIALOG,
 }
 
 enum BankType {

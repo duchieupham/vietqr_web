@@ -18,6 +18,8 @@ class InvoiceProvider extends ChangeNotifier {
     // const InvoiceStatus(id: 2, name: ''),
   ];
 
+  bool closeDialog = false;
+
   List<InvoiceTime> timeList = [
     const InvoiceTime(id: 0, name: 'Tất cả'),
     const InvoiceTime(id: 1, name: 'Tháng'),
@@ -41,6 +43,11 @@ class InvoiceProvider extends ChangeNotifier {
 
   String _invoiceId = '';
   String? get invoiceId => _invoiceId;
+
+  void isCloseDialog(bool value) {
+    closeDialog = value;
+    notifyListeners();
+  }
 
   void onPageChange(PageInvoice page, {String? invoiceId}) {
     if (page == PageInvoice.DETAIL) {
