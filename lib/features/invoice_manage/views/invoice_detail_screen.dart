@@ -1224,32 +1224,33 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   ],
                 ),
                 const SizedBox(width: 12),
-                MButtonWidget(
-                  margin: EdgeInsets.zero,
-                  padding: EdgeInsets.zero,
-                  colorDisableBgr: AppColor.GREY_DADADA,
-                  width: 250,
-                  height: 50,
-                  title: 'Yêu cầu thanh toán',
-                  radius: 5,
-                  isEnable: isEnable,
-                  onTap: isEnable
-                      ? () async {
-                          widget.bloc.add(RequestPaymentInvoiceItemEvent(
-                              dto.invoiceId,
-                              List<String>.from(_provider.listSelectInvoice
-                                  .where((e) =>
-                                      e.isSelect == true &&
-                                      e.invoiceItem.status == 0)
-                                  .toList()
-                                  .map(
-                                    (x) => x.invoiceItem.invoiceItemId,
-                                  )),
-                              false));
-                          // Navigator.of(context).pop();
-                        }
-                      : null,
-                ),
+                if (dto.status == 0 || dto.status == 3)
+                  MButtonWidget(
+                    margin: EdgeInsets.zero,
+                    padding: EdgeInsets.zero,
+                    colorDisableBgr: AppColor.GREY_DADADA,
+                    width: 250,
+                    height: 50,
+                    title: 'Yêu cầu thanh toán',
+                    radius: 5,
+                    isEnable: isEnable,
+                    onTap: isEnable
+                        ? () async {
+                            widget.bloc.add(RequestPaymentInvoiceItemEvent(
+                                dto.invoiceId,
+                                List<String>.from(_provider.listSelectInvoice
+                                    .where((e) =>
+                                        e.isSelect == true &&
+                                        e.invoiceItem.status == 0)
+                                    .toList()
+                                    .map(
+                                      (x) => x.invoiceItem.invoiceItemId,
+                                    )),
+                                false));
+                            // Navigator.of(context).pop();
+                          }
+                        : null,
+                  ),
               ],
             ),
           ),

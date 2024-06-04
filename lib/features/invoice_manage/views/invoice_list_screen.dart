@@ -14,8 +14,10 @@ import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/custom_scroll.dart';
@@ -51,6 +53,7 @@ class _ScreenState extends State<_Screen> {
 
   late InvoiceBloc _bloc;
   late InvoiceProvider _provider;
+  late SharedPreferences sharedPrefs;
 
   // String? invoiceId;
   String? selectBankId;
@@ -72,11 +75,16 @@ class _ScreenState extends State<_Screen> {
     });
   }
 
-  initData({bool isRefresh = false}) {
+  void initData({bool isRefresh = false}) async {
     if (isRefresh) {}
+    sharedPrefs = await SharedPreferences.getInstance();
     _bloc.add(GetListBankAccountEvent());
     _bloc.add(GetInvoiceList(
         status: _provider.invoiceStatus.id, bankId: '', filterBy: 1, page: 1));
+  }
+
+  bool isOpenDialog() {
+    return sharedPrefs.getBool('IS_DIALOG_OPEN') ?? false;
   }
 
   void onPopupBankSelect() async {
@@ -95,6 +103,7 @@ class _ScreenState extends State<_Screen> {
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
+    sharedPrefs.setBool('IS_DIALOG_OPEN', true);
     await showDialog(
       context: context,
       builder: (context) => PopupQrCodeInvoice(
@@ -110,6 +119,18 @@ class _ScreenState extends State<_Screen> {
         },
         invoiceId: dto.invoiceId,
       ),
+    ).then(
+      (value) async {
+        await sharedPrefs.setBool('IS_DIALOG_OPEN', false);
+        _bloc.add(GetInvoiceList(
+            status: _provider.invoiceStatus.id,
+            bankId: selectBankId ?? '',
+            time: selectDate != null
+                ? DateFormat('yyyy-MM').format(selectDate!)
+                : '',
+            filterBy: 1,
+            page: 1));
+      },
     );
   }
 
