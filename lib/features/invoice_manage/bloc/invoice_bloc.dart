@@ -20,6 +20,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
   InvoiceBloc(this.context) : super(const InvoiceStates()) {
     on<InvoiceEvent>(_getListInvoice);
     on<GetInvoiceDetail>(_getDetailInvoice);
+    on<GetInvoiceExcel>(_getExcelInvoice);
     on<GetInvoiceList>(_getListInvoice);
     on<GetListBankAccountEvent>(_getBanks);
     on<RequestPaymentInvoiceItemEvent>(_reqPayment);
@@ -127,6 +128,41 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
           request: InvoiceType.INVOICE_DETAIL,
           msg: 'Đã có lỗi xảy ra.'));
       //emiterror
+    }
+  }
+
+  void _getExcelInvoice(
+    InvoiceEvent event,
+    Emitter emit,
+  ) async {
+    try {
+      if (event is GetInvoiceExcel) {
+        if (state.status == BlocStatus.NONE) {
+          emit(state.copyWith(
+              status: BlocStatus.LOADING, request: InvoiceType.INVOICE_EXCEL));
+        }
+
+        final result =
+            await _invoiceRepository.getInvoiceExcel(event.invoiceId);
+        if (result != null) {
+          emit(state.copyWith(
+            status: BlocStatus.SUCCESS,
+            invoiceExcelDTO: result,
+            request: InvoiceType.INVOICE_EXCEL,
+          ));
+        } else {
+          emit(state.copyWith(
+              invoiceExcelDTO: null,
+              request: InvoiceType.INVOICE_EXCEL,
+              status: BlocStatus.NONE));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          request: InvoiceType.INVOICE_EXCEL,
+          msg: 'Đã có lỗi xảy ra.'));
     }
   }
 

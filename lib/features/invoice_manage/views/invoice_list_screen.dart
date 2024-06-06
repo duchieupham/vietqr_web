@@ -4,11 +4,13 @@ import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
 import 'package:VietQR/features/invoice_manage/widgets/item_right_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_bank_select_widget.dart';
+import 'package:VietQR/features/invoice_manage/widgets/popup_excel_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_payment_request_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_qr_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/title_invoice_widget.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
+import 'package:VietQR/models/invoice_excel_dto.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
@@ -85,6 +87,34 @@ class _ScreenState extends State<_Screen> {
         status: _provider.invoiceStatus.id, bankId: '', filterBy: 1, page: 1));
   }
 
+  void onShowPopup(
+    InvoiceFeeDTO dto,
+    InvoiceDetailDTO detail,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) => PopupPaymentRequestWidget(
+        invoiceDetailDTO: detail,
+        bloc: _bloc,
+        dto: dto,
+      ),
+    );
+  }
+
+  void onShowPopupExcel(
+    InvoiceExcelDTO excel,
+  ) async {
+    if (excel != null) {
+      await showDialog(
+        context: context,
+        builder: (context) => PopupExcelInvoice(
+          bloc: _bloc,
+          dto: excel,
+        ),
+      );
+    }
+  }
+
   void onPopupBankSelect() async {
     return await showDialog(
       context: context,
@@ -150,6 +180,12 @@ class _ScreenState extends State<_Screen> {
           listInvoice = [];
         }
 
+        if (state.request == InvoiceType.INVOICE_EXCEL &&
+            state.status == BlocStatus.SUCCESS) {
+          if (state.invoiceExcelDTO != null)
+            onShowPopupExcel(state.invoiceExcelDTO!);
+        }
+
         if (state.request == InvoiceType.INVOICE_DETAIL &&
             state.status == BlocStatus.SUCCESS) {
           if (state.isShow == true) {
@@ -167,22 +203,10 @@ class _ScreenState extends State<_Screen> {
             onShowQRPopup(state.invoiceDetailQrDTO!);
           }
         }
-
-        // if (state.request == InvoiceType.DIALOG) {
-
-        // }
       },
       builder: (context, state) {
         return Consumer<InvoiceProvider>(
           builder: (context, provider, child) {
-            // if (provider.closeDialog) {
-            //   if (isQrShow) {
-            //     Navigator.of(context).pop();
-            //   }
-
-            //   provider.isCloseDialog(false);
-            // }
-
             return Scaffold(
               backgroundColor: AppColor.BLUE_BGR,
               body: Container(
@@ -447,22 +471,21 @@ class _ScreenState extends State<_Screen> {
                                         .map(
                                           (e) => ItemRightWidget(
                                             dto: e,
+                                            onShowExcel: () {
+                                              setState(() {
+                                                selectInvoiceFee = e;
+                                              });
+                                              _bloc.add(GetInvoiceExcel(
+                                                  e.invoiceId!));
+                                            },
                                             onShowQR: () {
                                               setState(() {
                                                 selectInvoiceFee = e;
                                               });
                                               _bloc.add(GetInvoiceDetail(
                                                   e.invoiceId!, true));
-                                              // onShowPopup(
-                                              //   state,
-                                              //   e,
-                                              //   e.invoiceId!,
-                                              // );
                                             },
                                             onShowDetail: () {
-                                              // invoiceId = e.invoiceId;
-                                              // _bloc.add(GetInvoiceDetail(
-                                              //     e.invoiceId!, false));
                                               _provider.onPageChange(
                                                   PageInvoice.DETAIL,
                                                   invoiceId: e.invoiceId);
@@ -484,27 +507,6 @@ class _ScreenState extends State<_Screen> {
           )),
     );
   }
-
-  void onShowPopup(
-    InvoiceFeeDTO dto,
-    InvoiceDetailDTO detail,
-  ) async {
-    await showDialog(
-      context: context,
-      builder: (context) => PopupPaymentRequestWidget(
-        invoiceDetailDTO: detail,
-        bloc: _bloc,
-        dto: dto,
-      ),
-    );
-  }
-
-  // void onShowPopup() async {
-  //   return await showDialog(
-  //     context: context,
-  //     builder: (context) => PopupQrCodeInvoice(),
-  //   );
-  // }
 
   Widget _filterWidget() {
     return Consumer<InvoiceProvider>(

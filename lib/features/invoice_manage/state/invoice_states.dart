@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
+import 'package:VietQR/models/invoice_excel_dto.dart';
 import 'package:equatable/equatable.dart';
 import '../../../models/bank_account_dto.dart';
 import '../../../models/invoice_fee_dto.dart';
@@ -17,6 +18,7 @@ class InvoiceStates extends Equatable {
   final InvoiceDetailQrDTO? invoiceDetailQrDTO;
   final bool? isShow;
   final bool isOpenDialog;
+  final InvoiceExcelDTO? invoiceExcelDTO;
 
   const InvoiceStates({
     this.msg,
@@ -28,6 +30,7 @@ class InvoiceStates extends Equatable {
     this.invoiceDetailDTO,
     this.invoiceDetailQrDTO,
     this.isShow,
+    this.invoiceExcelDTO,
     this.isOpenDialog = false,
   });
 
@@ -40,6 +43,7 @@ class InvoiceStates extends Equatable {
     MetaDataDTO? metaDataDTO,
     InvoiceDetailDTO? invoiceDetailDTO,
     InvoiceDetailQrDTO? invoiceDetailQrDTO,
+    InvoiceExcelDTO? invoiceExcelDTO,
     bool? isShow,
     bool? isOpenDialog,
   }) {
@@ -51,6 +55,7 @@ class InvoiceStates extends Equatable {
       listBank: listBank ?? this.listBank,
       metaDataDTO: metaDataDTO ?? this.metaDataDTO,
       invoiceDetailDTO: invoiceDetailDTO ?? this.invoiceDetailDTO,
+      invoiceExcelDTO: invoiceExcelDTO ?? this.invoiceExcelDTO,
       invoiceDetailQrDTO: invoiceDetailQrDTO ?? this.invoiceDetailQrDTO,
       isShow: isShow ?? this.isShow,
       isOpenDialog: isOpenDialog ?? this.isOpenDialog,
@@ -65,6 +70,7 @@ class InvoiceStates extends Equatable {
         listBank,
         invoiceDetailDTO,
         invoiceDetailQrDTO,
+        invoiceExcelDTO,
         isShow,
         isOpenDialog,
         metaDataDTO,

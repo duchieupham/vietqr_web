@@ -57,3 +57,14 @@ class GetInvoiceDetail extends InvoiceEvent {
   @override
   List<Object?> get props => [invoiceId, isShowPopup];
 }
+
+class GetInvoiceExcel extends InvoiceEvent {
+  final String invoiceId;
+
+  const GetInvoiceExcel(
+    this.invoiceId,
+  );
+
+  @override
+  List<Object?> get props => [invoiceId];
+}

@@ -4,6 +4,7 @@ import 'package:VietQR/features/invoice_manage/repository/base_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
+import 'package:VietQR/models/invoice_excel_dto.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
@@ -85,6 +86,25 @@ class InvoiceRepository extends BaseRepo {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         return InvoiceDetailDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error("Failed to fetch Invoice detail: ${e.toString()}");
+    }
+    return null;
+  }
+
+  Future<InvoiceExcelDTO?> getInvoiceExcel(String invoiceId) async {
+    try {
+      // String url = '${EnvConfig.getBaseUrl()}invoice/detail/$invoiceId';
+      String url =
+          'https://dev.vietqr.org/vqr/mock/api/invoice/transaction-list?invoiceId=$invoiceId';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return InvoiceExcelDTO.fromJson(data);
       }
     } catch (e) {
       LOG.error("Failed to fetch Invoice detail: ${e.toString()}");

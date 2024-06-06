@@ -8,12 +8,14 @@ class ItemRightWidget extends StatelessWidget {
   final InvoiceFeeDTO dto;
   final Function() onShowQR;
   final Function() onShowDetail;
+  final Function() onShowExcel;
 
   const ItemRightWidget(
       {super.key,
       required this.dto,
       required this.onShowQR,
-      required this.onShowDetail});
+      required this.onShowDetail,
+      required this.onShowExcel});
 
   @override
   Widget build(BuildContext context) {
@@ -114,13 +116,14 @@ class ItemRightWidget extends StatelessWidget {
                   Tooltip(
                     message: 'Xuất Excel',
                     child: InkWell(
-                      onTap: () {
-                        // onShowPopupExcel();
-                        DialogWidget.instance.openMsgDialog(
-                            title: 'Bảo trì',
-                            msg:
-                                'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
-                      },
+                      onTap: onShowExcel,
+                      // onTap: () {
+                      // onShowPopupExcel();
+                      // DialogWidget.instance.openMsgDialog(
+                      //     title: 'Bảo trì',
+                      //     msg:
+                      //         'Chúng tôi đang bảo trì tính năng này trong khoảng 2-3 ngày để mang lại trải nghiệm tốt nhất cho người dùng. Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi.');
+                      // },
                       child: BoxLayout(
                         width: 30,
                         height: 30,
