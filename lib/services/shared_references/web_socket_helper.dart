@@ -88,16 +88,8 @@ class WebSocketHelper {
 
               print('Noti nè: ------------------------------- $data');
               if (data['notificationType'] != null &&
-                  data['notificationType'] !=
-                      Stringify.NOTI_TYPE_MOBILE_RECHARGE &&
-                  data['notificationType'] !=
-                      Stringify.NOTI_TYPE_UPDATE_TRANSACTION) {
-                // if (data['notificationType'] ==
-                //     Stringify.NOTI_INVOICE_SUCCESS) {
-                //   Provider.of<InvoiceProvider>(context!, listen: false)
-                //       .isCloseDialog(true);
-                // }
-
+                  data['notificationType'] == Stringify.NOTI_INVOICE_CREATE &&
+                  data['notificationType'] == Stringify.NOTI_INVOICE_CREATE) {
                 Toastification().showCustom(
                   context: context,
                   animationDuration: const Duration(milliseconds: 500),
