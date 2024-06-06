@@ -13,7 +13,7 @@ Future<void> setDialog(bool value) async {
   await prefs.setBool('IS_DIALOG_OPEN', value);
 }
 
-Future<bool?> getDialog() async {
+Future<bool> getDialog() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool('IS_DIALOG_OPEN') ?? false;
 }

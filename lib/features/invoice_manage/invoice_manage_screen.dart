@@ -2,6 +2,7 @@ import 'package:VietQR/commons/enums/type_menu_home.dart';
 import 'package:VietQR/features/dashboard/views/menu_left.dart';
 import 'package:VietQR/features/home/widget/item_menu_dropdown.dart';
 import 'package:VietQR/features/invoice_manage/views/invoice_list_screen.dart';
+import 'package:VietQR/features/invoice_manage/views/invoice_recharge_screen.dart';
 import 'package:VietQR/features/qr_manage/frame/qr_frame.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class _InvoiceManageScreenState extends State<InvoiceManageScreen> {
     if (type == Invoice_Type.LIST) {
       return const InvoiceListScreen();
     } else {
-      return const SizedBox();
+      return const InvoiceRechargeScreen();
     }
   }
 }

@@ -54,14 +54,12 @@ class _ScreenState extends State<_Screen> {
 
   late InvoiceBloc _bloc;
   late InvoiceProvider _provider;
-  late SharedPreferences sharedPrefs;
 
   // String? invoiceId;
   String? selectBankId;
   int? type = 9;
   DateTime? selectDate;
   bool isFirstSelected = true;
-  bool isQrShow = false;
 
   List<InvoiceFeeDTO>? listInvoice = [];
   InvoiceFeeDTO? selectInvoiceFee;
@@ -79,7 +77,7 @@ class _ScreenState extends State<_Screen> {
 
   void initData({bool isRefresh = false}) async {
     if (isRefresh) {}
-    sharedPrefs = await SharedPreferences.getInstance();
+    _provider.selectBankAccount(null);
     _bloc.add(GetListBankAccountEvent());
     _bloc.add(GetInvoiceList(
         status: _provider.invoiceStatus.id, bankId: '', filterBy: 1, page: 1));
@@ -101,33 +99,24 @@ class _ScreenState extends State<_Screen> {
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
-    setState(() {
-      isQrShow = true;
-    });
-    await showDialog(
-      context: context,
-      builder: (context) => PopupQrCodeInvoice(
-        dto: dto,
-        showButton: true,
-        onPop: (id) {
-          _provider.onPageChange(PageInvoice.DETAIL, invoiceId: dto.invoiceId);
+    await setDialog(true).then(
+      (value) async => await showDialog(
+        context: context,
+        builder: (context) => PopupQrCodeInvoice(
+          dto: dto,
+          showButton: true,
+          onPop: (id) {
+            _provider.onPageChange(PageInvoice.DETAIL,
+                invoiceId: dto.invoiceId);
+          },
+          invoiceId: dto.invoiceId,
+        ),
+      ).then(
+        (value) async {
+          await setDialog(false);
+          _provider.isCloseDialog();
         },
-        invoiceId: dto.invoiceId,
       ),
-    ).then(
-      (value) {
-        setState(() {
-          isQrShow = false;
-        });
-        _bloc.add(GetInvoiceList(
-            status: _provider.invoiceStatus.id,
-            bankId: selectBankId ?? '',
-            time: selectDate != null
-                ? DateFormat('yyyy-MM').format(selectDate!)
-                : '',
-            filterBy: 1,
-            page: 1));
-      },
     );
   }
 
@@ -175,13 +164,21 @@ class _ScreenState extends State<_Screen> {
       builder: (context, state) {
         return Consumer<InvoiceProvider>(
           builder: (context, provider, child) {
-            // if (provider.closeDialog) {
-            //   if (isQrShow) {
-            //     Navigator.of(context).pop();
-            //   }
-
-            //   provider.isCloseDialog(false);
-            // }
+            if (provider.closeDialog) {
+              Navigator.of(context).pop();
+              // provider.makeReload(true);
+            }
+            if (provider.isReload) {
+              _bloc.add(GetInvoiceList(
+                  status: _provider.invoiceStatus.id,
+                  bankId: selectBankId ?? '',
+                  time: selectDate != null
+                      ? DateFormat('yyyy-MM').format(selectDate!)
+                      : '',
+                  filterBy: 1,
+                  page: 1));
+              provider.makeReload(false);
+            }
 
             return Scaffold(
               backgroundColor: AppColor.BLUE_BGR,
@@ -227,7 +224,7 @@ class _ScreenState extends State<_Screen> {
                                 // _buildOption("Đã thanh toán", !isFirstSelected),
                               ],
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 20),
                             _filterWidget(),
                             const SizedBox(height: 20),
                             const MySeparator(
@@ -321,18 +318,7 @@ class _ScreenState extends State<_Screen> {
         ),
       ));
     }
-    // if (listInvoice!.isEmpty) {
-    //   return Expanded(
-    //       child: Container(
-    //     padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-    //     child: const Center(
-    //       child: Text('Trông'),
-    //     ),
-    //   ));
-    // }
-    // if (state.listInvoice!.isEmpty || state.listInvoice == null) {
-    //   return const SizedBox.shrink();
-    // }
+
     return Expanded(
       child: Padding(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -726,7 +712,7 @@ class _ScreenState extends State<_Screen> {
             style: TextStyle(fontSize: 15),
           ),
           Text(
-            " Danh sách hoá đơn",
+            "Danh sách hoá đơn",
             style: TextStyle(fontSize: 15),
           ),
         ],

@@ -24,7 +24,7 @@ class ToastNotiWidget extends StatefulWidget {
 class _ToastNotiWidgetState extends State<ToastNotiWidget> {
   // late InvoiceBloc _bloc;
   // GoRouter? _router;
-  late InvoiceProvider _provider;
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +55,12 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
     String icLogo = '';
     String actionText = '';
     Color color = AppColor.WHITE;
+    if (widget.data['notificationType'] == Stringify.NOTI_INVOICE_SUCCESS ||
+        widget.data['notificationType'] == Stringify.NOTI_INVOICE_CREATE) {
+      Provider.of<InvoiceProvider>(context, listen: false).isCloseDialog();
+      Provider.of<InvoiceProvider>(context, listen: false).makeReload(true);
+      // context.read<InvoiceBloc>().add(CloseDialogEvent());
+    }
     switch (widget.data['notificationType']) {
       case Stringify.NOTI_TYPE_UPDATE_TRANSACTION:
         if (widget.data['transType'] == 'D') {
@@ -83,6 +89,7 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
           actionText = 'Danh sách hóa đơn';
           color = AppColor.ORANGE_C02;
         }
+
         break;
       case Stringify.NOTI_INVOICE_SUCCESS:
         if (widget.data['status'] != 0) {
