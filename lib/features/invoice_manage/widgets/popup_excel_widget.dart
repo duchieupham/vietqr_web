@@ -130,8 +130,8 @@ class _PopupExcelInvoiceState extends State<PopupExcelInvoice> {
                             child: Column(
                               children: [
                                 _itemTitleInfoTransactionWidget(),
-                                if (_invoiceExcelDTO!.transactions.isNotEmpty ||
-                                    _invoiceExcelDTO!.transactions != null)
+                                if (_invoiceExcelDTO != null &&
+                                    _invoiceExcelDTO!.transactions.isNotEmpty)
                                   ..._invoiceExcelDTO!.transactions
                                       .asMap()
                                       .map(
