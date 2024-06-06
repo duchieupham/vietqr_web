@@ -63,7 +63,7 @@ class _ScreenState extends State<_Screen> {
   DateTime? selectDate;
   bool isFirstSelected = true;
 
-  List<InvoiceFeeDTO>? listInvoice = [];
+  List<InvoiceFeeDTO> listInvoice = [];
   InvoiceFeeDTO? selectInvoiceFee;
 
   @override
@@ -161,7 +161,7 @@ class _ScreenState extends State<_Screen> {
 
         if (state.request == InvoiceType.GET_INVOICE_LIST &&
             state.status == BlocStatus.SUCCESS) {
-          listInvoice = state.listInvoice;
+          listInvoice = state.listInvoice!;
         }
 
         if (state.request == InvoiceType.GET_INVOICE_LIST &&
@@ -171,8 +171,9 @@ class _ScreenState extends State<_Screen> {
 
         if (state.request == InvoiceType.INVOICE_EXCEL &&
             state.status == BlocStatus.SUCCESS) {
-          if (state.invoiceExcelDTO != null)
+          if (state.invoiceExcelDTO != null) {
             onShowPopupExcel(state.invoiceExcelDTO!);
+          }
         }
 
         if (state.request == InvoiceType.INVOICE_DETAIL &&
@@ -351,6 +352,16 @@ class _ScreenState extends State<_Screen> {
       ));
     }
 
+    if (listInvoice.isEmpty) {
+      return Expanded(
+          child: Container(
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: const Center(
+          child: Text('Không có hóa đơn'),
+        ),
+      ));
+    }
+
     return Expanded(
       child: Padding(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -361,35 +372,39 @@ class _ScreenState extends State<_Screen> {
                 children: [
                   Scrollbar(
                     controller: controller1,
-                    child: SingleChildScrollView(
-                      controller: controller1,
-                      scrollDirection: Axis.horizontal,
-                      child: SizedBox(
-                        width: 1570,
-                        child: Column(
-                          children: [
-                            const TitleItemInvoiceWidget(),
-                            if (listInvoice!.isNotEmpty || listInvoice != null)
-                              ...listInvoice!
-                                  .asMap()
-                                  .map(
-                                    (index, x) {
-                                      return MapEntry(
-                                          index,
-                                          ItemInvoiceWidget(
-                                            index: index + 1,
-                                            dto: x,
-                                          ));
-                                    },
-                                  )
-                                  .values
-                                  .toList()
+                    child: ScrollConfiguration(
+                      behavior: MyCustomScrollBehavior(),
+                      child: SingleChildScrollView(
+                        controller: controller1,
+                        scrollDirection: Axis.horizontal,
+                        child: SizedBox(
+                          width: 1570,
+                          child: Column(
+                            children: [
+                              const TitleItemInvoiceWidget(),
+                              if (listInvoice!.isNotEmpty ||
+                                  listInvoice != null)
+                                ...listInvoice!
+                                    .asMap()
+                                    .map(
+                                      (index, x) {
+                                        return MapEntry(
+                                            index,
+                                            ItemInvoiceWidget(
+                                              index: index + 1,
+                                              dto: x,
+                                            ));
+                                      },
+                                    )
+                                    .values
+                                    .toList()
 
-                            // if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                            //     state.status == BlocStatus.NONE)
-                            //   const Expanded(
-                            //       child: Center(child: Text('Trống..')))
-                          ],
+                              // if (state.request == InvoiceType.GET_INVOICE_LIST &&
+                              //     state.status == BlocStatus.NONE)
+                              //   const Expanded(
+                              //       child: Center(child: Text('Trống..')))
+                            ],
+                          ),
                         ),
                       ),
                     ),

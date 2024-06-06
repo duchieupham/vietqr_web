@@ -159,9 +159,84 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                           style: const TextStyle(fontSize: 15),
                                         )
                                       : const SizedBox.shrink(),
+                                  const SizedBox(height: 20),
+                                  const SizedBox(
+                                    width: double.infinity,
+                                    height: 20,
+                                    child: Text(
+                                      'Danh mục hàng hoá / dịch vụ',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 30),
+                                  SizedBox(
+                                    // width: statusNum == 0 ? 1360 : 1270,
+                                    width: state.invoiceDetailDTO!.status == 0
+                                        ? 1360
+                                        : 1270,
+                                    // width: 1270,
+                                    child: Scrollbar(
+                                      controller: controller3,
+                                      child: SingleChildScrollView(
+                                        controller: controller3,
+                                        scrollDirection: Axis.horizontal,
+                                        child: Container(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                          child: Column(
+                                            children: [
+                                              _itemTitleListService(),
+                                              // _buildItemListService(),
+                                              if (state.status ==
+                                                      BlocStatus.LOADING &&
+                                                  state.request ==
+                                                      InvoiceType
+                                                          .INVOICE_DETAIL)
+                                                const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                )
+                                              else
+                                                ...provider.listSelectInvoice
+                                                    .asMap()
+                                                    .map(
+                                                      (index, e) {
+                                                        bool isAlreadyPay = state
+                                                                .invoiceDetailDTO!
+                                                                .invoiceItemDetailDTOS[
+                                                                    index]
+                                                                .status ==
+                                                            1;
+                                                        if (isAlreadyPay) {
+                                                          provider
+                                                              .appliedInvoiceItem(
+                                                                  isAlreadyPay,
+                                                                  index);
+                                                        }
+                                                        return MapEntry(
+                                                          index,
+                                                          _buildItemListService(
+                                                              e,
+                                                              index + 1,
+                                                              isAlreadyPay,
+                                                              provider),
+                                                        );
+                                                      },
+                                                    )
+                                                    .values
+                                                    .toList()
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
                                   if (state.invoiceDetailDTO!.customerDetailDTOS
                                       .isNotEmpty) ...[
-                                    const SizedBox(height: 29),
+                                    const SizedBox(height: 30),
                                     const MySeparator(
                                       color: AppColor.GREY_DADADA,
                                     ),
@@ -260,84 +335,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                       ),
                                     ),
                                   ],
-                                  const SizedBox(height: 20),
-                                  const SizedBox(
-                                    width: double.infinity,
-                                    height: 20,
-                                    child: Text(
-                                      'Danh mục hàng hoá / dịch vụ',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  SizedBox(
-                                    // width: statusNum == 0 ? 1360 : 1270,
-                                    width: state.invoiceDetailDTO!.status == 0
-                                        ? 1360
-                                        : 1270,
-                                    // width: 1270,
-                                    child: Scrollbar(
-                                      controller: controller3,
-                                      child: SingleChildScrollView(
-                                        controller: controller3,
-                                        scrollDirection: Axis.horizontal,
-                                        child: Container(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 10),
-                                          child: Column(
-                                            children: [
-                                              _itemTitleListService(),
-                                              // _buildItemListService(),
-                                              if (state.status ==
-                                                      BlocStatus.LOADING &&
-                                                  state.request ==
-                                                      InvoiceType
-                                                          .INVOICE_DETAIL)
-                                                const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                )
-                                              else
-                                                ...provider.listSelectInvoice
-                                                    .asMap()
-                                                    .map(
-                                                      (index, e) {
-                                                        bool isAlreadyPay = state
-                                                                .invoiceDetailDTO!
-                                                                .invoiceItemDetailDTOS[
-                                                                    index]
-                                                                .status ==
-                                                            1;
-                                                        if (isAlreadyPay) {
-                                                          provider
-                                                              .appliedInvoiceItem(
-                                                                  isAlreadyPay,
-                                                                  index);
-                                                        }
-                                                        return MapEntry(
-                                                          index,
-                                                          _buildItemListService(
-                                                              e,
-                                                              index + 1,
-                                                              isAlreadyPay,
-                                                              provider),
-                                                        );
-                                                      },
-                                                    )
-                                                    .values
-                                                    .toList()
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 30),
-                                  const MySeparator(
-                                      color: AppColor.GREY_DADADA),
-                                  const SizedBox(height: 30),
+
+                                  // const SizedBox(height: 30),
+                                  // const MySeparator(
+                                  //     color: AppColor.GREY_DADADA),
+                                  // const SizedBox(height: 30),
                                   // const SizedBox(
                                   //   width: double.infinity,
                                   //   height: 20,

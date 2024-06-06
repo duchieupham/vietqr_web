@@ -35,6 +35,7 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
             children: [
               Consumer<InvoiceProvider>(
                 builder: (context, provider, child) {
+                  provider.selectBankAccount(null);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -1,5 +1,6 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
@@ -189,35 +190,38 @@ class __ScreenState extends State<_Screen> {
                     children: [
                       Scrollbar(
                         controller: controller1,
-                        child: SingleChildScrollView(
-                          controller: controller1,
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            width: 1600,
-                            child: Column(
-                              children: [
-                                const TitleItemInvoiceRechargeWidget(),
-                                // if (listInvoice!.isNotEmpty || listInvoice != null)
-                                //   ...listInvoice!
-                                //       .asMap()
-                                //       .map(
-                                //         (index, x) {
-                                //           return MapEntry(
-                                //               index,
-                                //               ItemInvoiceWidget(
-                                //                 index: index + 1,
-                                //                 dto: x,
-                                //               ));
-                                //         },
-                                //       )
-                                //       .values
-                                //       .toList()
+                        child: ScrollConfiguration(
+                          behavior: MyCustomScrollBehavior(),
+                          child: SingleChildScrollView(
+                            controller: controller1,
+                            scrollDirection: Axis.horizontal,
+                            child: SizedBox(
+                              width: 1600,
+                              child: Column(
+                                children: [
+                                  const TitleItemInvoiceRechargeWidget(),
+                                  // if (listInvoice!.isNotEmpty || listInvoice != null)
+                                  //   ...listInvoice!
+                                  //       .asMap()
+                                  //       .map(
+                                  //         (index, x) {
+                                  //           return MapEntry(
+                                  //               index,
+                                  //               ItemInvoiceWidget(
+                                  //                 index: index + 1,
+                                  //                 dto: x,
+                                  //               ));
+                                  //         },
+                                  //       )
+                                  //       .values
+                                  //       .toList()
 
-                                // if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                                //     state.status == BlocStatus.NONE)
-                                //   const Expanded(
-                                //       child: Center(child: Text('Trống..')))
-                              ],
+                                  // if (state.request == InvoiceType.GET_INVOICE_LIST &&
+                                  //     state.status == BlocStatus.NONE)
+                                  //   const Expanded(
+                                  //       child: Center(child: Text('Trống..')))
+                                ],
+                              ),
                             ),
                           ),
                         ),
