@@ -1,5 +1,5 @@
 import 'package:VietQR/models/invoice_detail_dto.dart';
-import 'package:VietQR/models/invoice_excel_dto.dart';
+import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/bank_account_dto.dart';
@@ -19,7 +19,11 @@ class InvoiceProvider extends ChangeNotifier {
     // const InvoiceStatus(id: 2, name: ''),
   ];
 
-  bool closeDialog = false;
+  bool _closeDialog = false;
+  bool _isReLoad = false;
+
+  bool get closeDialog => _closeDialog;
+  bool get isReload => _isReLoad;
 
   List<InvoiceTime> timeList = [
     const InvoiceTime(id: 0, name: 'Tất cả'),
@@ -45,8 +49,19 @@ class InvoiceProvider extends ChangeNotifier {
   String _invoiceId = '';
   String? get invoiceId => _invoiceId;
 
-  void isCloseDialog(bool value) {
-    closeDialog = value;
+  void makeReload(bool value) async {
+    _isReLoad = value;
+    notifyListeners();
+  }
+
+  void isCloseDialog() async {
+    // closeDialog = value;
+    final dialog = await getDialog();
+    if (dialog) {
+      _closeDialog = true;
+    } else {
+      _closeDialog = false;
+    }
     notifyListeners();
   }
 
