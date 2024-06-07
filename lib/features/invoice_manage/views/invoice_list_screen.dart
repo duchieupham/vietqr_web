@@ -102,15 +102,13 @@ class _ScreenState extends State<_Screen> {
   void onShowPopupExcel(
     InvoiceExcelDTO excel,
   ) async {
-    if (excel != null) {
-      await showDialog(
-        context: context,
-        builder: (context) => PopupExcelInvoice(
-          bloc: _bloc,
-          dto: excel,
-        ),
-      );
-    }
+    await showDialog(
+      context: context,
+      builder: (context) => PopupExcelInvoice(
+        bloc: _bloc,
+        dto: excel,
+      ),
+    );
   }
 
   void onPopupBankSelect() async {

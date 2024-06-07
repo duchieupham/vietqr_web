@@ -9,6 +9,7 @@ import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'dart:html' as html;
 
 import '../../../../commons/constants/configurations/theme.dart';
 import 'item_title_widget.dart';
@@ -555,7 +556,11 @@ class _PopupExcelInvoiceState extends State<PopupExcelInvoice> {
             width: 200,
             child: SelectionArea(
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  String link =
+                      'https://dev.vietqr.org/vqr/api/invoice/export-excel/${dto.invoiceItemId}';
+                  html.window.open(link, 'new tab');
+                },
                 child: const Row(
                   children: [
                     Text(
