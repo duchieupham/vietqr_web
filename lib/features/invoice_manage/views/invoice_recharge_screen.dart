@@ -5,10 +5,13 @@ import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
+import 'package:VietQR/features/invoice_manage/widgets/item_fee_package_invoice.dart';
+import 'package:VietQR/features/invoice_manage/widgets/item_right_fee_package_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_bank_select_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/title_invoice_recharge_widget.dart';
 import 'package:VietQR/features/transaction/widgets/dialog_pick_date.dart';
 import 'package:VietQR/main.dart';
+import 'package:VietQR/models/fee_package_invoice.dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +47,7 @@ class __ScreenState extends State<_Screen> {
   int? type = 9;
   String? selectBankId = '';
   DateTime? selectDate;
+  List<FeePackageInvoiceDTO> listInvoice = [];
 
   @override
   void initState() {
@@ -59,8 +63,8 @@ class __ScreenState extends State<_Screen> {
   void initData({bool isRefresh = false}) async {
     if (isRefresh) {}
     _provider.selectBankAccount(null);
-
     _bloc.add(GetListBankAccountEvent());
+    _bloc.add(const GetListPackageInvoiceFeeEvent(bankId: ''));
   }
 
   void onPopupBankSelect() async {
@@ -112,6 +116,14 @@ class __ScreenState extends State<_Screen> {
       listener: (context, state) {
         if (state.request == InvoiceType.INVOCIE_RECHARGE &&
             state.status == BlocStatus.LOADING) {}
+        if (state.request == InvoiceType.GET_LIST_FEE &&
+            state.status == BlocStatus.SUCCESS) {
+          listInvoice = state.listFeePackageInvoice!;
+        }
+        if (state.request == InvoiceType.GET_LIST_FEE &&
+            state.status == BlocStatus.NONE) {
+          listInvoice = [];
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -196,25 +208,26 @@ class __ScreenState extends State<_Screen> {
                             controller: controller1,
                             scrollDirection: Axis.horizontal,
                             child: SizedBox(
-                              width: 1600,
+                              width: 1590,
                               child: Column(
                                 children: [
                                   const TitleItemInvoiceRechargeWidget(),
-                                  // if (listInvoice!.isNotEmpty || listInvoice != null)
-                                  //   ...listInvoice!
-                                  //       .asMap()
-                                  //       .map(
-                                  //         (index, x) {
-                                  //           return MapEntry(
-                                  //               index,
-                                  //               ItemInvoiceWidget(
-                                  //                 index: index + 1,
-                                  //                 dto: x,
-                                  //               ));
-                                  //         },
-                                  //       )
-                                  //       .values
-                                  //       .toList()
+                                  if (listInvoice!.isNotEmpty ||
+                                      listInvoice != null)
+                                    ...listInvoice!
+                                        .asMap()
+                                        .map(
+                                          (index, x) {
+                                            return MapEntry(
+                                                index,
+                                                ItemFeePackage(
+                                                  index: index + 1,
+                                                  dto: x,
+                                                ));
+                                          },
+                                        )
+                                        .values
+                                        .toList()
 
                                   // if (state.request == InvoiceType.GET_INVOICE_LIST &&
                                   //     state.status == BlocStatus.NONE)
@@ -227,7 +240,7 @@ class __ScreenState extends State<_Screen> {
                         ),
                       ),
                       SizedBox(
-                        width: 1600,
+                        width: 1590,
                         child: Row(
                           children: [
                             const Expanded(child: SizedBox()),
@@ -295,35 +308,22 @@ class __ScreenState extends State<_Screen> {
                                           ],
                                         ),
                                       ),
-                                      // if (listInvoice!.isNotEmpty ||
-                                      //     listInvoice != null)
-                                      //   ...listInvoice!
-                                      //       .map(
-                                      //         (e) => ItemRightWidget(
-                                      //           dto: e,
-                                      //           onShowQR: () {
-                                      //             setState(() {
-                                      //               selectInvoiceFee = e;
-                                      //             });
-                                      //             _bloc.add(GetInvoiceDetail(
-                                      //                 e.invoiceId!, true));
-                                      //             // onShowPopup(
-                                      //             //   state,
-                                      //             //   e,
-                                      //             //   e.invoiceId!,
-                                      //             // );
-                                      //           },
-                                      //           onShowDetail: () {
-                                      //             // invoiceId = e.invoiceId;
-                                      //             // _bloc.add(GetInvoiceDetail(
-                                      //             //     e.invoiceId!, false));
-                                      //             _provider.onPageChange(
-                                      //                 PageInvoice.DETAIL,
-                                      //                 invoiceId: e.invoiceId);
-                                      //           },
-                                      //         ),
-                                      //       )
-                                      //       .toList(),
+                                      if (listInvoice!.isNotEmpty ||
+                                          listInvoice != null)
+                                        ...listInvoice!
+                                            .map(
+                                              (e) => ItemRightFeePackageWidget(
+                                                dto: e,
+                                                onShowExcel: () {
+                                                  // setState(() {
+                                                  //   selectInvoiceFee = e;
+                                                  // });
+                                                  // _bloc.add(GetInvoiceExcel(
+                                                  //     e.invoiceId!));
+                                                },
+                                              ),
+                                            )
+                                            .toList(),
                                     ],
                                   ),
                                 ),
@@ -504,15 +504,23 @@ class __ScreenState extends State<_Screen> {
                 ),
                 const SizedBox(height: 10),
                 InkWell(
+                  // onTap: () {
+                  // _bloc.add(GetInvoiceList(
+                  //     status: _provider.invoiceStatus.id,
+                  //     bankId: selectBankId ?? '',
+                  //     time: selectDate != null
+                  //         ? DateFormat('yyyy-MM').format(selectDate!)
+                  //         : '',
+                  //     filterBy: 1,
+                  //     page: 1));
+                  // },
                   onTap: () {
-                    // _bloc.add(GetInvoiceList(
-                    //     status: _provider.invoiceStatus.id,
-                    //     bankId: selectBankId ?? '',
-                    //     time: selectDate != null
-                    //         ? DateFormat('yyyy-MM').format(selectDate!)
-                    //         : '',
-                    //     filterBy: 1,
-                    //     page: 1));
+                    _bloc.add(GetListPackageInvoiceFeeEvent(
+                      bankId: selectBankId ?? '',
+                      time: selectDate != null
+                          ? DateFormat('yyyy-MM').format(selectDate!)
+                          : '',
+                    ));
                   },
                   child: Container(
                     height: 40,

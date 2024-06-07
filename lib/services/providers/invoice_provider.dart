@@ -1,3 +1,4 @@
+import 'package:VietQR/models/fee_package_invoice.dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class InvoiceProvider extends ChangeNotifier {
   PageInvoice pageInvoice = PageInvoice.LIST;
 
   List<BankAccountDTO> listBank = [];
+  List<FeePackageInvoiceDTO> listFeePackageInvoice = [];
   List<BankAccountDTO> filterBanks = [];
   List<SelectInvoiceItem> listSelectInvoice = [];
 
@@ -141,6 +143,11 @@ class InvoiceProvider extends ChangeNotifier {
 
   void setListBank(List<BankAccountDTO> list) {
     listBank = list;
+    notifyListeners();
+  }
+
+  void setListFeePackgeInvoice(List<FeePackageInvoiceDTO> list) {
+    listFeePackageInvoice = list;
     notifyListeners();
   }
 

@@ -38,6 +38,7 @@ enum BlocStatus {
 enum InvoiceType {
   NONE,
   GET_BANKS,
+  GET_LIST_FEE,
   GET_INVOICE_LIST,
   INVOCIE_RECHARGE,
   INVOICE_DETAIL,

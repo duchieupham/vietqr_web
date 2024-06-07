@@ -25,6 +25,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
     on<GetListBankAccountEvent>(_getBanks);
     on<RequestPaymentInvoiceItemEvent>(_reqPayment);
     on<CloseDialogEvent>(_closeDialog);
+    on<GetListPackageInvoiceFeeEvent>(_getListPackageInvoiceFee);
   }
   final InvoiceRepository _invoiceRepository = InvoiceRepository();
 
@@ -55,6 +56,40 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
       emit(state.copyWith(
           status: BlocStatus.ERROR,
           request: InvoiceType.GET_BANKS,
+          msg: 'Đã có lỗi xảy ra.'));
+    }
+  }
+
+  void _getListPackageInvoiceFee(
+    InvoiceEvent event,
+    Emitter emit,
+  ) async {
+    try {
+      if (event is GetListPackageInvoiceFeeEvent) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: InvoiceType.GET_LIST_FEE));
+        final result = await _invoiceRepository.getListFeePackageInvoice(
+          bankId: event.bankId,
+          time: event.time,
+        );
+        if (result.isNotEmpty) {
+          emit(state.copyWith(
+              status: BlocStatus.SUCCESS,
+              listFeePackageInvoice: result,
+              request: InvoiceType.GET_LIST_FEE));
+          // callback(result);
+        } else {
+          emit(state.copyWith(
+              listFeePackageInvoice: [],
+              request: InvoiceType.GET_LIST_FEE,
+              status: BlocStatus.NONE));
+        }
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          request: InvoiceType.GET_LIST_FEE,
           msg: 'Đã có lỗi xảy ra.'));
     }
   }

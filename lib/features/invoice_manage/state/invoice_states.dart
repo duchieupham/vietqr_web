@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/models/fee_package_invoice.dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_excel_dto.dart';
@@ -14,6 +15,7 @@ class InvoiceStates extends Equatable {
   final BlocStatus status;
   final MetaDataDTO? metaDataDTO;
   final List<BankAccountDTO>? listBank;
+  final List<FeePackageInvoiceDTO>? listFeePackageInvoice;
   final InvoiceDetailDTO? invoiceDetailDTO;
   final InvoiceDetailQrDTO? invoiceDetailQrDTO;
   final bool? isShow;
@@ -27,6 +29,7 @@ class InvoiceStates extends Equatable {
     this.listInvoice,
     this.listBank,
     this.metaDataDTO,
+    this.listFeePackageInvoice,
     this.invoiceDetailDTO,
     this.invoiceDetailQrDTO,
     this.isShow,
@@ -40,6 +43,7 @@ class InvoiceStates extends Equatable {
     String? msg,
     List<InvoiceFeeDTO>? listInvoice,
     List<BankAccountDTO>? listBank,
+    List<FeePackageInvoiceDTO>? listFeePackageInvoice,
     MetaDataDTO? metaDataDTO,
     InvoiceDetailDTO? invoiceDetailDTO,
     InvoiceDetailQrDTO? invoiceDetailQrDTO,
@@ -53,6 +57,8 @@ class InvoiceStates extends Equatable {
       msg: msg ?? this.msg,
       listInvoice: listInvoice ?? this.listInvoice,
       listBank: listBank ?? this.listBank,
+      listFeePackageInvoice:
+          listFeePackageInvoice ?? this.listFeePackageInvoice,
       metaDataDTO: metaDataDTO ?? this.metaDataDTO,
       invoiceDetailDTO: invoiceDetailDTO ?? this.invoiceDetailDTO,
       invoiceExcelDTO: invoiceExcelDTO ?? this.invoiceExcelDTO,
@@ -68,6 +74,7 @@ class InvoiceStates extends Equatable {
         msg,
         listInvoice,
         listBank,
+        listFeePackageInvoice,
         invoiceDetailDTO,
         invoiceDetailQrDTO,
         invoiceExcelDTO,
