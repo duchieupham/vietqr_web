@@ -273,7 +273,7 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
           ),
           const SizedBox(width: 30),
           Tooltip(
-            message: 'Menu_popup',
+            message: 'Danh mục',
             child: InkWell(
               key: _buttonKey,
               onTap: () {

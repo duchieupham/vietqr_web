@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:VietQR/features/invoice_manage/repository/base_repository.dart';
 import 'package:VietQR/models/bank_account_dto.dart';
+import 'package:VietQR/models/fee_package_invoice.dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_excel_dto.dart';
@@ -42,6 +43,35 @@ class InvoiceRepository extends BaseRepo {
         return result = data['data'].map<InvoiceFeeDTO>((json) {
           return InvoiceFeeDTO.fromJson(json);
         }).toList();
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return result;
+  }
+
+  Future<List<FeePackageInvoiceDTO>> getListFeePackageInvoice({
+    String? bankId,
+    String? time,
+  }) async {
+    List<FeePackageInvoiceDTO> result = [];
+
+    try {
+      // final String url = '${EnvConfig.getBaseUrl()}account-bank/$userId';
+      String userId = UserInformationHelper.instance.getUserId().trim();
+      final String url =
+          'https://dev.vietqr.org/vqr/mock/api/invoice/feepackages?userId=$userId&bankId=$bankId&time=$time';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data != null) {
+          result = data.map<FeePackageInvoiceDTO>((json) {
+            return FeePackageInvoiceDTO.fromJson(json);
+          }).toList();
+        }
       }
     } catch (e) {
       LOG.error(e.toString());
