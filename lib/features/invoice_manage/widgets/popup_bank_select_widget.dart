@@ -35,12 +35,12 @@ class _PopupBankSelectWidgetState extends State<PopupBankSelectWidget> {
             children: [
               Consumer<InvoiceProvider>(
                 builder: (context, provider, child) {
-                  provider.selectBankAccount(null);
+                  // provider.selectBankAccount(null);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: const EdgeInsets.only(left: 20),
+                        padding: EdgeInsets.only(left: 20),
                         child: Text(
                           'Chọn tài khoản ngân hàng',
                           style: TextStyle(

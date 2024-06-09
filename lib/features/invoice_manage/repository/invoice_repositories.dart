@@ -60,7 +60,7 @@ class InvoiceRepository extends BaseRepo {
       // final String url = '${EnvConfig.getBaseUrl()}account-bank/$userId';
       String userId = UserInformationHelper.instance.getUserId().trim();
       final String url =
-          'https://dev.vietqr.org/vqr/mock/api/invoice/feepackages?userId=$userId&bankId=$bankId&time=$time';
+          '${EnvConfig.getBaseUrl()}invoice/fee-package/$userId?bankId=$bankId&time=$time';
       final response = await BaseAPIClient.getAPI(
         url: url,
         type: AuthenticationType.SYSTEM,

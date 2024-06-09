@@ -64,7 +64,11 @@ class __ScreenState extends State<_Screen> {
     if (isRefresh) {}
     _provider.selectBankAccount(null);
     _bloc.add(GetListBankAccountEvent());
-    _bloc.add(const GetListPackageInvoiceFeeEvent(bankId: ''));
+    _bloc.add(GetListPackageInvoiceFeeEvent(
+        bankId: '',
+        time: selectDate != null
+            ? DateFormat('yyyy-MM').format(selectDate!)
+            : ''));
   }
 
   void onPopupBankSelect() async {
@@ -114,8 +118,6 @@ class __ScreenState extends State<_Screen> {
   Widget build(BuildContext context) {
     return BlocConsumer<InvoiceBloc, InvoiceStates>(
       listener: (context, state) {
-        if (state.request == InvoiceType.INVOCIE_RECHARGE &&
-            state.status == BlocStatus.LOADING) {}
         if (state.request == InvoiceType.GET_LIST_FEE &&
             state.status == BlocStatus.SUCCESS) {
           listInvoice = state.listFeePackageInvoice!;
@@ -123,6 +125,10 @@ class __ScreenState extends State<_Screen> {
         if (state.request == InvoiceType.GET_LIST_FEE &&
             state.status == BlocStatus.NONE) {
           listInvoice = [];
+        }
+        if (state.request == InvoiceType.GET_BANKS &&
+            state.status == BlocStatus.SUCCESS) {
+          _provider.setListBank(state.listBank!);
         }
       },
       builder: (context, state) {
@@ -191,151 +197,169 @@ class __ScreenState extends State<_Screen> {
             child: Text('Đang tải...'),
           ),
         ));
+      case BlocStatus.NONE:
+        return Expanded(
+            child: Container(
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: const Center(
+            child: Text('Trống...'),
+          ),
+        ));
       case BlocStatus.SUCCESS:
         return Expanded(
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width - 220,
-                child: SingleChildScrollView(
-                  child: Stack(
-                    children: [
-                      Scrollbar(
-                        controller: controller1,
-                        child: ScrollConfiguration(
-                          behavior: MyCustomScrollBehavior(),
-                          child: SingleChildScrollView(
+          child: listInvoice.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width - 220,
+                    child: SingleChildScrollView(
+                      child: Stack(
+                        children: [
+                          Scrollbar(
                             controller: controller1,
-                            scrollDirection: Axis.horizontal,
-                            child: SizedBox(
-                              width: 1590,
-                              child: Column(
-                                children: [
-                                  const TitleItemInvoiceRechargeWidget(),
-                                  if (listInvoice!.isNotEmpty ||
-                                      listInvoice != null)
-                                    ...listInvoice!
-                                        .asMap()
-                                        .map(
-                                          (index, x) {
-                                            return MapEntry(
-                                                index,
-                                                ItemFeePackage(
-                                                  index: index + 1,
-                                                  dto: x,
-                                                ));
-                                          },
-                                        )
-                                        .values
-                                        .toList()
-
-                                  // if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                                  //     state.status == BlocStatus.NONE)
-                                  //   const Expanded(
-                                  //       child: Center(child: Text('Trống..')))
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 1590,
-                        child: Row(
-                          children: [
-                            const Expanded(child: SizedBox()),
-                            SingleChildScrollView(
-                              controller: controller2,
+                            child: ScrollConfiguration(
+                              behavior: MyCustomScrollBehavior(),
                               child: SingleChildScrollView(
+                                controller: controller1,
                                 scrollDirection: Axis.horizontal,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColor.WHITE,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppColor.GREY_BORDER
-                                              .withOpacity(0.8),
-                                          blurRadius: 5,
-                                          spreadRadius: 1,
-                                          offset: const Offset(0, 0)),
-                                    ],
-                                  ),
+                                child: SizedBox(
+                                  width: 1590,
                                   child: Column(
                                     children: [
-                                      Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: AppColor.BLUE_TEXT
-                                                .withOpacity(0.3)),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                                height: 50,
-                                                width: 150,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: AppColor
-                                                            .GREY_TEXT
-                                                            .withOpacity(0.3))),
-                                                child: const Text(
-                                                  'Tổng phí GD (VND)',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: AppColor.BLACK,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )),
-                                            Container(
-                                                height: 50,
-                                                width: 80,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: AppColor
-                                                            .GREY_TEXT
-                                                            .withOpacity(0.3))),
-                                                child: const Text(
-                                                  'Thao tác',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: AppColor.BLACK,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )),
-                                          ],
-                                        ),
-                                      ),
-                                      if (listInvoice!.isNotEmpty ||
-                                          listInvoice != null)
-                                        ...listInvoice!
-                                            .map(
-                                              (e) => ItemRightFeePackageWidget(
-                                                dto: e,
-                                                onShowExcel: () {
-                                                  // setState(() {
-                                                  //   selectInvoiceFee = e;
-                                                  // });
-                                                  // _bloc.add(GetInvoiceExcel(
-                                                  //     e.invoiceId!));
-                                                },
-                                              ),
-                                            )
-                                            .toList(),
+                                      const TitleItemInvoiceRechargeWidget(),
+                                      // if (listInvoice.isNotEmpty)
+                                      ...listInvoice
+                                          .asMap()
+                                          .map(
+                                            (index, x) {
+                                              return MapEntry(
+                                                  index,
+                                                  ItemFeePackage(
+                                                    index: index + 1,
+                                                    dto: x,
+                                                  ));
+                                            },
+                                          )
+                                          .values
+                                          .toList()
+
+                                      // if (state.request == InvoiceType.GET_INVOICE_LIST &&
+                                      //     state.status == BlocStatus.NONE)
+                                      //   const Expanded(
+                                      //       child: Center(child: Text('Trống..')))
                                     ],
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            width: 1590,
+                            child: Row(
+                              children: [
+                                const Expanded(child: SizedBox()),
+                                SingleChildScrollView(
+                                  controller: controller2,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColor.WHITE,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: AppColor.GREY_BORDER
+                                                  .withOpacity(0.8),
+                                              blurRadius: 5,
+                                              spreadRadius: 1,
+                                              offset: const Offset(0, 0)),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                color: AppColor.BLUE_TEXT
+                                                    .withOpacity(0.3)),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                    height: 50,
+                                                    width: 150,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: AppColor
+                                                                .GREY_TEXT
+                                                                .withOpacity(
+                                                                    0.3))),
+                                                    child: const Text(
+                                                      'Tổng phí GD (VND)',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: AppColor.BLACK,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                Container(
+                                                    height: 50,
+                                                    width: 80,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: AppColor
+                                                                .GREY_TEXT
+                                                                .withOpacity(
+                                                                    0.3))),
+                                                    child: const Text(
+                                                      'Thao tác',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: AppColor.BLACK,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          // if (listInvoice.isNotEmpty)
+                                          ...listInvoice
+                                              .map(
+                                                (e) =>
+                                                    ItemRightFeePackageWidget(
+                                                  dto: e,
+                                                  onShowExcel: () {
+                                                    // setState(() {
+                                                    //   selectInvoiceFee = e;
+                                                    // });
+                                                    // _bloc.add(GetInvoiceExcel(
+                                                    //     e.invoiceId!));
+                                                  },
+                                                ),
+                                              )
+                                              .toList(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ))
+              : Container(
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  child: const Center(
+                    child: Text('Trống...'),
                   ),
                 ),
-              )),
         );
 
       default:

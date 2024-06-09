@@ -32,7 +32,7 @@ class GetListPackageInvoiceFeeEvent extends InvoiceEvent {
 
   const GetListPackageInvoiceFeeEvent({
     required this.bankId,
-    this.time,
+    required this.time,
   });
 
   @override

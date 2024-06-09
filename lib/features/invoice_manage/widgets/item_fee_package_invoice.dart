@@ -76,13 +76,13 @@ class ItemFeePackage extends StatelessWidget {
                 children: [
                   Text(
                     // dto.bankAccount,
-                    dto.bankAccount!.isNotEmpty ? dto.bankAccount! : '-',
+                    dto.bankAccount.isNotEmpty ? dto.bankAccount : '-',
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
                   ),
                   Text(
                     // dto.bankShortName,
-                    dto.bankShortName!.isNotEmpty ? dto.bankShortName! : '-',
+                    dto.bankShortName.isNotEmpty ? dto.bankShortName : '-',
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
                   ),
