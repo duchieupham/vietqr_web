@@ -72,6 +72,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
           bankId: event.bankId,
           time: event.time,
         );
+        Future.delayed(const Duration(milliseconds: 500));
         if (result.isNotEmpty) {
           emit(state.copyWith(
               status: BlocStatus.SUCCESS,
