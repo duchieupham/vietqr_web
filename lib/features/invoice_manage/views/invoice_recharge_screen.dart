@@ -112,6 +112,11 @@ class __ScreenState extends State<_Screen> {
       //     time: DateFormat('yyyy-MM').format(result),
       //     filterBy: 1,
       //     page: 1));
+      _bloc.add(GetListPackageInvoiceFeeEvent(
+        bankId: selectBankId ?? '',
+        time:
+            selectDate != null ? DateFormat('yyyy-MM').format(selectDate!) : '',
+      ));
     }
   }
 

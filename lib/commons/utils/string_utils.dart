@@ -40,6 +40,14 @@ class StringUtils {
     return text.trim() == confirmText.trim();
   }
 
+  static String formatTime(String time) {
+    List<String> parts = time.split('-');
+    if (parts.length == 2) {
+      return '${parts[1]}/${parts[0]}'; // Đổi thứ tự và nối với '/'
+    }
+    return time; // Trả về chuỗi gốc nếu không phải định dạng mong muốn
+  }
+
   static String formatMoney(String money) {
     if (money.length > 2) {
       var value = money;

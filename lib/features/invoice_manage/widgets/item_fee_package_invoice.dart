@@ -51,7 +51,7 @@ class ItemFeePackage extends StatelessWidget {
             width: 120,
             child: SelectionArea(
               child: Text(
-                dto.timeProcess,
+                StringUtils.formatTime(dto.timeProcess.toString()),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,
