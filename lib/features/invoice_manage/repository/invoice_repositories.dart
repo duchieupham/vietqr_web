@@ -127,7 +127,7 @@ class InvoiceRepository extends BaseRepo {
     try {
       // String url = '${EnvConfig.getBaseUrl()}invoice/detail/$invoiceId';
       String url =
-          'https://dev.vietqr.org/vqr/mock/api/invoice/transaction-list?invoiceId=$invoiceId';
+          '${EnvConfig.getBaseUrl()}invoice/transaction-list?invoiceId=$invoiceId';
       final response = await BaseAPIClient.getAPI(
         url: url,
         type: AuthenticationType.SYSTEM,
