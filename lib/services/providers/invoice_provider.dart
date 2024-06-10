@@ -109,7 +109,7 @@ class InvoiceProvider extends ChangeNotifier {
 
   void setListSelectItem(List<InvoiceItemDetailDTO> items) {
     listSelectInvoice = items
-        .map((e) => SelectInvoiceItem(isSelect: false, invoiceItem: e))
+        .map((e) => SelectInvoiceItem(isSelect: true, invoiceItem: e))
         .toList();
     notifyListeners();
   }
