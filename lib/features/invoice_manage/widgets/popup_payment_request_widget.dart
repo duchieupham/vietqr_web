@@ -109,7 +109,11 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                        _buildInvoiceWidget(provider),
+                        if (_invoiceDetailDTO != null ||
+                            _invoiceDetailDTO!.invoiceItemDetailDTOS.isNotEmpty)
+                          _buildInvoiceWidget(provider)
+                        else
+                          const Expanded(child: SizedBox()),
                         const SizedBox(height: 50),
                         if (_invoiceDetailDTO != null)
                           _buildReqPayment(
@@ -191,10 +195,10 @@ class _PopupPaymentRequestWidgetState extends State<PopupPaymentRequestWidget> {
   }
 
   Widget _buildInvoiceWidget(InvoiceProvider provider) {
-    if (_invoiceDetailDTO == null ||
-        _invoiceDetailDTO!.invoiceItemDetailDTOS.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    // if (_invoiceDetailDTO == null ||
+    //     _invoiceDetailDTO!.invoiceItemDetailDTOS.isEmpty) {
+    //   return const SizedBox.shrink();
+    // }
     bool isAllApplied =
         provider.listSelectInvoice.every((element) => element.isSelect == true);
     return Expanded(
