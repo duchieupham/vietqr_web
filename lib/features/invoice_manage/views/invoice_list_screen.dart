@@ -201,7 +201,7 @@ class _ScreenState extends State<_Screen> {
             }
             if (provider.isReload) {
               _bloc.add(GetInvoiceList(
-                  status: _provider.invoiceStatus.id,
+                  status: provider.invoiceStatus.id,
                   bankId: selectBankId ?? '',
                   time: selectDate != null
                       ? DateFormat('yyyy-MM').format(selectDate!)
@@ -282,6 +282,14 @@ class _ScreenState extends State<_Screen> {
                           // invoiceId: invoiceId!,
                           callback: () {
                             provider.onPageChange(PageInvoice.LIST);
+                            _bloc.add(GetInvoiceList(
+                                status: provider.invoiceStatus.id,
+                                bankId: selectBankId ?? '',
+                                time: selectDate != null
+                                    ? DateFormat('yyyy-MM').format(selectDate!)
+                                    : '',
+                                filterBy: 1,
+                                page: 1));
                           },
                         ),
                       ),
@@ -380,9 +388,8 @@ class _ScreenState extends State<_Screen> {
                           child: Column(
                             children: [
                               const TitleItemInvoiceWidget(),
-                              if (listInvoice!.isNotEmpty ||
-                                  listInvoice != null)
-                                ...listInvoice!
+                              if (listInvoice.isNotEmpty)
+                                ...listInvoice
                                     .asMap()
                                     .map(
                                       (index, x) {
@@ -472,9 +479,8 @@ class _ScreenState extends State<_Screen> {
                                       ],
                                     ),
                                   ),
-                                  if (listInvoice!.isNotEmpty ||
-                                      listInvoice != null)
-                                    ...listInvoice!
+                                  if (listInvoice.isNotEmpty)
+                                    ...listInvoice
                                         .map(
                                           (e) => ItemRightWidget(
                                             dto: e,
@@ -720,26 +726,65 @@ class _ScreenState extends State<_Screen> {
   }
 
   Widget _headerWidget() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(30, 15, 30, 10),
-      // width: MediaQuery.of(context).size.width,
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            "Quản lý hoá đơn",
-            style: TextStyle(fontSize: 15),
+    return Consumer<InvoiceProvider>(
+      builder: (context, provider, child) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(30, 15, 30, 10),
+          // width: MediaQuery.of(context).size.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text(
+                "Quản lý hoá đơn",
+                style: TextStyle(fontSize: 15),
+              ),
+              const Text(
+                "   /   ",
+                style: TextStyle(fontSize: 15),
+              ),
+              if (provider.pageInvoice == PageInvoice.LIST)
+                const Text(
+                  "Danh sách hoá đơn",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                )
+              else
+                InkWell(
+                  onTap: () {
+                    provider.onPageChange(PageInvoice.LIST);
+                    _bloc.add(GetInvoiceList(
+                        status: provider.invoiceStatus.id,
+                        bankId: selectBankId ?? '',
+                        time: selectDate != null
+                            ? DateFormat('yyyy-MM').format(selectDate!)
+                            : '',
+                        filterBy: 1,
+                        page: 1));
+                  },
+                  child: const Text(
+                    "Danh sách hoá đơn",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: AppColor.BLUE_TEXT,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColor.BLUE_TEXT),
+                  ),
+                ),
+              if (provider.pageInvoice == PageInvoice.DETAIL) ...[
+                const Text(
+                  "   /   ",
+                  style: TextStyle(fontSize: 15),
+                ),
+                const Text(
+                  "Chi tiết hoá đơn",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ]
+            ],
           ),
-          Text(
-            "   /   ",
-            style: TextStyle(fontSize: 15),
-          ),
-          Text(
-            "Danh sách hoá đơn",
-            style: TextStyle(fontSize: 15),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

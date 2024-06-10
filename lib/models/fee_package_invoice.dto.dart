@@ -1,30 +1,32 @@
+import 'dart:convert';
+
 class FeePackageInvoiceDTO {
-  String invoiceItemId;
-  String timeProcess;
-  String bankAccount;
-  String bankShortName;
-  bool mmsActive;
-  String title;
-  int totalCount;
-  int totalAmountReceive;
-  int fixFee;
-  double percentFee;
-  int amount;
-  int totalAmount;
-  double vat;
-  int totalAfterVat;
+  final String timeProcess;
+  final String bankAccount;
+  final String bankShortName;
+  final String connectionType;
+  final String title;
+  final int totalCount;
+  final int totalAmountReceive;
+  final int fixFee;
+  final double percentFee;
+  final int vatAmount;
+  final int totalAmount;
+  final double vat;
+  final int totalAfterVat;
+  final String invoiceItemId;
 
   FeePackageInvoiceDTO({
     required this.timeProcess,
     required this.bankAccount,
     required this.bankShortName,
-    required this.mmsActive,
+    required this.connectionType,
     required this.title,
     required this.totalCount,
     required this.totalAmountReceive,
     required this.fixFee,
     required this.percentFee,
-    required this.amount,
+    required this.vatAmount,
     required this.totalAmount,
     required this.vat,
     required this.totalAfterVat,
@@ -33,41 +35,39 @@ class FeePackageInvoiceDTO {
 
   factory FeePackageInvoiceDTO.fromJson(Map<String, dynamic> json) {
     return FeePackageInvoiceDTO(
-      invoiceItemId: json['invoiceItemId'],
       timeProcess: json['timeProcess'],
       bankAccount: json['bankAccount'],
       bankShortName: json['bankShortName'],
-      mmsActive: json['mmsActive'],
+      connectionType: json['connectionType'],
       title: json['title'],
       totalCount: json['totalCount'],
       totalAmountReceive: json['totalAmountReceive'],
       fixFee: json['fixFee'],
-      percentFee: json['percentFee']
-          .toDouble(), // Assuming this might be parsed as int but should be double
-      amount: json['amount'],
+      percentFee: json['percentFee'],
+      vatAmount: json['vatAmount'],
       totalAmount: json['totalAmount'],
-      vat: json['vat']
-          .toDouble(), // Assuming this might be parsed as int but should be double
+      vat: json['vat'],
       totalAfterVat: json['totalAfterVat'],
+      invoiceItemId: json['invoiceItemId'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'invoiceItemId': invoiceItemId,
       'timeProcess': timeProcess,
       'bankAccount': bankAccount,
       'bankShortName': bankShortName,
-      'mmsActive': mmsActive,
+      'connectionType': connectionType,
       'title': title,
       'totalCount': totalCount,
       'totalAmountReceive': totalAmountReceive,
       'fixFee': fixFee,
       'percentFee': percentFee,
-      'amount': amount,
+      'vatAmount': vatAmount,
       'totalAmount': totalAmount,
       'vat': vat,
       'totalAfterVat': totalAfterVat,
+      'invoiceItemId': invoiceItemId,
     };
   }
 }

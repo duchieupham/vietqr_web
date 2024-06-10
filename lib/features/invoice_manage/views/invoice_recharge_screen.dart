@@ -62,13 +62,14 @@ class __ScreenState extends State<_Screen> {
 
   void initData({bool isRefresh = false}) async {
     if (isRefresh) {}
+    selectDate = getMonth();
     _provider.selectBankAccount(null);
     _bloc.add(GetListBankAccountEvent());
     _bloc.add(GetListPackageInvoiceFeeEvent(
         bankId: '',
         time: selectDate != null
             ? DateFormat('yyyy-MM').format(selectDate!)
-            : ''));
+            : DateFormat('yyyy-MM').format(getMonth())));
   }
 
   void onPopupBankSelect() async {
@@ -112,6 +113,32 @@ class __ScreenState extends State<_Screen> {
       //     filterBy: 1,
       //     page: 1));
     }
+  }
+
+  DateTime getMonth() {
+    DateTime now = DateTime.now();
+    int newMonth = now.month;
+    int newYear = now.year;
+
+    if (newMonth < 1) {
+      newMonth = 12; // Set month to December
+      newYear--; // Decrement year
+    }
+
+    return DateTime(newYear, newMonth);
+  }
+
+  DateTime getPreviousMonth() {
+    DateTime now = DateTime.now();
+    int newMonth = now.month - 1;
+    int newYear = now.year;
+
+    if (newMonth < 1) {
+      newMonth = 12; // Set month to December
+      newYear--; // Decrement year
+    }
+
+    return DateTime(newYear, newMonth);
   }
 
   @override
@@ -332,13 +359,7 @@ class __ScreenState extends State<_Screen> {
                                                 (e) =>
                                                     ItemRightFeePackageWidget(
                                                   dto: e,
-                                                  onShowExcel: () {
-                                                    // setState(() {
-                                                    //   selectInvoiceFee = e;
-                                                    // });
-                                                    // _bloc.add(GetInvoiceExcel(
-                                                    //     e.invoiceId!));
-                                                  },
+                                                  onShowExcel: () {},
                                                 ),
                                               )
                                               .toList(),
@@ -601,19 +622,6 @@ class __ScreenState extends State<_Screen> {
         ],
       ),
     );
-  }
-
-  DateTime getMonth() {
-    DateTime now = DateTime.now();
-    int newMonth = now.month;
-    int newYear = now.year;
-
-    if (newMonth < 1) {
-      newMonth = 12; // Set month to December
-      newYear--; // Decrement year
-    }
-
-    return DateTime(newYear, newMonth);
   }
 
   void updateState() {

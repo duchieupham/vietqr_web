@@ -101,7 +101,7 @@ class ItemFeePackage extends StatelessWidget {
             width: 120,
             child: SelectionArea(
               child: Text(
-                dto.mmsActive ? "VietQR Pro" : "VietQR Plus",
+                dto.connectionType,
                 // 'aasdasd',
                 textAlign: TextAlign.left,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
@@ -210,7 +210,7 @@ class ItemFeePackage extends StatelessWidget {
             width: 150,
             child: SelectionArea(
               child: Text(
-                StringUtils.formatNumberWithOutVND(dto.amount.toString()),
+                StringUtils.formatNumberWithOutVND(dto.totalAmount.toString()),
                 textAlign: TextAlign.end,
                 style: const TextStyle(fontSize: 12, color: AppColor.BLACK),
               ),
@@ -245,7 +245,7 @@ class ItemFeePackage extends StatelessWidget {
             width: 100,
             child: SelectionArea(
               child: Text(
-                StringUtils.formatNumberWithOutVND(dto.totalAmount.toString()),
+                StringUtils.formatNumberWithOutVND(dto.vatAmount.toString()),
 
                 // '182938192381293',
                 textAlign: TextAlign.end,

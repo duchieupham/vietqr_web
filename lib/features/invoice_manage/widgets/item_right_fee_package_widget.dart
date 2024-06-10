@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/layouts/box_layout.dart';
@@ -67,7 +68,7 @@ class ItemRightFeePackageWidget extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         String link =
-                            'https://api.vietqr.org/vqr/api/invoice/export-excel?invoiceItemId=${dto.invoiceItemId}';
+                            '${EnvConfig.getBaseUrl()}invoice/export-excel?invoiceItemId=${dto.invoiceItemId}';
                         html.window.open(link, 'new tab');
                       },
                       // onTap: () {
