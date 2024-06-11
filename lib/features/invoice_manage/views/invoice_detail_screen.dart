@@ -92,10 +92,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         return Consumer<InvoiceProvider>(
           builder: (context, provider, child) {
             bool isEnable = false;
-            if (provider.listSelectInvoice.isNotEmpty) {
+            if (provider.listSelectInvoice.isNotEmpty &&
+                _invoiceDetailDTO != null) {
               isEnable =
                   provider.listSelectInvoice.any((x) => x.isSelect == true) &&
-                      state.invoiceDetailDTO!.paymentRequestDTOS.any(
+                      _invoiceDetailDTO!.paymentRequestDTOS.any(
                         (x) => x.isChecked,
                       );
             }
