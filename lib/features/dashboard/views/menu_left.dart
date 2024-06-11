@@ -30,6 +30,7 @@ class MenuLeft extends StatelessWidget {
   final List<Widget> subMenuMember;
   final List<Widget> subMenuQr;
   final List<Widget> subMenuInvoice;
+  final List<Widget> subMenuMerchantV2;
 
   final Function(int)? onSelectMenu;
 
@@ -45,6 +46,7 @@ class MenuLeft extends StatelessWidget {
     this.subMenuQr = const [],
     this.subMenuMerchant = const [],
     this.subMenuInvoice = const [],
+    this.subMenuMerchantV2 = const [],
   });
 
   @override
@@ -202,14 +204,25 @@ class MenuLeft extends StatelessWidget {
               ItemMenuHome(
                 title: 'Tích hợp và kết nối',
                 iconId: AppImages.icMenuIntergrated,
+                isSelect: currentType == MenuHomeType.MERCHANT_V2,
                 enableDropDownList: true,
-                listItemDrop: subMenuMerchantRequest,
-                isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+                listItemDrop: subMenuMerchantV2,
                 bold: true,
                 onTap: () {
-                  context.go('/merchant/request');
+                  context.go('/merchantv2');
                 },
               ),
+              // ItemMenuHome(
+              //   title: 'Tích hợp và kết nối',
+              //   iconId: AppImages.icMenuIntergrated,
+              //   enableDropDownList: true,
+              //   listItemDrop: subMenuMerchantRequest,
+              //   isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+              //   bold: true,
+              //   onTap: () {
+              //     context.go('/merchant/request');
+              //   },
+              // ),
               // ItemMenuHome(
               //   title: 'Kết nối máy bán hàng',
               //   iconId: AppImages.icMenuBank,
@@ -543,11 +556,10 @@ class MenuLeft extends StatelessWidget {
           ItemMenuHome(
             title: 'Tích hợp và kết nối',
             iconId: AppImages.icMenuIntergrated,
+            isSelect: currentType == MenuHomeType.MERCHANT_V2,
             isOnlyIcon: true,
-            isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
             bold: true,
             onTap: () {
-              // context.go('/merchant/request');
               final RenderBox button = context.findRenderObject() as RenderBox;
               final Offset buttonPosition = button.localToGlobal(Offset.zero);
               final double buttonWidth = button.size.width;
@@ -556,45 +568,99 @@ class MenuLeft extends StatelessWidget {
                 [
                   PopupMenuItem(
                     child: ItemDropDownMenu(
-                      title: 'API SERVICE',
-                      isSelect: provider.type == '8' ? true : false,
-                      onTap: () {
-                        provider.selectType('8');
-                        context.go('/merchant/request');
-                      },
-                    ),
-                  ),
-                  PopupMenuItem(
-                    child: ItemDropDownMenu(
-                      title: 'ECOMMERCE',
-                      isSelect: provider.type == '9' ? true : false,
-                      onTap: () {
-                        provider.selectType('9');
-                        context.go('/merchant/request/ecommerce');
-                      },
-                    ),
-                  ),
-                  PopupMenuItem(
-                    child: ItemDropDownMenu(
-                      title: 'MÁY BÁN HÀNG',
+                      title: 'Kết nối API Service',
                       isSelect: provider.type == '10' ? true : false,
                       onTap: () {
                         provider.selectType('10');
-                        context.go('/merchant/request/mbh');
+                        context.go('/merchantv2/api-service');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Kết nối E-Commerce',
+                      isSelect: provider.type == '11' ? true : false,
+                      onTap: () {
+                        provider.selectType('11');
+                        context.go('/merchantv2/e-commerce');
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: ItemDropDownMenu(
+                      title: 'Kết nối máy bán hàng',
+                      isSelect: provider.type == '12' ? true : false,
+                      onTap: () {
+                        provider.selectType('12');
+                        context.go('/merchantv2/connected-machine');
                       },
                     ),
                   )
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,
-                  buttonPosition.dy *
-                      (provider.isAccountIsMerchant ? 7.2 : 6.2),
+                  buttonPosition.dy * 6,
                   buttonPosition.dx + buttonWidth * 2,
                   buttonPosition.dy + button.size.height,
                 ),
               );
             },
           ),
+          // ItemMenuHome(
+          //   title: 'Tích hợp và kết nối',
+          //   iconId: AppImages.icMenuIntergrated,
+          //   isOnlyIcon: true,
+          //   isSelect: currentType == MenuHomeType.MERCHANT_REQUEST,
+          //   bold: true,
+          //   onTap: () {
+          //     // context.go('/merchant/request');
+          //     final RenderBox button = context.findRenderObject() as RenderBox;
+          //     final Offset buttonPosition = button.localToGlobal(Offset.zero);
+          //     final double buttonWidth = button.size.width;
+          //     showPopup(
+          //       context,
+          //       [
+          //         PopupMenuItem(
+          //           child: ItemDropDownMenu(
+          //             title: 'API SERVICE',
+          //             isSelect: provider.type == '8' ? true : false,
+          //             onTap: () {
+          //               provider.selectType('8');
+          //               context.go('/merchant/request');
+          //             },
+          //           ),
+          //         ),
+          //         PopupMenuItem(
+          //           child: ItemDropDownMenu(
+          //             title: 'ECOMMERCE',
+          //             isSelect: provider.type == '9' ? true : false,
+          //             onTap: () {
+          //               provider.selectType('9');
+          //               context.go('/merchant/request/ecommerce');
+          //             },
+          //           ),
+          //         ),
+          //         PopupMenuItem(
+          //           child: ItemDropDownMenu(
+          //             title: 'MÁY BÁN HÀNG',
+          //             isSelect: provider.type == '10' ? true : false,
+          //             onTap: () {
+          //               provider.selectType('10');
+          //               context.go('/merchant/request/mbh');
+          //             },
+          //           ),
+          //         )
+          //       ],
+          //       RelativeRect.fromLTRB(
+          //         buttonPosition.dx + buttonWidth,
+          //         buttonPosition.dy *
+          //             (provider.isAccountIsMerchant ? 7.2 : 6.2),
+          //         buttonPosition.dx + buttonWidth * 2,
+          //         buttonPosition.dy + button.size.height,
+          //       ),
+          //     );
+          //   },
+          // ),
           ItemMenuHome(
             title: 'Giới thiệu VietQR VN',
             iconId: AppImages.icMenuContactBlack,

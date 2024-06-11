@@ -23,6 +23,7 @@ enum MenuHomeType {
   SETTING,
   LOGOUT,
   OTHER,
+  MERCHANT_V2,
 }
 
 enum SubMenuType {

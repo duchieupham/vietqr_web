@@ -41,6 +41,7 @@ import 'package:VietQR/features/merchant/views/merchant_bill.dart';
 import 'package:VietQR/features/merchant/views/merchant_fee.dart';
 import 'package:VietQR/features/merchant/views/merchant_report.dart';
 import 'package:VietQR/features/merchant/views/merchant_transaction.dart';
+import 'package:VietQR/features/merchant_manage/merchant_manage_screen.dart';
 import 'package:VietQR/features/merchant_request/views/call_back_page.dart';
 import 'package:VietQR/features/merchant_request/views/merchant_request.dart';
 import 'package:VietQR/features/mobile_recharge/mobile_recharge_screen.dart';
@@ -803,6 +804,66 @@ final GoRouter _router = GoRouter(
                     type: Qr_Manage.CREATE,
                   )
                 : const CreateQRLogin(),
+          );
+        }),
+    GoRoute(
+        path: '/merchantv2',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/merchantv2' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantManageScreen(type: Merchant_Type.API_SERVICE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantManageScreen(
+              type: Merchant_Type.API_SERVICE,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/merchantv2/api-service',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/merchantv2/api-service' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantManageScreen(type: Merchant_Type.API_SERVICE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantManageScreen(
+              type: Merchant_Type.API_SERVICE,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/merchantv2/e-commerce',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/merchantv2/e-commerce' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantManageScreen(type: Merchant_Type.E_COMMERCE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantManageScreen(
+              type: Merchant_Type.E_COMMERCE,
+            ),
+          );
+        }),
+    GoRoute(
+        path: '/merchantv2/connected-machine',
+        redirect: (context, state) =>
+            (userId.isNotEmpty) ? '/merchantv2/connected-machine' : '/login',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MerchantManageScreen(type: Merchant_Type.CONNECTED_MACHINE),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return buildPageWithoutAnimation(
+            context: context,
+            state: state,
+            child: const MerchantManageScreen(
+              type: Merchant_Type.CONNECTED_MACHINE,
+            ),
           );
         }),
     GoRoute(
