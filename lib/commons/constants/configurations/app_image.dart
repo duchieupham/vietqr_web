@@ -11,6 +11,7 @@ class AppImages {
   static String icMenuMerchant = '16827735-95b7-4e6e-8348-1c75bc580947';
   static String icMenuEmployeeBlack = '9579d333-891c-46c9-b756-8c0a67855b92';
   static String icMenuInvoiceBlack = 'a7695ab4-563b-42ef-a6ab-1914b1483c84';
+  static String logoGgChat = '5b54623f-ef73-40a0-9671-d4cc4ca4ad92';
 
   static String icMenuQrBlack = 'cfe8225e-ac60-4f94-8fe2-ddbc12d5492d';
   static String icMenuIntergrated = 'd8bc527f-ea1c-4e3d-9d2a-3b49e7b324b6';
