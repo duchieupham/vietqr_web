@@ -26,7 +26,7 @@ class _Screen extends StatefulWidget {
 class __ScreenState extends State<_Screen> {
   String selectedType = 'individual';
   int merchantLength = 0;
-  int curStep = 2;
+  int curStep = 4;
 
   String? _selectedItem;
   final _horizontal = ScrollController();
@@ -201,6 +201,9 @@ class __ScreenState extends State<_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
                   const Text(
                     'Thông tin kết nối dịch vụ',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -302,7 +305,7 @@ class __ScreenState extends State<_Screen> {
                             _isObscured
                                 ? Icons.visibility_off
                                 : Icons.visibility,
-                            size: 13,
+                            size: 15,
                           ),
                           onPressed: () {
                             setState(() {
@@ -314,14 +317,210 @@ class __ScreenState extends State<_Screen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  const Text(
+                    'URL API Callback*',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Thông tin API nhận biến động số dư của đối tác.\nSử dụng phương thức bảo mật Bearer Token mà API Get Token của đối tác trả về.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: 350,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.GREY_DADADA),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      controller: _urlApiCallbackController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "https://...",
+                        hintStyle: TextStyle(color: AppColor.GREY_TEXT),
+                        contentPadding: EdgeInsets.only(bottom: 8),
+                        counterText: "",
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
                 ],
               ),
             ),
           ),
           Container(
             width: 410,
-            color: AppColor.RED_CALENDAR.withOpacity(0.3),
-          )
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 85),
+                  const Text(
+                    'Thông tin tài khoản ngân hàng*',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
+                  RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.black, height: 1.4),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text:
+                                'Tài khoản đã liên kết trong hệ thống VietQR VN.\nKhả dụng cho việc nhận thông tin Biến động số dư.\nHỗ trợ ngân hàng '),
+                        TextSpan(
+                            text: 'MBBank',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: ' và '),
+                        TextSpan(
+                            text: 'BIDV',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: '.'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: 350,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColor.GREY_DADADA),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Chọn tài khoản ngân hàng',
+                            style: TextStyle(
+                                color: AppColor.GREY_TEXT, fontSize: 15),
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            color: AppColor.GREY_TEXT,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Kiểm tra kết nối',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Kiểm tra tính hợp lệ 2 APIs Get Token và Callback hợp lệ.\nHệ thống VietQR VN sẽ kiểm tra format APIs của đối tác và kết nối\nđến hệ thống đối tác.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: AppColor.GREY_DADADA))),
+                        width: 150,
+                        height: 40,
+                        child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('API', style: TextStyle(fontSize: 15))),
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: AppColor.GREY_DADADA))),
+                        width: 150,
+                        height: 40,
+                        child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Trạng thái',
+                                style: TextStyle(fontSize: 15))),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: AppColor.GREY_DADADA))),
+                        width: 150,
+                        height: 40,
+                        child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Get Token',
+                                style: TextStyle(fontSize: 15))),
+                      ),
+                      Container(
+                        width: 150,
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: AppColor.GREY_DADADA))),
+                        height: 40,
+                        child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('-', style: TextStyle(fontSize: 15))),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 150,
+                        height: 40,
+                        child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Callback',
+                                style: TextStyle(fontSize: 15))),
+                      ),
+                      Container(
+                        width: 150,
+                        height: 40,
+                        child: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('-', style: TextStyle(fontSize: 15))),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              width: 390,
+              height: MediaQuery.of(context).size.height - 240,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: AppColor.BLUE_BGR,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -341,6 +540,7 @@ class __ScreenState extends State<_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 30),
                   const Text(
                     'Thông tin kinh doanh',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -550,7 +750,7 @@ class __ScreenState extends State<_Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 55),
+                  const SizedBox(height: 85),
                   SizedBox(
                     width: 350,
                     child: Column(
@@ -709,24 +909,23 @@ class __ScreenState extends State<_Screen> {
   }
 
   Widget _buildStep1() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              'Giới thiệu dịch vụ kết nối API Service\nthanh toán bằng mã VietQR',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 30),
-            Text(
-              'Mô tả ở đây.',
-              style: TextStyle(fontSize: 15),
-            ),
-          ],
-        ),
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(height: 35),
+          Text(
+            'Giới thiệu dịch vụ kết nối API Service\nthanh toán bằng mã VietQR',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 30),
+          Text(
+            'Mô tả ở đây.',
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
       ),
     );
   }
