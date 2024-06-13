@@ -52,6 +52,13 @@ class __ScreenState extends State<_Screen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _idConnectedController = TextEditingController();
+  final TextEditingController _urlApiGetTokenController =
+      TextEditingController();
+  final TextEditingController _urlApiCallbackController =
+      TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isObscured = true;
 
   final List<String> labels = [
     "Giới thiệu",
@@ -188,10 +195,127 @@ class __ScreenState extends State<_Screen> {
         children: [
           Container(
             width: 410,
-            color: AppColor.GREY_DADADA,
-            child: const Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Thông tin kết nối dịch vụ',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'URL API Get Token*',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Thông tin API xác thực bảo mật của đối tác.\nSử dụng Basic Authentication để trả về đoạn Bearer Token\nxác thực cho API Callback của đối tác.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: 350,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.GREY_DADADA),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      controller: _urlApiGetTokenController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "https://...",
+                        hintStyle: TextStyle(color: AppColor.GREY_TEXT),
+                        contentPadding: EdgeInsets.only(bottom: 8),
+                        counterText: "",
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Username*',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Thông tin Basic Authentication thuộc API Get Token của đối tác.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: 350,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.GREY_DADADA),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      controller: _userNameController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Nhập thông tin username tại đây",
+                        hintStyle: TextStyle(color: AppColor.GREY_TEXT),
+                        contentPadding: EdgeInsets.only(bottom: 8),
+                        counterText: "",
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Password*',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Thông tin Basic Authentication thuộc API Get Token của đối tác.',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: 350,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColor.GREY_DADADA),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: TextField(
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      controller: _passwordController,
+                      obscureText: _isObscured,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Nhập thông tin password tại đây",
+                        hintStyle: const TextStyle(color: AppColor.GREY_TEXT),
+                        contentPadding:
+                            const EdgeInsets.only(bottom: 8, top: 6),
+                        counterText: "",
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isObscured
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            size: 13,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
           Container(
