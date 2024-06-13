@@ -3,6 +3,7 @@ import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/widgets/m_button_widget.dart';
 import 'package:VietQR/features/merchant_manage/widgets/node_paint_widget.dart';
+import 'package:VietQR/features/merchant_manage/widgets/step_preccessing_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,6 +26,8 @@ class _Screen extends StatefulWidget {
 class __ScreenState extends State<_Screen> {
   String selectedType = 'individual';
   int merchantLength = 0;
+  int curStep = 2;
+
   String? _selectedItem;
   final _horizontal = ScrollController();
 
@@ -95,45 +98,25 @@ class __ScreenState extends State<_Screen> {
                         children: [
                           Container(
                             width: 280,
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            color: AppColor.RED_TEXT.withOpacity(0.2),
+                            padding: const EdgeInsets.fromLTRB(30, 40, 0, 0),
+                            // color: AppColor.RED_TEXT.withOpacity(0.2),
                             child: Column(
                               children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 40,
-                                      height: 300,
-                                      child: CustomPaint(
-                                        painter: NodePainter(6),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(left: 0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: labels
-                                              .map((label) => Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 40),
-                                                    child: Text(label),
-                                                  ))
-                                              .toList(),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                StepProgressView(
+                                  curStep: curStep,
+                                  color: AppColor.BLUE_TEXT,
+                                  titles: labels,
+                                  height: 400,
                                 ),
                               ],
                             ),
                           ),
-                          _buildStep3(),
+                          if (curStep == 2)
+                            _buildStep1()
+                          else if (curStep == 3)
+                            _buildStep2()
+                          else if (curStep == 4)
+                            _buildStep3()
                         ],
                       ),
                     ),
@@ -151,7 +134,7 @@ class __ScreenState extends State<_Screen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 90,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(color: AppColor.GREY_DADADA),
         ),
@@ -162,6 +145,12 @@ class __ScreenState extends State<_Screen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           MButtonWidget(
+            onTap: () {
+              if (curStep > 2) {
+                curStep--;
+              }
+              setState(() {});
+            },
             title: 'Trở về',
             isEnable: true,
             margin: EdgeInsets.zero,
@@ -170,17 +159,21 @@ class __ScreenState extends State<_Screen> {
             colorDisableText: AppColor.BLACK,
             height: 50,
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-            child: MButtonWidget(
-              title: 'Tiếp theo',
-              isEnable: true,
-              margin: EdgeInsets.zero,
-              width: 150,
-              colorDisableBgr: AppColor.GREY_BUTTON,
-              colorDisableText: AppColor.BLACK,
-              height: 50,
-            ),
+          MButtonWidget(
+            onTap: () {
+              if (curStep < 7) {
+                setState(() {
+                  curStep++;
+                });
+              }
+            },
+            title: 'Tiếp theo',
+            isEnable: true,
+            margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+            width: 150,
+            colorDisableBgr: AppColor.GREY_BUTTON,
+            colorDisableText: AppColor.BLACK,
+            height: 50,
           ),
         ],
       ),
