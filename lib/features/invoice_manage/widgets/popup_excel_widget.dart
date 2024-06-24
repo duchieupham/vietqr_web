@@ -558,7 +558,7 @@ class _PopupExcelInvoiceState extends State<PopupExcelInvoice> {
               child: InkWell(
                 onTap: () {
                   String link =
-                      'https://dev.vietqr.org/vqr/api/invoice/export-excel?invoiceItemId=${dto.invoiceItemId}';
+                      'https://api.vietqr.org/vqr/api/invoice/export-excel?invoiceItemId=${dto.invoiceItemId}';
                   html.window.open(link, 'new tab');
                 },
                 child: const Row(
