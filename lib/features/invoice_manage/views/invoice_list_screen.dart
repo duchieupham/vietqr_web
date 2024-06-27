@@ -53,6 +53,7 @@ class _Screen extends StatefulWidget {
 class _ScreenState extends State<_Screen> {
   final controller1 = ScrollController();
   final controller2 = ScrollController();
+  final controller3 = ScrollController();
 
   late InvoiceBloc _bloc;
   late InvoiceProvider _provider;
@@ -229,52 +230,69 @@ class _ScreenState extends State<_Screen> {
                       color: AppColor.GREY_DADADA,
                     ),
                     if (provider.pageInvoice == PageInvoice.LIST) ...[
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                const Text(
-                                  "Tìm kiếm thông tin hoá đơn ",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(width: 30),
+                            Container(
+                              width: double.infinity,
+                              padding:
+                                  const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ScrollConfiguration(
+                                    behavior: MyCustomScrollBehavior(),
+                                    child: SingleChildScrollView(
+                                      controller: controller3,
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            "Tìm kiếm thông tin hoá đơn ",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(width: 30),
 
-                                ...provider.statusList
-                                    .map(
-                                      (e) => _buildOption(e),
-                                    )
-                                    .toList(),
+                                          ...provider.statusList
+                                              .map(
+                                                (e) => _buildOption(e),
+                                              )
+                                              .toList(),
 
-                                // _buildOption("Chưa thanh toán", isFirstSelected),
-                                // const SizedBox(width: 20),
-                                // _buildOption("Đã thanh toán", !isFirstSelected),
-                              ],
+                                          // _buildOption("Chưa thanh toán", isFirstSelected),
+                                          // const SizedBox(width: 20),
+                                          // _buildOption("Đã thanh toán", !isFirstSelected),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  _filterWidget(),
+                                  const SizedBox(height: 20),
+                                  const MySeparator(
+                                    color: AppColor.GREY_DADADA,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    "Danh sách hoá đơn",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 20),
-                            _filterWidget(),
-                            const SizedBox(height: 20),
-                            const MySeparator(
-                              color: AppColor.GREY_DADADA,
-                            ),
-                            const SizedBox(height: 20),
-                            const Text(
-                              "Danh sách hoá đơn",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
+                            _buildListInvoice(state),
+                            const SizedBox(height: 10),
+                            _pagingWidget(state),
                             const SizedBox(height: 10),
                           ],
                         ),
-                      ),
-                      _buildListInvoice(state),
-                      const SizedBox(height: 10),
-                      _pagingWidget(state),
-                      const SizedBox(height: 10),
+                      )
                     ] else if (provider.pageInvoice == PageInvoice.DETAIL)
                       Expanded(
                         child: InvoiceDetailScreen(
@@ -524,202 +542,214 @@ class _ScreenState extends State<_Screen> {
   Widget _filterWidget() {
     return Consumer<InvoiceProvider>(
       builder: (context, provider, child) {
-        return Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        return ScrollConfiguration(
+          behavior: MyCustomScrollBehavior(),
+          child: SingleChildScrollView(
+            controller: controller3,
+            scrollDirection: Axis.horizontal,
+            child: Row(
               children: [
-                const Text(
-                  "Tìm kiếm theo",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  height: 40,
-                  width: type == 9 ? 210 : 500,
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColor.GREY_DADADA)),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 180,
-                        child: DropdownButton<int>(
-                          isExpanded: true,
-                          value: type,
-                          underline: const SizedBox.shrink(),
-                          icon: const RotatedBox(
-                            quarterTurns: 5,
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 12,
-                            ),
-                          ),
-                          items: const [
-                            DropdownMenuItem<int>(
-                                value: 9,
-                                child: Text(
-                                  "Tất cả (mặc định)",
-                                )),
-                            DropdownMenuItem<int>(
-                                value: 2,
-                                child: Text(
-                                  "TK ngân hàng",
-                                )),
-                          ],
-                          onChanged: (value) {
-                            if (value == 9) {
-                              selectBankId = '';
-                            }
-                            type = value;
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                      if (type == 2)
-                        Expanded(
-                          child: InkWell(
-                            onTap: onPopupBankSelect,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 8),
-                                const SizedBox(
-                                  height: 40,
-                                  child: VerticalDivider(
-                                    thickness: 1,
-                                    color: AppColor.GREY_DADADA,
-                                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Tìm kiếm theo",
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.normal),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      height: 40,
+                      width: type == 9 ? 210 : 500,
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColor.GREY_DADADA)),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 180,
+                            child: DropdownButton<int>(
+                              isExpanded: true,
+                              value: type,
+                              underline: const SizedBox.shrink(),
+                              icon: const RotatedBox(
+                                quarterTurns: 5,
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12,
                                 ),
-                                Expanded(
+                              ),
+                              items: const [
+                                DropdownMenuItem<int>(
+                                    value: 9,
                                     child: Text(
-                                  provider.selectBank != null
-                                      ? '${provider.selectBank!.bankShortName} - ${provider.selectBank!.bankAccount}'
-                                      : 'Chọn tài khoản ngân hàng',
-                                  style: const TextStyle(fontSize: 15),
-                                )),
-                                const RotatedBox(
-                                  quarterTurns: 5,
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 12,
-                                  ),
-                                ),
+                                      "Tất cả (mặc định)",
+                                    )),
+                                DropdownMenuItem<int>(
+                                    value: 2,
+                                    child: Text(
+                                      "TK ngân hàng",
+                                    )),
                               ],
+                              onChanged: (value) {
+                                if (value == 9) {
+                                  selectBankId = '';
+                                }
+                                type = value;
+                                setState(() {});
+                              },
                             ),
                           ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Thời gian",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: 300,
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColor.GREY_DADADA)),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 60,
-                        child: Center(
-                          child: Text('Tháng'),
-                        ),
+                          if (type == 2)
+                            Expanded(
+                              child: InkWell(
+                                onTap: onPopupBankSelect,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 8),
+                                    const SizedBox(
+                                      height: 40,
+                                      child: VerticalDivider(
+                                        thickness: 1,
+                                        color: AppColor.GREY_DADADA,
+                                      ),
+                                    ),
+                                    Expanded(
+                                        child: Text(
+                                      provider.selectBank != null
+                                          ? '${provider.selectBank!.bankShortName} - ${provider.selectBank!.bankAccount}'
+                                          : 'Chọn tài khoản ngân hàng',
+                                      style: const TextStyle(fontSize: 15),
+                                    )),
+                                    const RotatedBox(
+                                      quarterTurns: 5,
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      const SizedBox(
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Thời gian",
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.normal),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: 300,
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColor.GREY_DADADA)),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 60,
+                            child: Center(
+                              child: Text('Tháng'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const SizedBox(
+                            height: 40,
+                            child: VerticalDivider(
+                              thickness: 1,
+                              color: AppColor.GREY_DADADA,
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                _onPickMonth(getMonth());
+                              },
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      (selectDate == null
+                                          ? 'Tất cả'
+                                          : '${selectDate?.month}/${selectDate?.year}'),
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                    const Icon(Icons.calendar_month_outlined)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 30),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Thời gian",
+                      style: TextStyle(fontSize: 15, color: AppColor.WHITE),
+                    ),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        _bloc.add(GetInvoiceList(
+                            status: _provider.invoiceStatus.id,
+                            bankId: selectBankId ?? '',
+                            time: selectDate != null
+                                ? DateFormat('yyyy-MM').format(selectDate!)
+                                : '',
+                            filterBy: 1,
+                            page: 1));
+                      },
+                      child: Container(
                         height: 40,
-                        child: VerticalDivider(
-                          thickness: 1,
-                          color: AppColor.GREY_DADADA,
+                        width: 150,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColor.BLUE_TEXT,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            _onPickMonth(getMonth());
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  (selectDate == null
-                                      ? 'Tất cả'
-                                      : '${selectDate?.month}/${selectDate?.year}'),
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                                const Icon(Icons.calendar_month_outlined)
-                              ],
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.search,
+                              size: 15,
+                              color: AppColor.WHITE,
                             ),
-                          ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Tìm kiếm",
+                              style: TextStyle(
+                                  color: AppColor.WHITE, fontSize: 15),
+                            )
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(width: 30),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Thời gian",
-                  style: TextStyle(fontSize: 15, color: AppColor.WHITE),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    _bloc.add(GetInvoiceList(
-                        status: _provider.invoiceStatus.id,
-                        bankId: selectBankId ?? '',
-                        time: selectDate != null
-                            ? DateFormat('yyyy-MM').format(selectDate!)
-                            : '',
-                        filterBy: 1,
-                        page: 1));
-                  },
-                  child: Container(
-                    height: 40,
-                    width: 150,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColor.BLUE_TEXT,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.search,
-                          size: 15,
-                          color: AppColor.WHITE,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Tìm kiếm",
-                          style: TextStyle(color: AppColor.WHITE, fontSize: 15),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         );
       },
     );

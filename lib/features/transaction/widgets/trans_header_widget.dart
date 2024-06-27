@@ -28,50 +28,48 @@ class TransHeaderWidget extends StatelessWidget {
         color: AppColor.WHITE,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Row(
-                children: [
-                  Text('Giao dịch', style: styles),
-                  const SizedBox(width: 8),
-                  Text('/', style: styles),
-                  const SizedBox(width: 8),
-                  Text(title, style: styles),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Row(
-                      children: [
-                        if (dto?.imgId != null) ...[
-                          Image(
-                              image: ImageUtils.instance
-                                  .getImageNetWork(dto?.imgId ?? ''),
-                              width: 36),
-                          Text(
-                            dto?.bankAccount ?? '',
-                            style: const TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Row(
+              children: [
+                Text('Giao dịch', style: styles),
+                const SizedBox(width: 8),
+                Text('/', style: styles),
+                const SizedBox(width: 8),
+                Text(title, style: styles),
+                const Spacer(),
+                GestureDetector(
+                  onTap: onTap,
+                  child: Row(
+                    children: [
+                      if (dto?.imgId != null) ...[
                         Image(
-                          image: ImageUtils.instance
-                              .getImageNetWork(AppImages.icChooseBank),
-                          width: 24,
+                            image: ImageUtils.instance
+                                .getImageNetWork(dto?.imgId ?? ''),
+                            width: 36),
+                        Text(
+                          dto?.bankAccount ?? '',
+                          style: const TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold),
                         ),
                       ],
-                    ),
+                      Image(
+                        image: ImageUtils.instance
+                            .getImageNetWork(AppImages.icChooseBank),
+                        width: 24,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Container(height: 1, color: AppColor.GREY_DADADA),
-            child,
-          ],
-        ),
+          ),
+          Container(height: 1, color: AppColor.GREY_DADADA),
+          Expanded(child: child),
+        ],
       ),
     );
   }
