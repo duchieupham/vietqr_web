@@ -290,6 +290,10 @@ class _FilterWidgetState extends State<FilterWidget> {
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextField(
+        onSubmitted: (value) {
+          widget.onSearch(_filterByTime.id);
+        },
+        textInputAction: TextInputAction.done,
         style: const TextStyle(fontSize: 12),
         controller: searchController,
         onChanged: onChangedSearch,

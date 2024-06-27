@@ -224,6 +224,10 @@ class _StoreViewState extends State<StoreView> {
             borderRadius: BorderRadius.circular(5),
           ),
           child: TextField(
+            textInputAction: TextInputAction.done,
+            onSubmitted: (value) {
+              _onSearch();
+            },
             style: const TextStyle(fontSize: 12),
             controller: searchController,
             onChanged: (value) {

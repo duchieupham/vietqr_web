@@ -9,7 +9,7 @@ import '../../../models/transaction/data_filter.dart';
 
 class MemberFilterWidget extends StatefulWidget {
   final Function(int?, String?, bool) callBack;
-  final VoidCallback onSearch;
+  final Function() onSearch;
   final Stream<bool> stream;
   final bool isOwner;
 
@@ -103,7 +103,7 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
   }
 
   void _onCallBack({int? type, String? search, bool clearData = false}) {
-    widget.callBack.call(type, search, clearData);
+    widget.callBack(type, search, clearData);
   }
 
   Widget _buildFilterByWidget() {
@@ -134,6 +134,10 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextField(
+        textInputAction: TextInputAction.done,
+        onSubmitted: (value) {
+          _onCallBack(search: value, clearData: true);
+        },
         style: const TextStyle(fontSize: 12),
         controller: searchController,
         onChanged: onChangedSearch,
@@ -170,7 +174,7 @@ class _MemberFilterWidgetState extends State<MemberFilterWidget> {
         right: 16,
       ),
       child: InkWell(
-        onTap: widget.onSearch.call,
+        onTap: widget.onSearch,
         child: Container(
           width: 100,
           height: 34,

@@ -284,7 +284,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 20),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        // crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
