@@ -98,6 +98,7 @@ class __ScreenState extends State<_Screen> {
                   scrollDirection: Axis.horizontal,
                   controller: _horizontal,
                   child: SizedBox(
+                    width: width - 260,
                     child: SingleChildScrollView(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +124,7 @@ class __ScreenState extends State<_Screen> {
                           else if (curStep == 3)
                             _buildStep2()
                           else if (curStep == 4)
-                            _buildStep3()
+                            Expanded(child: _buildStep3())
                         ],
                       ),
                     ),
@@ -191,321 +192,331 @@ class __ScreenState extends State<_Screen> {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: 410,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  const Text(
-                    'Thông tin kết nối dịch vụ',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'URL API Get Token*',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Thông tin API xác thực bảo mật của đối tác.\nSử dụng Basic Authentication để trả về đoạn Bearer Token\nxác thực cho API Callback của đối tác.',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: 350,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColor.GREY_DADADA),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextField(
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      controller: _urlApiGetTokenController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "https://...",
-                        hintStyle: TextStyle(color: AppColor.GREY_TEXT),
-                        contentPadding: EdgeInsets.only(bottom: 8),
-                        counterText: "",
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 410,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Username*',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Thông tin Basic Authentication thuộc API Get Token của đối tác.',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: 350,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColor.GREY_DADADA),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextField(
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      controller: _userNameController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Nhập thông tin username tại đây",
-                        hintStyle: TextStyle(color: AppColor.GREY_TEXT),
-                        contentPadding: EdgeInsets.only(bottom: 8),
-                        counterText: "",
+                      const Text(
+                        'Thông tin kết nối dịch vụ',
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Password*',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Thông tin Basic Authentication thuộc API Get Token của đối tác.',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: 350,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColor.GREY_DADADA),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextField(
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      controller: _passwordController,
-                      obscureText: _isObscured,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Nhập thông tin password tại đây",
-                        hintStyle: const TextStyle(color: AppColor.GREY_TEXT),
-                        contentPadding:
-                            const EdgeInsets.only(bottom: 8, top: 6),
-                        counterText: "",
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isObscured
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            size: 15,
+                      const SizedBox(height: 20),
+                      const Text(
+                        'URL API Get Token*',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Thông tin API xác thực bảo mật của đối tác.\nSử dụng Basic Authentication để trả về đoạn Bearer Token\nxác thực cho API Callback của đối tác.',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: 350,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.GREY_DADADA),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          controller: _urlApiGetTokenController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "https://...",
+                            hintStyle: TextStyle(color: AppColor.GREY_TEXT),
+                            contentPadding: EdgeInsets.only(bottom: 8),
+                            counterText: "",
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isObscured = !_isObscured;
-                            });
-                          },
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'URL API Callback*',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Thông tin API nhận biến động số dư của đối tác.\nSử dụng phương thức bảo mật Bearer Token mà API Get Token của đối tác trả về.',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: 350,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColor.GREY_DADADA),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: TextField(
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      controller: _urlApiCallbackController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "https://...",
-                        hintStyle: TextStyle(color: AppColor.GREY_TEXT),
-                        contentPadding: EdgeInsets.only(bottom: 8),
-                        counterText: "",
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Username*',
+                        style: TextStyle(fontSize: 15),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            width: 410,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 85),
-                  const Text(
-                    'Thông tin tài khoản ngân hàng*',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.black, height: 1.4),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text:
-                                'Tài khoản đã liên kết trong hệ thống VietQR VN.\nKhả dụng cho việc nhận thông tin Biến động số dư.\nHỗ trợ ngân hàng '),
-                        TextSpan(
-                            text: 'MBBank',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(text: ' và '),
-                        TextSpan(
-                            text: 'BIDV',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(text: '.'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      width: 350,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColor.GREY_DADADA),
-                        borderRadius: BorderRadius.circular(5),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Thông tin Basic Authentication thuộc API Get Token của đối tác.',
+                        style: TextStyle(fontSize: 12),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Chọn tài khoản ngân hàng',
-                            style: TextStyle(
-                                color: AppColor.GREY_TEXT, fontSize: 15),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: 350,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.GREY_DADADA),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          controller: _userNameController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Nhập thông tin username tại đây",
+                            hintStyle: TextStyle(color: AppColor.GREY_TEXT),
+                            contentPadding: EdgeInsets.only(bottom: 8),
+                            counterText: "",
                           ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColor.GREY_TEXT,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Password*',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Thông tin Basic Authentication thuộc API Get Token của đối tác.',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: 350,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.GREY_DADADA),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          controller: _passwordController,
+                          obscureText: _isObscured,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Nhập thông tin password tại đây",
+                            hintStyle:
+                                const TextStyle(color: AppColor.GREY_TEXT),
+                            contentPadding:
+                                const EdgeInsets.only(bottom: 8, top: 6),
+                            counterText: "",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isObscured
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                size: 15,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscured = !_isObscured;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'URL API Callback*',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Thông tin API nhận biến động số dư của đối tác.\nSử dụng phương thức bảo mật Bearer Token mà API Get Token của đối tác trả về.',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: 350,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColor.GREY_DADADA),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          controller: _urlApiCallbackController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "https://...",
+                            hintStyle: TextStyle(color: AppColor.GREY_TEXT),
+                            contentPadding: EdgeInsets.only(bottom: 8),
+                            counterText: "",
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: 410,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 85),
+                      const Text(
+                        'Thông tin tài khoản ngân hàng*',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.black, height: 1.4),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text:
+                                    'Tài khoản đã liên kết trong hệ thống VietQR VN.\nKhả dụng cho việc nhận thông tin Biến động số dư.\nHỗ trợ ngân hàng '),
+                            TextSpan(
+                                text: 'MBBank',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: ' và '),
+                            TextSpan(
+                                text: 'BIDV',
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            TextSpan(text: '.'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          width: 350,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColor.GREY_DADADA),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Chọn tài khoản ngân hàng',
+                                style: TextStyle(
+                                    color: AppColor.GREY_TEXT, fontSize: 15),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColor.GREY_TEXT,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Kiểm tra kết nối',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        'Kiểm tra tính hợp lệ 2 APIs Get Token và Callback hợp lệ.\nHệ thống VietQR VN sẽ kiểm tra format APIs của đối tác và kết nối\nđến hệ thống đối tác.',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: AppColor.GREY_DADADA))),
+                            width: 150,
+                            height: 40,
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('API',
+                                    style: TextStyle(fontSize: 15))),
+                          ),
+                          Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: AppColor.GREY_DADADA))),
+                            width: 150,
+                            height: 40,
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('Trạng thái',
+                                    style: TextStyle(fontSize: 15))),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Kiểm tra kết nối',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Kiểm tra tính hợp lệ 2 APIs Get Token và Callback hợp lệ.\nHệ thống VietQR VN sẽ kiểm tra format APIs của đối tác và kết nối\nđến hệ thống đối tác.',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom:
-                                    BorderSide(color: AppColor.GREY_DADADA))),
-                        width: 150,
-                        height: 40,
-                        child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('API', style: TextStyle(fontSize: 15))),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: AppColor.GREY_DADADA))),
+                            width: 150,
+                            height: 40,
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('Get Token',
+                                    style: TextStyle(fontSize: 15))),
+                          ),
+                          Container(
+                            width: 150,
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: AppColor.GREY_DADADA))),
+                            height: 40,
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child:
+                                    Text('-', style: TextStyle(fontSize: 15))),
+                          ),
+                        ],
                       ),
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom:
-                                    BorderSide(color: AppColor.GREY_DADADA))),
-                        width: 150,
-                        height: 40,
-                        child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Trạng thái',
-                                style: TextStyle(fontSize: 15))),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom:
-                                    BorderSide(color: AppColor.GREY_DADADA))),
-                        width: 150,
-                        height: 40,
-                        child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Get Token',
-                                style: TextStyle(fontSize: 15))),
-                      ),
-                      Container(
-                        width: 150,
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom:
-                                    BorderSide(color: AppColor.GREY_DADADA))),
-                        height: 40,
-                        child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('-', style: TextStyle(fontSize: 15))),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 40,
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('Callback',
+                                    style: TextStyle(fontSize: 15))),
+                          ),
+                          Container(
+                            width: 150,
+                            height: 40,
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child:
+                                    Text('-', style: TextStyle(fontSize: 15))),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 150,
-                        height: 40,
-                        child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Callback',
-                                style: TextStyle(fontSize: 15))),
-                      ),
-                      Container(
-                        width: 150,
-                        height: 40,
-                        child: const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('-', style: TextStyle(fontSize: 15))),
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
