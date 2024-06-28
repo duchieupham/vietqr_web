@@ -213,18 +213,20 @@ class ServiceView extends StatelessWidget {
               children: [
                 Container(
                   width: 460,
-                  alignment: Alignment.center,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
                   child: InkWell(
                     onTap: () {
                       html.window.open(
-                          'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
+                          'https://docs.google.com/document/d/101uFYsCsDDjSL54jPAGAJx6X56_OQT_JbVh5mflbPjk/edit',
                           'new tab');
                     },
                     child: Text(
-                      'Tài liệu kết nối API VietQR VN - Nhận biến động số dư',
+                      'Tài liệu kết nối API VietQR VN - Nhận biến động số dư (Host to Host)',
+                      textAlign: TextAlign.left,
                       style: TextStyle(
                           color: AppColor.BLUE_TEXT,
                           fontSize: sizeText,
@@ -239,7 +241,7 @@ class ServiceView extends StatelessWidget {
                       border: Border.all(
                           color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
                   child: const Text(
-                    '24/10/2023',
+                    '28/06/2024',
                   ),
                 ),
                 Container(
@@ -251,7 +253,7 @@ class ServiceView extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       html.window.open(
-                          'https://docs.google.com/document/d/17wA-LMJuAwxgr-K5APRAW1X51hvDIrnM/edit?fbclid=IwAR05F0k7xpOJi4mAyuJ4ALSrtSOmPfJkh43An3-hJi5hgwyqfts1TkmhP9s#heading=h.uspmij5vwsf8',
+                          'https://docs.google.com/document/d/101uFYsCsDDjSL54jPAGAJx6X56_OQT_JbVh5mflbPjk/edit',
                           'new tab');
                     },
                     child: const Text(
@@ -271,18 +273,20 @@ class ServiceView extends StatelessWidget {
               children: [
                 Container(
                   width: 460,
-                  alignment: Alignment.center,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
                   child: InkWell(
                     onTap: () {
                       html.window.open(
-                          'https://docs.google.com/document/d/1FEwXIRAAG3nLlGc3a0vsCoDuY4wqdHb7aofD9X19WVI/edit?usp=sharing',
+                          'https://docs.google.com/document/d/101uFYsCsDDjSL54jPAGAJx6X56_OQT_JbVh5mflbPjk/edit',
                           'new tab');
                     },
                     child: Text(
-                      'Tài liệu refund cho đối tác',
+                      'Tài liệu kết nối API VietQR VN - Nhận biến động số dư (Host to Client & Cloud Platform)',
+                      textAlign: TextAlign.left,
                       style: TextStyle(
                           color: AppColor.BLUE_TEXT,
                           fontSize: sizeText,
@@ -297,7 +301,7 @@ class ServiceView extends StatelessWidget {
                       border: Border.all(
                           color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
                   child: const Text(
-                    '24/10/2023',
+                    '28/06/2024',
                   ),
                 ),
                 Container(
@@ -309,7 +313,247 @@ class ServiceView extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       html.window.open(
-                          'https://docs.google.com/document/d/1FEwXIRAAG3nLlGc3a0vsCoDuY4wqdHb7aofD9X19WVI/edit?usp=sharing',
+                          'https://docs.google.com/document/d/101uFYsCsDDjSL54jPAGAJx6X56_OQT_JbVh5mflbPjk/edit',
+                          'new tab');
+                    },
+                    child: const Text(
+                      'Truy cập',
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 58,
+            child: Row(
+              children: [
+                Container(
+                  width: 460,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/1FEwXIRAAG3nLlGc3a0vsCoDuY4wqdHb7aofD9X19WVI/edit',
+                          'new tab');
+                    },
+                    child: Text(
+                      'Tài liệu API Refund Transaction',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          fontSize: sizeText,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    '28/06/2024',
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/1FEwXIRAAG3nLlGc3a0vsCoDuY4wqdHb7aofD9X19WVI/edit',
+                          'new tab');
+                    },
+                    child: const Text(
+                      'Truy cập',
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 58,
+            child: Row(
+              children: [
+                Container(
+                  width: 460,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/11E367PsXykff37P6c4_-uP3JkvZ8l3zOnOdVNx-NXd0/edit',
+                          'new tab');
+                    },
+                    child: Text(
+                      'Tài liệu Tạo Static QR Code: Mã QR tĩnh  - Dynamic QR Code: Mã QR động',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          fontSize: sizeText,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    '28/06/2024',
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/11E367PsXykff37P6c4_-uP3JkvZ8l3zOnOdVNx-NXd0/edit',
+                          'new tab');
+                    },
+                    child: const Text(
+                      'Truy cập',
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 58,
+            child: Row(
+              children: [
+                Container(
+                  width: 460,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/1ktLPG9JGNraKf4t303pLsEdieVj8exVNgql2fl8XFBg/edit?usp=sharing',
+                          'new tab');
+                    },
+                    child: Text(
+                      'API kết nối Ative tài Khoản Nhận BDSD 2 chiều app VietQR và Đối tác',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          fontSize: sizeText,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    '28/06/2024',
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/1ktLPG9JGNraKf4t303pLsEdieVj8exVNgql2fl8XFBg/edit?usp=sharing',
+                          'new tab');
+                    },
+                    child: const Text(
+                      'Truy cập',
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 58,
+            child: Row(
+              children: [
+                Container(
+                  width: 460,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/16daInn54JPFrA7LoYjullx37NBar1A9kOzQxHPMHsA0/edit?usp=sharing',
+                          'new tab');
+                    },
+                    child: Text(
+                      'API đồng bộ TERMINAL',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: AppColor.BLUE_TEXT,
+                          fontSize: sizeText,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: const Text(
+                    '28/06/2024',
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
+                  child: InkWell(
+                    onTap: () {
+                      html.window.open(
+                          'https://docs.google.com/document/d/16daInn54JPFrA7LoYjullx37NBar1A9kOzQxHPMHsA0/edit?usp=sharing',
                           'new tab');
                     },
                     child: const Text(
@@ -387,7 +631,8 @@ class ServiceView extends StatelessWidget {
               children: [
                 Container(
                   width: 460,
-                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
@@ -445,7 +690,8 @@ class ServiceView extends StatelessWidget {
               children: [
                 Container(
                   width: 460,
-                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: AppColor.BLACK_BUTTON.withOpacity(0.2))),
