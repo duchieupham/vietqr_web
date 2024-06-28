@@ -79,7 +79,7 @@ class WebSocketHelper {
         try {
           setListenWs(true);
           final wsUrl =
-              Uri.parse('wss://dev.vietqr.org/vqr/socket?userId=$userId');
+              Uri.parse('wss://api.vietqr.org/vqr/socket?userId=$userId');
           _channelTransaction = WebSocketChannel.connect(wsUrl);
 
           if (_channelTransaction.closeCode == null) {
@@ -88,10 +88,9 @@ class WebSocketHelper {
 
               print('Noti nè: ------------------------------- $data');
               if (data['notificationType'] != null &&
-                  data['notificationType'] !=
-                      Stringify.NOTI_TYPE_UPDATE_TRANSACTION &&
-                  data['notificationType'] !=
-                      Stringify.NOTI_TYPE_MOBILE_RECHARGE) {
+                  (data['notificationType'] == Stringify.NOTI_INVOICE_CREATE ||
+                      data['notificationType'] ==
+                          Stringify.NOTI_INVOICE_SUCCESS)) {
                 Toastification().showCustom(
                   context: context,
                   animationDuration: const Duration(milliseconds: 500),

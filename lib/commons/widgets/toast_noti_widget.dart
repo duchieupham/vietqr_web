@@ -136,16 +136,20 @@ class _ToastNotiWidgetState extends State<ToastNotiWidget> {
 
                   //   },
                   // )
-                  Html(
-                    data: widget.data['html'],
-                    shrinkWrap: true,
-                    style: {
-                      'span': Style(
-                          textOverflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          fontSize: FontSize(15)),
-                    },
-                  ),
+                  if (widget.data['notificationType'] ==
+                          Stringify.NOTI_INVOICE_CREATE ||
+                      widget.data['notificationType'] ==
+                          Stringify.NOTI_INVOICE_SUCCESS)
+                    Html(
+                      data: widget.data['html'],
+                      shrinkWrap: true,
+                      style: {
+                        'span': Style(
+                            textOverflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            fontSize: FontSize(15)),
+                      },
+                    ),
                 ],
               ),
             ),

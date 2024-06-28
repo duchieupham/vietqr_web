@@ -103,7 +103,7 @@ class NotifyTransDTO {
       businessName: json['businessName'] ?? '',
       notificationId: json['notificationId'] ?? '',
       time: int.tryParse(json['time'] ?? '') ?? 0,
-      type: json['type'] ?? 0,
+      type: int.tryParse(json['type'] ?? '') ?? 0,
       refId: json['refId'] ?? '',
       transactionReceiveId: json['transactionReceiveId'] ?? '',
       content: json['content'] ?? '',

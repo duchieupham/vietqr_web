@@ -595,7 +595,21 @@ class MenuLeft extends StatelessWidget {
                         context.go('/merchantv2/connected-machine');
                       },
                     ),
-                  )
+                  ),
+                  if (UserInformationHelper.instance
+                      .getCustomerSyncTestId()
+                      .trim()
+                      .isNotEmpty)
+                    PopupMenuItem(
+                      child: ItemDropDownMenu(
+                        title: 'TEST CALLBACK',
+                        isSelect: provider.type == '11' ? true : false,
+                        onTap: () {
+                          provider.selectType('11');
+                          context.go('/merchant/callback');
+                        },
+                      ),
+                    )
                 ],
                 RelativeRect.fromLTRB(
                   buttonPosition.dx + buttonWidth,

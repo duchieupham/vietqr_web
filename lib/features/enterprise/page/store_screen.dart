@@ -34,7 +34,7 @@ class StoreScreen extends StatefulWidget {
 class _StoreScreenState extends State<StoreScreen> {
   double get width => MediaQuery.of(context).size.width;
 
-  bool get isMobile => (PlatformUtils.instance.resizeWhen(width, 850));
+  bool get isMobile => (PlatformUtils.instance.resizeWhen(width, 450));
 
   @override
   Widget build(BuildContext context) {

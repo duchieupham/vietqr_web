@@ -1,6 +1,7 @@
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
@@ -31,26 +32,52 @@ class TableTransWidget extends StatefulWidget {
 
 class _TableTransWidgetState extends State<TableTransWidget> {
   final ScrollController _horizontal = ScrollController();
+  ScrollController controller1 = ScrollController();
+  ScrollController controller2 = ScrollController();
+  bool isScrollingDown1 = false;
+  bool isScrollingDown2 = false;
 
   final List<TransData> list = [
-    TransData(title: 'stt'.toUpperCase()),
-    TransData(title: 'Thời gian\nthanh toán', width: 80),
+    TransData(title: 'stt'.toUpperCase(), width: 50),
+    TransData(title: 'Thời gian\nthanh toán', width: 100),
     TransData(title: 'Số tiền (VND)', width: 100),
     TransData(title: 'Mã giao dịch', width: 100),
     TransData(title: 'Mã đơn hàng', width: 100),
     TransData(title: 'Mã điểm bán', width: 100),
     TransData(title: 'Loại GD', width: 100),
-    TransData(title: 'Thời gian\ntạo GD', width: 80),
+    TransData(title: 'Thời gian\ntạo GD', width: 100),
     TransData(title: 'Tài khoản\nnhận', width: 100),
-    TransData(title: 'Nội dung', width: 200),
+    TransData(title: 'Nội dung', width: 250),
     TransData(title: 'Ghi chú', width: 200),
-    TransData(title: 'Trạng thái', padding: 0, width: 80),
-    TransData(title: 'Thao tác', padding: 0, width: 80),
+    // TransData(title: 'Trạng thái', padding: 0, width: 80),
+    // TransData(title: 'Thao tác', padding: 0, width: 80),
   ];
 
   @override
+  void initState() {
+    super.initState();
+    controller1 = ScrollController();
+    controller2 = ScrollController();
+    controller1.addListener(() {
+      if (!isScrollingDown2) {
+        isScrollingDown1 = true;
+        controller2.jumpTo(controller1.offset);
+      }
+      isScrollingDown1 = false;
+    });
+
+    controller2.addListener(() {
+      if (!isScrollingDown1) {
+        isScrollingDown2 = true;
+        controller1.jumpTo(controller2.offset);
+      }
+      isScrollingDown2 = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    double widthTable = 1652;
+    double widthTable = 1510;
     double withEmpty = 0;
     return Consumer<MenuProvider>(
       builder: (context, provider, child) {
@@ -63,480 +90,772 @@ class _TableTransWidgetState extends State<TableTransWidget> {
 
         withEmpty = width - widthTable;
 
-        return SizedBox(
-          width: width,
-          child: Stack(
-            children: [
-              SizedBox(
-                width: widthTable,
-                child: RawScrollbar(
-                  controller: _horizontal,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+        return Expanded(
+          child: SizedBox(
+            width: width,
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: widthTable,
+                  child: RawScrollbar(
                     controller: _horizontal,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        DataTable(
-                          headingRowHeight: 40,
-                          dataRowHeight: 40,
-                          horizontalMargin: 10,
-                          columnSpacing: 16,
-                          headingRowColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
-                            return AppColor.BLUE_TEXT.withOpacity(0.25);
-                          }),
-                          border: TableBorder.all(
-                            width: 0.5,
-                            color: AppColor.GREY_TEXT.withOpacity(0.6),
-                          ),
-                          columns: List.generate(list.length, (index) {
-                            TransData e = list[index];
-                            return DataColumn(
-                              label: _buildTitle(
-                                title: e.title,
-                                width: e.width,
-                                padding: e.padding,
-                              ),
-                            );
-                          }),
-                          rows: List.generate(
-                            widget.list.length,
-                            (index) {
-                              TransReceiveDTO model = widget.list[index];
-
-                              return DataRow(
-                                color:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                        (Set<MaterialState> states) {
-                                  return Colors.transparent;
-                                }),
-                                cells: [
-                                  /// STT
-                                  DataCell(
-                                    _buildContent(
-                                      title:
-                                          '${(widget.offset * 20) + index + 1}',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-
-                                  /// Thời gian tạo
-                                  DataCell(
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: _buildContent(
-                                        title: model.timePayment,
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  ),
-
-                                  /// Số tiền
-                                  DataCell(
-                                    _buildContent(
-                                        title:
-                                            '${model.statusAmount} ${model.amount.contains('*') ? model.amount : CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
-                                        textAlign: TextAlign.right,
-                                        textColor: model.getColorStatus,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-
-                                  /// Mã giao dịch
-                                  DataCell(
-                                    _buildContent(
-                                      title: model.referenceNumber,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-
-                                  /// Mã đơn hàng
-                                  DataCell(
-                                    _buildContent(
-                                      title: model.orderId,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-
-                                  /// Mã điểm bán
-                                  DataCell(_buildContent(
-                                    title: model.terminalCode,
-                                    textAlign: TextAlign.left,
-                                  )),
-
-                                  /// Loại GD
-                                  DataCell(
-                                    _buildContent(
-                                      title: model.transactionType,
-                                      textAlign: TextAlign.left,
-                                    ),
-                                  ),
-
-                                  /// Thời gian tạo
-                                  DataCell(
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: _buildContent(
-                                          title: model.timeCreate,
-                                          textAlign: TextAlign.right),
-                                    ),
-                                  ),
-
-                                  /// Tài khoản nhận
-                                  DataCell(
-                                    SizedBox(
-                                      width: 100,
-                                      child: Column(
-                                        // crossAxisAlignment:
-                                        //     CrossAxisAlignment.stretch,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            model.bankAccount,
-                                            maxLines: 1,
-                                            textAlign: TextAlign.left,
-                                            style: const TextStyle(
-                                                fontSize: 10,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          ),
-                                          Text(
-                                            model.bankShortName,
-                                            maxLines: 1,
-                                            textAlign: TextAlign.left,
-                                            style: const TextStyle(
-                                                fontSize: 10,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  /// Nội dung
-                                  DataCell(
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      width: 200,
-                                      child: _buildContent(
-                                          title: model.content,
-                                          textAlign: TextAlign.right),
-                                    ),
-                                  ),
-
-                                  ///Ghi chú
-                                  DataCell(SizedBox(
-                                      width: 200,
-                                      child: _buildContent(title: model.note))),
-
-                                  /// Tài khoản nhận
-                                  const DataCell(SizedBox(width: 80)),
-
-                                  /// Tài khoản nhận
-                                  const DataCell(SizedBox(width: 80)),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        if (widget.list.isEmpty)
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      controller: _horizontal,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           Container(
-                            height: 100,
-                            width: widthTable,
-                            color: AppColor.BLUE_TEXT.withOpacity(0.1),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: AppColor.BLUE_TEXT.withOpacity(0.3)),
                             child: Row(
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: withEmpty > 0
-                                      ? widthTable
-                                      : widthTable - (withEmpty.abs()),
-                                  child: (widget.isLoading)
-                                      ? const Center(
-                                          child: SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        )
-                                      : Column(
-                                          children: [
-                                            Image(
-                                              image: ImageUtils.instance
-                                                  .getImageNetWork(
-                                                      AppImages.icEmptyTrans),
-                                              width: 60,
-                                            ),
-                                            const Text('Trống',
-                                                style: TextStyle(
-                                                    color: AppColor.GREY_TEXT)),
-                                          ],
-                                        ),
-                                ),
-                                const Expanded(child: SizedBox.shrink())
-                              ],
+                              children: List.generate(
+                                list.length,
+                                (index) {
+                                  TransData e = list[index];
+                                  return _buildItemTitle(e.title,
+                                      height: 40,
+                                      width: e.width,
+                                      alignment: Alignment.center,
+                                      textAlign: TextAlign.center);
+                                },
+                              ),
                             ),
                           ),
-                      ],
+                          if (widget.list.isEmpty)
+                            Container(
+                              height: 100,
+                              width: widthTable,
+                              color: AppColor.BLUE_TEXT.withOpacity(0.1),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: withEmpty > 0
+                                        ? widthTable
+                                        : widthTable - (withEmpty.abs()),
+                                    child: (widget.isLoading)
+                                        ? const Center(
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          )
+                                        : Column(
+                                            children: [
+                                              Image(
+                                                image: ImageUtils.instance
+                                                    .getImageNetWork(
+                                                        AppImages.icEmptyTrans),
+                                                width: 60,
+                                              ),
+                                              const Text('Trống',
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColor.GREY_TEXT)),
+                                            ],
+                                          ),
+                                  ),
+                                  // const Expanded(child: SizedBox.shrink())
+                                ],
+                              ),
+                            ),
+                          Expanded(
+                            child: ScrollConfiguration(
+                              behavior: ScrollConfiguration.of(context)
+                                  .copyWith(scrollbars: false),
+                              child: SingleChildScrollView(
+                                controller: controller1,
+                                child: Column(
+                                  children: widget.list
+                                      .asMap()
+                                      .map(
+                                        (index, x) {
+                                          return MapEntry(
+                                              index,
+                                              _buildItem(
+                                                index: index,
+                                                model: x,
+                                              ));
+                                        },
+                                      )
+                                      .values
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (widget.list.isNotEmpty)
                 SizedBox(
                   width: widthTable,
                   child: Row(
                     children: [
                       const Expanded(child: SizedBox()),
                       Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: AppColor.WHITE,
-                          boxShadow: [
-                            BoxShadow(
-                                color: AppColor.GREY_BORDER.withOpacity(0.8),
-                                blurRadius: 5,
-                                spreadRadius: 1,
-                                offset: const Offset(0, 0)),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //       color: AppColor.GREY_BORDER.withOpacity(0.8),
+                          //       blurRadius: 5,
+                          //       spreadRadius: 1,
+                          //       offset: const Offset(0, 0)),
+                          // ],
                         ),
                         child: Column(
                           children: [
                             Container(
-                              height: 40,
-                              width: 100,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 0),
-                              decoration: BoxDecoration(
-                                color: AppColor.BLUE_TEXT.withOpacity(0.25),
-                                border: Border.all(
-                                  color: AppColor.GREY_TEXT.withOpacity(0.3),
-                                ),
-                              ),
                               alignment: Alignment.center,
-                              child: const Text(
-                                'Trạng thái',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 10),
-                              ),
-                            ),
-                            Column(
-                              children: List.generate(
-                                widget.list.length,
-                                (index) {
-                                  TransReceiveDTO dto = widget.list[index];
-                                  return GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      width: 100,
+                              decoration: BoxDecoration(
+                                  color: AppColor.BLUE_TEXT.withOpacity(0.3)),
+                              child: Row(
+                                children: [
+                                  Container(
                                       height: 40,
+                                      width: 100,
+                                      alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: AppColor.GREY_TEXT
-                                                .withOpacity(0.3),
-                                          ),
-                                          color: Colors.transparent),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            dto.getStatusString,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              color: dto.getColorStatus,
-                                              overflow: TextOverflow.ellipsis,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        color: AppColor.WHITE,
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 110,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 0),
-                              decoration: BoxDecoration(
-                                color: AppColor.BLUE_TEXT.withOpacity(0.25),
-                                border: Border.all(
-                                  color: AppColor.GREY_TEXT.withOpacity(0.3),
-                                ),
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                'Thao tác',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 10),
+                                              color: AppColor.GREY_TEXT
+                                                  .withOpacity(0.3))),
+                                      child: const Text(
+                                        'Trạng thái',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColor.BLACK,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  Container(
+                                      height: 40,
+                                      width: 110,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: AppColor.GREY_TEXT
+                                                  .withOpacity(0.3))),
+                                      child: const Text(
+                                        'Thao tác',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColor.BLACK,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                ],
                               ),
                             ),
-                            Column(
-                              children: List.generate(
-                                widget.list.length,
-                                (index) {
-                                  TransReceiveDTO dto = widget.list[index];
-                                  return Container(
-                                    width: 110,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColor.GREY_TEXT
-                                              .withOpacity(0.3),
+                            if (widget.list.isNotEmpty)
+                              Expanded(
+                                child: Scrollbar(
+                                  controller: controller2,
+                                  thumbVisibility: true,
+                                  child: ScrollConfiguration(
+                                    behavior: MyCustomScrollBehavior(),
+                                    child: SingleChildScrollView(
+                                      controller: controller2,
+                                      child: Column(
+                                        children: List.generate(
+                                          widget.list.length,
+                                          (index) {
+                                            TransReceiveDTO dto =
+                                                widget.list[index];
+                                            return Container(
+                                                alignment: Alignment.center,
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 100,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColor
+                                                                .GREY_TEXT
+                                                                .withOpacity(
+                                                                    0.3),
+                                                          ),
+                                                          color: Colors
+                                                              .transparent),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            dto.getStatusString,
+                                                            maxLines: 2,
+                                                            style: TextStyle(
+                                                              color: dto
+                                                                  .getColorStatus,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 110,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColor
+                                                                .GREY_TEXT
+                                                                .withOpacity(
+                                                                    0.3),
+                                                          ),
+                                                          color: Colors
+                                                              .transparent),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Tooltip(
+                                                            message:
+                                                                'Cập nhật ghi chú',
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () => widget
+                                                                  .onEditNote(
+                                                                      dto),
+                                                              child: Container(
+                                                                width: 24,
+                                                                height: 24,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              32),
+                                                                  color: AppColor
+                                                                      .BLUE_TEXT
+                                                                      .withOpacity(
+                                                                          0.25),
+                                                                ),
+                                                                child: Image(
+                                                                  image: ImageUtils
+                                                                      .instance
+                                                                      .getImageNetWork(
+                                                                          AppImages
+                                                                              .icEditTrans),
+                                                                  width: 24,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          if (widget.isOwner)
+                                                            Tooltip(
+                                                              message:
+                                                                  'Cập nhật giao dịch',
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  widget
+                                                                      .onChooseTerminal(
+                                                                          dto);
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  width: 24,
+                                                                  height: 24,
+                                                                  margin: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          6),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            32),
+                                                                    color: (!widget.isOwner &&
+                                                                            !dto
+                                                                                .isEnableTerminal)
+                                                                        ? AppColor
+                                                                            .GREY_BG
+                                                                        : AppColor
+                                                                            .BLUE_TEXT
+                                                                            .withOpacity(0.25),
+                                                                  ),
+                                                                  child: Image(
+                                                                    image: ImageUtils
+                                                                        .instance
+                                                                        .getImageNetWork(
+                                                                            AppImages.icNoteTrans),
+                                                                    width: 24,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          // GestureDetector(
+                                                          //   child: Container(
+                                                          //     width: 24,
+                                                          //     height: 24,
+                                                          //     decoration: BoxDecoration(
+                                                          //       borderRadius:
+                                                          //           BorderRadius.circular(32),
+                                                          //       color: AppColor.GREY_BG,
+                                                          //     ),
+                                                          //     child: Image(
+                                                          //       image: ImageUtils.instance
+                                                          //           .getImageNetWork(
+                                                          //               AppImages.icRefundTrans),
+                                                          //       width: 24,
+                                                          //       color: AppColor.GREY_BG,
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ));
+                                          },
                                         ),
-                                        color: Colors.transparent),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Tooltip(
-                                          message: 'Cập nhật ghi chú',
-                                          child: GestureDetector(
-                                            onTap: () => widget.onEditNote(dto),
-                                            child: Container(
-                                              width: 24,
-                                              height: 24,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(32),
-                                                color: AppColor.BLUE_TEXT
-                                                    .withOpacity(0.25),
-                                              ),
-                                              child: Image(
-                                                image: ImageUtils.instance
-                                                    .getImageNetWork(
-                                                        AppImages.icEditTrans),
-                                                width: 24,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        if (widget.isOwner)
-                                          Tooltip(
-                                            message: 'Cập nhật giao dịch',
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                widget.onChooseTerminal(dto);
-                                              },
-                                              child: Container(
-                                                width: 24,
-                                                height: 24,
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 6),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(32),
-                                                  color: (!widget.isOwner &&
-                                                          !dto.isEnableTerminal)
-                                                      ? AppColor.GREY_BG
-                                                      : AppColor.BLUE_TEXT
-                                                          .withOpacity(0.25),
-                                                ),
-                                                child: Image(
-                                                  image: ImageUtils.instance
-                                                      .getImageNetWork(AppImages
-                                                          .icNoteTrans),
-                                                  width: 24,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        // GestureDetector(
-                                        //   child: Container(
-                                        //     width: 24,
-                                        //     height: 24,
-                                        //     decoration: BoxDecoration(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(32),
-                                        //       color: AppColor.GREY_BG,
-                                        //     ),
-                                        //     child: Image(
-                                        //       image: ImageUtils.instance
-                                        //           .getImageNetWork(
-                                        //               AppImages.icRefundTrans),
-                                        //       width: 24,
-                                        //       color: AppColor.GREY_BG,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                      ],
+                                      ),
                                     ),
-                                  );
-                                },
-                              ),
-                            )
+                                  ),
+                                ),
+                              )
+                            else
+                              Container(
+                                height: 100,
+                                width: 210,
+                                color: AppColor.BLUE_TEXT.withOpacity(0.1),
+                              )
                           ],
                         ),
                       ),
+                      // Container(
+                      //   color: AppColor.WHITE,
+                      //   child: Column(
+                      //     children: [
+                      //       Container(
+                      //         height: 40,
+                      //         width: 110,
+                      //         padding:
+                      //             const EdgeInsets.symmetric(horizontal: 0),
+                      //         decoration: BoxDecoration(
+                      //           color: AppColor.BLUE_TEXT.withOpacity(0.25),
+                      //           border: Border.all(
+                      //             color: AppColor.GREY_TEXT.withOpacity(0.3),
+                      //           ),
+                      //         ),
+                      //         alignment: Alignment.center,
+                      //         child: const Text(
+                      //           'Thao tác',
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //               fontWeight: FontWeight.bold,
+                      //               fontSize: 10),
+                      //         ),
+                      //       ),
+                      //       Scrollbar(
+                      //         controller: controller2,
+                      //         child: SingleChildScrollView(
+                      //           controller: controller2,
+                      //           child: Column(
+                      //             children: List.generate(
+                      //               widget.list.length,
+                      //               (index) {
+                      //                 TransReceiveDTO dto =
+                      //                     widget.list[index];
+                      //                 return Container(
+                      //                   width: 110,
+                      //                   height: 40,
+                      //                   decoration: BoxDecoration(
+                      //                       border: Border.all(
+                      //                         color: AppColor.GREY_TEXT
+                      //                             .withOpacity(0.3),
+                      //                       ),
+                      //                       color: Colors.transparent),
+                      //                   child: Row(
+                      //                     crossAxisAlignment:
+                      //                         CrossAxisAlignment.center,
+                      //                     mainAxisAlignment:
+                      //                         MainAxisAlignment.center,
+                      //                     children: [
+                      //                       Tooltip(
+                      //                         message: 'Cập nhật ghi chú',
+                      //                         child: GestureDetector(
+                      //                           onTap: () =>
+                      //                               widget.onEditNote(dto),
+                      //                           child: Container(
+                      //                             width: 24,
+                      //                             height: 24,
+                      //                             decoration: BoxDecoration(
+                      //                               borderRadius:
+                      //                                   BorderRadius.circular(
+                      //                                       32),
+                      //                               color: AppColor.BLUE_TEXT
+                      //                                   .withOpacity(0.25),
+                      //                             ),
+                      //                             child: Image(
+                      //                               image: ImageUtils.instance
+                      //                                   .getImageNetWork(
+                      //                                       AppImages
+                      //                                           .icEditTrans),
+                      //                               width: 24,
+                      //                             ),
+                      //                           ),
+                      //                         ),
+                      //                       ),
+                      //                       if (widget.isOwner)
+                      //                         Tooltip(
+                      //                           message: 'Cập nhật giao dịch',
+                      //                           child: GestureDetector(
+                      //                             onTap: () {
+                      //                               widget.onChooseTerminal(
+                      //                                   dto);
+                      //                             },
+                      //                             child: Container(
+                      //                               width: 24,
+                      //                               height: 24,
+                      //                               margin: const EdgeInsets
+                      //                                   .symmetric(
+                      //                                   horizontal: 6),
+                      //                               decoration: BoxDecoration(
+                      //                                 borderRadius:
+                      //                                     BorderRadius
+                      //                                         .circular(32),
+                      //                                 color: (!widget
+                      //                                             .isOwner &&
+                      //                                         !dto
+                      //                                             .isEnableTerminal)
+                      //                                     ? AppColor.GREY_BG
+                      //                                     : AppColor.BLUE_TEXT
+                      //                                         .withOpacity(
+                      //                                             0.25),
+                      //                               ),
+                      //                               child: Image(
+                      //                                 image: ImageUtils
+                      //                                     .instance
+                      //                                     .getImageNetWork(
+                      //                                         AppImages
+                      //                                             .icNoteTrans),
+                      //                                 width: 24,
+                      //                               ),
+                      //                             ),
+                      //                           ),
+                      //                         ),
+                      //                       // GestureDetector(
+                      //                       //   child: Container(
+                      //                       //     width: 24,
+                      //                       //     height: 24,
+                      //                       //     decoration: BoxDecoration(
+                      //                       //       borderRadius:
+                      //                       //           BorderRadius.circular(32),
+                      //                       //       color: AppColor.GREY_BG,
+                      //                       //     ),
+                      //                       //     child: Image(
+                      //                       //       image: ImageUtils.instance
+                      //                       //           .getImageNetWork(
+                      //                       //               AppImages.icRefundTrans),
+                      //                       //       width: 24,
+                      //                       //       color: AppColor.GREY_BG,
+                      //                       //     ),
+                      //                       //   ),
+                      //                       // ),
+                      //                     ],
+                      //                   ),
+                      //                 );
+                      //               },
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildTitle(
-      {required String title, double? width, double? padding, Color? bgr}) {
+  Widget _buildItemTitle(String title,
+      {TextAlign? textAlign,
+      EdgeInsets? padding,
+      double? width,
+      double? height,
+      Alignment? alignment}) {
     return Container(
-      height: 40,
       width: width,
-      padding: EdgeInsets.symmetric(horizontal: padding ?? 20),
-      decoration: BoxDecoration(color: bgr),
-      alignment: Alignment.center,
+      height: height,
+      padding: padding,
+      alignment: alignment,
+      decoration: const BoxDecoration(
+          border: Border(
+              left: BorderSide(color: AppColor.GREY_DADADA, width: 0.5))),
       child: Text(
         title,
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+        textAlign: textAlign,
+        style: const TextStyle(
+            fontSize: 12, color: AppColor.BLACK, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildContent({
-    String title = '',
-    Color? textColor,
-    GestureTapCallback? onTap,
-    double? fontSize,
-    FontWeight? fontWeight,
-    TextAlign? textAlign,
-  }) {
-    return SelectionArea(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Text(
-          title.isNotEmpty ? title : '-',
-          maxLines: 2,
-          textAlign: textAlign,
-          style: TextStyle(
-            color: textColor,
-            overflow: TextOverflow.ellipsis,
-            fontSize: fontSize ?? 10,
-            fontWeight: fontWeight,
+  Widget _buildItem({int? index, TransReceiveDTO? model}) {
+    return Container(
+      alignment: Alignment.center,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 50,
+            child: SelectionArea(
+              child: Text(
+                '${(widget.offset * 20) + index! + 1}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
           ),
-        ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerRight,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                model!.timePayment,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerRight,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                '${model.statusAmount} ${model.amount.contains('*') ? model.amount : CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                  color: model.getColorStatus,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerLeft,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                model.referenceNumber,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerLeft,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                model.orderId,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerLeft,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                model.terminalCode,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerLeft,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                model.transactionType,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerRight,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Text(
+                model.timeCreate,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerRight,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 100,
+            child: SelectionArea(
+              child: Column(
+                // crossAxisAlignment:
+                //     CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    model.bankAccount,
+                    maxLines: 1,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        fontSize: 10, overflow: TextOverflow.ellipsis),
+                  ),
+                  Text(
+                    model.bankShortName,
+                    maxLines: 1,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        fontSize: 10, overflow: TextOverflow.ellipsis),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerRight,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 250,
+            child: SelectionArea(
+              child: Text(
+                model.content,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.centerRight,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 200,
+            child: SelectionArea(
+              child: Text(
+                model.note,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
