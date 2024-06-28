@@ -3,7 +3,7 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"flutter_bootstrap.js": "021a96fe5b0c166b02a0766e979a32cb",
+const RESOURCES = {"flutter_bootstrap.js": "1c46c9aa29b2de13d3ce6b6e05eda2a0",
 "version.json": "e5e961cc88c45665b8b6be7bd0ea317b",
 "splash/img/light-2x.png": "78b32172d739fcec40fd4ff9601192ec",
 "splash/img/dark-4x.png": "ce752977aef4637f4e5c40deb4a774fb",
@@ -15,8 +15,8 @@ const RESOURCES = {"flutter_bootstrap.js": "021a96fe5b0c166b02a0766e979a32cb",
 "splash/img/light-1x.png": "940040774642d53de6f71453e737a203",
 "splash/splash.js": "123c400b58bea74c1305ca3ac966748d",
 "splash/style.css": "c94c38ff00a9d487c353a2d78989ea08",
-"index.html": "3e468ac5851e2d2839720833fe1eb099",
-"/": "3e468ac5851e2d2839720833fe1eb099",
+"index.html": "a2c62250f5a16bb2a0a85c8728c24f64",
+"/": "a2c62250f5a16bb2a0a85c8728c24f64",
 "firebase-messaging-sw.js": "ac580569feefa4089ae00ab086b89ada",
 "main.dart.js": "c7432a84bfd93ea4f635df814a1a4fed",
 "flutter.js": "383e55f7f3cce5be08fcf1f3881f585c",
