@@ -20,6 +20,8 @@ class InvoiceStates extends Equatable {
   final InvoiceDetailQrDTO? invoiceDetailQrDTO;
   final bool? isShow;
   final bool isOpenDialog;
+  final bool hasFile;
+
   final InvoiceExcelDTO? invoiceExcelDTO;
 
   const InvoiceStates({
@@ -33,6 +35,7 @@ class InvoiceStates extends Equatable {
     this.invoiceDetailDTO,
     this.invoiceDetailQrDTO,
     this.isShow,
+    this.hasFile = false,
     this.invoiceExcelDTO,
     this.isOpenDialog = false,
   });
@@ -50,6 +53,7 @@ class InvoiceStates extends Equatable {
     InvoiceExcelDTO? invoiceExcelDTO,
     bool? isShow,
     bool? isOpenDialog,
+    bool? hasFile,
   }) {
     return InvoiceStates(
       status: status ?? this.status,
@@ -65,6 +69,7 @@ class InvoiceStates extends Equatable {
       invoiceDetailQrDTO: invoiceDetailQrDTO ?? this.invoiceDetailQrDTO,
       isShow: isShow ?? this.isShow,
       isOpenDialog: isOpenDialog ?? this.isOpenDialog,
+      hasFile: hasFile ?? this.hasFile,
     );
   }
 
@@ -80,6 +85,7 @@ class InvoiceStates extends Equatable {
         invoiceExcelDTO,
         isShow,
         isOpenDialog,
+        hasFile,
         metaDataDTO,
       ];
 }

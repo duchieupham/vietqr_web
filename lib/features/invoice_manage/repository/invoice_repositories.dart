@@ -18,6 +18,21 @@ import '../../../commons/utils/log.dart';
 class InvoiceRepository extends BaseRepo {
   String userId = UserInformationHelper.instance.getUserId();
 
+  Future<bool> getFile(String invoiceId) async {
+    try {
+      String url =
+          '${EnvConfig.getBaseUrl()}images-invoice/get-file?invoiceId=$invoiceId';
+      final response = await BaseAPIClient.getAPI(
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      LOG.error(e.toString());
+    }
+    return false;
+  }
+
   Future<List<InvoiceFeeDTO>?> getInvoiceList(
       {int? status,
       String? bankId,
