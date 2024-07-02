@@ -26,8 +26,32 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
     on<RequestPaymentInvoiceItemEvent>(_reqPayment);
     on<CloseDialogEvent>(_closeDialog);
     on<GetListPackageInvoiceFeeEvent>(_getListPackageInvoiceFee);
+    on<GetAttachFile>(_getFile);
   }
   final InvoiceRepository _invoiceRepository = InvoiceRepository();
+
+  void _getFile(
+    InvoiceEvent event,
+    Emitter emit,
+  ) async {
+    try {
+      if (event is GetAttachFile) {
+        emit(state.copyWith(
+            status: BlocStatus.LOADING, request: InvoiceType.GET_FILE));
+        final result = await _invoiceRepository.getFile(event.invoiceId);
+        emit(state.copyWith(
+            status: BlocStatus.SUCCESS,
+            hasFile: result,
+            request: InvoiceType.GET_FILE));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(
+          status: BlocStatus.ERROR,
+          request: InvoiceType.GET_FILE,
+          msg: 'Đã có lỗi xảy ra.'));
+    }
+  }
 
   void _getBanks(
     InvoiceEvent event,

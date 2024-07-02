@@ -58,6 +58,15 @@ class RequestPaymentInvoiceItemEvent extends InvoiceEvent {
 
 class CloseDialogEvent extends InvoiceEvent {}
 
+class GetAttachFile extends InvoiceEvent {
+  final String invoiceId;
+
+  const GetAttachFile(this.invoiceId);
+
+  @override
+  List<Object?> get props => [invoiceId];
+}
+
 class GetInvoiceDetail extends InvoiceEvent {
   final String invoiceId;
   final bool isShowPopup;

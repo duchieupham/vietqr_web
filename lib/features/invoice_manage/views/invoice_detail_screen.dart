@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/constants/configurations/theme.dart';
+import 'package:VietQR/commons/constants/env/env_config.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
@@ -15,6 +16,7 @@ import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'dart:html' as html;
 
 class InvoiceDetailScreen extends StatefulWidget {
   final InvoiceBloc bloc;
@@ -42,6 +44,8 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   InvoiceDetailDTO? _invoiceDetailDTO;
   List<PaymentRequestDTO> listPaymentBank = [];
 
+  bool hasFile = false;
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +53,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
 
     widget.bloc.add(GetInvoiceDetail(_provider.invoiceId!, false));
+    widget.bloc.add(GetAttachFile(_provider.invoiceId!));
   }
 
   void onShowQRPopup(InvoiceDetailQrDTO dto) async {
@@ -81,6 +86,10 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         if (state.request == InvoiceType.REQUEST_PAYMENT &&
             state.status == BlocStatus.SUCCESS) {
           onShowQRPopup(state.invoiceDetailQrDTO!);
+        }
+        if (state.request == InvoiceType.GET_FILE &&
+            state.status == BlocStatus.SUCCESS) {
+          hasFile = state.hasFile;
         }
       },
       builder: (context, state) {
@@ -127,6 +136,56 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                               style: TextStyle(
                                   fontSize: 25, fontWeight: FontWeight.bold),
                             ),
+                            const SizedBox(width: 20),
+                            hasFile
+                                ? GestureDetector(
+                                    onTap: () {
+                                      String url =
+                                          '${EnvConfig.getBaseUrl()}images-invoice/download-files?invoiceId=${_provider.invoiceId!}';
+                                      html.window.open(url, 'new tab');
+                                    },
+                                    child: Container(
+                                      width: 200,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: AppColor.WHITE,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border:
+                                              Border.all(color: Colors.grey)),
+                                      child: const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 10, right: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  "Tải tệp",
+                                                  style: const TextStyle(
+                                                    color: AppColor.BLUE_TEXT,
+                                                    fontSize: 13,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Icon(
+                                                Icons.attach_file,
+                                                color: AppColor.BLUE_TEXT,
+                                                size: 15,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
                           ],
                         ),
                       ),
@@ -161,15 +220,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                                         )
                                       : const SizedBox.shrink(),
                                   const SizedBox(height: 20),
-                                  const SizedBox(
-                                    width: double.infinity,
-                                    height: 20,
-                                    child: Text(
-                                      'Danh mục hàng hoá / dịch vụ',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  const Text(
+                                    'Danh mục hàng hoá / dịch vụ',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 30),
                                   SizedBox(
