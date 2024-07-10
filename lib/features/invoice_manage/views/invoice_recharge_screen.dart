@@ -257,7 +257,7 @@ class __ScreenState extends State<_Screen> {
             child: Column(
               children: [
                 Text(
-                  'Giao dịch được ghi nhận vào ngày cuối cùng của tháng. Bạn sẽ nhận được tổng kết giao dịch của tháng ${selectDate?.month}/${selectDate?.year}.\nVào ngày đầu tiên của tháng tiếp theo: 02/${nextMonthDate?.month}/${nextMonthDate?.year} bạn sẽ nhận được bảng tổng kết giao dịch của chúng tôi',
+                  'Giao dịch được ghi nhận vào ngày cuối cùng của tháng. Bạn sẽ nhận được tổng kết giao dịch của tháng ${selectDate?.month}/${selectDate?.year}.\nVào ngày đầu tiên của tháng tiếp theo: 01/${nextMonthDate?.month}/${nextMonthDate?.year} bạn sẽ nhận được bảng tổng kết giao dịch của chúng tôi',
                   style: TextStyle(color: AppColor.RED_TEXT),
                 ),
                 const SizedBox(
@@ -417,7 +417,7 @@ class __ScreenState extends State<_Screen> {
                     child: Column(
                       children: [
                         Text(
-                          'Giao dịch được ghi nhận vào ngày cuối cùng của tháng. Bạn sẽ nhận được tổng kết giao dịch của tháng ${selectDate?.month}/${selectDate?.year}.\nVào ngày đầu tiên của tháng tiếp theo: 02/${nextMonthDate?.month}/${nextMonthDate?.year} bạn sẽ nhận được bảng tổng kết giao dịch của chúng tôi',
+                          'Giao dịch được ghi nhận vào ngày cuối cùng của tháng. Bạn sẽ nhận được tổng kết giao dịch của tháng ${selectDate?.month}/${selectDate?.year}.\nVào ngày đầu tiên của tháng tiếp theo: 01/${nextMonthDate?.month}/${nextMonthDate?.year} bạn sẽ nhận được bảng tổng kết giao dịch của chúng tôi',
                           style: const TextStyle(color: AppColor.RED_TEXT),
                         ),
                         const SizedBox(

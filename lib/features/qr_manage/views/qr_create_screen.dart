@@ -1229,10 +1229,10 @@ class _ScreenState extends State<_Screen> {
                             width: 350,
                             height: 80,
                             decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(5)),
-                                border:
-                                    Border.all(color: AppColor.GREY_DADADA)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(color: AppColor.GREY_DADADA),
+                            ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1264,41 +1264,51 @@ class _ScreenState extends State<_Screen> {
                                               .isAuthenticated &&
                                           provider.bankAccountDTO!.isOwner)
                                         Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: Image(
-                                              image: ImageUtils.instance
-                                                  .getImageNetWork(
-                                                      ic_linked_bank),
-                                              width: 28,
-                                            )),
+                                          top: 0,
+                                          right: 0,
+                                          child: Image(
+                                            image: ImageUtils.instance
+                                                .getImageNetWork(
+                                                    ic_linked_bank),
+                                            width: 28,
+                                          ),
+                                        ),
                                       if (!provider.bankAccountDTO!.isOwner)
                                         Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: Image(
-                                              image: ImageUtils.instance
-                                                  .getImageNetWork(
-                                                      ic_share_bank),
-                                              width: 28,
-                                            )),
+                                          top: 0,
+                                          right: 0,
+                                          child: Image(
+                                            image: ImageUtils.instance
+                                                .getImageNetWork(ic_share_bank),
+                                            width: 28,
+                                          ),
+                                        ),
                                     ],
                                   ),
-                                  // Placeholder for bank logo
                                 ),
                                 const SizedBox(width: 20),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(provider.bankAccountDTO!.bankAccount,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        provider.bankAccountDTO!.bankAccount,
                                         style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 4),
-                                    Text(provider.bankAccountDTO!.userBankName,
-                                        style: const TextStyle(fontSize: 12)),
-                                  ],
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        provider.bankAccountDTO!.userBankName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
