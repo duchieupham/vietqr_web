@@ -9,13 +9,15 @@ class ItemRightWidget extends StatelessWidget {
   final Function() onShowQR;
   final Function() onShowDetail;
   final Function() onShowExcel;
+  final Function() onCopy;
 
   const ItemRightWidget(
       {super.key,
       required this.dto,
       required this.onShowQR,
       required this.onShowDetail,
-      required this.onShowExcel});
+      required this.onShowExcel,
+      required this.onCopy});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class ItemRightWidget extends StatelessWidget {
             child: SelectionArea(
                 child: Text(
               dto.status == 0
-                  ? 'Chờ thanh toán'
+                  ? 'Chờ TT'
                   : dto.status == 1
                       ? 'Đã thanh toán'
                       : 'Chưa TT hết',
@@ -66,12 +68,13 @@ class ItemRightWidget extends StatelessWidget {
                     right: BorderSide(
                         color: AppColor.GREY_TEXT.withOpacity(0.3)))),
             height: 50,
-            width: 140,
+            width: 180,
             child: SelectionArea(
               child: Row(
                 mainAxisAlignment: dto.status == 1
                     ? MainAxisAlignment.center
                     : MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (dto.status == 0 || dto.status == 3)
                     Tooltip(
@@ -133,6 +136,26 @@ class ItemRightWidget extends StatelessWidget {
                         bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
                         child: const Icon(
                           Icons.list,
+                          size: 12,
+                          color: AppColor.BLUE_TEXT,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (dto.status == 1) const SizedBox(width: 10),
+                  Tooltip(
+                    message: 'Copy',
+                    child: InkWell(
+                      onTap: onCopy,
+                      child: BoxLayout(
+                        width: 30,
+                        height: 30,
+                        borderRadius: 100,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(0),
+                        bgColor: AppColor.BLUE_TEXT.withOpacity(0.3),
+                        child: const Icon(
+                          Icons.copy,
                           size: 12,
                           color: AppColor.BLUE_TEXT,
                         ),

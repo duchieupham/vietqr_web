@@ -192,83 +192,104 @@ class _HeaderFullWidgetState extends State<HeaderFullWidget> {
               if (notiDto == null || notiDto!.totalInvoice == 0) {
                 return const SizedBox.shrink();
               }
-              return Container(
-                width: 300,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColor.WHITE,
-                ),
+              return InkWell(
+                onTap: () {
+                  context.go('/invoice');
+                },
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Container(
-                    //   width: 30,
-                    //   decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.circular(5),
-                    //     color: AppColor.ORANGE_DARK.withOpacity(0.3),
-                    //   ),
-                    //   height: 30,
-                    //   child: const Center(
-                    //     child: Icon(
-                    //       Icons.receipt_long_outlined,
-                    //       color: AppColor.ORANGE_DARK,
-                    //       size: 24,
-                    //     ),
-                    //   ),
-                    // ),
-                    Image.asset(
-                      'assets/images/ic-noti-invoice.png',
-                      width: 30,
-                      height: 30,
-                      fit: BoxFit.contain,
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: '${notiDto!.totalInvoice}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const TextSpan(
-                            text: ' hoá đơn chưa thanh toán!',
-                          ),
-                        ],
+                    Text(
+                      'Có ${notiDto!.totalInvoice} hoá đơn chưa được thanh toán',
+                      style: TextStyle(
+                        color: AppColor.RED_TEXT,
+                        fontSize: 13,
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        context.go('/invoice');
-                      },
-                      child: Container(
-                        width: 60,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: AppColor.ORANGE_DARK.withOpacity(0.3),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Truy cập',
-                            style: TextStyle(
-                              color: AppColor.ORANGE_DARK,
-                              fontSize: 13,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.error_outline,
+                      color: AppColor.RED_TEXT,
+                    )
                   ],
                 ),
               );
+              // return Container(
+              //   width: 300,
+              //   height: 40,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(5),
+              //     color: AppColor.WHITE,
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //       // Container(
+              //       //   width: 30,
+              //       //   decoration: BoxDecoration(
+              //       //     borderRadius: BorderRadius.circular(5),
+              //       //     color: AppColor.ORANGE_DARK.withOpacity(0.3),
+              //       //   ),
+              //       //   height: 30,
+              //       //   child: const Center(
+              //       //     child: Icon(
+              //       //       Icons.receipt_long_outlined,
+              //       //       color: AppColor.ORANGE_DARK,
+              //       //       size: 24,
+              //       //     ),
+              //       //   ),
+              //       // ),
+              //       Image.asset(
+              //         'assets/images/ic-noti-invoice.png',
+              //         width: 30,
+              //         height: 30,
+              //         fit: BoxFit.contain,
+              //       ),
+              //       RichText(
+              //         text: TextSpan(
+              //           style: const TextStyle(
+              //             fontSize: 13,
+              //             color: Colors.black,
+              //           ),
+              //           children: <TextSpan>[
+              //             TextSpan(
+              //               text: '${notiDto!.totalInvoice}',
+              //               style: const TextStyle(
+              //                 fontWeight: FontWeight.bold,
+              //               ),
+              //             ),
+              //             const TextSpan(
+              //               text: ' hoá đơn chưa thanh toán!',
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       InkWell(
+              //         onTap: () {
+              //           context.go('/invoice');
+              //         },
+              //         child: Container(
+              //           width: 60,
+              //           height: 30,
+              //           decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(5),
+              //             color: AppColor.ORANGE_DARK.withOpacity(0.3),
+              //           ),
+              //           child: const Center(
+              //             child: Text(
+              //               'Truy cập',
+              //               style: TextStyle(
+              //                 color: AppColor.ORANGE_DARK,
+              //                 fontSize: 13,
+              //               ),
+              //               textAlign: TextAlign.center,
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // );
             },
           ),
           const SizedBox(width: 30),
