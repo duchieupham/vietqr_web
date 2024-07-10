@@ -18,6 +18,7 @@ import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -54,9 +55,11 @@ class _Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<_Screen> {
+  final verticalController = ScrollController();
   final controller1 = ScrollController();
   final controller2 = ScrollController();
   final controller3 = ScrollController();
+  bool isScrollingDown = false;
 
   late InvoiceBloc _bloc;
   late InvoiceProvider _provider;
@@ -73,6 +76,7 @@ class _ScreenState extends State<_Screen> {
   @override
   void initState() {
     super.initState();
+    verticalController.addListener(_scrollListener);
     _bloc = BlocProvider.of(context);
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
     // initData();
@@ -87,6 +91,32 @@ class _ScreenState extends State<_Screen> {
     _bloc.add(GetListBankAccountEvent());
     _bloc.add(GetInvoiceList(
         status: _provider.invoiceStatus.id, bankId: '', filterBy: 1, page: 1));
+  }
+
+  void _scrollListener() {
+    if (verticalController.offset <=
+        verticalController.position.minScrollExtent) {
+      if (isScrollingDown) {
+        setState(() {
+          isScrollingDown = false;
+        });
+      }
+    } else {
+      if (!isScrollingDown) {
+        setState(() {
+          isScrollingDown = true;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    verticalController.removeListener(_scrollListener);
+    verticalController.dispose();
+    controller1.dispose();
+    controller2.dispose();
+    super.dispose();
   }
 
   void onShowPopup(
@@ -367,181 +397,392 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
+  // Widget _buildListInvoice(InvoiceStates state) {
+  //   if (state.request == InvoiceType.GET_INVOICE_LIST &&
+  //       state.status == BlocStatus.LOADING) {
+  //     return Expanded(
+  //         child: Container(
+  //       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+  //       child: const Center(
+  //         child: Text('Đang tải...'),
+  //       ),
+  //     ));
+  //   }
+
+  //   if (listInvoice.isEmpty) {
+  //     return Expanded(
+  //         child: Container(
+  //       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+  //       child: const Center(
+  //         child: Text('Không có hóa đơn'),
+  //       ),
+  //     ));
+  //   }
+
+  //   return Expanded(
+  //     child: Padding(
+  //         padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+  //         child: SizedBox(
+  //           width: MediaQuery.of(context).size.width - 220,
+  //           child: SingleChildScrollView(
+  //             child: Stack(
+  //               children: [
+  //                 Scrollbar(
+  //                   controller: controller1,
+  //                   child: ScrollConfiguration(
+  //                     behavior: MyCustomScrollBehavior(),
+  //                     child: SingleChildScrollView(
+  //                       controller: controller1,
+  //                       scrollDirection: Axis.horizontal,
+  //                       child: SizedBox(
+  //                         width: 1610,
+  //                         child: Column(
+  //                           children: [
+  //                             const TitleItemInvoiceWidget(),
+  //                             if (listInvoice.isNotEmpty)
+  //                               ...listInvoice
+  //                                   .asMap()
+  //                                   .map(
+  //                                     (index, x) {
+  //                                       return MapEntry(
+  //                                           index,
+  //                                           ItemInvoiceWidget(
+  //                                             index: index + 1,
+  //                                             dto: x,
+  //                                           ));
+  //                                     },
+  //                                   )
+  //                                   .values
+  //                                   .toList()
+
+  //                             // if (state.request == InvoiceType.GET_INVOICE_LIST &&
+  //                             //     state.status == BlocStatus.NONE)
+  //                             //   const Expanded(
+  //                             //       child: Center(child: Text('Trống..')))
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(
+  //                   width: 1610,
+  //                   child: Row(
+  //                     children: [
+  //                       const Expanded(child: SizedBox()),
+  //                       SingleChildScrollView(
+  //                         controller: controller2,
+  //                         child: SingleChildScrollView(
+  //                           scrollDirection: Axis.horizontal,
+  //                           child: Container(
+  //                             decoration: BoxDecoration(
+  //                               color: AppColor.WHITE,
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                     color:
+  //                                         AppColor.GREY_BORDER.withOpacity(0.8),
+  //                                     blurRadius: 5,
+  //                                     spreadRadius: 1,
+  //                                     offset: const Offset(0, 0)),
+  //                               ],
+  //                             ),
+  //                             child: Column(
+  //                               children: [
+  //                                 Container(
+  //                                   alignment: Alignment.center,
+  //                                   decoration: BoxDecoration(
+  //                                       color: AppColor.BLUE_TEXT
+  //                                           .withOpacity(0.3)),
+  //                                   child: Row(
+  //                                     children: [
+  //                                       Container(
+  //                                           height: 50,
+  //                                           width: 120,
+  //                                           alignment: Alignment.center,
+  //                                           decoration: BoxDecoration(
+  //                                               border: Border.all(
+  //                                                   color: AppColor.GREY_TEXT
+  //                                                       .withOpacity(0.3))),
+  //                                           child: const Text(
+  //                                             'Trạng thái',
+  //                                             textAlign: TextAlign.center,
+  //                                             style: TextStyle(
+  //                                                 fontSize: 12,
+  //                                                 color: AppColor.BLACK,
+  //                                                 fontWeight: FontWeight.bold),
+  //                                           )),
+  //                                       Container(
+  //                                           height: 50,
+  //                                           width: 180,
+  //                                           alignment: Alignment.center,
+  //                                           decoration: BoxDecoration(
+  //                                               border: Border.all(
+  //                                                   color: AppColor.GREY_TEXT
+  //                                                       .withOpacity(0.3))),
+  //                                           child: const Text(
+  //                                             'Thao tác',
+  //                                             textAlign: TextAlign.center,
+  //                                             style: TextStyle(
+  //                                                 fontSize: 12,
+  //                                                 color: AppColor.BLACK,
+  //                                                 fontWeight: FontWeight.bold),
+  //                                           )),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                                 if (listInvoice.isNotEmpty)
+  //                                   ...listInvoice
+  //                                       .map(
+  //                                         (e) => ItemRightWidget(
+  //                                           dto: e,
+  //                                           onCopy: () {
+  //                                             onCopy(dto: e);
+  //                                           },
+  //                                           onShowExcel: () {
+  //                                             setState(() {
+  //                                               selectInvoiceFee = e;
+  //                                             });
+  //                                             _bloc.add(GetInvoiceExcel(
+  //                                                 e.invoiceId!));
+  //                                           },
+  //                                           onShowQR: () {
+  //                                             setState(() {
+  //                                               selectInvoiceFee = e;
+  //                                             });
+  //                                             _bloc.add(GetInvoiceDetail(
+  //                                                 e.invoiceId!, true));
+  //                                           },
+  //                                           onShowDetail: () {
+  //                                             _provider.onPageChange(
+  //                                                 PageInvoice.DETAIL,
+  //                                                 invoiceId: e.invoiceId);
+  //                                           },
+  //                                         ),
+  //                                       )
+  //                                       .toList(),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         )),
+  //   );
+  // }
+
   Widget _buildListInvoice(InvoiceStates state) {
     if (state.request == InvoiceType.GET_INVOICE_LIST &&
         state.status == BlocStatus.LOADING) {
       return Expanded(
-          child: Container(
-        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-        child: const Center(
-          child: Text('Đang tải...'),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: const Center(
+            child: Text('Đang tải...'),
+          ),
         ),
-      ));
+      );
     }
 
     if (listInvoice.isEmpty) {
       return Expanded(
-          child: Container(
-        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-        child: const Center(
-          child: Text('Không có hóa đơn'),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: const Center(
+            child: Text('Không có hóa đơn'),
+          ),
         ),
-      ));
+      );
     }
 
     return Expanded(
       child: Padding(
-          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width - 220,
-            child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  Scrollbar(
-                    controller: controller1,
-                    child: ScrollConfiguration(
-                      behavior: MyCustomScrollBehavior(),
-                      child: SingleChildScrollView(
-                        controller: controller1,
-                        scrollDirection: Axis.horizontal,
-                        child: SizedBox(
-                          width: 1610,
-                          child: Column(
-                            children: [
-                              const TitleItemInvoiceWidget(),
-                              if (listInvoice.isNotEmpty)
-                                ...listInvoice
-                                    .asMap()
-                                    .map(
-                                      (index, x) {
-                                        return MapEntry(
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: Stack(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 220,
+              child: SingleChildScrollView(
+                controller: verticalController,
+                child: Stack(
+                  children: [
+                    Scrollbar(
+                      controller: controller1,
+                      child: ScrollConfiguration(
+                        behavior: MyCustomScrollBehavior(),
+                        child: SingleChildScrollView(
+                          controller: controller1,
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            width: 1610,
+                            child: Column(
+                              children: [
+                                const TitleItemInvoiceWidget(),
+                                if (listInvoice.isNotEmpty)
+                                  ...listInvoice
+                                      .asMap()
+                                      .map(
+                                        (index, x) {
+                                          return MapEntry(
                                             index,
                                             ItemInvoiceWidget(
                                               index: index + 1,
                                               dto: x,
-                                            ));
-                                      },
-                                    )
-                                    .values
-                                    .toList()
-
-                              // if (state.request == InvoiceType.GET_INVOICE_LIST &&
-                              //     state.status == BlocStatus.NONE)
-                              //   const Expanded(
-                              //       child: Center(child: Text('Trống..')))
-                            ],
+                                            ),
+                                          );
+                                        },
+                                      )
+                                      .values
+                                      .toList(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 1610,
-                    child: Row(
-                      children: [
-                        const Expanded(child: SizedBox()),
-                        SingleChildScrollView(
-                          controller: controller2,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.WHITE,
-                                boxShadow: [
-                                  BoxShadow(
+                    SizedBox(
+                      width: 1610,
+                      child: Row(
+                        children: [
+                          const Expanded(child: SizedBox()),
+                          SingleChildScrollView(
+                            controller: controller2,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColor.WHITE,
+                                  boxShadow: [
+                                    BoxShadow(
                                       color:
                                           AppColor.GREY_BORDER.withOpacity(0.8),
                                       blurRadius: 5,
                                       spreadRadius: 1,
-                                      offset: const Offset(0, 0)),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: AppColor.BLUE_TEXT
-                                            .withOpacity(0.3)),
-                                    child: Row(
-                                      children: [
-                                        Container(
+                                      offset: const Offset(0, 0),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            AppColor.BLUE_TEXT.withOpacity(0.3),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
                                             height: 50,
                                             width: 120,
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: AppColor.GREY_TEXT
-                                                        .withOpacity(0.3))),
+                                              border: Border.all(
+                                                color: AppColor.GREY_TEXT
+                                                    .withOpacity(0.3),
+                                              ),
+                                            ),
                                             child: const Text(
                                               'Trạng thái',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColor.BLACK,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                        Container(
+                                                fontSize: 12,
+                                                color: AppColor.BLACK,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
                                             height: 50,
                                             width: 180,
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: AppColor.GREY_TEXT
-                                                        .withOpacity(0.3))),
+                                              border: Border.all(
+                                                color: AppColor.GREY_TEXT
+                                                    .withOpacity(0.3),
+                                              ),
+                                            ),
                                             child: const Text(
                                               'Thao tác',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColor.BLACK,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                  if (listInvoice.isNotEmpty)
-                                    ...listInvoice
-                                        .map(
-                                          (e) => ItemRightWidget(
-                                            dto: e,
-                                            onCopy: () {
-                                              onCopy(dto: e);
-                                            },
-                                            onShowExcel: () {
-                                              setState(() {
-                                                selectInvoiceFee = e;
-                                              });
-                                              _bloc.add(GetInvoiceExcel(
-                                                  e.invoiceId!));
-                                            },
-                                            onShowQR: () {
-                                              setState(() {
-                                                selectInvoiceFee = e;
-                                              });
-                                              _bloc.add(GetInvoiceDetail(
-                                                  e.invoiceId!, true));
-                                            },
-                                            onShowDetail: () {
-                                              _provider.onPageChange(
-                                                  PageInvoice.DETAIL,
-                                                  invoiceId: e.invoiceId);
-                                            },
+                                                fontSize: 12,
+                                                color: AppColor.BLACK,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
-                                        )
-                                        .toList(),
-                                ],
+                                        ],
+                                      ),
+                                    ),
+                                    if (listInvoice.isNotEmpty)
+                                      ...listInvoice
+                                          .map(
+                                            (e) => ItemRightWidget(
+                                              dto: e,
+                                              onCopy: () {
+                                                onCopy(dto: e);
+                                              },
+                                              onShowExcel: () {
+                                                setState(() {
+                                                  selectInvoiceFee = e;
+                                                });
+                                                _bloc.add(GetInvoiceExcel(
+                                                    e.invoiceId!));
+                                              },
+                                              onShowQR: () {
+                                                setState(() {
+                                                  selectInvoiceFee = e;
+                                                });
+                                                _bloc.add(GetInvoiceDetail(
+                                                    e.invoiceId!, true));
+                                              },
+                                              onShowDetail: () {
+                                                _provider.onPageChange(
+                                                    PageInvoice.DETAIL,
+                                                    invoiceId: e.invoiceId);
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          )),
+            if (isScrollingDown)
+              Positioned(
+                right: 30,
+                bottom: 30,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    verticalController.animateTo(
+                      0,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                    );
+                    setState(() {
+                      isScrollingDown = false;
+                    });
+                  },
+                  mini: true,
+                  child: Icon(Icons.arrow_upward),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 

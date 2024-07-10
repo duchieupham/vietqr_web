@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 
 class ShareUtils {
@@ -152,20 +153,36 @@ class ShareUtils {
     try {
       RenderRepaintBoundary boundary =
           globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage();
+      ui.Image image = await boundary.toImage(pixelRatio: 5.0);
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       await WebImageDownloader.downloadImageFromUInt8List(
           uInt8List: pngBytes, name: 'VietQr-$bankAccount');
-      // await ImageGallerySaver.saveImage(
-      //   pngBytes,
-      //   quality: 100,
-      // );
     } catch (e) {
       LOG.error(e.toString());
     }
   }
+
+  // Future<void> saveImageToGallery(
+  //     GlobalKey globalKey, String bankAccount) async {
+  //   try {
+  //     RenderRepaintBoundary boundary =
+  //         globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+  //     ui.Image image = await boundary.toImage(pixelRatio: 5.0);
+  //     ByteData? byteData =
+  //         await image.toByteData(format: ui.ImageByteFormat.png);
+  //     Uint8List pngBytes = byteData!.buffer.asUint8List();
+  // await WebImageDownloader.downloadImageFromUInt8List(
+  //     uInt8List: pngBytes, name: 'VietQr-$bankAccount');
+  //     // await ImageGallerySaver.saveImage(
+  //     //   pngBytes,
+  //     //   quality: 100,
+  //     // );
+  //   } catch (e) {
+  //     LOG.error(e.toString());
+  //   }
+  // }
 
   Future<void> getImageFromWidget(GlobalKey globalKey, String nameFile) async {
     try {
