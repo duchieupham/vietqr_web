@@ -47,6 +47,7 @@ class __ScreenState extends State<_Screen> {
   int? type = 9;
   String? selectBankId = '';
   DateTime? selectDate;
+  DateTime? nextMonthDate;
   List<FeePackageInvoiceDTO> listInvoice = [];
 
   @override
@@ -63,6 +64,12 @@ class __ScreenState extends State<_Screen> {
   void initData({bool isRefresh = false}) async {
     if (isRefresh) {}
     selectDate = getMonth();
+    nextMonthDate = getNextMonth();
+    // DateTime nextMonthDate = DateTime(selectDate!.year, selectDate!.month + 1);
+
+    // if (nextMonthDate.month > 12) {
+    //   nextMonthDate = DateTime(selectDate!.year + 1, nextMonthDate.month - 12);
+    // }
     _provider.selectBankAccount(null);
     _bloc.add(GetListBankAccountEvent());
     _bloc.add(GetListPackageInvoiceFeeEvent(
@@ -128,6 +135,19 @@ class __ScreenState extends State<_Screen> {
     if (newMonth < 1) {
       newMonth = 12; // Set month to December
       newYear--; // Decrement year
+    }
+
+    return DateTime(newYear, newMonth);
+  }
+
+  DateTime getNextMonth() {
+    DateTime now = DateTime.now();
+    int newMonth = now.month + 1;
+    int newYear = now.year;
+
+    if (newMonth > 12) {
+      newMonth = 1;
+      newYear++;
     }
 
     return DateTime(newYear, newMonth);
@@ -233,8 +253,19 @@ class __ScreenState extends State<_Screen> {
         return Expanded(
             child: Container(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: const Center(
-            child: Text('Trống...'),
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  'Giao dịch được ghi nhận vào ngày cuối cùng của tháng. Bạn sẽ nhận được tổng kết giao dịch của tháng ${selectDate?.month}/${selectDate?.year}.\nVào ngày đầu tiên của tháng tiếp theo: 01/${nextMonthDate?.month}/${nextMonthDate?.year} bạn sẽ nhận được bảng tổng kết giao dịch của chúng tôi',
+                  style: TextStyle(color: AppColor.RED_TEXT),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text('Trống...'),
+              ],
+            ),
           ),
         ));
       case BlocStatus.SUCCESS:
@@ -382,8 +413,19 @@ class __ScreenState extends State<_Screen> {
                   ))
               : Container(
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                  child: const Center(
-                    child: Text('Trống...'),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Giao dịch được ghi nhận vào ngày cuối cùng của tháng. Bạn sẽ nhận được tổng kết giao dịch của tháng ${selectDate?.month}/${selectDate?.year}.\nVào ngày đầu tiên của tháng tiếp theo: 01/${nextMonthDate?.month}/${nextMonthDate?.year} bạn sẽ nhận được bảng tổng kết giao dịch của chúng tôi',
+                          style: const TextStyle(color: AppColor.RED_TEXT),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text('Trống...'),
+                      ],
+                    ),
                   ),
                 ),
         );

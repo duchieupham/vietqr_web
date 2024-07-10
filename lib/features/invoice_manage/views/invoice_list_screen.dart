@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
@@ -15,8 +16,10 @@ import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:VietQR/services/shared_references/shared_pref.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -402,7 +405,7 @@ class _ScreenState extends State<_Screen> {
                         controller: controller1,
                         scrollDirection: Axis.horizontal,
                         child: SizedBox(
-                          width: 1570,
+                          width: 1610,
                           child: Column(
                             children: [
                               const TitleItemInvoiceWidget(),
@@ -433,7 +436,7 @@ class _ScreenState extends State<_Screen> {
                     ),
                   ),
                   SizedBox(
-                    width: 1570,
+                    width: 1610,
                     child: Row(
                       children: [
                         const Expanded(child: SizedBox()),
@@ -480,7 +483,7 @@ class _ScreenState extends State<_Screen> {
                                             )),
                                         Container(
                                             height: 50,
-                                            width: 140,
+                                            width: 180,
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
                                                 border: Border.all(
@@ -502,6 +505,9 @@ class _ScreenState extends State<_Screen> {
                                         .map(
                                           (e) => ItemRightWidget(
                                             dto: e,
+                                            onCopy: () {
+                                              onCopy(dto: e);
+                                            },
                                             onShowExcel: () {
                                               setState(() {
                                                 selectInvoiceFee = e;
@@ -978,6 +984,23 @@ class _ScreenState extends State<_Screen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void onCopy({required InvoiceFeeDTO dto}) async {
+    await FlutterClipboard.copy(ShareUtils.instance.getTextSharingCopy(dto))
+        .then(
+      (value) => Fluttertoast.showToast(
+        msg: 'Đã sao chép',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Theme.of(context).cardColor,
+        textColor: Colors.black,
+        fontSize: 15,
+        webBgColor: 'rgba(255, 255, 255)',
+        webPosition: 'center',
       ),
     );
   }

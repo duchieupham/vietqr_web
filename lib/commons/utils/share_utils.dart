@@ -4,11 +4,14 @@ import 'dart:ui' as ui;
 
 import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/commons/utils/string_utils.dart';
+import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
+import 'package:intl/intl.dart';
 
 class ShareUtils {
   const ShareUtils._privateConsrtructor();
@@ -30,6 +33,52 @@ class ShareUtils {
       }
     }
     result = prefix + suffix;
+    return result;
+  }
+
+  String getTextSharingCopy(InvoiceFeeDTO dto) {
+    String formattedDateTimePaid = dto.timePaid.toString().isNotEmpty
+        ? DateFormat('yyyy-MM-dd HH:mm:ss')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timePaid! * 1000))
+        : '-';
+    String result = '';
+    String vso = '';
+    String amount = '';
+    String timePaid = '';
+    String midName = '';
+    String invoiceName = '';
+    String userName = '';
+    String bankAccount = '';
+    String invoiceNumber = '';
+    if (dto.vso!.isNotEmpty) {
+      vso = '\nMã đại lý: ${dto.vso}';
+    }
+    if (dto.invoiceNumber!.isNotEmpty) {
+      invoiceNumber = '\nMã hoá đơn: ${dto.invoiceNumber}';
+    }
+    if (dto.totalAmount != 0) {
+      amount =
+          '\nTổng tiền: ${StringUtils.formatNumberWithOutVND(dto.totalAmount.toString())}';
+    }
+    if (dto.timePaid != 0) {
+      timePaid = '\nThời gian thanh toán: $formattedDateTimePaid';
+    }
+    if (dto.midName!.isNotEmpty) {
+      midName = '\nĐại lý: ${dto.midName}';
+    }
+    if (dto.invoiceName!.isNotEmpty) {
+      invoiceName = '\nHoá đơn: ${dto.invoiceName}';
+    }
+    if (dto.userBankName!.isNotEmpty) {
+      userName = '\nChủ TK: ${dto.userBankName}';
+    }
+    if (dto.bankAccount!.isNotEmpty && dto.bankShortName!.isNotEmpty) {
+      bankAccount = '\nTK ngân hàng: ${dto.bankAccount} - ${dto.bankShortName}';
+    }
+
+    result =
+        '$invoiceName $amount $invoiceNumber $midName $vso $bankAccount $userName $timePaid\nBy VIETQR.VN';
+
     return result;
   }
 

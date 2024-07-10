@@ -408,10 +408,22 @@ class TimeUtils {
 
     TimeOfDay? selectedTime;
 
+    // if (isSelectedTime) {
+    //   selectedTime = await showTimePicker(
+    //     context: context,
+    //     initialTime: TimeOfDay.fromDateTime(selectedDate),
+    //   );
+    // }
     if (isSelectedTime) {
       selectedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(selectedDate),
+        builder: (BuildContext context, Widget? child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          );
+        },
       );
     }
 
