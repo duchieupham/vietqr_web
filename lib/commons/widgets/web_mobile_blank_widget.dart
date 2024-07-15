@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:html' as html;
 
 class WebMobileBlankWidget extends StatelessWidget {
   static late LogoutBloc logoutBloc;
@@ -25,6 +26,7 @@ class WebMobileBlankWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _redirectIfWeb();
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     initialServices(context);
@@ -215,5 +217,12 @@ class WebMobileBlankWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _redirectIfWeb() {
+    // Chỉ chạy khi nền tảng là Web
+    if (identical(0, 0.0)) {
+      html.window.location.href = 'https://api.vietqr.vn';
+    }
   }
 }

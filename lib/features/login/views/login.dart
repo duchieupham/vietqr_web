@@ -37,6 +37,7 @@ import 'package:toastification/toastification.dart';
 
 import '../../../models/account_login_method_dto.dart';
 import '../widgets/login_by_card_widget.dart';
+import 'dart:html' as html;
 
 class Login extends StatefulWidget {
   final String pathHistory;
@@ -799,7 +800,29 @@ class _Login extends State<Login> {
     );
   }
 
+  // Widget _buildLoginMobileWeb(LoginProvider provider) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 12),
+  //     child: SizedBox(
+  //       height: 500,
+  //       child: PageView(
+  //         controller: pageController,
+  //         physics: const NeverScrollableScrollPhysics(),
+  //         children: [
+  //           _buildFormLoginMobileWeb(),
+  //           _buildListAccountMobileWeb(provider),
+  //           _buildInputPassLoginMobileWeb(),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
   Widget _buildLoginMobileWeb(LoginProvider provider) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _redirectIfWeb();
+    });
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: SizedBox(
@@ -815,6 +838,13 @@ class _Login extends State<Login> {
         ),
       ),
     );
+  }
+
+  void _redirectIfWeb() {
+    // Chỉ chạy khi nền tảng là Web
+    if (identical(0, 0.0)) {
+      html.window.location.href = 'https://api.vietqr.vn';
+    }
   }
 
   Widget _buildListAccountMobileWeb(LoginProvider provider) {
