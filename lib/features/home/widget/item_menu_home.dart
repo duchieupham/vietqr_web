@@ -15,6 +15,8 @@ class ItemMenuHome extends StatefulWidget {
   final String? pathImage;
   final List<Widget> listItemDrop;
   final bool isDropDownItem;
+  final Icon? iconWidget;
+
   final double titleSize;
   final bool isOnlyIcon, isDefaultColor;
   final EdgeInsets paddingIcon;
@@ -34,6 +36,7 @@ class ItemMenuHome extends StatefulWidget {
       this.titleSize = 12,
       this.enableMenuCard = false,
       this.isOnlyIcon = false,
+      this.iconWidget,
       this.isDefaultColor = false,
       this.isFirst = false,
       this.bold = false,
@@ -160,7 +163,6 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
               openMenuCard = !openMenuCard;
             });
           }
-          print('widget.enableDropDownList: ${widget.enableDropDownList}');
           // if (widget.enableDropDownList) {
           //   onOpenDropDownList();
           // }
@@ -179,12 +181,14 @@ class _ItemMenuHomeState extends State<ItemMenuHome> {
                 children: [
                   Row(
                     children: [
-                      Image(
-                        image:
-                            ImageUtils.instance.getImageNetWork(widget.iconId),
-                        color: AppColor.BLACK,
-                        height: 30,
-                      ),
+                      widget.iconWidget ??
+                          Image(
+                            image: ImageUtils.instance
+                                .getImageNetWork(widget.iconId),
+                            color: AppColor.BLACK,
+                            height: 30,
+                          ),
+
                       const SizedBox(width: 10),
                       // const Spacer(),
                       if (widget.isLogout)

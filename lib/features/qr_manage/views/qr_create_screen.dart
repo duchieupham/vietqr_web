@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
@@ -24,9 +28,11 @@ import 'package:popover/popover.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:html' as html;
+import 'package:path_provider/path_provider.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/share_utils.dart';
@@ -109,7 +115,7 @@ class _ScreenState extends State<_Screen> {
   List<BankAccountDTO>? bankAccounts = [];
   List<BankTypeDTO>? bankTypes = [];
 
-  BankTypeDTO? selectBankTypes =
+  BankTypeDTO selectBankTypes =
       const BankTypeDTO(bankName: 'Chọn hoặc nhập tên ngân hàng', id: '0');
 
   String ic_linked_bank = '3e985867-7e93-4b3c-8164-945b7265752c';
@@ -149,121 +155,6 @@ class _ScreenState extends State<_Screen> {
             _qrCreateBloc.add(GetListTerminalEvent(bankId: id));
           },
         );
-      },
-    );
-  }
-
-  Future<void> printBill(QRGeneratedDTO dto) async {
-    final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
-    final font = await PdfGoogleFonts.interLight();
-    await Printing.layoutPdf(
-      format: PdfPageFormat.roll80,
-      onLayout: (format) {
-        pdf.addPage(
-          pw.Page(
-            pageFormat: format,
-            orientation: pw.PageOrientation.natural,
-            build: (context) {
-              return pw.SizedBox(
-                width: double.infinity,
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.center,
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      "Nhận tiền từ mọi ngân hàng và ví điện tử có hỗ trợ VietQR",
-                      textAlign: pw.TextAlign.center,
-                      style: pw.TextStyle(fontSize: 8, font: font),
-                    ),
-                    pw.SizedBox(height: 20),
-                    pw.BarcodeWidget(
-                      barcode: pw.Barcode.qrCode(),
-                      data: dto.qrCode,
-                      width: 100,
-                      height: 100,
-                    ),
-                    pw.SizedBox(height: 20),
-                    dto.amount.isNotEmpty
-                        ? pw.Row(
-                            mainAxisAlignment:
-                                pw.MainAxisAlignment.spaceBetween,
-                            children: [
-                                pw.Text('Số tiền:',
-                                    style:
-                                        pw.TextStyle(font: font, fontSize: 10)),
-                                pw.Text(
-                                    StringUtils.formatNumberAmount(dto.amount),
-                                    style: const pw.TextStyle(fontSize: 10)),
-                              ])
-                        : pw.SizedBox.shrink(),
-                    if (_contentController.text.isNotEmpty) ...[
-                      pw.SizedBox(height: 10),
-                      pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Text('Nội dung:',
-                                style: pw.TextStyle(font: font, fontSize: 10)),
-                            pw.Text(dto.content,
-                                style: pw.TextStyle(font: font, fontSize: 10)),
-                          ])
-                    ],
-                    pw.SizedBox(height: 10),
-                    pw.LayoutBuilder(
-                      builder: (context, constraints) {
-                        final boxWidth = constraints!.constrainWidth();
-                        const dashWidth = 2.0;
-                        final dashCount = (boxWidth / (2 * dashWidth)).floor();
-                        return pw.Flex(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          direction: pw.Axis.horizontal,
-                          children: List.generate(dashCount, (_) {
-                            return pw.SizedBox(
-                              width: dashWidth,
-                              height: 1,
-                              child: pw.DecoratedBox(
-                                decoration: const pw.BoxDecoration(
-                                    color: PdfColors.black),
-                              ),
-                            );
-                          }),
-                        );
-                      },
-                    ),
-                    if (_invoiceController.text.isNotEmpty) ...[
-                      pw.SizedBox(height: 10),
-                      pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Text('Mã đơn hàng:',
-                                style: pw.TextStyle(font: font, fontSize: 10)),
-                            pw.Text(_invoiceController.text,
-                                style: pw.TextStyle(font: font, fontSize: 10)),
-                          ])
-                    ],
-                    if (dto.terminalCode.isNotEmpty) ...[
-                      pw.SizedBox(height: 10),
-                      pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Text('Mã điểm bán:',
-                                style: pw.TextStyle(font: font, fontSize: 10)),
-                            pw.Text(dto.terminalCode,
-                                style: pw.TextStyle(font: font, fontSize: 10)),
-                          ])
-                    ],
-                    pw.SizedBox(height: 60),
-                    pw.Text('By VietQR VN',
-                        style: pw.TextStyle(
-                            font: font,
-                            fontSize: 10,
-                            fontWeight: pw.FontWeight.bold))
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-        return pdf.save();
       },
     );
   }
@@ -795,33 +686,43 @@ class _ScreenState extends State<_Screen> {
                     textSize: 15,
                     iconColor: AppColor.BLUE_TEXT,
                     title: 'Lưu ảnh VietQR',
-                    onTap: () {
-                      onSaveImage(context);
+                    onTap: () async {
+                      // onSaveImage(context);
+                      final item = await pdfItem(
+                          qrGeneratedDTO: dto, format: PdfPageFormat.a4);
+                      await savePdfFile(
+                        'VietQR',
+                        item,
+                      );
                     },
                     border: Border.all(color: AppColor.BLUE_TEXT),
                     bgColor: AppColor.WHITE,
                     textColor: AppColor.BLUE_TEXT,
                   ),
                 ),
-                PopupMenuButton(
-                  offset: const Offset(115, 0),
+                PopupMenuButton<int>(
+                  offset: const Offset(125, 0),
+                  onSelected: (value) async {
+                    if (value == 1) {
+                      // String paramData = Session.instance
+                      //     .formatDataParamUrl(dto, showBankAccount: 1);
+                      // html.window.open(
+                      //     Uri.base.toString().replaceFirst(
+                      //         '/create-vietqr', '/qr-generate/print$paramData'),
+                      //     'new tab');
+                      await printA4(dto);
+                    } else {
+                      printBill(dto);
+                    }
+                  },
                   itemBuilder: (context) => [
-                    PopupMenuItem(
-                      onTap: () {
-                        String paramData = Session.instance
-                            .formatDataParamUrl(dto, showBankAccount: 1);
-                        html.window.open(
-                            Uri.base.toString().replaceFirst('/create-vietqr',
-                                '/qr-generate/print$paramData'),
-                            'new tab');
-                      },
-                      child: const Text('In khổ A4'),
+                    const PopupMenuItem<int>(
+                      value: 1,
+                      child: Text('In khổ A4'),
                     ),
-                    PopupMenuItem(
-                      onTap: () {
-                        printBill(dto);
-                      },
-                      child: const Text('In bill'),
+                    const PopupMenuItem<int>(
+                      value: 2,
+                      child: Text('In bill'),
                     ),
                   ],
                   child: Container(
@@ -848,37 +749,6 @@ class _ScreenState extends State<_Screen> {
                     ),
                   ),
                 )
-                // Tooltip(
-                //   message: '',
-                //   child: MButtonIconWidget(
-                //     height: 50,
-                //     width: 170,
-                //     icon: Icons.print_outlined,
-                //     iconSize: 15,
-                //     textSize: 15,
-                //     iconColor: AppColor.BLUE_TEXT,
-                //     title: 'In mã VietQR',
-                //     onTap: () async {
-                //
-                //       PopupMenuButton(
-                //         itemBuilder: (context) => [
-                //           PopupMenuItem(
-                //             onTap: () {},
-                //             child: Text('In khổ A4'),
-                //           ),
-                //           PopupMenuItem(
-                //             onTap: () {},
-                //             child: Text('In bill'),
-                //           ),
-                //         ],
-                //       );
-
-                //     },
-                //     border: Border.all(color: AppColor.BLUE_TEXT),
-                //     bgColor: AppColor.WHITE,
-                //     textColor: AppColor.BLUE_TEXT,
-                //   ),
-                // ),
               ],
             ),
           ],
@@ -1738,6 +1608,364 @@ class _ScreenState extends State<_Screen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> savePdfFile(String name, Uint8List byteList) async {
+    // final output = await getTemporaryDirectory();
+    // var filePath = "${output.path}/$fileName.pdf";
+    // final file = File(filePath);
+    // await file.writeAsBytes(byteList);
+
+    final base64Pdf = base64Encode(byteList);
+    String fileName = '$name.pdf';
+    final anchor =
+        html.AnchorElement(href: 'data:application/pdf;base64,$base64Pdf')
+          ..setAttribute('download', fileName)
+          ..click();
+  }
+
+  Future<Uint8List> pdfItem(
+      {required QRGeneratedDTO qrGeneratedDTO,
+      required PdfPageFormat format}) async {
+    final pdf = pw.Document();
+    final imageBgr = (await rootBundle.load('assets/images/bg-qr-vqr.png'))
+        .buffer
+        .asUint8List();
+    final vqrLogo = (await rootBundle.load('assets/images/ic-viet-qr.png'))
+        .buffer
+        .asUint8List();
+    final response = await http.get(Uri.parse(
+        'https://api.vietqr.org/vqr/api/images/${qrGeneratedDTO.imgId}'));
+    final bankImg = response.bodyBytes;
+    String userBankName = qrGeneratedDTO.userBankName.toUpperCase() ?? '';
+    int maxLength = 20; // Adjust this value based on your width and font size
+    String truncatedText = userBankName.length > maxLength
+        ? '${userBankName.substring(0, maxLength - 3)}...'
+        : userBankName;
+
+    String content = qrGeneratedDTO.content ?? '';
+    int contentMaxLength =
+        50; // Adjust this value based on your width and font size
+    String contentTruncated = content.length > contentMaxLength
+        ? '${content.substring(0, contentMaxLength - 3)}...'
+        : content;
+    pdf.addPage(pw.Page(
+      orientation: pw.PageOrientation.natural,
+      pageFormat: format,
+      build: (context) {
+        return pw.SizedBox(
+          width: double.infinity,
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: 350,
+                height: 400,
+                decoration: pw.BoxDecoration(
+                    borderRadius: pw.BorderRadius.circular(10),
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(imageBgr),
+                      fit: pw.BoxFit.cover,
+                    )),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.SizedBox(height: 20),
+                    pw.Container(
+                      width: 300,
+                      height: 60,
+                      decoration: pw.BoxDecoration(
+                        borderRadius: pw.BorderRadius.circular(6),
+                        color: PdfColors.white,
+                      ),
+                      child: pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.Container(
+                              alignment: pw.Alignment.center,
+                              width: 80,
+                              padding:
+                                  const pw.EdgeInsets.symmetric(horizontal: 24),
+                              decoration: pw.BoxDecoration(
+                                image: pw.DecorationImage(
+                                  fit: pw.BoxFit.fitWidth,
+                                  image: pw.MemoryImage(bankImg),
+                                ),
+                              ),
+                            ),
+                            pw.Container(
+                              height: 40,
+                              child:
+                                  pw.VerticalDivider(color: PdfColors.grey500),
+                            ),
+                            pw.Expanded(
+                              child: pw.Container(
+                                padding: const pw.EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 8),
+                                alignment: pw.Alignment.centerLeft,
+                                child: pw.Column(
+                                  crossAxisAlignment:
+                                      pw.CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      pw.MainAxisAlignment.center,
+                                  children: [
+                                    pw.Text(
+                                      qrGeneratedDTO.bankAccount,
+                                      // 'widget.qrGeneratedDTO.bankAccount,',
+                                      maxLines: 1,
+                                      style: pw.TextStyle(
+                                          color: PdfColors.black,
+                                          fontSize: 15,
+                                          fontWeight: pw.FontWeight.bold),
+                                    ),
+                                    pw.Text(
+                                      truncatedText,
+                                      maxLines: 1,
+                                      style: const pw.TextStyle(
+                                        color: PdfColors.black,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ]),
+                    ),
+                    pw.SizedBox(height: 10),
+                    pw.Container(
+                      width: 300,
+                      height: 300,
+                      padding: const pw.EdgeInsets.fromLTRB(30, 10, 30, 10),
+                      decoration: pw.BoxDecoration(
+                        color: PdfColors.white,
+                        borderRadius: pw.BorderRadius.circular(10),
+                      ),
+                      child: pw.Column(
+                          mainAxisAlignment: pw.MainAxisAlignment.center,
+                          children: [
+                            pw.SizedBox(
+                              width: 220,
+                              height: 220,
+                              child: pw.Stack(children: [
+                                pw.Positioned(
+                                  top: 0,
+                                  bottom: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: pw.BarcodeWidget(
+                                    barcode: pw.Barcode.qrCode(),
+                                    data: qrGeneratedDTO.qrCode,
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                ),
+                                pw.Align(
+                                  child: pw.Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: pw.BoxDecoration(
+                                        image: pw.DecorationImage(
+                                      image: pw.MemoryImage(vqrLogo),
+                                      fit: pw.BoxFit.cover,
+                                    )),
+                                  ),
+                                )
+                              ]),
+                            ),
+                          ]),
+                    ),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                '+ ${CurrencyUtils.instance.getCurrencyFormatted(qrGeneratedDTO.amount)} VND',
+                style: pw.TextStyle(
+                  fontSize: 35,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.orange600,
+                ),
+              ),
+              pw.SizedBox(height: 10),
+              pw.Container(
+                width: 350,
+                height: 1,
+                color: PdfColors.grey500,
+              ),
+              pw.SizedBox(height: 10),
+              pw.Container(
+                width: 350,
+                child: pw.Text(
+                  contentTruncated,
+                  style:
+                      const pw.TextStyle(fontSize: 18, color: PdfColors.black),
+                  maxLines: 2,
+                  textAlign: pw.TextAlign.center,
+                ),
+              ),
+              pw.Spacer(),
+              pw.Text(
+                'BY VIETQR.VN',
+                style: const pw.TextStyle(fontSize: 14, color: PdfColors.black),
+                textAlign: pw.TextAlign.center,
+              )
+            ],
+          ),
+        );
+      },
+    ));
+
+    return pdf.save();
+  }
+
+  Future<void> printA4(QRGeneratedDTO qrGeneratedDTO) async {
+    Printing.layoutPdf(
+      format: PdfPageFormat.a4,
+      onLayout: (format) {
+        return pdfItem(
+          format: format,
+          qrGeneratedDTO: qrGeneratedDTO,
+        );
+      },
+    );
+  }
+
+  Future<void> printBill(QRGeneratedDTO dto) async {
+    final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+    final font = await PdfGoogleFonts.interLight();
+    await Printing.layoutPdf(
+      format: PdfPageFormat.roll80,
+      onLayout: (format) {
+        pdf.addPage(
+          pw.Page(
+            pageFormat: format,
+            orientation: pw.PageOrientation.natural,
+            build: (context) {
+              return pw.SizedBox(
+                width: double.infinity,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.center,
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      "Quét mã QR bằng APP ngân hàng\nhoặc Ví điện tử để thanh toán",
+                      textAlign: pw.TextAlign.center,
+                      style: pw.TextStyle(fontSize: 8, font: font),
+                    ),
+                    pw.SizedBox(height: 4),
+                    pw.BarcodeWidget(
+                      barcode: pw.Barcode.qrCode(),
+                      data: dto.qrCode,
+                      width: 100,
+                      height: 100,
+                    ),
+                    pw.SizedBox(height: 16),
+                    pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text('Chủ TK:',
+                              style: pw.TextStyle(font: font, fontSize: 10)),
+                          pw.Text(dto.userBankName,
+                              style: pw.TextStyle(fontSize: 10, font: font)),
+                        ]),
+                    pw.SizedBox(height: 8),
+                    pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text('Tài khoản:',
+                              style: pw.TextStyle(font: font, fontSize: 10)),
+                          pw.Text(
+                              '${_provider.bankAccountDTO?.bankShortName} - ${dto.bankAccount}',
+                              style: pw.TextStyle(fontSize: 10, font: font)),
+                        ]),
+                    if (_contentController.text.isNotEmpty) ...[
+                      pw.SizedBox(height: 8),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Nội dung:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(dto.content,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    if (_invoiceController.text.isNotEmpty) ...[
+                      pw.SizedBox(height: 8),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Mã đơn hàng:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(_invoiceController.text,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    if (dto.terminalCode.isNotEmpty) ...[
+                      pw.SizedBox(height: 8),
+                      pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text('Mã điểm bán:',
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                            pw.Text(dto.terminalCode,
+                                style: pw.TextStyle(font: font, fontSize: 10)),
+                          ])
+                    ],
+                    pw.SizedBox(height: 8),
+                    dto.amount.isNotEmpty
+                        ? pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                                pw.Text('Số tiền:',
+                                    style:
+                                        pw.TextStyle(font: font, fontSize: 10)),
+                                pw.Text(
+                                    StringUtils.formatNumberAmount(dto.amount),
+                                    style: const pw.TextStyle(fontSize: 10)),
+                              ])
+                        : pw.SizedBox.shrink(),
+                    pw.SizedBox(height: 40),
+                    pw.LayoutBuilder(
+                      builder: (context, constraints) {
+                        final boxWidth = constraints!.constrainWidth();
+                        const dashWidth = 2.0;
+                        final dashCount = (boxWidth / (2 * dashWidth)).floor();
+                        return pw.Flex(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          direction: pw.Axis.horizontal,
+                          children: List.generate(dashCount, (_) {
+                            return pw.SizedBox(
+                              width: dashWidth,
+                              height: 1,
+                              child: pw.DecoratedBox(
+                                decoration: const pw.BoxDecoration(
+                                    color: PdfColors.black),
+                              ),
+                            );
+                          }),
+                        );
+                      },
+                    ),
+                    pw.SizedBox(height: 20),
+                    pw.Text('By VietQR.VN | VietQR.COM',
+                        style: pw.TextStyle(
+                            font: font,
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold))
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+        return pdf.save();
+      },
     );
   }
 }

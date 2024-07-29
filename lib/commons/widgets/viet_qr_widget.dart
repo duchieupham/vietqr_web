@@ -300,7 +300,6 @@ class VietQRWidget extends StatelessWidget {
                           children: [
                             Text(
                               qrGeneratedDTO.bankAccount,
-                              // 'widget.qrGeneratedDTO.bankAccount,',
                               maxLines: 1,
                               style: const TextStyle(
                                   color: AppColor.BLACK,
@@ -308,8 +307,6 @@ class VietQRWidget extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              // 'widget.qrGeneratedDTO.userBankName'
-                              //     .toUpperCase(),
                               qrGeneratedDTO.userBankName.toUpperCase(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

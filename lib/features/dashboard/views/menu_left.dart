@@ -260,18 +260,24 @@ class MenuLeft extends StatelessWidget {
             ],
           ),
         ),
-        // ItemMenuHome(
-        //   title: 'Cài đặt',
-        //   iconId: AppImages.icMenuSetting,
-        //   isSelect: currentType == MenuHomeType.SETTING,
-        //   onTap: () {
-        //     DialogWidget.instance.openPopup(
-        //       width: 800,
-        //       height: 650,
-        //       child: const PopupSetting(),
-        //     );
-        //   },
-        // ),
+        ItemMenuHome(
+          title: 'Cài đặt',
+          // iconId: AppImages.icMenuSetting,
+          iconWidget: const Icon(
+            Icons.settings,
+            color: AppColor.BLACK,
+            size: 20,
+          ),
+          isSelect: currentType == MenuHomeType.SETTING,
+          onTap: () {
+            DialogWidget.instance.openPopup(
+              width: 800,
+              height: 650,
+              child: const PopupSetting(),
+            );
+          },
+        ),
+
         // ItemMenuHome(
         //   title: 'Đăng xuất',
         //   isSelect: currentType == MenuHomeType.LOGOUT,
