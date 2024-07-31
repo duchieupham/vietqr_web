@@ -103,6 +103,16 @@ class MenuLogin extends StatelessWidget {
                               provider.changePage(0);
                               context.go('/create-qr');
                             }),
+                            _buildItemMenu('Tài liệu API',
+                                isSelected: provider.page == 0, onTap: () {
+                              html.window
+                                  .open('https://api.vietqr.vn/', 'new tab');
+                            }),
+                            _buildItemMenu('Tài liệu VietQR',
+                                isSelected: provider.page == 0, onTap: () {
+                              html.window
+                                  .open('https://doc.vietqr.vn', 'new tab');
+                            }),
                             _buildItemMenu('Tài liệu kết nối',
                                 isSelected: provider.page == 1, onTap: () {
                               provider.changePage(1);
