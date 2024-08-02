@@ -10,6 +10,7 @@ class PinWidget extends StatelessWidget {
   final int pinLength;
   final FocusNode focusNode;
   final Function(String) onDone;
+  final Alignment? alignment;
 
   const PinWidget({
     super.key,
@@ -18,6 +19,7 @@ class PinWidget extends StatelessWidget {
     required this.pinLength,
     required this.focusNode,
     required this.onDone,
+    this.alignment,
   });
 
   @override
@@ -27,7 +29,7 @@ class PinWidget extends StatelessWidget {
         Container(
           width: width,
           height: pinSize + 5,
-          alignment: Alignment.center,
+          alignment: alignment ?? Alignment.center,
           child: Consumer<PinProvider>(
             builder: ((context, value, child) {
               return ListView.builder(
@@ -36,6 +38,11 @@ class PinWidget extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: ((context, index) {
+                  // Determine the color based on whether the pin has been entered
+                  final bool isFilled = index < value.pinLength;
+                  final Color pinColor =
+                      isFilled ? Colors.blue : Colors.grey.withOpacity(0.5);
+
                   return UnconstrainedBox(
                     child: Container(
                       width: pinSize,
@@ -43,12 +50,10 @@ class PinWidget extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(pinSize),
-                        color: (value.pinLength < index + 1)
-                            ? AppColor.TRANSPARENT
-                            : AppColor.GREY_TOP_TAB_BAR,
+                        color: pinColor,
                         border: Border.all(
                           width: 2,
-                          color: AppColor.GREY_TOP_TAB_BAR,
+                          color: pinColor,
                         ),
                       ),
                     ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
+import 'package:VietQR/commons/constants/configurations/numeral.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/descede.dart';
 import 'package:VietQR/commons/utils/encrypt_utils.dart';
@@ -12,7 +13,9 @@ import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/divider_widget.dart';
 import 'package:VietQR/commons/widgets/header/menu_drawer.dart';
 import 'package:VietQR/commons/widgets/header/menu_login.dart';
+import 'package:VietQR/commons/widgets/n_pin_widget.dart';
 import 'package:VietQR/commons/widgets/pin_code_input.dart';
+import 'package:VietQR/commons/widgets/pin_widget.dart';
 import 'package:VietQR/commons/widgets/textfield_widget.dart';
 import 'package:VietQR/features/login/blocs/login_bloc.dart';
 import 'package:VietQR/features/login/events/login_event.dart';
@@ -20,10 +23,12 @@ import 'package:VietQR/features/login/frames/login_frame.dart';
 import 'package:VietQR/features/login/frames/login_mobile_frame.dart';
 import 'package:VietQR/features/login/provider/login_provider.dart';
 import 'package:VietQR/features/login/states/login_state.dart';
+import 'package:VietQR/features/login/widgets/popup_qr_widget.dart';
 import 'package:VietQR/layouts/border_layout.dart';
 import 'package:VietQR/layouts/box_layout.dart';
 import 'package:VietQR/models/account_login_dto.dart';
 import 'package:VietQR/models/info_user_dto.dart';
+import 'package:VietQR/services/providers/pin_provider.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 import 'package:VietQR/services/shared_references/web_socket_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -59,18 +64,18 @@ class _Login extends State<Login> {
   late PageController pageController = PageController();
   List<InfoUserDTO> _listInfoUsers = [];
   bool isMobileWeb = false;
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  Timer? _timer;
+  bool isLoginSelected = true;
 
   @override
   void initState() {
     super.initState();
+    _startAutoSlide();
     _listInfoUsers = UserInformationHelper.instance.getLoginAccount();
     if (_listInfoUsers.isNotEmpty) {
       pageController = PageController(initialPage: 1);
-    }
-
-    if (kDebugMode) {
-      phoneNoController.text = '0373568944';
-      _passwordController.text = '181101';
     }
 
     String loginID = des.getLoginID();
@@ -87,8 +92,44 @@ class _Login extends State<Login> {
   @override
   void dispose() {
     // LoginRepository.codeLoginController.close();
+    _timer?.cancel();
+    _pageController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
+
+  void _startAutoSlide() {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < _containers.length - 1) {
+        _currentPage++;
+        _pageController.animateToPage(
+          _currentPage,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+      } else {
+        Future.delayed(Duration(seconds: 3), () {
+          _currentPage = 0;
+          _pageController.jumpToPage(_currentPage);
+        });
+      }
+    });
+  }
+  // void _startAutoSlide() {
+  //   _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+  //     if (_currentPage < _containers.length - 1) {
+  //       _currentPage++;
+  //     } else {
+  //       _currentPage = 0;
+  //     }
+
+  //     _pageController.animateToPage(
+  //       _currentPage,
+  //       duration: Duration(milliseconds: 300),
+  //       curve: Curves.easeIn,
+  //     );
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +231,11 @@ class _Login extends State<Login> {
                 }
                 if (state is LoginFailedState) {
                   FocusManager.instance.primaryFocus?.unfocus();
+                  setState(() {
+                    _passwordController.clear();
+                    // focusNode.dispose();
+                    Provider.of<PinProvider>(context, listen: false).reset();
+                  });
                   //pop loading dialog
                   Navigator.of(context).pop();
 
@@ -205,13 +251,21 @@ class _Login extends State<Login> {
                       width: width,
                       height: height,
                       menuTop: const MenuLogin(),
-                      widget1: _buildWidget1(
+                      // widget1: _buildWidget1(
+                      //     width: width,
+                      //     isResized:
+                      //         PlatformUtils.instance.resizeWhen(width, 750),
+                      //     height: 604,
+                      //     provider: provider),
+                      // widget2: _buildQrLogin(),
+                      // widget2: _buildSlide(),
+                      widget1: _buildSlide(),
+                      widget2: _buildLogin(
                           width: width,
                           isResized:
                               PlatformUtils.instance.resizeWhen(width, 750),
                           height: 604,
                           provider: provider),
-                      widget2: _buildQrLogin(),
                     )
                   : LoginMobileFrame(
                       width: width,
@@ -265,6 +319,280 @@ class _Login extends State<Login> {
             );
           });
     }
+  }
+
+  Widget _buildLogin(
+      {required bool isResized,
+      required double width,
+      required double height,
+      required LoginProvider provider}) {
+    final FocusNode focusNode = FocusNode();
+    String phoneNo = '';
+    String email = '';
+    if (StringUtils.instance.isNumeric(phoneNoController.text.trim())) {
+      phoneNo = phoneNoController.text.trim();
+    } else {
+      email = phoneNoController.text.trim();
+    }
+    return SizedBox(
+      height: height,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [
+                      Color(0xFF00C6FF),
+                      Color(0xFF0072FF),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds),
+                  child: const Text(
+                    'Đăng nhập',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 150,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      gradient: const LinearGradient(
+                          colors: [Color(0xFFE1EFFF), Color(0xFFE5F9FF)],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight)),
+                  child: Center(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image(
+                          image: ImageUtils.instance
+                              .getImageNetWork(AppImages.icInfoBlack),
+                          width: 30,
+                          height: 30,
+                        ),
+                        Text(
+                          'VietQR ID Card',
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            BorderLayout(
+              width: width,
+              height: 50,
+              borderColor: AppColor.GREY_DADADA,
+              isError: false,
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icPhoneBlack),
+                    width: 30,
+                    height: 30,
+                  ),
+                  Expanded(
+                    child: TextFieldWidget(
+                      height: 46,
+                      width: width,
+                      isObscureText: false,
+                      autoFocus: true,
+                      hintText: 'Số điện thoại*',
+                      fontSize: 14,
+                      controller: phoneNoController,
+                      inputType: TextInputType.text,
+                      keyboardAction: TextInputAction.done,
+                      inputFormatter: [
+                        LengthLimitingTextInputFormatter(10),
+                      ],
+                      onSubmitted: (value) {
+                        // _loginBloc.add(CheckExistPhone(
+                        //     phone: phoneNoController.text.trim()));
+                      },
+                      onChange: (value) {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            BorderLayout(
+              width: width,
+              height: 50,
+              borderColor: AppColor.GREY_DADADA,
+              isError: false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 10),
+                  Image(
+                    image: ImageUtils.instance
+                        .getImageNetWork(AppImages.icLockBlack),
+                    width: 30,
+                    height: 30,
+                  ),
+                  Expanded(
+                    child: NPinWidget(
+                      pinController: _passwordController,
+                      alignment: Alignment.centerLeft,
+                      width: 300,
+                      pinSize: 15,
+                      pinLength: Numeral.DEFAULT_PIN_LENGTH,
+                      focusNode: focusNode,
+                      onDone: (pin) {
+                        AccountLoginDTO dto = AccountLoginDTO(
+                          phoneNo: phoneNoController.text,
+                          email: phoneNoController.text,
+                          password: EncryptUtils.instance.encrypted(
+                            phoneNoController.text,
+                            pin,
+                          ),
+                          device: '',
+                          fcmToken: '',
+                          platform: '',
+                        );
+
+                        _loginBloc.add(
+                          LoginEventByPhone(dto: dto),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Quên mật khẩu đăng nhập?',
+              style: TextStyle(fontSize: 15, color: AppColor.GREY_TEXT),
+            ),
+            const SizedBox(height: 50),
+            InkWell(
+              onTap: () {
+                AccountLoginDTO dto = AccountLoginDTO(
+                  phoneNo: phoneNoController.text,
+                  email: phoneNoController.text,
+                  password: EncryptUtils.instance.encrypted(
+                    phoneNoController.text,
+                    _passwordController.text,
+                  ),
+                  device: '',
+                  fcmToken: '',
+                  platform: '',
+                );
+
+                _loginBloc.add(
+                  LoginEventByPhone(dto: dto),
+                );
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  gradient: const LinearGradient(
+                      colors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Đăng nhập',
+                    style: TextStyle(fontSize: 15, color: AppColor.WHITE),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            InkWell(
+              onTap: () {
+                context.go('/register');
+              },
+              child: ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ).createShader(bounds),
+                child: Center(
+                  child: const Text(
+                    'Đăng ký tài khoản mới',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      child: PopupQrWidget(
+                        qrValue: qrValue,
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(
+                      image: ImageUtils.instance
+                          .getImageNetWork(AppImages.icSuggest),
+                      width: 30,
+                      height: 30,
+                    ),
+                    ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [
+                          Color(0xFF458BF8),
+                          Color(0xFFFF8021),
+                          Color(0xFFFF3751),
+                          Color(0xFFC958DB)
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ).createShader(bounds),
+                      child: const Text(
+                        'Quét mã QR để đăng nhập vào website',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildWidget1(
@@ -619,6 +947,335 @@ class _Login extends State<Login> {
                 color: textColor,
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  final List<Widget> _containers = [
+    Container(
+      width: 600,
+      height: 500,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.step1Login),
+            width: 400,
+            height: 400,
+          ),
+          const SizedBox(height: 8),
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [
+                Color(0xFF9CD740),
+                Color(0xFF2BACE6),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: const Text(
+              'Ứng dụng Tiện ích, Đơn giản\ncho cuộc sống hiện đại',
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    Container(
+      width: 600,
+      height: 500,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [
+                Color(0xFF4260ED),
+                Color(0xFFFC7218),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: const Text(
+              'Thanh toán nhanh gọn,\nđối soát nhanh chóng',
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Quét mã VietQR thanh toán tức thì.\nHỗ trợ quét mã thanh toán cho tất cả  các ứng dụng ngân hàng và ví điện tử.',
+            style: TextStyle(fontSize: 15),
+          ),
+          const SizedBox(height: 8),
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.step2Login),
+            width: 400,
+            height: 260,
+          ),
+        ],
+      ),
+    ),
+    Container(
+      width: 600,
+      height: 500,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.step3Login),
+            width: 400,
+            height: 260,
+          ),
+          const SizedBox(height: 8),
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [
+                Color(0xFF3C5FFF),
+                Color(0xFFEB5BEE),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: const Text(
+              'Quản lý cửa hàng hiệu quả',
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Dữ liệu thống kê trực quan, đáng tin cậy.',
+            style: TextStyle(fontSize: 15),
+          ),
+        ],
+      ),
+    ),
+    Container(
+      width: 600,
+      height: 500,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [
+                Color(0xFFFD711A),
+                Color(0xFFDF263C),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: const Text(
+              'Chia sẻ thông tin số dư\nqua nền tảng mạng xã hội',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.step4Login),
+            width: 400,
+            height: 260,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Chia sẻ thông tin giao dịch với nhóm nhân viên của bạn.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 15),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoDiscord),
+                width: 40,
+                height: 40,
+              ),
+              Image(
+                image: ImageUtils.instance.getImageNetWork(AppImages.logoSlark),
+                width: 40,
+                height: 40,
+              ),
+              Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoGGSheet),
+                width: 40,
+                height: 40,
+              ),
+              Image(
+                image:
+                    ImageUtils.instance.getImageNetWork(AppImages.logoGGChat),
+                width: 40,
+                height: 40,
+              ),
+              Image(
+                image: ImageUtils.instance
+                    .getImageNetWork(AppImages.logoLarkLogin),
+                width: 40,
+                height: 40,
+              ),
+              Image(
+                image: ImageUtils.instance
+                    .getImageNetWork(AppImages.logoTeleLogin),
+                width: 40,
+                height: 40,
+              ),
+              SizedBox(width: 8),
+              Text('và nhiều hơn thế!!!'),
+            ],
+          ),
+        ],
+      ),
+    ),
+    Container(
+      width: 600,
+      height: 500,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Sử dụng bộ API Service của chúng tôi để tích hợp và\nquản trị trực tiếp trên hệ thống của bạn.',
+              style: TextStyle(fontSize: 15),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Image(
+            image: ImageUtils.instance.getImageNetWork(AppImages.step5Login),
+            width: 400,
+            height: 260,
+          ),
+          const SizedBox(height: 8),
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [
+                Color(0xFF415FEB),
+                Color(0xFF131C3B),
+              ],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: Text(
+              'Tích hợp dịch vụ VietQR\nvào hệ thống của bạn',
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+                // fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 20),
+          InkWell(
+            onTap: () {
+              html.window.open('https://api.vietqr.vn/', 'new tab');
+            },
+            child: Container(
+              width: 400,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF458BF8),
+                    Color(0xFFFF8021),
+                    Color(0xFFFF3751),
+                    Color(0xFFC958DB),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Container(
+                margin: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(23),
+                  color: Colors.white,
+                ),
+                child: const Center(
+                  child: Text(
+                    'Truy cập trang tài liệu kết nối API Service',
+                    style: TextStyle(
+                      color: Color(0xFF458BF8),
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    )
+  ];
+
+  Widget _buildSlide() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0),
+      child: Container(
+        width: 600,
+        height: 600,
+        child: Row(
+          children: [
+            Expanded(
+              child: PageView(
+                physics: BouncingScrollPhysics(),
+                controller: _pageController,
+                scrollDirection: Axis.vertical,
+                onPageChanged: (int page) {
+                  setState(() {
+                    _currentPage = page;
+                  });
+                },
+                children: _containers,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(_containers.length, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Container(
+                    width: 10,
+                    height: index == _currentPage ? 20 : 10,
+                    decoration: BoxDecoration(
+                      color: index == _currentPage
+                          ? const Color(0xFF3048A1)
+                          : AppColor.GREY_TEXT.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                );
+              }),
+            ),
           ],
         ),
       ),

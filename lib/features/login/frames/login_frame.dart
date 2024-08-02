@@ -58,14 +58,29 @@ class LoginFrame extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
+                          // Expanded(
+                          //   child: widget2,
+                          // ),
+                          // slidewidget
+                          // BoxLayout(
+                          //   width: 600,
+                          //   borderRadius: 16,
+                          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                          //   bgColor: AppColor.WHITE,
+                          //   child: widget2,
+                          // ),
+                          BoxLayout(
+                            width: 390,
+                            borderRadius: 16,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            bgColor: AppColor.WHITE,
                             child: widget2,
                           ),
                           const SizedBox(
                             width: 30,
                           ),
                           BoxLayout(
-                            width: 500,
+                            width: 600,
                             borderRadius: 16,
                             padding: const EdgeInsets.symmetric(horizontal: 28),
                             bgColor: AppColor.WHITE,

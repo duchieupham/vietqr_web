@@ -134,4 +134,23 @@ class AppImages {
   static String icSuccessInGreen = 'e6b21866-b49c-4998-a472-4a41f4e68b3e';
   static String icSuccessInBlue = '8e97696d-474f-4e89-9bec-512af8353625';
   static String icCheckedWhite = '86b95a6a-19c7-4528-a466-8a9eec4cca42';
+
+  //login
+  static String icInfoBlack = '2dd96105-b6ef-4fee-a814-baa7bc994fb1';
+  static String icPhoneBlack = '544c25bd-7a53-4df7-b5c2-4b4f40135ffa';
+  static String icLockBlack = '2b3e2e24-bb58-49d3-858d-847a4d5f6abf';
+  static String icSuggest = 'd59ef5a8-d6da-4594-9360-6dac4270b826';
+  static String icNoteBlack = '87fce417-f4b7-4f52-8dea-4887448a5ebb';
+  static String icHeadphoneBlack = '52a5000c-db74-4a39-9282-efc22503e74d';
+  static String step1Login = 'db7f1091-8023-4064-82c7-0048383ab459';
+  static String step2Login = '8af8b6ec-a8b9-4f54-9981-38b5512fa281';
+  static String step3Login = '14152f17-78e7-44ff-b284-e45573785492';
+  static String step4Login = '1d4049f1-ea37-4a72-9e5c-c4c4855ada31';
+  static String step5Login = '26682f91-49e2-4bce-9e52-44258da99b02';
+  static String logoDiscord = '5c70cf3d-caa0-4135-be2b-6bc8725e4a24';
+  static String logoSlark = 'fc777573-ab1b-43f1-9963-34d033417b6b';
+  static String logoGGSheet = '0714b539-2467-4d29-beee-95fb7497ce63';
+  static String logoGGChat = '7f87ffe2-3ace-4d9b-97e7-3bce9bf89613';
+  static String logoLarkLogin = '40b717d0-751d-43bd-8bcc-1366236a7872';
+  static String logoTeleLogin = 'f9bf6edd-3ebd-4b46-a80b-6a8adc14c7ae';
 }
