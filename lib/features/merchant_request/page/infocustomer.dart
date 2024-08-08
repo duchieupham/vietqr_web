@@ -309,6 +309,15 @@ class InforCustomer extends StatelessWidget {
               ),
             ],
           ),
+        const SizedBox(height: 4),
+        Visibility(
+            visible: provider.urlError,
+            child: Text(
+              provider.valueTypeConnect == 0
+                  ? 'URL không đúng định dạng'
+                  : 'IP không phù hợp',
+              style: const TextStyle(fontSize: 12, color: AppColor.RED_TEXT),
+            )),
         const SizedBox(
           height: 16,
         ),
