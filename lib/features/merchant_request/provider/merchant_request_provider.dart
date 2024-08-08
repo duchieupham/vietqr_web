@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 
 class MerchantRequestProvider with ChangeNotifier {
   String _urlConnect = '';
+  bool _urlError = false;
+  bool get urlError => _urlError;
 
   String get urlConnect => _urlConnect;
   String _suffixConnect = '';
@@ -162,8 +164,23 @@ class MerchantRequestProvider with ChangeNotifier {
     }
   }
 
+  bool isAllowedUrl(String url) {
+    List<String> allowedUrls = [
+      'dev.vietqr.org',
+      'api.vietqr.org',
+      '112.78.1.209',
+      '112.78.1.220',
+    ];
+
+    return allowedUrls.contains(url);
+  }
+
   void updateUrlConnect(String value) {
-    _urlConnect = value;
+    if (isAllowedUrl(value)) {
+      _urlConnect = value;
+    }
+    _urlError = isAllowedUrl(value);
+    notifyListeners();
   }
 
   void updateUserBankName(String value) {
@@ -182,7 +199,12 @@ class MerchantRequestProvider with ChangeNotifier {
   }
 
   void updateIpConnect(String value) {
-    _ipConnect = value;
+    if (isAllowedUrl(value)) {
+      _ipConnect = value;
+    }
+    _urlError = isAllowedUrl(value);
+
+    notifyListeners();
   }
 
   void updatePortConnect(String value) {
