@@ -70,9 +70,11 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   void _handleExportExcel() async {
+    DateTime formattedDate =
+        DateTime(_fromDate.year, _fromDate.month, _fromDate.day, 0, 0, 0);
     final result = await repository.exportExcel(
         widget.bankId,
-        _formatDay.format(_fromDate),
+        _formatDay.format(formattedDate),
         _formatDay.format(_toDate),
         terminalDTO.terminalCode);
 
