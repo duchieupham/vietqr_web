@@ -648,7 +648,7 @@ class _ScreenState extends State<_Screen> {
             const SizedBox(height: 20),
             if (dto.amount != '0' && dto.amount.isNotEmpty) ...[
               Text(
-                '+ ${StringUtils.formatNumberAmount(dto.amount)}',
+                '+ ${dto.amount}',
                 style: const TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
