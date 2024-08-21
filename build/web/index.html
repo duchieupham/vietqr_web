@@ -1,89 +1,118 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/10.13.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/10.13.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/10.13.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
+<head>
+  <!--
+      If you are serving your web app in a path other than the root, change the
+      href value below to reflect the base path you are serving from.
+
+      The path provided below has to start and end with a slash "/" in order for
+      it to work correctly.
+
+      For more details:
+      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+      This is a placeholder for base href that will be replaced by the value of
+      the `--base-href` argument provided to `flutter build`.
     -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  <base href="/">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description"
+    content="VietQR là chuẩn thanh toán QR của EMV Co. · Giao dịch nhanh chóng/ Đơn giản hóa trải nghiệm và tăng tốc độ thanh toán thông qua việc quét mã QR được phát triển nhằm tạo sự thanh toán và thuận tiện cho khách 19006234 - VietQR.vn - VietQR.com - VietQR.org">
+  <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /> -->
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title"
+    content="VIETQR.VN - Phần mềm tạo mã QR và Đối soát giao dịch thanh toán qua mã VietQR">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
+  <!-- Favicon -->
+
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>VietQR VN - Mã QR thanh toán Ngân hàng Việt Nam</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = '"2347109486"';
+
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <!--  <script src="flutter.js" defer></script>-->
+  <script src="main.dart.js" defer=""></script>
+  <link rel="stylesheet" type="text/css" href="splash/style.css">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  <script src="splash/splash.js"></script>
+</head>
+
+<body>
+  <picture id="splash">
+    <source
+      srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x"
+      media="(prefers-color-scheme: light)">
+    <source
+      srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x"
+      media="(prefers-color-scheme: dark)">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+  </picture>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('flutter-first-frame', function () {
+        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + new Date().getTime();
+        navigator.serviceWorker.register(serviceWorkerUrl);
+        navigator.serviceWorker.register('/flutter_service_worker.js');
       });
-    </script>
-  </body>
+    }
+    window.onbeforeprint = function () {
+      window.flutterWebRenderer = "html";
+      window.print()
+    }
+    window.addEventListener('load', function (ev) {
+      // Download main.dart.js
+      entrypointUrl: "/main.dart.js",
+        _flutter.loader({
+          serviceWorker: {
+            serviceWorkerVersion: serviceWorkerVersion,
+          },
+          onEntrypointLoaded: function (engineInitializer) {
+            let config = {
+              renderer: useHtml ? "html" : "canvaskit",
+            };
+            engineInitializer.initializeEngine(config).then(function (appRunner) {
+              appRunner.runApp();
+            });
+          }
+        });
+    });
+
+  </script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  <script>
+    // Hàm JavaScript để gửi dữ liệu từ InAppWebView đến Flutter web
+    function receiveDataFromFlutter(data) {
+      window.state = {
+        userId: data
+      }
+    }
+
+  </script>
+  <script>
+    function sendDataToFlutter(data) {
+      // Gửi dữ liệu từ WebView về Flutter thông qua InAppWebView
+      window.flutter_inappwebview.callHandler('sendDataToFlutter', data);
+    }
+
+  </script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.15/plugins/export/libs/FileSaver.js/FileSaver.min.js"></script>
+
+
+</body>
+
 </html>
