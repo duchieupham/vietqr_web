@@ -311,7 +311,9 @@ class InforCustomer extends StatelessWidget {
           ),
         const SizedBox(height: 4),
         Visibility(
-            visible: provider.urlError,
+            visible: provider.valueTypeConnect == 0
+                ? provider.urlError
+                : provider.ipError,
             child: Text(
               provider.valueTypeConnect == 0
                   ? 'URL không đúng định dạng'

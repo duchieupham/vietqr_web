@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 class MerchantRequestProvider with ChangeNotifier {
   String _urlConnect = '';
   bool _urlError = false;
+  bool _ipError = false;
+
   bool get urlError => _urlError;
+  bool get ipError => _ipError;
 
   String get urlConnect => _urlConnect;
   String _suffixConnect = '';
@@ -202,7 +205,7 @@ class MerchantRequestProvider with ChangeNotifier {
     if (isAllowedUrl(value)) {
       _ipConnect = value;
     }
-    _urlError = isAllowedUrl(value);
+    _ipError = isAllowedUrl(value);
 
     notifyListeners();
   }
