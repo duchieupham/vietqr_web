@@ -79,6 +79,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     const DataFilter(id: 4, name: 'Mã điểm bán'),
     const DataFilter(id: 2, name: 'Mã đơn hàng (Order ID)'),
     const DataFilter(id: 3, name: 'Nội dung'),
+    const DataFilter(id: 6, name: 'Mã cửa hàng'),
   ];
 
   final List<DataFilter> listFilterByStatus = [
@@ -104,6 +105,8 @@ class _FilterWidgetState extends State<FilterWidget> {
     if (_filterBy.id == 4) return 'Tìm kiếm theo mã điểm bán';
     if (_filterBy.id == 2) return 'Tìm kiếm theo mã đơn hàng';
     if (_filterBy.id == 3) return 'Tìm kiếm theo nội dung';
+    if (_filterBy.id == 6) return 'Tìm kiếm theo mã cửa hàng';
+
     return 'Tìm kiếm theo mã giao dịch';
   }
 
