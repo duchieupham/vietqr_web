@@ -53,6 +53,7 @@ class TransReceiveDTO {
   String note;
   final String referenceNumber;
   final String orderId;
+  final String subCode;
   final String bankShortName;
   final String id;
   final String bankId;
@@ -73,6 +74,7 @@ class TransReceiveDTO {
     this.transType = '',
     this.terminalCode = '',
     this.terminalName = '',
+    this.subCode = '',
     this.note = '',
     this.referenceNumber = '',
     this.orderId = '',
@@ -203,6 +205,7 @@ class TransReceiveDTO {
               : '',
       type: json['type'] ?? 0,
       transType: json['transType'] ?? '',
+      subCode: json['subCode'] ?? '-',
       bankShortName: json['bankShortName'] ?? '',
       orderId: json['orderId'] ?? '',
       note: json['note'] ?? '',

@@ -76,10 +76,10 @@ class _FilterWidgetState extends State<FilterWidget> {
   final List<DataFilter> listFilterBy = [
     const DataFilter(id: 9, name: 'Mã giao dịch'),
     const DataFilter(id: 5, name: 'Trạng thái giao dịch'),
-    const DataFilter(id: 4, name: 'Mã điểm bán'),
+    const DataFilter(id: 6, name: 'Mã điểm bán'),
     const DataFilter(id: 2, name: 'Mã đơn hàng (Order ID)'),
     const DataFilter(id: 3, name: 'Nội dung'),
-    const DataFilter(id: 6, name: 'Mã cửa hàng'),
+    const DataFilter(id: 4, name: 'Mã cửa hàng'),
   ];
 
   final List<DataFilter> listFilterByStatus = [
