@@ -305,7 +305,7 @@ class GetUsernamePassword extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
                           Text(
-                            'Lưu ý',
+                            'Lưu ý:',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
