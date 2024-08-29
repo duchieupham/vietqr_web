@@ -102,87 +102,96 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: 210,
                     child: SizedBox(
                       width: widthTable,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        controller: _horizontal,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: AppColor.BLUE_TEXT.withOpacity(0.3)),
-                              child: Row(
-                                children: List.generate(
-                                  list.length,
-                                  (index) {
-                                    TransData e = list[index];
-                                    return _buildItemTitle(e.title,
-                                        height: 40,
-                                        width: e.width,
-                                        alignment: Alignment.center,
-                                        textAlign: TextAlign.center);
-                                  },
-                                ),
-                              ),
-                            ),
-                            if (widget.list.isEmpty)
-                              Container(
-                                height: 100,
-                                width: widthTable,
-                                color: AppColor.BLUE_TEXT.withOpacity(0.1),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      width: withEmpty > 0
-                                          ? widthTable
-                                          : widthTable - (withEmpty.abs()),
-                                      child: (widget.isLoading)
-                                          ? const Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child:
-                                                    CircularProgressIndicator(),
-                                              ),
-                                            )
-                                          : Column(
-                                              children: [
-                                                Image(
-                                                  image: ImageUtils.instance
-                                                      .getImageNetWork(AppImages
-                                                          .icEmptyTrans),
-                                                  width: 60,
-                                                ),
-                                                const Text('Trống',
-                                                    style: TextStyle(
-                                                        color: AppColor
-                                                            .GREY_TEXT)),
-                                              ],
-                                            ),
+                      child: ScrollConfiguration(
+                        behavior: MyCustomScrollBehavior(),
+                        child: Scrollbar(
+                          controller: _horizontal,
+                          child: SingleChildScrollView(
+                            physics: const ClampingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            controller: _horizontal,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color:
+                                          AppColor.BLUE_TEXT.withOpacity(0.3)),
+                                  child: Row(
+                                    children: List.generate(
+                                      list.length,
+                                      (index) {
+                                        TransData e = list[index];
+                                        return _buildItemTitle(e.title,
+                                            height: 40,
+                                            width: e.width,
+                                            alignment: Alignment.center,
+                                            textAlign: TextAlign.center);
+                                      },
                                     ),
-                                    // const Expanded(child: SizedBox.shrink())
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            Column(
-                              children: widget.list
-                                  .asMap()
-                                  .map(
-                                    (index, x) {
-                                      return MapEntry(
-                                          index,
-                                          _buildItem(
-                                            index: index,
-                                            model: x,
-                                          ));
-                                    },
-                                  )
-                                  .values
-                                  .toList(),
+                                if (widget.list.isEmpty)
+                                  Container(
+                                    height: 100,
+                                    width: widthTable,
+                                    color: AppColor.BLUE_TEXT.withOpacity(0.1),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          width: withEmpty > 0
+                                              ? widthTable
+                                              : widthTable - (withEmpty.abs()),
+                                          child: (widget.isLoading)
+                                              ? const Center(
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                                )
+                                              : Column(
+                                                  children: [
+                                                    Image(
+                                                      image: ImageUtils.instance
+                                                          .getImageNetWork(
+                                                              AppImages
+                                                                  .icEmptyTrans),
+                                                      width: 60,
+                                                    ),
+                                                    const Text('Trống',
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .GREY_TEXT)),
+                                                  ],
+                                                ),
+                                        ),
+                                        // const Expanded(child: SizedBox.shrink())
+                                      ],
+                                    ),
+                                  ),
+                                Column(
+                                  children: widget.list
+                                      .asMap()
+                                      .map(
+                                        (index, x) {
+                                          return MapEntry(
+                                              index,
+                                              _buildItem(
+                                                index: index,
+                                                model: x,
+                                              ));
+                                        },
+                                      )
+                                      .values
+                                      .toList(),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
