@@ -336,50 +336,61 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                 dashWidth: 5, dashSpace: 3),
                             size: const Size(double.infinity, 1),
                           ),
-                          const SizedBox(height: 16),
-                          FilterWidget(
-                            dto: state.bankDTO,
-                            stream: filterStream,
-                            callBack: _onReceive,
-                            onSearch: _onSearch,
-                            terminals: state.terminals,
-                            bankId: _bankId,
-                            isOwner: _isOwner,
-                          ),
-                          const SizedBox(height: 24),
-                          CustomPaint(
-                            painter: HorizontalDashedLine(
-                                dashWidth: 5, dashSpace: 3),
-                            size: const Size(double.infinity, 1),
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              const Text(
-                                'Danh sách GD thanh toán',
-                                style: TextStyle(
-                                    color: AppColor.BLACK,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 11),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 16),
+                                  FilterWidget(
+                                    dto: state.bankDTO,
+                                    stream: filterStream,
+                                    callBack: _onReceive,
+                                    onSearch: _onSearch,
+                                    terminals: state.terminals,
+                                    bankId: _bankId,
+                                    isOwner: _isOwner,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  CustomPaint(
+                                    painter: HorizontalDashedLine(
+                                        dashWidth: 5, dashSpace: 3),
+                                    size: const Size(double.infinity, 1),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Danh sách GD thanh toán',
+                                        style: TextStyle(
+                                            color: AppColor.BLACK,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11),
+                                      ),
+                                      _refreshWidget(),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  TableTransWidget(
+                                    list: state.isCache
+                                        ? state.mapLocals[
+                                                _typeTime.timeKeyExt.name] ??
+                                            []
+                                        : state.maps['${state.offset}'] ?? [],
+                                    offset: state.offset,
+                                    isOwner: state.bankDTO?.isOwner ?? false,
+                                    onChooseTerminal: (transDTO) =>
+                                        _onChooseTerminal(state.terminals,
+                                            state.offset, transDTO),
+                                    onEditNote: (dto) =>
+                                        _onChooseNote(state.offset, dto),
+                                    isLoading:
+                                        state.status == BlocStatus.LOADING,
+                                  ),
+                                  _buildPageWidget(state),
+                                ],
                               ),
-                              _refreshWidget(),
-                            ],
+                            ),
                           ),
-                          const SizedBox(height: 12),
-                          TableTransWidget(
-                            list: state.isCache
-                                ? state.mapLocals[_typeTime.timeKeyExt.name] ??
-                                    []
-                                : state.maps['${state.offset}'] ?? [],
-                            offset: state.offset,
-                            isOwner: state.bankDTO?.isOwner ?? false,
-                            onChooseTerminal: (transDTO) => _onChooseTerminal(
-                                state.terminals, state.offset, transDTO),
-                            onEditNote: (dto) =>
-                                _onChooseNote(state.offset, dto),
-                            isLoading: state.status == BlocStatus.LOADING,
-                          ),
-                          _buildPageWidget(state),
                         ],
                       ),
                     ),

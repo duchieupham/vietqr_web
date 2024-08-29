@@ -32,10 +32,10 @@ class TableTransWidget extends StatefulWidget {
 
 class _TableTransWidgetState extends State<TableTransWidget> {
   final ScrollController _horizontal = ScrollController();
-  ScrollController controller1 = ScrollController();
-  ScrollController controller2 = ScrollController();
-  bool isScrollingDown1 = false;
-  bool isScrollingDown2 = false;
+  // ScrollController controller1 = ScrollController();
+  // ScrollController controller2 = ScrollController();
+  // bool isScrollingDown1 = false;
+  // bool isScrollingDown2 = false;
 
   final List<TransData> list = [
     TransData(title: 'stt'.toUpperCase(), width: 50),
@@ -58,23 +58,23 @@ class _TableTransWidgetState extends State<TableTransWidget> {
   @override
   void initState() {
     super.initState();
-    controller1 = ScrollController();
-    controller2 = ScrollController();
-    controller1.addListener(() {
-      if (!isScrollingDown2) {
-        isScrollingDown1 = true;
-        controller2.jumpTo(controller1.offset);
-      }
-      isScrollingDown1 = false;
-    });
+    // controller1 = ScrollController();
+    // controller2 = ScrollController();
+    // controller1.addListener(() {
+    //   if (!isScrollingDown2) {
+    //     isScrollingDown1 = true;
+    //     controller2.jumpTo(controller1.offset);
+    //   }
+    //   isScrollingDown1 = false;
+    // });
 
-    controller2.addListener(() {
-      if (!isScrollingDown1) {
-        isScrollingDown2 = true;
-        controller1.jumpTo(controller2.offset);
-      }
-      isScrollingDown2 = false;
-    });
+    // controller2.addListener(() {
+    //   if (!isScrollingDown1) {
+    //     isScrollingDown2 = true;
+    //     controller1.jumpTo(controller2.offset);
+    //   }
+    //   isScrollingDown2 = false;
+    // });
   }
 
   @override
@@ -172,28 +172,21 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                     ),
                                   ),
                                 Expanded(
-                                  child: ScrollConfiguration(
-                                    behavior: ScrollConfiguration.of(context)
-                                        .copyWith(scrollbars: false),
-                                    child: SingleChildScrollView(
-                                      controller: controller1,
-                                      child: Column(
-                                        children: widget.list
-                                            .asMap()
-                                            .map(
-                                              (index, x) {
-                                                return MapEntry(
-                                                    index,
-                                                    _buildItem(
-                                                      index: index,
-                                                      model: x,
-                                                    ));
-                                              },
-                                            )
-                                            .values
-                                            .toList(),
-                                      ),
-                                    ),
+                                  child: Column(
+                                    children: widget.list
+                                        .asMap()
+                                        .map(
+                                          (index, x) {
+                                            return MapEntry(
+                                                index,
+                                                _buildItem(
+                                                  index: index,
+                                                  model: x,
+                                                ));
+                                          },
+                                        )
+                                        .values
+                                        .toList(),
                                   ),
                                 ),
                               ],
@@ -254,188 +247,172 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                               ),
                               if (widget.list.isNotEmpty)
                                 Expanded(
-                                  child: Scrollbar(
-                                    controller: controller2,
-                                    thumbVisibility: true,
-                                    child: ScrollConfiguration(
-                                      behavior: MyCustomScrollBehavior(),
-                                      child: SingleChildScrollView(
-                                        controller: controller2,
-                                        child: Column(
-                                          children: List.generate(
-                                            widget.list.length,
-                                            (index) {
-                                              TransReceiveDTO dto =
-                                                  widget.list[index];
-                                              return Container(
-                                                  alignment: Alignment.center,
+                                  child: Column(
+                                    children: List.generate(
+                                      widget.list.length,
+                                      (index) {
+                                        TransReceiveDTO dto =
+                                            widget.list[index];
+                                        return Container(
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 100,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: AppColor
+                                                            .GREY_TEXT
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                      color:
+                                                          Colors.transparent),
                                                   child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
-                                                      Container(
-                                                        width: 100,
-                                                        height: 50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  color: AppColor
-                                                                      .GREY_TEXT
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                ),
-                                                                color: Colors
-                                                                    .transparent),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(
-                                                              dto.getStatusString,
-                                                              maxLines: 2,
-                                                              style: TextStyle(
-                                                                color: dto
-                                                                    .getColorStatus,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 12,
-                                                              ),
-                                                            ),
-                                                          ],
+                                                      Text(
+                                                        dto.getStatusString,
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                          color: dto
+                                                              .getColorStatus,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 12,
                                                         ),
                                                       ),
-                                                      Container(
-                                                        width: 110,
-                                                        height: 50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                border:
-                                                                    Border.all(
-                                                                  color: AppColor
-                                                                      .GREY_TEXT
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                ),
-                                                                color: Colors
-                                                                    .transparent),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Tooltip(
-                                                              message:
-                                                                  'Cập nhật ghi chú',
-                                                              child:
-                                                                  GestureDetector(
-                                                                onTap: () => widget
-                                                                    .onEditNote(
-                                                                        dto),
-                                                                child:
-                                                                    Container(
-                                                                  width: 24,
-                                                                  height: 24,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 110,
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: AppColor
+                                                            .GREY_TEXT
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                      color:
+                                                          Colors.transparent),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Tooltip(
+                                                        message:
+                                                            'Cập nhật ghi chú',
+                                                        child: GestureDetector(
+                                                          onTap: () => widget
+                                                              .onEditNote(dto),
+                                                          child: Container(
+                                                            width: 24,
+                                                            height: 24,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          32),
+                                                              color: AppColor
+                                                                  .BLUE_TEXT
+                                                                  .withOpacity(
+                                                                      0.25),
+                                                            ),
+                                                            child: Image(
+                                                              image: ImageUtils
+                                                                  .instance
+                                                                  .getImageNetWork(
+                                                                      AppImages
+                                                                          .icEditTrans),
+                                                              width: 24,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      if (widget.isOwner)
+                                                        Tooltip(
+                                                          message:
+                                                              'Cập nhật giao dịch',
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              widget
+                                                                  .onChooseTerminal(
+                                                                      dto);
+                                                            },
+                                                            child: Container(
+                                                              width: 24,
+                                                              height: 24,
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          6),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
                                                                             32),
-                                                                    color: AppColor
+                                                                color: (!widget
+                                                                            .isOwner &&
+                                                                        !dto
+                                                                            .isEnableTerminal)
+                                                                    ? AppColor
+                                                                        .GREY_BG
+                                                                    : AppColor
                                                                         .BLUE_TEXT
                                                                         .withOpacity(
                                                                             0.25),
-                                                                  ),
-                                                                  child: Image(
-                                                                    image: ImageUtils
-                                                                        .instance
-                                                                        .getImageNetWork(
-                                                                            AppImages.icEditTrans),
-                                                                    width: 24,
-                                                                  ),
-                                                                ),
+                                                              ),
+                                                              child: Image(
+                                                                image: ImageUtils
+                                                                    .instance
+                                                                    .getImageNetWork(
+                                                                        AppImages
+                                                                            .icNoteTrans),
+                                                                width: 24,
                                                               ),
                                                             ),
-                                                            if (widget.isOwner)
-                                                              Tooltip(
-                                                                message:
-                                                                    'Cập nhật giao dịch',
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {
-                                                                    widget
-                                                                        .onChooseTerminal(
-                                                                            dto);
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    width: 24,
-                                                                    height: 24,
-                                                                    margin: const EdgeInsets
-                                                                        .symmetric(
-                                                                        horizontal:
-                                                                            6),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              32),
-                                                                      color: (!widget.isOwner &&
-                                                                              !dto
-                                                                                  .isEnableTerminal)
-                                                                          ? AppColor
-                                                                              .GREY_BG
-                                                                          : AppColor
-                                                                              .BLUE_TEXT
-                                                                              .withOpacity(0.25),
-                                                                    ),
-                                                                    child:
-                                                                        Image(
-                                                                      image: ImageUtils
-                                                                          .instance
-                                                                          .getImageNetWork(
-                                                                              AppImages.icNoteTrans),
-                                                                      width: 24,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            // GestureDetector(
-                                                            //   child: Container(
-                                                            //     width: 24,
-                                                            //     height: 24,
-                                                            //     decoration: BoxDecoration(
-                                                            //       borderRadius:
-                                                            //           BorderRadius.circular(32),
-                                                            //       color: AppColor.GREY_BG,
-                                                            //     ),
-                                                            //     child: Image(
-                                                            //       image: ImageUtils.instance
-                                                            //           .getImageNetWork(
-                                                            //               AppImages.icRefundTrans),
-                                                            //       width: 24,
-                                                            //       color: AppColor.GREY_BG,
-                                                            //     ),
-                                                            //   ),
-                                                            // ),
-                                                          ],
+                                                          ),
                                                         ),
-                                                      )
+                                                      // GestureDetector(
+                                                      //   child: Container(
+                                                      //     width: 24,
+                                                      //     height: 24,
+                                                      //     decoration: BoxDecoration(
+                                                      //       borderRadius:
+                                                      //           BorderRadius.circular(32),
+                                                      //       color: AppColor.GREY_BG,
+                                                      //     ),
+                                                      //     child: Image(
+                                                      //       image: ImageUtils.instance
+                                                      //           .getImageNetWork(
+                                                      //               AppImages.icRefundTrans),
+                                                      //       width: 24,
+                                                      //       color: AppColor.GREY_BG,
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
                                                     ],
-                                                  ));
-                                            },
-                                          ),
-                                        ),
-                                      ),
+                                                  ),
+                                                )
+                                              ],
+                                            ));
+                                      },
                                     ),
                                   ),
                                 )
