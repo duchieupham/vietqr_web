@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/month_calculator.dart';
 import 'package:VietQR/commons/utils/time_utils.dart';
 import 'package:VietQR/commons/widgets/button_widget.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/features/transaction/repositories/transaction_repository.dart';
+import 'package:VietQR/features/transaction/widgets/time_picker_dialog_with_seconds.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/data_filter.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
@@ -57,6 +60,9 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   DateTime _fromDate = DateTime.now();
   DateTime _toDate = DateTime.now();
 
+  ExtendedTimeOfDay? _selectedFromDateTime;
+  ExtendedTimeOfDay? _selectedToDateTime;
+
   void _handleBack() {
     Navigator.pop(context);
   }
@@ -70,8 +76,13 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   void _handleExportExcel() async {
-    DateTime formattedDate =
-        DateTime(_fromDate.year, _fromDate.month, _fromDate.day, 0, 0, 0);
+    DateTime formattedDate = DateTime(
+        _fromDate.year,
+        _fromDate.month,
+        _fromDate.day,
+        _filterByTime.id != 4 ? 0 : _fromDate.hour,
+        _filterByTime.id != 4 ? 0 : _fromDate.minute,
+        _filterByTime.id != 4 ? 0 : _fromDate.second);
     final result = await repository.exportExcel(
         widget.bankId,
         _formatDay.format(formattedDate),
@@ -204,9 +215,11 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   void _pickToDate() async {
+    DateTime formattedDate =
+        DateTime(_toDate.year, _toDate.month, _toDate.day, 23, 59, 59);
     DateTime? date = await TimeUtils.instance.showDateTimePicker(
       context: context,
-      initialDate: _toDate,
+      initialDate: formattedDate,
       firstDate: DateTime(2021, 6),
       lastDate: DateTime.now(),
     );
@@ -226,9 +239,12 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   void _pickFromDate() async {
+    DateTime _formattedDate =
+        DateTime(_fromDate.year, _fromDate.month, _fromDate.day, 0, 0, 0);
+    print(_formattedDate);
     DateTime? date = await TimeUtils.instance.showDateTimePicker(
       context: context,
-      initialDate: _fromDate,
+      initialDate: _formattedDate,
       firstDate: DateTime(2021, 6),
       lastDate: DateTime.now(),
     );

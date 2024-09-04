@@ -1,4 +1,5 @@
 import 'package:VietQR/commons/utils/log.dart';
+import 'package:VietQR/features/transaction/widgets/time_picker_dialog_with_seconds.dart';
 import 'package:VietQR/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -406,7 +407,9 @@ class TimeUtils {
 
     if (!mounted) return selectedDate;
 
-    TimeOfDay? selectedTime;
+    // TimeOfDay? selectedTime;
+
+    ExtendedTimeOfDay? selectedTime;
 
     // if (isSelectedTime) {
     //   selectedTime = await showTimePicker(
@@ -415,26 +418,35 @@ class TimeUtils {
     //   );
     // }
     if (isSelectedTime) {
-      selectedTime = await showTimePicker(
+      // selectedTime = await showTimePicker(
+      //   context: context,
+      //   initialTime: TimeOfDay.fromDateTime(selectedDate),
+      //   builder: (BuildContext context, Widget? child) {
+      //     return MediaQuery(
+      //       data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+      //       child: child!,
+      //     );
+      //   },
+      // );
+      ExtendedTimeOfDay? initial;
+      if (initialDate != null) {
+        initial = ExtendedTimeOfDay(
+            hour: initialDate.hour,
+            minute: initialDate.minute,
+            second: initialDate.second);
+      }
+      selectedTime = await showDialog<ExtendedTimeOfDay>(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDate),
-        builder: (BuildContext context, Widget? child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-            child: child!,
-          );
+        builder: (BuildContext context) {
+          return TimePickerDialogWithSeconds(
+              initialTime: initial ?? ExtendedTimeOfDay.now());
         },
       );
     }
 
     return selectedTime == null
         ? selectedDate
-        : DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            selectedTime.hour,
-            selectedTime.minute,
-          );
+        : DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
+            selectedTime.hour, selectedTime.minute, selectedTime.second);
   }
 }
