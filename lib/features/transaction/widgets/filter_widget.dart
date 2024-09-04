@@ -73,6 +73,9 @@ class _FilterWidgetState extends State<FilterWidget> {
         .subtract(const Duration(seconds: 1));
   }
 
+  DateTime? selectFromDate;
+  DateTime? selectToDate;
+
   final List<DataFilter> listFilterBy = [
     const DataFilter(id: 9, name: 'Mã giao dịch'),
     const DataFilter(id: 5, name: 'Trạng thái giao dịch'),
@@ -480,6 +483,8 @@ class _FilterWidgetState extends State<FilterWidget> {
     _filterByTime = listFilterByTime.first;
     _fromDate = _formatFromDate(now);
     _toDate = _formatEndDate(now);
+    selectFromDate = null;
+    selectToDate = null;
     _onCallBack(
         type: _filterBy.id,
         status: _filterByStatus.id,
@@ -505,48 +510,57 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   void _pickToDate() async {
-    DateTime? date = await TimeUtils.instance.showDateTimePicker(
+    DateTime formattedDate =
+        DateTime(_toDate.year, _toDate.month, _toDate.day, 23, 59, 59);
+    DateTime? pickToDate = await TimeUtils.instance.showDateTimePicker(
       context: context,
-      initialDate: _toDate,
+      initialDate: formattedDate,
       firstDate: DateTime(2021, 6),
       lastDate: DateTime.now(),
     );
-    int numberOfMonths =
-        monthCalculator.calculateMonths(_fromDate, date ?? DateTime.now());
+    setState(() {
+      selectToDate = pickToDate;
+    });
+    int numberOfMonths = monthCalculator.calculateMonths(
+        _fromDate, selectToDate ?? DateTime.now());
 
     if (numberOfMonths > 3) {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo',
           msg: 'Vui lòng nhập khoảng thời gian tối đa là 3 tháng.');
-    } else if ((date ?? DateTime.now()).isBefore(_fromDate)) {
+    } else if ((selectToDate ?? DateTime.now()).isBefore(_fromDate)) {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo', msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
     } else {
-      updateToDate(date ?? DateTime.now());
+      updateToDate(selectToDate ?? DateTime.now());
       _onCallBack(toDate: _toDate);
     }
   }
 
   void _pickFromDate() async {
-    DateTime? date = await TimeUtils.instance.showDateTimePicker(
+    DateTime formattedDate =
+        DateTime(_fromDate.year, _fromDate.month, _fromDate.day, 0, 0, 0);
+    DateTime? pickFromDate = await TimeUtils.instance.showDateTimePicker(
       context: context,
-      initialDate: _fromDate,
+      initialDate: formattedDate,
       firstDate: DateTime(2021, 6),
       lastDate: DateTime.now(),
     );
-
-    int numberOfMonths =
-        monthCalculator.calculateMonths(date ?? DateTime.now(), _toDate);
+    setState(() {
+      selectFromDate = pickFromDate;
+    });
+    int numberOfMonths = monthCalculator.calculateMonths(
+        selectFromDate ?? DateTime.now(), _toDate);
 
     if (numberOfMonths > 3) {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo',
           msg: 'Vui lòng nhập khoảng thời gian tối đa là 3 tháng.');
-    } else if ((date ?? DateTime.now()).isAfter(_toDate)) {
+    } else if ((selectFromDate ?? DateTime.now()).isAfter(_toDate)) {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo', msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
     } else {
-      updateFromDate(date ?? DateTime.now());
+      updateFromDate(selectFromDate ?? DateTime.now());
       _onCallBack(fromDate: _fromDate);
     }
   }
@@ -580,6 +594,8 @@ class _FilterWidgetState extends State<FilterWidget> {
           return DialogExcelWidget(
             terminals: terminals!,
             bankId: widget.bankId,
+            selectToDate: selectToDate,
+            selectFromDate: selectFromDate,
           );
         },
       );

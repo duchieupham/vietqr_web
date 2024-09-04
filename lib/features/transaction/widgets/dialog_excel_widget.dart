@@ -1,4 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:html' as html;
 import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/utils/month_calculator.dart';
@@ -11,23 +16,24 @@ import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/data_filter.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/services/shared_references/shared_pref.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../../layouts/m_drop_widget.dart';
 import '../../../services/shared_references/user_information_helper.dart';
 import 'dialog_pick_date.dart';
-import '../../../layouts/m_drop_widget.dart';
-import 'dart:html' as html;
 
 class DialogExcelWidget extends StatefulWidget {
   final List<TerminalQRDTO> terminals;
   final String bankId;
+  DateTime? selectFromDate;
+  DateTime? selectToDate;
 
-  const DialogExcelWidget({
-    super.key,
+  DialogExcelWidget({
+    Key? key,
     required this.terminals,
     required this.bankId,
-  });
+    this.selectFromDate,
+    this.selectToDate,
+  }) : super(key: key);
 
   @override
   State<DialogExcelWidget> createState() => _DialogExcelWidgetState();
@@ -60,9 +66,6 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   DateTime _fromDate = DateTime.now();
   DateTime _toDate = DateTime.now();
 
-  ExtendedTimeOfDay? _selectedFromDateTime;
-  ExtendedTimeOfDay? _selectedToDateTime;
-
   void _handleBack() {
     Navigator.pop(context);
   }
@@ -76,17 +79,29 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   }
 
   void _handleExportExcel() async {
-    DateTime formattedDate = DateTime(
-        _fromDate.year,
-        _fromDate.month,
-        _fromDate.day,
-        _filterByTime.id != 4 ? 0 : _fromDate.hour,
-        _filterByTime.id != 4 ? 0 : _fromDate.minute,
-        _filterByTime.id != 4 ? 0 : _fromDate.second);
+    DateTime? formattedDate;
+    if (widget.selectFromDate != null) {
+      formattedDate = DateTime(
+          widget.selectFromDate!.year,
+          widget.selectFromDate!.month,
+          widget.selectFromDate!.day,
+          _filterByTime.id != 4 ? 0 : widget.selectFromDate!.hour,
+          _filterByTime.id != 4 ? 0 : widget.selectFromDate!.minute,
+          _filterByTime.id != 4 ? 0 : widget.selectFromDate!.second);
+    } else {
+      formattedDate = DateTime(
+          _fromDate.year,
+          _fromDate.month,
+          _fromDate.day,
+          _filterByTime.id != 4 ? 0 : _fromDate.hour,
+          _filterByTime.id != 4 ? 0 : _fromDate.minute,
+          _filterByTime.id != 4 ? 0 : _fromDate.second);
+    }
+
     final result = await repository.exportExcel(
         widget.bankId,
         _formatDay.format(formattedDate),
-        _formatDay.format(_toDate),
+        _formatDay.format(widget.selectToDate ?? _toDate),
         terminalDTO.terminalCode);
 
     downloadFile(result);
@@ -167,11 +182,15 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   Widget _buildRangeTimeWidget() {
     return Row(
       children: [
-        Expanded(child: _pickTime(onTap: _pickFromDate)),
+        Expanded(
+            child:
+                _pickTime(date: widget.selectFromDate, onTap: _pickFromDate)),
         const SizedBox(width: 8),
         Expanded(
             child: _pickTime(
-                title: 'Đến ngày', date: _toDate, onTap: _pickToDate)),
+                title: 'Đến ngày',
+                date: widget.selectToDate ?? _toDate,
+                onTap: _pickToDate)),
       ],
     );
   }
@@ -223,8 +242,8 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
       firstDate: DateTime(2021, 6),
       lastDate: DateTime.now(),
     );
-    int numberOfMonths =
-        monthCalculator.calculateMonths(_fromDate, date ?? DateTime.now());
+    int numberOfMonths = monthCalculator.calculateMonths(
+        _fromDate, widget.selectToDate ?? date ?? DateTime.now());
 
     if (numberOfMonths > 3) {
       DialogWidget.instance.openMsgDialog(
@@ -234,23 +253,22 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo', msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
     } else {
-      updateToDate(date ?? DateTime.now());
+      updateToDate(widget.selectToDate ?? date ?? DateTime.now());
     }
   }
 
   void _pickFromDate() async {
-    DateTime _formattedDate =
+    DateTime formattedDate =
         DateTime(_fromDate.year, _fromDate.month, _fromDate.day, 0, 0, 0);
-    print(_formattedDate);
     DateTime? date = await TimeUtils.instance.showDateTimePicker(
       context: context,
-      initialDate: _formattedDate,
+      initialDate: formattedDate,
       firstDate: DateTime(2021, 6),
       lastDate: DateTime.now(),
     );
 
-    int numberOfMonths =
-        monthCalculator.calculateMonths(date ?? DateTime.now(), _toDate);
+    int numberOfMonths = monthCalculator.calculateMonths(
+        widget.selectFromDate ?? date ?? DateTime.now(), _toDate);
 
     if (numberOfMonths > 3) {
       DialogWidget.instance.openMsgDialog(
@@ -260,7 +278,7 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo', msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
     } else {
-      updateFromDate(date ?? DateTime.now());
+      updateFromDate(widget.selectFromDate ?? date ?? DateTime.now());
     }
   }
 
