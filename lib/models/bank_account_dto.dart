@@ -20,6 +20,7 @@ class BankAccountDTO {
   final String ewalletToken;
   final int unlinkedType;
   final bool isAuthenticated;
+  final int pushNotification;
 
   // Dùng cho detail store
   final String terminalId;
@@ -50,6 +51,7 @@ class BankAccountDTO {
     this.unlinkedType = -1,
     this.isAuthenticated = false,
     this.terminalId = '',
+    this.pushNotification = 0,
   });
 
   setColor(value) {
@@ -77,6 +79,7 @@ class BankAccountDTO {
       ewalletToken: json["ewalletToken"] ?? '',
       unlinkedType: json["unlinkedType"] ?? 0,
       isAuthenticated: json["authenticated"] ?? false,
+      pushNotification: json["pushNotification"],
     );
   }
 
@@ -100,5 +103,6 @@ class BankAccountDTO {
         "ewalletToken": ewalletToken,
         "unlinkedType": unlinkedType,
         "authenticated": isAuthenticated,
+        "pushNotification": pushNotification,
       };
 }
