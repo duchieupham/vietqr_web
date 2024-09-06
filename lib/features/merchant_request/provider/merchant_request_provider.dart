@@ -179,7 +179,7 @@ class MerchantRequestProvider with ChangeNotifier {
   }
 
   void updateUrlConnect(String value) {
-    if (isAllowedUrl(value)) {
+    if (!isAllowedUrl(value)) {
       _urlConnect = value;
     }
     _urlError = isAllowedUrl(value);
@@ -202,7 +202,7 @@ class MerchantRequestProvider with ChangeNotifier {
   }
 
   void updateIpConnect(String value) {
-    if (isAllowedUrl(value)) {
+    if (!isAllowedUrl(value)) {
       _ipConnect = value;
     }
     _ipError = isAllowedUrl(value);

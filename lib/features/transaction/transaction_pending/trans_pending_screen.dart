@@ -212,7 +212,9 @@ class TransPendingScreenState extends State<TransPendingScreen> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return ChooseBankWidget(banks: list);
+        return ChooseBankWidget(
+          banks: list,
+        );
       },
     );
 
