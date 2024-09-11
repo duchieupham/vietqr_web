@@ -344,6 +344,8 @@ class _SettingBDSDState extends State<SettingBDSD> {
                                   userBankName: dto.userBankName,
                                   userId: dto.userId,
                                 );
+                                onOffBdsd = banks.every(
+                                    (element) => element.pushNotification == 1);
                               });
                             }
                           },
