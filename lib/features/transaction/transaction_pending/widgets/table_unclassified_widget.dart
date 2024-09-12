@@ -5,7 +5,9 @@ import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/setting_account_sto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class TableUnclassifiedWidget extends StatefulWidget {
@@ -14,6 +16,7 @@ class TableUnclassifiedWidget extends StatefulWidget {
   final ValueChanged<TransRequest> callBack;
   final Function(TransReceiveDTO) onChooseTerminal;
   final Function(TransReceiveDTO) onEditNote;
+  final Function(TransReceiveDTO) onCopy;
   final int offset;
   final bool isOwner;
   final bool isLoading;
@@ -28,6 +31,7 @@ class TableUnclassifiedWidget extends StatefulWidget {
     required this.onChooseTerminal,
     required this.onEditNote,
     required this.role,
+    required this.onCopy,
   }) : super(key: key);
 
   @override
@@ -152,6 +156,21 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
                 title: e.timePayment,
                 width: list[1].width,
                 textAlign: TextAlign.right,
+                onTap: () async {
+                  await FlutterClipboard.copy(e.timePayment).then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppColor.WHITE,
+                      textColor: AppColor.BLACK,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
               ),
 
               /// Số tiền
@@ -163,6 +182,23 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
                 textColor: e.getColorStatus,
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
+                onTap: () async {
+                  await FlutterClipboard.copy(
+                          '${e.statusAmount} ${CurrencyUtils.instance.getCurrencyFormatted(e.amount)}')
+                      .then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppColor.WHITE,
+                      textColor: AppColor.BLACK,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
               ),
 
               /// Mã giao dịch
@@ -170,13 +206,45 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
                 title: e.referenceNumber,
                 width: list[3].width,
                 textAlign: TextAlign.left,
+                onTap: () async {
+                  await FlutterClipboard.copy(e.referenceNumber).then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppColor.WHITE,
+                      textColor: AppColor.BLACK,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
               ),
 
               /// Tài khoản nhận
-              _buildAccount(
-                e,
-                width: list[4].width,
-                height: _headingRowHeight,
+              InkWell(
+                onTap: () async {
+                  await FlutterClipboard.copy(e.bankAccount).then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppColor.WHITE,
+                      textColor: AppColor.BLACK,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
+                child: _buildAccount(
+                  e,
+                  width: list[4].width,
+                  height: _headingRowHeight,
+                ),
               ),
 
               /// Nội dung
@@ -184,6 +252,21 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
                 title: e.content,
                 width: list[5].width,
                 textAlign: TextAlign.left,
+                onTap: () async {
+                  await FlutterClipboard.copy(e.content).then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppColor.WHITE,
+                      textColor: AppColor.BLACK,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
               ),
 
               /// Người tạo
@@ -191,6 +274,21 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
                 title: e.note,
                 width: list[6].width,
                 textAlign: TextAlign.left,
+                onTap: () async {
+                  await FlutterClipboard.copy(e.note).then(
+                    (value) => Fluttertoast.showToast(
+                      msg: 'Đã sao chép',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppColor.WHITE,
+                      textColor: AppColor.BLACK,
+                      fontSize: 15,
+                      webBgColor: 'rgba(255, 255, 255)',
+                      webPosition: 'center',
+                    ),
+                  );
+                },
               ),
 
               /// 2 cột pin
@@ -258,6 +356,26 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
                           message: 'Cập nhật giao dịch',
                           onTap: () => widget.onChooseTerminal(dto),
                         ),
+                        const SizedBox(width: 6),
+                        Tooltip(
+                          message: 'Copy',
+                          child: InkWell(
+                            onTap: () => widget.onCopy(dto),
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(32),
+                                color: AppColor.BLUE_TEXT.withOpacity(0.25),
+                              ),
+                              child: const Icon(
+                                Icons.copy,
+                                size: 12,
+                                color: AppColor.BLUE_TEXT,
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                       if (dto.totalRequest > 0) ...[
                         const SizedBox(width: 6),
@@ -439,33 +557,31 @@ class _TableUnclassifiedWidgetState extends State<TableUnclassifiedWidget> {
     double? width,
     double height = 50,
   }) {
-    return SelectionArea(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColor.GREY_DADADA, width: 0.25),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                title ?? '-',
-                maxLines: 2,
-                textAlign: textAlign,
-                style: TextStyle(
-                  color: textColor,
-                  overflow: TextOverflow.ellipsis,
-                  fontSize: fontSize ?? 11,
-                  fontWeight: fontWeight ?? FontWeight.w500,
-                ),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColor.GREY_DADADA, width: 0.25),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              title ?? '-',
+              maxLines: 2,
+              textAlign: textAlign,
+              style: TextStyle(
+                color: textColor,
+                overflow: TextOverflow.ellipsis,
+                fontSize: fontSize ?? 11,
+                fontWeight: fontWeight ?? FontWeight.w500,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -179,4 +179,6 @@ class StringUtils {
     String credentialsBase64 = base64Encode(utf8.encode(credentials));
     return credentialsBase64;
   }
+
+  
 }

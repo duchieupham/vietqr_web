@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -323,6 +325,15 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                           '',
                                   des: 'Doanh thu',
                                 ),
+                                _buildInfoRefund(
+                                  title: 'Giao dịch hoàn tiền',
+                                  totalTrans:
+                                      '${state.totalTransDTO?.totalTransRefund ?? ''}',
+                                  amount:
+                                      state.totalTransDTO?.getCashRefund ??
+                                          '',
+                                  des: 'Tổng số tiền hoàn',
+                                ),
                               ],
                             ),
                           ],
@@ -374,6 +385,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                           onChooseTerminal: (transDTO) => _onChooseTerminal(
                               state.terminals, state.offset, transDTO),
                           onEditNote: (dto) => _onChooseNote(state.offset, dto),
+                          onCopy: (dto) => onCopy(dto: dto),
                           isLoading: state.status == BlocStatus.LOADING,
                         ),
                         // _buildPageWidget(state),
@@ -408,6 +420,23 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           },
         );
       },
+    );
+  }
+
+  void onCopy({required TransReceiveDTO dto}) async {
+    await FlutterClipboard.copy(ShareUtils.instance.getTransPaymentSharing(dto))
+        .then(
+      (value) => Fluttertoast.showToast(
+        msg: 'Đã sao chép',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Theme.of(context).cardColor,
+        textColor: Colors.black,
+        fontSize: 15,
+        webBgColor: 'rgba(255, 255, 255)',
+        webPosition: 'center',
+      ),
     );
   }
 
@@ -534,6 +563,68 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           ),
           Text(
             '$totalTrans giao dịch đến',
+            style: const TextStyle(
+              color: AppColor.BLACK,
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+          Row(
+            children: [
+              Text(
+                amount,
+                style: TextStyle(
+                  color: amountColor ?? AppColor.BLUE_TEXT,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  height: 1.4,
+                ),
+              ),
+              const Text(
+                ' VND',
+                style: TextStyle(
+                  color: AppColor.GREY_TEXT,
+                  fontSize: 12,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            des,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRefund(
+      {String title = '',
+      String totalTrans = '',
+      String amount = '',
+      String des = '',
+      Color? amountColor}) {
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+          Text(
+            '$totalTrans giao dịch hoàn tiền',
             style: const TextStyle(
               color: AppColor.BLACK,
               fontSize: 11,
