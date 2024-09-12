@@ -325,6 +325,15 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                           '',
                                   des: 'Doanh thu',
                                 ),
+                                _buildInfoRefund(
+                                  title: 'Giao dịch hoàn tiền',
+                                  totalTrans:
+                                      '${state.totalTransDTO?.totalTransRefund ?? ''}',
+                                  amount:
+                                      state.totalTransDTO?.getCashRefund ??
+                                          '',
+                                  des: 'Tổng số tiền hoàn',
+                                ),
                               ],
                             ),
                           ],
@@ -554,6 +563,68 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           ),
           Text(
             '$totalTrans giao dịch đến',
+            style: const TextStyle(
+              color: AppColor.BLACK,
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+          Row(
+            children: [
+              Text(
+                amount,
+                style: TextStyle(
+                  color: amountColor ?? AppColor.BLUE_TEXT,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  height: 1.4,
+                ),
+              ),
+              const Text(
+                ' VND',
+                style: TextStyle(
+                  color: AppColor.GREY_TEXT,
+                  fontSize: 12,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            des,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRefund(
+      {String title = '',
+      String totalTrans = '',
+      String amount = '',
+      String des = '',
+      Color? amountColor}) {
+    return Container(
+      width: 200,
+      margin: const EdgeInsets.only(right: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppColor.GREY_TEXT,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+          Text(
+            '$totalTrans giao dịch hoàn tiền',
             style: const TextStyle(
               color: AppColor.BLACK,
               fontSize: 11,
