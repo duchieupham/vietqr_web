@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
 import 'package:VietQR/commons/utils/platform_utils.dart';
+import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/commons/widgets/dialog_widget.dart';
 import 'package:VietQR/commons/widgets/web_mobile_blank_widget.dart';
 import 'package:VietQR/features/transaction/blocs/transaction_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:VietQR/models/transaction_input_dto.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -374,6 +376,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                           onChooseTerminal: (transDTO) => _onChooseTerminal(
                               state.terminals, state.offset, transDTO),
                           onEditNote: (dto) => _onChooseNote(state.offset, dto),
+                          onCopy: (dto) => onCopy(dto: dto),
                           isLoading: state.status == BlocStatus.LOADING,
                         ),
                         // _buildPageWidget(state),
@@ -408,6 +411,23 @@ class _StoreScreenState extends State<TransactionPaymentView> {
           },
         );
       },
+    );
+  }
+
+  void onCopy({required TransReceiveDTO dto}) async {
+    await FlutterClipboard.copy(ShareUtils.instance.getTransPaymentSharing(dto))
+        .then(
+      (value) => Fluttertoast.showToast(
+        msg: 'Đã sao chép',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Theme.of(context).cardColor,
+        textColor: Colors.black,
+        fontSize: 15,
+        webBgColor: 'rgba(255, 255, 255)',
+        webPosition: 'center',
+      ),
     );
   }
 

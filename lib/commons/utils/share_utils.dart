@@ -7,6 +7,7 @@ import 'package:VietQR/commons/utils/log.dart';
 import 'package:VietQR/commons/utils/string_utils.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/qr_generated_dto.dart';
+import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,138 @@ class ShareUtils {
   static const ShareUtils _instance = ShareUtils._privateConsrtructor();
 
   static ShareUtils get instance => _instance;
+
+  String getTransPaymentSharing(TransReceiveDTO dto) {
+    String result = '';
+    String formattedDateTimeCreated = dto.timeCreated.toString().isNotEmpty
+        ? DateFormat('yyyy-MM-dd HH:mm:ss')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timeCreated * 1000))
+        : '-';
+    String bankAccount = '';
+    String amount = '';
+    String referenceNumber = '';
+    String orderId = '';
+    String subCode = '';
+    String terminalCode = '';
+    String transactionType = '';
+    String timeCreate = '';
+    String content = '';
+    String note = '';
+    String getStatusString = '';
+    String timePayment = '';
+
+    String dtoTimeCreate = dto.time == 0
+        ? '-'
+        : DateFormat('HH:mm:ss - dd/MM/yyyy')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.time * 1000));
+    if (dto.referenceNumber.isNotEmpty) {
+      referenceNumber = '\nMã giao dịch: ${dto.referenceNumber}';
+    }
+    if (dto.amount.isNotEmpty) {
+      amount =
+          '\nSố tiền: ${dto.statusAmount} ${dto.amount.contains('*') ? dto.amount : CurrencyUtils.instance.getCurrencyFormatted(dto.amount)}';
+    }
+    if (dto.orderId.isNotEmpty) {
+      orderId = '\nMã đơn hàng: ${dto.orderId}';
+    }
+    if (dto.subCode.isNotEmpty) {
+      subCode = '\nMã điểm bán: ${dto.subCode}';
+    }
+    if (dto.terminalCode.isNotEmpty) {
+      terminalCode = '\nMã cửa hàng: ${dto.terminalCode}';
+    }
+    if (dto.transactionType.isNotEmpty) {
+      transactionType = '\nLoại GD: ${dto.transactionType}';
+    }
+    if (dtoTimeCreate.isNotEmpty) {
+      timeCreate = '\nThời gian tạo GD: $dtoTimeCreate';
+    }
+    if (dto.bankAccount.isNotEmpty && dto.bankShortName.isNotEmpty) {
+      bankAccount =
+          '\nTài khoản nhận: ${dto.bankAccount} - ${dto.bankShortName}';
+    }
+    if (dto.content.isNotEmpty) {
+      content = '\nNội dung: ${dto.content}';
+    }
+    if (dto.timeCreated != 0) {
+      timeCreate = '\nThời gian tạo: $formattedDateTimeCreated';
+    }
+
+    String dtoPayment = dto.timePaid == 0
+        ? '-'
+        : DateFormat('HH:mm:ss - dd/MM/yyyy')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timePaid * 1000));
+
+    if (dtoPayment.isNotEmpty) {
+      timePayment = '\nThời gian thanh toán: $dtoPayment';
+    }
+    if (dto.note.isNotEmpty) {
+      note = '\nGhi chú: ${dto.note}';
+    }
+    if (dto.getStatusString.isNotEmpty) {
+      getStatusString = '\nTrạng thái: ${dto.getStatusString}';
+    }
+
+    result =
+        '$timePayment $amount $referenceNumber $orderId $subCode $terminalCode $transactionType $timeCreate $bankAccount $content $note $getStatusString \nBy VIETQR.VN';
+
+    return result;
+  }
+
+  String getUnclassifiedTransPaymentSharing(TransReceiveDTO dto) {
+    String result = '';
+    String formattedDateTimeCreated = dto.timeCreated.toString().isNotEmpty
+        ? DateFormat('yyyy-MM-dd HH:mm:ss')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timeCreated * 1000))
+        : '-';
+    String bankAccount = '';
+    String amount = '';
+    String referenceNumber = '';
+    String content = '';
+    String note = '';
+    String getStatusString = '';
+    String timePayment = '';
+
+    String dtoTimeCreate = dto.time == 0
+        ? '-'
+        : DateFormat('HH:mm:ss - dd/MM/yyyy')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.time * 1000));
+    if (dto.referenceNumber.isNotEmpty) {
+      referenceNumber = '\nMã giao dịch: ${dto.referenceNumber}';
+    }
+    if (dto.amount.isNotEmpty) {
+      amount =
+          '\nSố tiền: ${dto.statusAmount} ${dto.amount.contains('*') ? dto.amount : CurrencyUtils.instance.getCurrencyFormatted(dto.amount)}';
+    }
+
+    if (dto.bankAccount.isNotEmpty && dto.bankShortName.isNotEmpty) {
+      bankAccount =
+          '\nTài khoản nhận: ${dto.bankAccount} - ${dto.bankShortName}';
+    }
+    if (dto.content.isNotEmpty) {
+      content = '\nNội dung: ${dto.content}';
+    }
+
+    String dtoPayment = dto.timePaid == 0
+        ? '-'
+        : DateFormat('HH:mm:ss - dd/MM/yyyy')
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timePaid * 1000));
+
+    if (dtoPayment.isNotEmpty) {
+      timePayment = '\nThời gian thanh toán: $dtoPayment';
+    }
+    if (dto.note.isNotEmpty) {
+      note = '\nGhi chú: ${dto.note}';
+    }
+    if (dto.getStatusString.isNotEmpty) {
+      getStatusString = '\nTrạng thái: ${dto.getStatusString}';
+    }
+
+    result =
+        '$timePayment $amount $referenceNumber $bankAccount $content $note $getStatusString \nBy VIETQR.VN';
+
+    return result;
+  }
 
   String getTextSharing(QRGeneratedDTO dto) {
     String result = '';

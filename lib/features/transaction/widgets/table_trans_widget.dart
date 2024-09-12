@@ -5,7 +5,9 @@ import 'package:VietQR/commons/utils/custom_scroll.dart';
 import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/models/transaction/trans_receive_dto.dart';
 import 'package:VietQR/services/providers/menu_provider.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class TableTransWidget extends StatefulWidget {
@@ -13,6 +15,7 @@ class TableTransWidget extends StatefulWidget {
   final int offset;
   final Function(TransReceiveDTO) onChooseTerminal;
   final Function(TransReceiveDTO) onEditNote;
+  final Function(TransReceiveDTO) onCopy;
   final bool isOwner;
   final bool isLoading;
 
@@ -22,6 +25,7 @@ class TableTransWidget extends StatefulWidget {
     required this.offset,
     required this.onChooseTerminal,
     required this.onEditNote,
+    required this.onCopy,
     this.isOwner = false,
     this.isLoading = false,
   });
@@ -377,6 +381,34 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                                                           ),
                                                         ),
                                                       ),
+
+                                                    Tooltip(
+                                                      message: 'Copy',
+                                                      child: GestureDetector(
+                                                        onTap: () => widget
+                                                            .onCopy(e),
+                                                        child: Container(
+                                                            width: 24,
+                                                            height: 24,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          32),
+                                                              color: AppColor
+                                                                  .BLUE_TEXT
+                                                                  .withOpacity(
+                                                                      0.25),
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.copy,
+                                                              size: 12,
+                                                              color: AppColor
+                                                                  .BLUE_TEXT,
+                                                            )),
+                                                      ),
+                                                    ),
                                                     // GestureDetector(
                                                     //   child: Container(
                                                     //     width: 24,
@@ -468,7 +500,8 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 50,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () {},
               child: Text(
                 '${(widget.offset * 20) + index! + 1}',
                 textAlign: TextAlign.center,
@@ -485,11 +518,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model!.timePayment.isNotEmpty ? model.timePayment : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model!.timePayment,
+                model!.timePayment.isNotEmpty ? model.timePayment : '-',
                 textAlign: TextAlign.right,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -505,7 +555,24 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                        '${model.statusAmount} ${model.amount.contains('*') ? model.amount : CurrencyUtils.instance.getCurrencyFormatted(model.amount)}')
+                    .then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
                 '${model.statusAmount} ${model.amount.contains('*') ? model.amount : CurrencyUtils.instance.getCurrencyFormatted(model.amount)}',
                 textAlign: TextAlign.center,
@@ -526,11 +593,30 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model.referenceNumber.isNotEmpty
+                      ? model.referenceNumber
+                      : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.referenceNumber,
+                model.referenceNumber.isNotEmpty ? model.referenceNumber : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -546,11 +632,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                        model.orderId.isNotEmpty ? model.orderId : '-')
+                    .then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.orderId,
+                model.orderId.isNotEmpty ? model.orderId : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -566,11 +669,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model.subCode.isNotEmpty ? model.subCode : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.subCode,
+                model.subCode.isNotEmpty ? model.subCode : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -586,11 +706,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 120,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model.terminalCode.isNotEmpty ? model.terminalCode : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.terminalCode,
+                model.terminalCode.isNotEmpty ? model.terminalCode : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -606,11 +743,30 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model.transactionType.isNotEmpty
+                      ? model.transactionType
+                      : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.transactionType,
+                model.transactionType.isNotEmpty ? model.transactionType : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -626,11 +782,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model.timeCreate.isNotEmpty ? model.timeCreate : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.timeCreate,
+                model.timeCreate.isNotEmpty ? model.timeCreate : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -646,21 +819,38 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 100,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                        '${model.bankAccount.isNotEmpty ? model.bankAccount : '-'} - ${model.bankShortName.isNotEmpty ? model.bankShortName : '-'}')
+                    .then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Column(
                 // crossAxisAlignment:
                 //     CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    model.bankAccount,
+                    model.bankAccount.isNotEmpty ? model.bankAccount : '-',
                     maxLines: 1,
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                         fontSize: 10, overflow: TextOverflow.ellipsis),
                   ),
                   Text(
-                    model.bankShortName,
+                    model.bankShortName.isNotEmpty ? model.bankShortName : '-',
                     maxLines: 1,
                     textAlign: TextAlign.left,
                     style: const TextStyle(
@@ -679,11 +869,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 250,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                        model.content.isNotEmpty ? model.content : '-')
+                    .then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.content,
+                model.content.isNotEmpty ? model.content : '-',
                 textAlign: TextAlign.right,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
@@ -699,11 +906,28 @@ class _TableTransWidgetState extends State<TableTransWidget> {
                     right: BorderSide(color: AppColor.GREY_BUTTON))),
             height: 50,
             width: 200,
-            child: SelectionArea(
+            child: TextButton(
+              onPressed: () async {
+                await FlutterClipboard.copy(
+                  model.note.isNotEmpty ? model.note : '-',
+                ).then(
+                  (value) => Fluttertoast.showToast(
+                    msg: 'Đã sao chép',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: AppColor.WHITE,
+                    textColor: AppColor.BLACK,
+                    fontSize: 15,
+                    webBgColor: 'rgba(255, 255, 255)',
+                    webPosition: 'center',
+                  ),
+                );
+              },
               child: Text(
-                model.note,
+                model.note.isNotEmpty ? model.note : '-',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                 ),
