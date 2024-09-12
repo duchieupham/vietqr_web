@@ -1,8 +1,11 @@
 import 'package:VietQR/commons/enums/check_type.dart';
+import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
+import 'package:VietQR/commons/widgets/%20button_vietqr_widget.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
+import 'package:VietQR/features/invoice_manage/widgets/invoice_list_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/item_right_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_bank_select_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_excel_widget.dart';
@@ -22,6 +25,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,10 +59,12 @@ class _Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<_Screen> {
-  final verticalController = ScrollController();
-  final controller1 = ScrollController();
-  final controller2 = ScrollController();
-  final controller3 = ScrollController();
+  // final verticalController = ScrollController();
+  // final controller1 = ScrollController();
+  // final controller2 = ScrollController();
+  // final controller3 = ScrollController();
+
+  late ScrollController horizontalController;
   bool isScrollingDown = false;
 
   late InvoiceBloc _bloc;
@@ -71,14 +77,17 @@ class _ScreenState extends State<_Screen> {
   bool isFirstSelected = true;
 
   List<InvoiceFeeDTO> listInvoice = [];
+  List<InvoiceGroup> invoiceGroups = [];
+
   InvoiceFeeDTO? selectInvoiceFee;
 
   @override
   void initState() {
     super.initState();
-    verticalController.addListener(_scrollListener);
+    // verticalController.addListener(_scrollListener);
     _bloc = BlocProvider.of(context);
     _provider = Provider.of<InvoiceProvider>(context, listen: false);
+    horizontalController = ScrollController();
     // initData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initData();
@@ -93,29 +102,22 @@ class _ScreenState extends State<_Screen> {
         status: _provider.invoiceStatus.id, bankId: '', filterBy: 1, page: 1));
   }
 
-  void _scrollListener() {
-    if (verticalController.offset <=
-        verticalController.position.minScrollExtent) {
-      if (isScrollingDown) {
-        setState(() {
-          isScrollingDown = false;
-        });
-      }
-    } else {
-      if (!isScrollingDown) {
-        setState(() {
-          isScrollingDown = true;
-        });
-      }
+  List<String> getListId() {
+    Set<String> setId = <String>{};
+    if (listInvoice.isEmpty) {
+      return setId.toList();
     }
+    final list =
+        listInvoice.where((element) => element.isSelect == true).toList();
+    for (InvoiceFeeDTO selection in list) {
+      setId.add(selection.invoiceId);
+    }
+
+    return setId.toList();
   }
 
   @override
   void dispose() {
-    verticalController.removeListener(_scrollListener);
-    verticalController.dispose();
-    controller1.dispose();
-    controller2.dispose();
     super.dispose();
   }
 
@@ -193,7 +195,27 @@ class _ScreenState extends State<_Screen> {
 
         if (state.request == InvoiceType.GET_INVOICE_LIST &&
             state.status == BlocStatus.SUCCESS) {
-          listInvoice = state.listInvoice!;
+          listInvoice = state.listInvoice ?? [];
+          Map<String, List<InvoiceFeeDTO>> groupedInvoices = {};
+          for (var invoice in listInvoice) {
+            // Convert timeCreated to DateTime
+            DateTime dateTime =
+                DateTime.fromMillisecondsSinceEpoch(invoice.timeCreated * 1000);
+
+            String yearMonthKey =
+                "${dateTime.month.toString().padLeft(2, '0')}-${dateTime.year}";
+
+            // Add invoice to the corresponding group
+            if (!groupedInvoices.containsKey(yearMonthKey)) {
+              groupedInvoices[yearMonthKey] = [];
+            }
+            groupedInvoices[yearMonthKey]?.add(invoice);
+          }
+
+          invoiceGroups = groupedInvoices.entries
+              .map((entry) =>
+                  InvoiceGroup(monthYear: entry.key, invoices: entry.value))
+              .toList();
         }
 
         if (state.request == InvoiceType.GET_INVOICE_LIST &&
@@ -264,66 +286,26 @@ class _ScreenState extends State<_Screen> {
                     ),
                     if (provider.pageInvoice == PageInvoice.LIST) ...[
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              padding:
-                                  const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ScrollConfiguration(
-                                    behavior: MyCustomScrollBehavior(),
-                                    child: SingleChildScrollView(
-                                      controller: controller3,
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            "Tìm kiếm thông tin hoá đơn ",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(width: 30),
-
-                                          ...provider.statusList
-                                              .map(
-                                                (e) => _buildOption(e),
-                                              )
-                                              .toList(),
-
-                                          // _buildOption("Chưa thanh toán", isFirstSelected),
-                                          // const SizedBox(width: 20),
-                                          // _buildOption("Đã thanh toán", !isFirstSelected),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  _filterWidget(),
-                                  const SizedBox(height: 20),
-                                  const MySeparator(
-                                    color: AppColor.GREY_DADADA,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    "Danh sách hoá đơn",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 10),
-                                ],
-                              ),
-                            ),
-                            _buildListInvoice(state),
-                            const SizedBox(height: 10),
-                            _pagingWidget(state),
-                            const SizedBox(height: 10),
-                          ],
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return InvoiceListWidget(
+                              width: constraints.maxWidth - 30,
+                              filterWidget: _filterWidget(),
+                              invoicelistWidget:
+                                  _buildListInvoice(state, provider),
+                              onSelectStatus: () {
+                                _bloc.add(GetInvoiceList(
+                                    status: provider.invoiceStatus.id,
+                                    bankId: selectBankId ?? '',
+                                    time: selectDate != null
+                                        ? DateFormat('yyyy-MM')
+                                            .format(selectDate!)
+                                        : '',
+                                    filterBy: 1,
+                                    page: 1));
+                              },
+                            );
+                          },
                         ),
                       )
                     ] else if (provider.pageInvoice == PageInvoice.DETAIL)
@@ -344,6 +326,89 @@ class _ScreenState extends State<_Screen> {
                           },
                         ),
                       ),
+                    if (provider.pageInvoice == PageInvoice.LIST)
+                      Container(
+                        height: 100,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Đang chọn: ${getListId().length}'),
+                                const SizedBox(height: 4),
+                                RichText(
+                                    text: TextSpan(
+                                        text: 'Tổng tiền (VND): ',
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.BLACK),
+                                        children: [
+                                      TextSpan(
+                                        text: CurrencyUtils.instance
+                                            .getCurrencyFormatted(getListId()
+                                                    .isNotEmpty
+                                                ? listInvoice
+                                                    .where((element) =>
+                                                        element.isSelect)
+                                                    .map((e) => e.totalAmount)
+                                                    .reduce((a, b) => a + b)
+                                                    .toString()
+                                                : 0.toString()),
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.ORANGE_DARK),
+                                      ),
+                                    ])),
+                              ],
+                            ),
+                            VietQRButton.gradient(
+                                borderRadius: 100,
+                                height: 50,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                onPressed: () {
+                                  Fluttertoast.showToast(
+                                    msg: 'Đang cập nhật tính năng',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    backgroundColor:
+                                        Theme.of(context).cardColor,
+                                    textColor: Theme.of(context).hintColor,
+                                    fontSize: 15,
+                                  );
+                                },
+                                isDisabled: (getListId().isNotEmpty
+                                        ? listInvoice
+                                            .where(
+                                                (element) => element.isSelect)
+                                            .map((e) => e.totalAmount)
+                                            .reduce((a, b) => a + b)
+                                        : 0) ==
+                                    0,
+                                child: Center(
+                                    child: Text(
+                                  'Thanh toán hóa đơn',
+                                  style: TextStyle(
+                                      color: (getListId().isNotEmpty
+                                                  ? listInvoice
+                                                      .where((element) =>
+                                                          element.isSelect)
+                                                      .map((e) => e.totalAmount)
+                                                      .reduce((a, b) => a + b)
+                                                  : 0) ==
+                                              0
+                                          ? AppColor.BLACK
+                                          : AppColor.WHITE),
+                                )))
+                          ],
+                        ),
+                      )
                   ],
                 ),
               ),
@@ -354,373 +419,218 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  Widget _buildOption(InvoiceStatus status) {
-    return Consumer<InvoiceProvider>(
-      builder: (context, provider, child) {
-        return Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: InkWell(
-            onTap: () {
-              provider.selectStatus(status);
-              _bloc.add(GetInvoiceList(
-                  status: _provider.invoiceStatus.id,
-                  bankId: selectBankId ?? '',
-                  time: selectDate != null
-                      ? DateFormat('yyyy-MM').format(selectDate!)
-                      : '',
-                  filterBy: 1,
-                  page: 1));
-            },
-            child: Container(
-              width: 150,
-              height: 30,
-              decoration: BoxDecoration(
-                color: provider.invoiceStatus == status
-                    ? AppColor.BLUE_TEXT.withOpacity(0.3)
-                    : AppColor.WHITE,
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                status.name,
-                style: TextStyle(
-                  color: provider.invoiceStatus == status
-                      ? AppColor.BLUE_TEXT
-                      : AppColor.BLACK,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  // Widget _buildListInvoice(InvoiceStates state) {
-  //   if (state.request == InvoiceType.GET_INVOICE_LIST &&
-  //       state.status == BlocStatus.LOADING) {
-  //     return Expanded(
-  //         child: Container(
-  //       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-  //       child: const Center(
-  //         child: Text('Đang tải...'),
-  //       ),
-  //     ));
-  //   }
-
-  //   if (listInvoice.isEmpty) {
-  //     return Expanded(
-  //         child: Container(
-  //       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-  //       child: const Center(
-  //         child: Text('Không có hóa đơn'),
-  //       ),
-  //     ));
-  //   }
-
-  //   return Expanded(
-  //     child: Padding(
-  //         padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-  //         child: SizedBox(
-  //           width: MediaQuery.of(context).size.width - 220,
-  //           child: SingleChildScrollView(
-  //             child: Stack(
-  //               children: [
-  //                 Scrollbar(
-  //                   controller: controller1,
-  //                   child: ScrollConfiguration(
-  //                     behavior: MyCustomScrollBehavior(),
-  //                     child: SingleChildScrollView(
-  //                       controller: controller1,
-  //                       scrollDirection: Axis.horizontal,
-  //                       child: SizedBox(
-  //                         width: 1610,
-  //                         child: Column(
-  //                           children: [
-  //                             const TitleItemInvoiceWidget(),
-  //                             if (listInvoice.isNotEmpty)
-  //                               ...listInvoice
-  //                                   .asMap()
-  //                                   .map(
-  //                                     (index, x) {
-  //                                       return MapEntry(
-  //                                           index,
-  //                                           ItemInvoiceWidget(
-  //                                             index: index + 1,
-  //                                             dto: x,
-  //                                           ));
-  //                                     },
-  //                                   )
-  //                                   .values
-  //                                   .toList()
-
-  //                             // if (state.request == InvoiceType.GET_INVOICE_LIST &&
-  //                             //     state.status == BlocStatus.NONE)
-  //                             //   const Expanded(
-  //                             //       child: Center(child: Text('Trống..')))
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(
-  //                   width: 1610,
-  //                   child: Row(
-  //                     children: [
-  //                       const Expanded(child: SizedBox()),
-  //                       SingleChildScrollView(
-  //                         controller: controller2,
-  //                         child: SingleChildScrollView(
-  //                           scrollDirection: Axis.horizontal,
-  //                           child: Container(
-  //                             decoration: BoxDecoration(
-  //                               color: AppColor.WHITE,
-  //                               boxShadow: [
-  //                                 BoxShadow(
-  //                                     color:
-  //                                         AppColor.GREY_BORDER.withOpacity(0.8),
-  //                                     blurRadius: 5,
-  //                                     spreadRadius: 1,
-  //                                     offset: const Offset(0, 0)),
-  //                               ],
-  //                             ),
-  //                             child: Column(
-  //                               children: [
-  //                                 Container(
-  //                                   alignment: Alignment.center,
-  //                                   decoration: BoxDecoration(
-  //                                       color: AppColor.BLUE_TEXT
-  //                                           .withOpacity(0.3)),
-  //                                   child: Row(
-  //                                     children: [
-  //                                       Container(
-  //                                           height: 50,
-  //                                           width: 120,
-  //                                           alignment: Alignment.center,
-  //                                           decoration: BoxDecoration(
-  //                                               border: Border.all(
-  //                                                   color: AppColor.GREY_TEXT
-  //                                                       .withOpacity(0.3))),
-  //                                           child: const Text(
-  //                                             'Trạng thái',
-  //                                             textAlign: TextAlign.center,
-  //                                             style: TextStyle(
-  //                                                 fontSize: 12,
-  //                                                 color: AppColor.BLACK,
-  //                                                 fontWeight: FontWeight.bold),
-  //                                           )),
-  //                                       Container(
-  //                                           height: 50,
-  //                                           width: 180,
-  //                                           alignment: Alignment.center,
-  //                                           decoration: BoxDecoration(
-  //                                               border: Border.all(
-  //                                                   color: AppColor.GREY_TEXT
-  //                                                       .withOpacity(0.3))),
-  //                                           child: const Text(
-  //                                             'Thao tác',
-  //                                             textAlign: TextAlign.center,
-  //                                             style: TextStyle(
-  //                                                 fontSize: 12,
-  //                                                 color: AppColor.BLACK,
-  //                                                 fontWeight: FontWeight.bold),
-  //                                           )),
-  //                                     ],
-  //                                   ),
-  //                                 ),
-  //                                 if (listInvoice.isNotEmpty)
-  //                                   ...listInvoice
-  //                                       .map(
-  //                                         (e) => ItemRightWidget(
-  //                                           dto: e,
-  //                                           onCopy: () {
-  //                                             onCopy(dto: e);
-  //                                           },
-  //                                           onShowExcel: () {
-  //                                             setState(() {
-  //                                               selectInvoiceFee = e;
-  //                                             });
-  //                                             _bloc.add(GetInvoiceExcel(
-  //                                                 e.invoiceId!));
-  //                                           },
-  //                                           onShowQR: () {
-  //                                             setState(() {
-  //                                               selectInvoiceFee = e;
-  //                                             });
-  //                                             _bloc.add(GetInvoiceDetail(
-  //                                                 e.invoiceId!, true));
-  //                                           },
-  //                                           onShowDetail: () {
-  //                                             _provider.onPageChange(
-  //                                                 PageInvoice.DETAIL,
-  //                                                 invoiceId: e.invoiceId);
-  //                                           },
-  //                                         ),
-  //                                       )
-  //                                       .toList(),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         )),
-  //   );
-  // }
-
-  Widget _buildListInvoice(InvoiceStates state) {
+  Widget _buildListInvoice(InvoiceStates state, InvoiceProvider provider) {
     if (state.request == InvoiceType.GET_INVOICE_LIST &&
         state.status == BlocStatus.LOADING) {
-      return Expanded(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: const Center(
-            child: Text('Đang tải...'),
-          ),
+      return Container(
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: const Center(
+          child: Text('Đang tải...'),
         ),
       );
     }
 
     if (listInvoice.isEmpty) {
-      return Expanded(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: const Center(
-            child: Text('Không có hóa đơn'),
-          ),
+      return Container(
+        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: const Center(
+          child: Text('Không có hóa đơn'),
         ),
       );
     }
 
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-        child: Stack(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 220,
-              child: SingleChildScrollView(
-                controller: verticalController,
-                child: Stack(
+    return Column(
+      children: [
+        ...invoiceGroups
+            .asMap()
+            .map(
+              (index, i) => MapEntry(
+                index,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Scrollbar(
-                      controller: controller1,
-                      child: ScrollConfiguration(
-                        behavior: MyCustomScrollBehavior(),
-                        child: SingleChildScrollView(
-                          controller: controller1,
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            width: 1610,
-                            child: Column(
-                              children: [
-                                const TitleItemInvoiceWidget(),
-                                if (listInvoice.isNotEmpty)
-                                  ...listInvoice
-                                      .asMap()
-                                      .map(
-                                        (index, x) {
-                                          return MapEntry(
-                                            index,
-                                            ItemInvoiceWidget(
-                                              index: index + 1,
-                                              dto: x,
-                                            ),
-                                          );
-                                        },
-                                      )
-                                      .values
-                                      .toList(),
-                              ],
-                            ),
-                          ),
+                    if (invoiceGroups.indexWhere((element) =>
+                            element.monthYear !=
+                            invoiceGroups[index].monthYear) ==
+                        0)
+                      const SizedBox(
+                        width: 1400,
+                        child: MySeparator(
+                          color: AppColor.GREY_DADADA,
                         ),
                       ),
-                    ),
+                    const SizedBox(height: 10),
                     SizedBox(
-                      width: 1610,
+                      width: 1400,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(child: SizedBox()),
-                          SingleChildScrollView(
-                            controller: controller2,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: AppColor.WHITE,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          AppColor.GREY_BORDER.withOpacity(0.8),
-                                      blurRadius: 5,
-                                      spreadRadius: 1,
-                                      offset: const Offset(0, 0),
-                                    ),
-                                  ],
+                          Row(
+                            children: [
+                              Container(
+                                width: 90,
+                                alignment: Alignment.center,
+                                child: Checkbox(
+                                  value: provider.invoiceStatus.id == 1
+                                      ? true
+                                      : i.invoices
+                                          .every((element) => element.isSelect),
+                                  onChanged: (value) {
+                                    if (value != null &&
+                                        provider.invoiceStatus.id == 0) {
+                                      List<InvoiceFeeDTO> list = [];
+                                      for (var item in i.invoices) {
+                                        InvoiceFeeDTO dto = item;
+                                        dto.selected(value);
+                                        list.add(dto);
+                                      }
+                                      setState(() {
+                                        invoiceGroups[index] = InvoiceGroup(
+                                            monthYear: i.monthYear,
+                                            invoices: list);
+                                      });
+                                    }
+                                  },
                                 ),
+                              ),
+                              // const SizedBox(width: 8),
+                              Text(
+                                provider.invoiceStatus.id == 0
+                                    ? 'Thanh toán tất cả'
+                                    : 'Đã thanh toán',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    color: AppColor.BLACK,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            'Hóa đơn tháng ${i.monthYear}',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 1400,
+                      child: Stack(
+                        children: [
+                          ScrollConfiguration(
+                            behavior: MyCustomScrollBehavior(),
+                            child: SingleChildScrollView(
+                              physics: const ClampingScrollPhysics(),
+                              // controller: horizontalController,
+                              scrollDirection: Axis.horizontal,
+                              child: SizedBox(
+                                width: 1700,
                                 child: Column(
                                   children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            AppColor.BLUE_TEXT.withOpacity(0.3),
+                                    const TitleItemInvoiceWidget(),
+                                    ...i.invoices
+                                        .asMap()
+                                        .map(
+                                          (key, e) => MapEntry(
+                                              key,
+                                              ItemInvoiceWidget(
+                                                  onSelect: (select) {
+                                                    int index = listInvoice
+                                                        .indexWhere((element) =>
+                                                            element.invoiceId ==
+                                                            e.invoiceId);
+                                                    InvoiceFeeDTO invoice = e;
+                                                    invoice.selected(select);
+
+                                                    setState(() {
+                                                      listInvoice[index] =
+                                                          invoice;
+                                                    });
+                                                  },
+                                                  index: key + 1,
+                                                  dto: e)),
+                                        )
+                                        .values,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            child: Row(
+                              children: [
+                                const Spacer(),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColor.WHITE,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColor.GREY_BORDER
+                                            .withOpacity(0.8),
+                                        blurRadius: 5,
+                                        spreadRadius: 1,
+                                        offset: const Offset(0, 0),
                                       ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            height: 50,
-                                            width: 120,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: AppColor.GREY_TEXT
-                                                    .withOpacity(0.3),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: AppColor.BLUE_TEXT
+                                              .withOpacity(0.3),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 45,
+                                              width: 120,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: AppColor.GREY_TEXT
+                                                      .withOpacity(0.3),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'Trạng thái',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColor.BLACK,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
-                                            child: const Text(
-                                              'Trạng thái',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppColor.BLACK,
-                                                fontWeight: FontWeight.bold,
+                                            Container(
+                                              height: 45,
+                                              width: 180,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: AppColor.GREY_TEXT
+                                                      .withOpacity(0.3),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'Thao tác',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColor.BLACK,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            height: 50,
-                                            width: 180,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: AppColor.GREY_TEXT
-                                                    .withOpacity(0.3),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              'Thao tác',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: AppColor.BLACK,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    if (listInvoice.isNotEmpty)
-                                      ...listInvoice
+                                      ...i.invoices
                                           .map(
                                             (e) => ItemRightWidget(
                                               dto: e,
@@ -732,14 +642,14 @@ class _ScreenState extends State<_Screen> {
                                                   selectInvoiceFee = e;
                                                 });
                                                 _bloc.add(GetInvoiceExcel(
-                                                    e.invoiceId!));
+                                                    e.invoiceId));
                                               },
                                               onShowQR: () {
                                                 setState(() {
                                                   selectInvoiceFee = e;
                                                 });
                                                 _bloc.add(GetInvoiceDetail(
-                                                    e.invoiceId!, true));
+                                                    e.invoiceId, true));
                                               },
                                               onShowDetail: () {
                                                 _provider.onPageChange(
@@ -749,254 +659,373 @@ class _ScreenState extends State<_Screen> {
                                             ),
                                           )
                                           .toList(),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
-            ),
-            if (isScrollingDown)
-              Positioned(
-                right: 30,
-                bottom: 30,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    verticalController.animateTo(
-                      0,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                    );
-                    setState(() {
-                      isScrollingDown = false;
-                    });
-                  },
-                  mini: true,
-                  child: Icon(Icons.arrow_upward),
-                ),
-              ),
-          ],
-        ),
-      ),
+            )
+            .values
+      ],
+
+      // child: SizedBox(
+      //   width: MediaQuery.of(context).size.width - 220,
+      //   child: Stack(
+      //     children: [
+      //       SingleChildScrollView(
+      //         controller: controller1,
+      //         scrollDirection: Axis.horizontal,
+      //         child: SizedBox(
+      //           width: 1610,
+      //           child: Column(
+      //             children: [
+      //               const TitleItemInvoiceWidget(),
+      //               if (listInvoice.isNotEmpty)
+      //                 ...listInvoice
+      //                     .asMap()
+      //                     .map(
+      //                       (index, x) {
+      //                         return MapEntry(
+      //                           index,
+      //                           ItemInvoiceWidget(
+      //                             index: index + 1,
+      //                             dto: x,
+      //                           ),
+      //                         );
+      //                       },
+      //                     )
+      //                     .values
+      //                     .toList(),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //       SizedBox(
+      //         width: 1610,
+      //         child: Row(
+      //           children: [
+      //             const Expanded(child: SizedBox()),
+      //             SingleChildScrollView(
+      //               controller: controller2,
+      //               child: SingleChildScrollView(
+      //                 scrollDirection: Axis.horizontal,
+      //                 child: Container(
+      //                   decoration: BoxDecoration(
+      //                     color: AppColor.WHITE,
+      //                     boxShadow: [
+      //                       BoxShadow(
+      //                         color:
+      //                             AppColor.GREY_BORDER.withOpacity(0.8),
+      //                         blurRadius: 5,
+      //                         spreadRadius: 1,
+      //                         offset: const Offset(0, 0),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   child: Column(
+      //                     children: [
+      //                       Container(
+      //                         alignment: Alignment.center,
+      //                         decoration: BoxDecoration(
+      //                           color:
+      //                               AppColor.BLUE_TEXT.withOpacity(0.3),
+      //                         ),
+      //                         child: Row(
+      //                           children: [
+      //                             Container(
+      //                               height: 50,
+      //                               width: 120,
+      //                               alignment: Alignment.center,
+      //                               decoration: BoxDecoration(
+      //                                 border: Border.all(
+      //                                   color: AppColor.GREY_TEXT
+      //                                       .withOpacity(0.3),
+      //                                 ),
+      //                               ),
+      //                               child: const Text(
+      //                                 'Trạng thái',
+      //                                 textAlign: TextAlign.center,
+      //                                 style: TextStyle(
+      //                                   fontSize: 12,
+      //                                   color: AppColor.BLACK,
+      //                                   fontWeight: FontWeight.bold,
+      //                                 ),
+      //                               ),
+      //                             ),
+      //                             Container(
+      //                               height: 50,
+      //                               width: 180,
+      //                               alignment: Alignment.center,
+      //                               decoration: BoxDecoration(
+      //                                 border: Border.all(
+      //                                   color: AppColor.GREY_TEXT
+      //                                       .withOpacity(0.3),
+      //                                 ),
+      //                               ),
+      //                               child: const Text(
+      //                                 'Thao tác',
+      //                                 textAlign: TextAlign.center,
+      //                                 style: TextStyle(
+      //                                   fontSize: 12,
+      //                                   color: AppColor.BLACK,
+      //                                   fontWeight: FontWeight.bold,
+      //                                 ),
+      //                               ),
+      //                             ),
+      //                           ],
+      //                         ),
+      //                       ),
+      //                       if (listInvoice.isNotEmpty)
+      //                         ...listInvoice
+      //                             .map(
+      //                               (e) => ItemRightWidget(
+      //                                 dto: e,
+      //                                 onCopy: () {
+      //                                   onCopy(dto: e);
+      //                                 },
+      //                                 onShowExcel: () {
+      //                                   setState(() {
+      //                                     selectInvoiceFee = e;
+      //                                   });
+      //                                   _bloc.add(GetInvoiceExcel(
+      //                                       e.invoiceId));
+      //                                 },
+      //                                 onShowQR: () {
+      //                                   setState(() {
+      //                                     selectInvoiceFee = e;
+      //                                   });
+      //                                   _bloc.add(GetInvoiceDetail(
+      //                                       e.invoiceId, true));
+      //                                 },
+      //                                 onShowDetail: () {
+      //                                   _provider.onPageChange(
+      //                                       PageInvoice.DETAIL,
+      //                                       invoiceId: e.invoiceId);
+      //                                 },
+      //                               ),
+      //                             )
+      //                             .toList(),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 
   Widget _filterWidget() {
     return Consumer<InvoiceProvider>(
       builder: (context, provider, child) {
-        return ScrollConfiguration(
-          behavior: MyCustomScrollBehavior(),
-          child: SingleChildScrollView(
-            controller: controller3,
-            scrollDirection: Axis.horizontal,
-            child: Row(
+        return Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Tìm kiếm theo",
-                      style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.normal),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 40,
-                      width: type == 9 ? 210 : 500,
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColor.GREY_DADADA)),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 180,
-                            child: DropdownButton<int>(
-                              isExpanded: true,
-                              value: type,
-                              underline: const SizedBox.shrink(),
-                              icon: const RotatedBox(
-                                quarterTurns: 5,
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 12,
-                                ),
-                              ),
-                              items: const [
-                                DropdownMenuItem<int>(
-                                    value: 9,
-                                    child: Text(
-                                      "Tất cả (mặc định)",
-                                    )),
-                                DropdownMenuItem<int>(
-                                    value: 2,
-                                    child: Text(
-                                      "TK ngân hàng",
-                                    )),
-                              ],
-                              onChanged: (value) {
-                                if (value == 9) {
-                                  selectBankId = '';
-                                }
-                                type = value;
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                          if (type == 2)
-                            Expanded(
-                              child: InkWell(
-                                onTap: onPopupBankSelect,
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 8),
-                                    const SizedBox(
-                                      height: 40,
-                                      child: VerticalDivider(
-                                        thickness: 1,
-                                        color: AppColor.GREY_DADADA,
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Text(
-                                      provider.selectBank != null
-                                          ? '${provider.selectBank!.bankShortName} - ${provider.selectBank!.bankAccount}'
-                                          : 'Chọn tài khoản ngân hàng',
-                                      style: const TextStyle(fontSize: 15),
-                                    )),
-                                    const RotatedBox(
-                                      quarterTurns: 5,
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
+                const Text(
+                  "Tìm kiếm theo",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                 ),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Thời gian",
-                      style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.normal),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: 300,
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColor.GREY_DADADA)),
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            width: 60,
-                            child: Center(
-                              child: Text('Tháng'),
+                const SizedBox(height: 10),
+                Container(
+                  height: 40,
+                  width: type == 9 ? 210 : 500,
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColor.GREY_DADADA)),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 180,
+                        child: DropdownButton<int>(
+                          isExpanded: true,
+                          value: type,
+                          underline: const SizedBox.shrink(),
+                          icon: const RotatedBox(
+                            quarterTurns: 5,
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          const SizedBox(
-                            height: 40,
-                            child: VerticalDivider(
-                              thickness: 1,
-                              color: AppColor.GREY_DADADA,
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                _onPickMonth(getMonth());
-                              },
-                              child: Container(
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      (selectDate == null
-                                          ? 'Tất cả'
-                                          : '${selectDate?.month}/${selectDate?.year}'),
-                                      style: const TextStyle(fontSize: 15),
-                                    ),
-                                    const Icon(Icons.calendar_month_outlined)
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 30),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Thời gian",
-                      style: TextStyle(fontSize: 15, color: AppColor.WHITE),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        _bloc.add(GetInvoiceList(
-                            status: _provider.invoiceStatus.id,
-                            bankId: selectBankId ?? '',
-                            time: selectDate != null
-                                ? DateFormat('yyyy-MM').format(selectDate!)
-                                : '',
-                            filterBy: 1,
-                            page: 1));
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 150,
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColor.BLUE_TEXT,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.search,
-                              size: 15,
-                              color: AppColor.WHITE,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              "Tìm kiếm",
-                              style: TextStyle(
-                                  color: AppColor.WHITE, fontSize: 15),
-                            )
+                          items: const [
+                            DropdownMenuItem<int>(
+                                value: 9,
+                                child: Text(
+                                  "Tất cả (mặc định)",
+                                )),
+                            DropdownMenuItem<int>(
+                                value: 2,
+                                child: Text(
+                                  "TK ngân hàng",
+                                )),
                           ],
+                          onChanged: (value) {
+                            if (value == 9) {
+                              selectBankId = '';
+                            }
+                            type = value;
+                            setState(() {});
+                          },
                         ),
                       ),
-                    ),
-                  ],
+                      if (type == 2)
+                        Expanded(
+                          child: InkWell(
+                            onTap: onPopupBankSelect,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 8),
+                                const SizedBox(
+                                  height: 40,
+                                  child: VerticalDivider(
+                                    thickness: 1,
+                                    color: AppColor.GREY_DADADA,
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Text(
+                                  provider.selectBank != null
+                                      ? '${provider.selectBank!.bankShortName} - ${provider.selectBank!.bankAccount}'
+                                      : 'Chọn tài khoản ngân hàng',
+                                  style: const TextStyle(fontSize: 15),
+                                )),
+                                const RotatedBox(
+                                  quarterTurns: 5,
+                                  child: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
+            const SizedBox(width: 15),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Thời gian",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  width: 300,
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColor.GREY_DADADA)),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 60,
+                        child: Center(
+                          child: Text('Tháng'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const SizedBox(
+                        height: 40,
+                        child: VerticalDivider(
+                          thickness: 1,
+                          color: AppColor.GREY_DADADA,
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            _onPickMonth(getMonth());
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  (selectDate == null
+                                      ? 'Tất cả'
+                                      : '${selectDate?.month}/${selectDate?.year}'),
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                const Icon(Icons.calendar_month_outlined)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 30),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Thời gian",
+                  style: TextStyle(fontSize: 15, color: AppColor.WHITE),
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    _bloc.add(GetInvoiceList(
+                        status: _provider.invoiceStatus.id,
+                        bankId: selectBankId ?? '',
+                        time: selectDate != null
+                            ? DateFormat('yyyy-MM').format(selectDate!)
+                            : '',
+                        filterBy: 1,
+                        page: 1));
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 150,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColor.BLUE_TEXT,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search,
+                          size: 15,
+                          color: AppColor.WHITE,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Tìm kiếm",
+                          style: TextStyle(color: AppColor.WHITE, fontSize: 15),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );
@@ -1245,4 +1274,12 @@ class _ScreenState extends State<_Screen> {
       ),
     );
   }
+}
+
+class InvoiceGroup {
+  String monthYear;
+  List<InvoiceFeeDTO> invoices;
+  // bool i
+
+  InvoiceGroup({required this.monthYear, required this.invoices});
 }

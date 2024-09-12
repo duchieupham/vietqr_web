@@ -358,7 +358,7 @@ class _SettingBDSDState extends State<SettingBDSD> {
             }),
           )
         else
-          Center(
+          const Center(
             child: Text(
               'không có cửa hàng',
               style: TextStyle(fontSize: 12, color: AppColor.BLACK),
@@ -391,7 +391,7 @@ class _SettingBDSDState extends State<SettingBDSD> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
+          const Row(
             children: const [
               Icon(
                 Icons.info_outline,

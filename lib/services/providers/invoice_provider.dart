@@ -46,7 +46,7 @@ class InvoiceProvider extends ChangeNotifier {
 
   InvoiceStatus get invoiceStatus => _invoiceStatus;
 
-  int? selectedStatus = 0;
+  int selectedStatus = 0;
 
   String _invoiceId = '';
   String? get invoiceId => _invoiceId;

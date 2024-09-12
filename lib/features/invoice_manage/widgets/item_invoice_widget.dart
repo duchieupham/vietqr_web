@@ -12,18 +12,20 @@ import '../../../../commons/constants/configurations/theme.dart';
 class ItemInvoiceWidget extends StatelessWidget {
   final int index;
   final InvoiceFeeDTO dto;
+  final Function(bool) onSelect;
   const ItemInvoiceWidget({
     super.key,
     required this.index,
     required this.dto,
+    required this.onSelect,
   });
 
   @override
   Widget build(BuildContext context) {
-    String formattedDateTimePaid = dto.timePaid != null &&
+    String formattedDateTimePaid = dto.timePaid != 0 &&
             dto.timePaid.toString().isNotEmpty
         ? DateFormat('yyyy-MM-dd HH:mm:ss')
-            .format(DateTime.fromMillisecondsSinceEpoch(dto.timePaid! * 1000))
+            .format(DateTime.fromMillisecondsSinceEpoch(dto.timePaid * 1000))
         : '-';
     Color color = AppColor.WHITE;
     switch (dto.status) {
@@ -43,6 +45,24 @@ class ItemInvoiceWidget extends StatelessWidget {
       alignment: Alignment.center,
       child: Row(
         children: [
+          Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 5),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                    right: BorderSide(color: AppColor.GREY_BUTTON))),
+            height: 50,
+            width: 90,
+            child: Checkbox(
+              value: dto.status == 1 ? true : dto.isSelect,
+              onChanged: (value) {
+                if (value != null && dto.status != 1) {
+                  onSelect(value);
+                }
+              },
+            ),
+          ),
           Container(
             // padding: const EdgeInsets.symmetric(horizontal: 5),
             alignment: Alignment.center,
@@ -73,7 +93,7 @@ class ItemInvoiceWidget extends StatelessWidget {
               child: TextButton(
                 onPressed: () async {
                   await FlutterClipboard.copy(
-                    dto.invoiceName!,
+                    dto.invoiceName,
                   ).then(
                     (value) => Fluttertoast.showToast(
                       msg: 'Đã sao chép',
@@ -89,7 +109,7 @@ class ItemInvoiceWidget extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  dto.invoiceName!,
+                  dto.invoiceName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.left,
