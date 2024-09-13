@@ -19,57 +19,64 @@ class InvoiceListWidget extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-      child: SizedBox(
-        width: width,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          primary: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Consumer<InvoiceProvider>(
-                builder: (context, provider, child) {
-                  return Row(
-                    children: [
-                      const Text(
-                        "Tìm kiếm thông tin hoá đơn ",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(width: 30),
-                      ...provider.statusList
-                          .map(
-                            (e) => _buildOption(e, provider),
-                          )
-                          .toList(),
-                    ],
-                  );
-                },
+    return Container(
+      padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+      width: width,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Consumer<InvoiceProvider>(
+              builder: (context, provider, child) {
+                return Row(
+                  children: [
+                    const Text(
+                      "Tìm kiếm thông tin hoá đơn ",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(width: 30),
+                    ...provider.statusList
+                        .map(
+                          (e) => _buildOption(e, provider),
+                        )
+                        .toList(),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            filterWidget,
+            const SizedBox(height: 20),
+            SizedBox(
+              width: width,
+              child: const MySeparator(
+                color: AppColor.GREY_DADADA,
               ),
-              const SizedBox(height: 20),
-              filterWidget,
-              const SizedBox(height: 20),
-              SizedBox(
-                width: width,
-                child: const MySeparator(
-                  color: AppColor.GREY_DADADA,
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(right: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Danh sách hóa đơn",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    invoicelistWidget,
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-
-              const Text(
-                "Danh sách hóa đơn",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              invoicelistWidget,
-              // const SizedBox(height: 1000),
-              // _pagingWidget(state),
-              // const SizedBox(height: 10),
-            ],
-          ),
+            )
+            // const SizedBox(height: 1000),
+            // _pagingWidget(state),
+            // const SizedBox(height: 10),
+          ],
         ),
       ),
     );

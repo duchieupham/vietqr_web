@@ -289,7 +289,7 @@ class _ScreenState extends State<_Screen> {
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             return InvoiceListWidget(
-                              width: constraints.maxWidth - 30,
+                              width: constraints.maxWidth - 60,
                               filterWidget: _filterWidget(),
                               invoicelistWidget:
                                   _buildListInvoice(state, provider),
@@ -331,40 +331,58 @@ class _ScreenState extends State<_Screen> {
                         height: 100,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 8),
+                        decoration:
+                            BoxDecoration(color: AppColor.WHITE, boxShadow: [
+                          BoxShadow(
+                            color: AppColor.BLACK.withOpacity(0.1),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                            offset: const Offset(0, 2),
+                          )
+                        ]),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Row(
                               children: [
-                                Text('Đang chọn: ${getListId().length}'),
-                                const SizedBox(height: 4),
-                                RichText(
-                                    text: TextSpan(
-                                        text: 'Tổng tiền (VND): ',
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColor.BLACK),
-                                        children: [
-                                      TextSpan(
-                                        text: CurrencyUtils.instance
-                                            .getCurrencyFormatted(getListId()
-                                                    .isNotEmpty
-                                                ? listInvoice
-                                                    .where((element) =>
-                                                        element.isSelect)
-                                                    .map((e) => e.totalAmount)
-                                                    .reduce((a, b) => a + b)
-                                                    .toString()
-                                                : 0.toString()),
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColor.ORANGE_DARK),
-                                      ),
-                                    ])),
+                                _pagingWidget(state),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Đang chọn: ${getListId().length}'),
+                                    const SizedBox(height: 4),
+                                    RichText(
+                                        text: TextSpan(
+                                            text: 'Tổng tiền (VND): ',
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColor.BLACK),
+                                            children: [
+                                          TextSpan(
+                                            text: CurrencyUtils.instance
+                                                .getCurrencyFormatted(
+                                                    getListId()
+                                                            .isNotEmpty
+                                                        ? listInvoice
+                                                            .where((element) =>
+                                                                element
+                                                                    .isSelect)
+                                                            .map((e) =>
+                                                                e.totalAmount)
+                                                            .reduce(
+                                                                (a, b) => a + b)
+                                                            .toString()
+                                                        : 0.toString()),
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColor.ORANGE_DARK),
+                                          ),
+                                        ])),
+                                  ],
+                                ),
                               ],
                             ),
                             VietQRButton.gradient(
@@ -1155,13 +1173,12 @@ class _ScreenState extends State<_Screen> {
     MetaDataDTO? paging;
     bool isPaging = false;
 
-    if (state.status == BlocStatus.LOADING ||
-        state.status == BlocStatus.NONE ||
-        state.status == BlocStatus.ERROR) {
-      return const SizedBox.shrink();
-    }
-    if (state.request == InvoiceType.GET_INVOICE_LIST &&
-        state.status == BlocStatus.SUCCESS) {
+    // if (state.status == BlocStatus.LOADING ||
+    //     state.status == BlocStatus.NONE ||
+    //     state.status == BlocStatus.ERROR) {
+    //   return const SizedBox.shrink();
+    // }
+    if (state.metaDataDTO != null) {
       paging = state.metaDataDTO!;
       if (paging.page! != paging.totalPage!) {
         isPaging = true;
@@ -1171,9 +1188,10 @@ class _ScreenState extends State<_Screen> {
       return const SizedBox.shrink();
     }
     return Padding(
-      padding: const EdgeInsets.only(left: 30),
+      padding: const EdgeInsets.only(right: 30),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.all(4),
@@ -1201,22 +1219,10 @@ class _ScreenState extends State<_Screen> {
                     page: paging.page! - 1));
               }
             },
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                      color: paging.page != 1
-                          ? AppColor.BLACK
-                          : AppColor.GREY_DADADA)),
-              child: Center(
-                child: Icon(
-                  Icons.chevron_left_rounded,
-                  color:
-                      paging.page != 1 ? AppColor.BLACK : AppColor.GREY_DADADA,
-                  size: 20,
-                ),
-              ),
+            child: Icon(
+              Icons.chevron_left_rounded,
+              color: paging.page != 1 ? AppColor.BLACK : AppColor.GREY_DADADA,
+              size: 20,
             ),
           ),
           const SizedBox(width: 15),
@@ -1238,19 +1244,10 @@ class _ScreenState extends State<_Screen> {
                     page: paging.page! + 1));
               }
             },
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                      color: isPaging ? AppColor.BLACK : AppColor.GREY_DADADA)),
-              child: Center(
-                child: Icon(
-                  Icons.chevron_right_rounded,
-                  color: isPaging ? AppColor.BLACK : AppColor.GREY_DADADA,
-                  size: 20,
-                ),
-              ),
+            child: Icon(
+              Icons.chevron_right_rounded,
+              color: isPaging ? AppColor.BLACK : AppColor.GREY_DADADA,
+              size: 20,
             ),
           ),
         ],
