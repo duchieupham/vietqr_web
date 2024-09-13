@@ -3,6 +3,7 @@ import 'package:VietQR/models/fee_package_invoice.dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_excel_dto.dart';
+import 'package:VietQR/models/unpaid_invoice_detail_qr_dto.dart';
 import 'package:equatable/equatable.dart';
 import '../../../models/bank_account_dto.dart';
 import '../../../models/invoice_fee_dto.dart';
@@ -18,6 +19,8 @@ class InvoiceStates extends Equatable {
   final List<FeePackageInvoiceDTO>? listFeePackageInvoice;
   final InvoiceDetailDTO? invoiceDetailDTO;
   final InvoiceDetailQrDTO? invoiceDetailQrDTO;
+  final UnpaidInvoiceDetailQrDTO? unpaidInvoiceDetailQrDTO;
+
   final bool? isShow;
   final bool isOpenDialog;
   final bool hasFile;
@@ -38,6 +41,7 @@ class InvoiceStates extends Equatable {
     this.hasFile = false,
     this.invoiceExcelDTO,
     this.isOpenDialog = false,
+    this.unpaidInvoiceDetailQrDTO,
   });
 
   InvoiceStates copyWith({
@@ -54,6 +58,7 @@ class InvoiceStates extends Equatable {
     bool? isShow,
     bool? isOpenDialog,
     bool? hasFile,
+    UnpaidInvoiceDetailQrDTO? unpaidInvoiceDetailQrDTO,
   }) {
     return InvoiceStates(
       status: status ?? this.status,
@@ -70,6 +75,8 @@ class InvoiceStates extends Equatable {
       isShow: isShow ?? this.isShow,
       isOpenDialog: isOpenDialog ?? this.isOpenDialog,
       hasFile: hasFile ?? this.hasFile,
+      unpaidInvoiceDetailQrDTO:
+          unpaidInvoiceDetailQrDTO ?? this.unpaidInvoiceDetailQrDTO,
     );
   }
 
@@ -86,6 +93,7 @@ class InvoiceStates extends Equatable {
         isShow,
         isOpenDialog,
         hasFile,
+        unpaidInvoiceDetailQrDTO,
         metaDataDTO,
       ];
 }

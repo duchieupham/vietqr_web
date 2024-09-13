@@ -41,6 +41,15 @@ class GetListPackageInvoiceFeeEvent extends InvoiceEvent {
 
 class GetListBankAccountEvent extends InvoiceEvent {}
 
+class RequestMultiInvoicePaymentEvent extends InvoiceEvent {
+  final List<String> invoiceIds;
+
+  const RequestMultiInvoicePaymentEvent({required this.invoiceIds});
+
+  @override
+  List<Object?> get props => [invoiceIds];
+}
+
 class RequestPaymentInvoiceItemEvent extends InvoiceEvent {
   final String invoiceId;
   final List<String> itemItemIds;

@@ -8,6 +8,7 @@ import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_excel_dto.dart';
 import 'package:VietQR/models/invoice_fee_dto.dart';
 import 'package:VietQR/models/metadata_dto.dart';
+import 'package:VietQR/models/unpaid_invoice_detail_qr_dto.dart';
 import 'package:VietQR/services/shared_references/user_information_helper.dart';
 
 import '../../../commons/constants/env/env_config.dart';
@@ -92,6 +93,31 @@ class InvoiceRepository extends BaseRepo {
       LOG.error(e.toString());
     }
     return result;
+  }
+
+  Future<UnpaidInvoiceDetailQrDTO?> requestPaymnetV2({
+    required List<String> invoiceIds,
+    String bankIdRecharge = '',
+  }) async {
+    try {
+      Map<String, dynamic> param = {};
+      param['invoiceIds'] = invoiceIds;
+      param['bankIdRecharge'] = bankIdRecharge;
+
+      String url = '${EnvConfig.getBaseUrl()}invoice/request-payment/v2';
+      final response = await BaseAPIClient.postAPI(
+        body: param,
+        url: url,
+        type: AuthenticationType.SYSTEM,
+      );
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        return UnpaidInvoiceDetailQrDTO.fromJson(data);
+      }
+    } catch (e) {
+      LOG.error("Failed to request payment: ${e.toString()}");
+    }
+    return null;
   }
 
   Future<InvoiceDetailQrDTO?> requestPaymnet({

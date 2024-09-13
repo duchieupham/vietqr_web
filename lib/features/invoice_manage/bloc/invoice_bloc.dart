@@ -27,6 +27,7 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
     on<CloseDialogEvent>(_closeDialog);
     on<GetListPackageInvoiceFeeEvent>(_getListPackageInvoiceFee);
     on<GetAttachFile>(_getFile);
+    on<RequestMultiInvoicePaymentEvent>(_requestPayment);
   }
   final InvoiceRepository _invoiceRepository = InvoiceRepository();
 
@@ -81,6 +82,26 @@ class InvoiceBloc extends Bloc<InvoiceEvent, InvoiceStates> with BaseManager {
           status: BlocStatus.ERROR,
           request: InvoiceType.GET_BANKS,
           msg: 'Đã có lỗi xảy ra.'));
+    }
+  }
+
+  void _requestPayment(
+    InvoiceEvent event,
+    Emitter emit,
+  ) async {
+    try {
+      if (event is RequestMultiInvoicePaymentEvent) {
+        emit(state.copyWith(status: BlocStatus.LOADING));
+        final result = await _invoiceRepository.requestPaymnetV2(
+            invoiceIds: event.invoiceIds);
+        emit(state.copyWith(
+            status: BlocStatus.SUCCESS,
+            request: InvoiceType.PAYMENT,
+            unpaidInvoiceDetailQrDTO: result));
+      }
+    } catch (e) {
+      LOG.error(e.toString());
+      emit(state.copyWith(status: BlocStatus.ERROR, msg: 'Đã có lỗi xảy ra.'));
     }
   }
 

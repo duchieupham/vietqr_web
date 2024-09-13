@@ -5,12 +5,14 @@ import 'package:VietQR/commons/widgets/%20button_vietqr_widget.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
+import 'package:VietQR/features/invoice_manage/widgets/bottom_payment_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/invoice_list_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/item_right_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_bank_select_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_excel_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_payment_request_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_qr_widget.dart';
+import 'package:VietQR/features/invoice_manage/widgets/popup_unpaid_qr_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/title_invoice_widget.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
@@ -116,6 +118,13 @@ class _ScreenState extends State<_Screen> {
     return setId.toList();
   }
 
+  int get amount => getListId().isNotEmpty
+      ? listInvoice
+          .where((element) => element.isSelect)
+          .map((e) => e.totalAmount)
+          .reduce((a, b) => a + b)
+      : 0;
+
   @override
   void dispose() {
     super.dispose();
@@ -187,7 +196,7 @@ class _ScreenState extends State<_Screen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InvoiceBloc, InvoiceStates>(
-      listener: (BuildContext context, InvoiceStates state) {
+      listener: (BuildContext context, InvoiceStates state) async {
         if (state.request == InvoiceType.GET_BANKS &&
             state.status == BlocStatus.SUCCESS) {
           _provider.setListBank(state.listBank!);
@@ -245,6 +254,17 @@ class _ScreenState extends State<_Screen> {
             state.status == BlocStatus.SUCCESS) {
           if (state.isShow == true) {
             onShowQRPopup(state.invoiceDetailQrDTO!);
+          }
+        }
+        if (state.request == InvoiceType.PAYMENT &&
+            state.status == BlocStatus.SUCCESS) {
+          if (state.unpaidInvoiceDetailQrDTO != null) {
+            await showDialog(
+              context: context,
+              builder: (context) => PopupUnpaidQrWidget(
+                dto: state.unpaidInvoiceDetailQrDTO!,
+              ),
+            );
           }
         }
       },
@@ -327,106 +347,16 @@ class _ScreenState extends State<_Screen> {
                         ),
                       ),
                     if (provider.pageInvoice == PageInvoice.LIST)
-                      Container(
-                        height: 100,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 8),
-                        decoration:
-                            BoxDecoration(color: AppColor.WHITE, boxShadow: [
-                          BoxShadow(
-                            color: AppColor.BLACK.withOpacity(0.1),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 2),
-                          )
-                        ]),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                _pagingWidget(state),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Đang chọn: ${getListId().length}'),
-                                    const SizedBox(height: 4),
-                                    RichText(
-                                        text: TextSpan(
-                                            text: 'Tổng tiền (VND): ',
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColor.BLACK),
-                                            children: [
-                                          TextSpan(
-                                            text: CurrencyUtils.instance
-                                                .getCurrencyFormatted(
-                                                    getListId()
-                                                            .isNotEmpty
-                                                        ? listInvoice
-                                                            .where((element) =>
-                                                                element
-                                                                    .isSelect)
-                                                            .map((e) =>
-                                                                e.totalAmount)
-                                                            .reduce(
-                                                                (a, b) => a + b)
-                                                            .toString()
-                                                        : 0.toString()),
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColor.ORANGE_DARK),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            VietQRButton.gradient(
-                                borderRadius: 100,
-                                height: 50,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                onPressed: () {
-                                  Fluttertoast.showToast(
-                                    msg: 'Đang cập nhật tính năng',
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER,
-                                    backgroundColor:
-                                        Theme.of(context).cardColor,
-                                    textColor: Theme.of(context).hintColor,
-                                    fontSize: 15,
-                                  );
-                                },
-                                isDisabled: (getListId().isNotEmpty
-                                        ? listInvoice
-                                            .where(
-                                                (element) => element.isSelect)
-                                            .map((e) => e.totalAmount)
-                                            .reduce((a, b) => a + b)
-                                        : 0) ==
-                                    0,
-                                child: Center(
-                                    child: Text(
-                                  'Thanh toán hóa đơn',
-                                  style: TextStyle(
-                                      color: (getListId().isNotEmpty
-                                                  ? listInvoice
-                                                      .where((element) =>
-                                                          element.isSelect)
-                                                      .map((e) => e.totalAmount)
-                                                      .reduce((a, b) => a + b)
-                                                  : 0) ==
-                                              0
-                                          ? AppColor.BLACK
-                                          : AppColor.WHITE),
-                                )))
-                          ],
-                        ),
-                      )
+                      BottomPaymentWidget(
+                        amount: amount,
+                        isDisable: (getListId().isNotEmpty ? amount : 0) == 0,
+                        onTap: () {
+                          _bloc.add(RequestMultiInvoicePaymentEvent(
+                              invoiceIds: getListId()));
+                        },
+                        pagingWidget: _pagingWidget(state),
+                        selected: getListId().length,
+                      ),
                   ],
                 ),
               ),
