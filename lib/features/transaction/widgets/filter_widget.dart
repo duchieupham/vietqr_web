@@ -58,7 +58,10 @@ class _FilterWidgetState extends State<FilterWidget> {
 
   String _value = '';
   String _terminalCode = '';
-  DateTime _fromDate = DateTime.now();
+
+  DateTime _fromDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+          .subtract(const Duration(days: 7));
   DateTime _toDate = DateTime.now();
 
   DateTime _formatFromDate(DateTime now) {
@@ -99,7 +102,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     const DataFilter(id: 5, name: 'Khoảng thời gian'),
   ];
 
-  DataFilter _filterByTime = const DataFilter(id: 1, name: '7 ngày gần nhất');
+  DataFilter _filterByTime = const DataFilter(id: 5, name: 'Khoảng thời gian');
 
   DataFilter _filterBy = const DataFilter(id: 9, name: 'Mã giao dịch');
   DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
@@ -594,8 +597,11 @@ class _FilterWidgetState extends State<FilterWidget> {
           return DialogExcelWidget(
             terminals: terminals!,
             bankId: widget.bankId,
-            selectToDate: selectToDate,
-            selectFromDate: selectFromDate,
+            selectToDate: selectToDate ?? DateTime.now(),
+            selectFromDate: selectFromDate ??
+                DateTime(DateTime.now().year, DateTime.now().month,
+                        DateTime.now().day)
+                    .subtract(const Duration(days: 7)),
           );
         },
       );
