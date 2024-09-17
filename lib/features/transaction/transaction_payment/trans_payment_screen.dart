@@ -90,7 +90,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
   }
 
   void getTotalTransByDay() {
-    String from = _dateFormat.format(now);
+    String from = _dateFormat.format(now.subtract(const Duration(days: 7)));
     String to = _dateFormat.format(
         now.add(const Duration(days: 1)).subtract(const Duration(seconds: 1)));
 
@@ -330,8 +330,7 @@ class _StoreScreenState extends State<TransactionPaymentView> {
                                   totalTrans:
                                       '${state.totalTransDTO?.totalTransRefund ?? ''}',
                                   amount:
-                                      state.totalTransDTO?.getCashRefund ??
-                                          '',
+                                      state.totalTransDTO?.getCashRefund ?? '',
                                   des: 'Tổng số tiền hoàn',
                                 ),
                               ],

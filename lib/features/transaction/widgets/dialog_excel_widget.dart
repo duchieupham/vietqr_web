@@ -48,14 +48,14 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
   TerminalQRDTO terminalDTO = TerminalQRDTO();
 
   List<DataFilter> listFilterByTime = [
-    const DataFilter(id: 1, name: 'Hôm qua (mặc định)'),
+    const DataFilter(id: 1, name: 'Hôm qua'),
     const DataFilter(id: 2, name: 'Ngày'),
     const DataFilter(id: 3, name: 'Tháng'),
-    const DataFilter(id: 4, name: 'Khoảng thời gian'),
+    const DataFilter(id: 4, name: 'Khoảng thời gian (mặc định)'),
   ];
 
   DataFilter _filterByTime =
-      const DataFilter(id: 1, name: 'Hôm qua (mặc định)');
+      const DataFilter(id: 4, name: 'Khoảng thời gian (mặc định)');
 
   DateFormat get _format => DateFormat('yyyy/MM/dd HH:mm:ss');
 
