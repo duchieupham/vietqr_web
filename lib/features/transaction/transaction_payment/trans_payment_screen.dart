@@ -91,7 +91,8 @@ class _StoreScreenState extends State<TransactionPaymentView> {
 
   void getTotalTransByDay() {
     String from = _dateFormat.format(now.subtract(const Duration(days: 7)));
-    String to = _dateFormat.format(DateTime.now());
+    String to = _dateFormat.format(
+        now.add(const Duration(days: 1)).subtract(const Duration(seconds: 1)));
 
     TransactionInputDTO dto = TransactionInputDTO(
       bankId: _bankId,

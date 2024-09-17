@@ -62,7 +62,10 @@ class _FilterWidgetState extends State<FilterWidget> {
   DateTime _fromDate =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
           .subtract(const Duration(days: 7));
-  DateTime _toDate = DateTime.now();
+  DateTime _toDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+          .add(const Duration(days: 1))
+          .subtract(const Duration(seconds: 1));
 
   DateTime _formatFromDate(DateTime now) {
     DateTime fromDate = DateTime(now.year, now.month, now.day);
@@ -102,7 +105,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     const DataFilter(id: 5, name: 'Khoảng thời gian'),
   ];
 
-  DataFilter _filterByTime = const DataFilter(id: 5, name: 'Khoảng thời gian');
+  DataFilter _filterByTime = const DataFilter(id: 1, name: '7 ngày gần nhất');
 
   DataFilter _filterBy = const DataFilter(id: 9, name: 'Mã giao dịch');
   DataFilter _filterByStatus = const DataFilter(id: 0, name: 'Chờ thanh toán');
@@ -233,7 +236,6 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   Widget _buildRangeTimeWidget() {
-    if (_filterByTime.id != 5) return const SizedBox();
     return Row(
       children: [
         const SizedBox(width: 16),
@@ -289,7 +291,6 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   Widget _buildSearchWidget() {
-    if (_filterBy.id == 5) return const SizedBox();
     return Container(
       width: 250,
       height: 34,
@@ -365,11 +366,13 @@ class _FilterWidgetState extends State<FilterWidget> {
 
   void updateFromDate(DateTime dateTime) {
     _fromDate = dateTime;
+    selectFromDate = dateTime;
     updateState();
   }
 
   void updateToDate(DateTime dateTime) {
     _toDate = dateTime;
+    selectToDate = dateTime;
     updateState();
   }
 
@@ -390,30 +393,32 @@ class _FilterWidgetState extends State<FilterWidget> {
     } else if (_filterByTime.id == TypeTimeFilter.SEVEN_LAST_DAY.id) {
       DateTime fromDate = endDate.subtract(const Duration(days: 7));
 
-      fromDate = fromDate
+      endDate = endDate
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
+
       _onCallBack(fromDate: fromDate, toDate: endDate);
-      updateFromDate(endDate);
-      updateToDate(fromDate);
+      updateFromDate(fromDate);
+      updateToDate(endDate);
     } else if (_filterByTime.id == TypeTimeFilter.THIRTY_LAST_DAY.id) {
       DateTime fromDate = endDate.subtract(const Duration(days: 30));
-      fromDate = fromDate
+      endDate = endDate
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
       _onCallBack(fromDate: fromDate, toDate: endDate);
-      updateFromDate(endDate);
-      updateToDate(fromDate);
+      updateFromDate(fromDate);
+      updateToDate(endDate);
     } else if (_filterByTime.id == TypeTimeFilter.THREE_MONTH_LAST_DAY.id) {
       // DateTime fromDate = Jiffy(endDate).subtract(months: 3).dateTime;
       DateTime fromDate =
           Jiffy.parseFromDateTime(endDate).subtract(months: 3).dateTime;
-      fromDate = fromDate
+      endDate = endDate
           .add(const Duration(days: 1))
           .subtract(const Duration(seconds: 1));
+
       _onCallBack(fromDate: fromDate, toDate: endDate);
-      updateFromDate(endDate);
-      updateToDate(fromDate);
+      updateFromDate(fromDate);
+      updateToDate(endDate);
     }
   }
 
@@ -597,7 +602,9 @@ class _FilterWidgetState extends State<FilterWidget> {
           return DialogExcelWidget(
             terminals: terminals!,
             bankId: widget.bankId,
-            selectToDate: selectToDate ?? DateTime.now(),
+            selectToDate: selectToDate ??
+                DateTime(DateTime.now().year, DateTime.now().month,
+                    DateTime.now().day).add(const Duration(days: 1)).subtract(const Duration(seconds: 1)),
             selectFromDate: selectFromDate ??
                 DateTime(DateTime.now().year, DateTime.now().month,
                         DateTime.now().day)
