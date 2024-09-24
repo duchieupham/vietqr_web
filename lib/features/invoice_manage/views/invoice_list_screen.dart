@@ -1,7 +1,5 @@
 import 'package:VietQR/commons/enums/check_type.dart';
-import 'package:VietQR/commons/utils/currency_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
-import 'package:VietQR/commons/widgets/%20button_vietqr_widget.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
@@ -26,16 +24,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
-import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/custom_scroll.dart';
 import '../../../commons/widgets/dot_dash_widget.dart';
-import '../../../layouts/box_layout.dart';
 import '../../../main.dart';
 import '../../transaction/widgets/dialog_pick_date.dart';
 import '../widgets/item_invoice_widget.dart';
@@ -416,35 +410,45 @@ class _ScreenState extends State<_Screen> {
                           Row(
                             children: [
                               Container(
-                                width: 90,
-                                alignment: Alignment.center,
-                                child: Checkbox(
-                                  value: provider.invoiceStatus.id == 1
-                                      ? true
-                                      : i.invoices
-                                          .every((element) => element.isSelect),
-                                  onChanged: (value) {
-                                    if (value != null &&
-                                        provider.invoiceStatus.id == 0) {
-                                      List<InvoiceFeeDTO> list = [];
-                                      for (var item in i.invoices) {
-                                        InvoiceFeeDTO dto = item;
-                                        dto.selected(value);
-                                        list.add(dto);
-                                      }
-                                      setState(() {
-                                        invoiceGroups[index] = InvoiceGroup(
-                                            monthYear: i.monthYear,
-                                            invoices: list);
-                                      });
-                                    }
-                                  },
-                                ),
-                              ),
+                                  width: 90,
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        'Tất cả',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: AppColor.BLACK),
+                                      ),
+                                      Checkbox(
+                                        value: provider.invoiceStatus.id == 1
+                                            ? true
+                                            : i.invoices.every(
+                                                (element) => element.isSelect),
+                                        onChanged: (value) {
+                                          if (value != null &&
+                                              provider.invoiceStatus.id == 0) {
+                                            List<InvoiceFeeDTO> list = [];
+                                            for (var item in i.invoices) {
+                                              InvoiceFeeDTO dto = item;
+                                              dto.selected(value);
+                                              list.add(dto);
+                                            }
+                                            setState(() {
+                                              invoiceGroups[index] =
+                                                  InvoiceGroup(
+                                                      monthYear: i.monthYear,
+                                                      invoices: list);
+                                            });
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  )),
                               // const SizedBox(width: 8),
                               Text(
                                 provider.invoiceStatus.id == 0
-                                    ? 'Thanh toán tất cả'
+                                    ? 'Hóa đơn tháng ${i.monthYear}'
                                     : 'Đã thanh toán',
                                 textAlign: TextAlign.center,
                                 style: const TextStyle(
@@ -454,11 +458,11 @@ class _ScreenState extends State<_Screen> {
                               ),
                             ],
                           ),
-                          Text(
-                            'Hóa đơn tháng ${i.monthYear}',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                          // Text(
+                          //   'Hóa đơn tháng ${i.monthYear}',
+                          //   style: const TextStyle(
+                          //       fontSize: 16, fontWeight: FontWeight.bold),
+                          // ),
                         ],
                       ),
                     ),

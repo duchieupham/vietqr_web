@@ -34,7 +34,7 @@ class InvoiceFeeDTO {
     required this.bankShortName,
     required this.qrCode,
     required this.totalAmount,
-    this.isSelect = false,
+    this.isSelect = true,
   });
 
   factory InvoiceFeeDTO.fromJson(Map<String, dynamic> json) {
