@@ -45,7 +45,6 @@ class InvoiceRepository extends BaseRepo {
 
     try {
       //  final String url = '${EnvConfig.getBaseUrl()}key-active-bank/annual-fee';
-      print('test');
       String userId = UserInformationHelper.instance.getUserId().trim();
       final String url =
           '${EnvConfig.getBaseUrl()}invoice/$userId?filterBy=$filterBy&time=${time ?? ''}&page=$page&size=${size ?? 20}&bankId=$bankId&status=$status';

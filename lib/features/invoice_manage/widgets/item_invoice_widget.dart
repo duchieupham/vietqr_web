@@ -45,24 +45,25 @@ class ItemInvoiceWidget extends StatelessWidget {
       alignment: Alignment.center,
       child: Row(
         children: [
-          Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 5),
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: AppColor.GREY_BUTTON),
-                    right: BorderSide(color: AppColor.GREY_BUTTON))),
-            height: 50,
-            width: 90,
-            child: Checkbox(
-              value: dto.status == 1 ? true : dto.isSelect,
-              onChanged: (value) {
-                if (value != null && dto.status != 1) {
-                  onSelect(value);
-                }
-              },
+          if (dto.status == 0)
+            Container(
+              // padding: const EdgeInsets.symmetric(horizontal: 5),
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: AppColor.GREY_BUTTON),
+                      right: BorderSide(color: AppColor.GREY_BUTTON))),
+              height: 50,
+              width: 90,
+              child: Checkbox(
+                value: dto.status == 1 ? true : dto.isSelect,
+                onChanged: (value) {
+                  if (value != null && dto.status != 1) {
+                    onSelect(value);
+                  }
+                },
+              ),
             ),
-          ),
           Container(
             // padding: const EdgeInsets.symmetric(horizontal: 5),
             alignment: Alignment.center,
