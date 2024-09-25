@@ -253,7 +253,8 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo', msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
     } else {
-      updateToDate(widget.selectToDate ?? date ?? DateTime.now());
+      // updateToDate(widget.selectToDate ?? date ?? DateTime.now());
+      updateToDate(date ?? widget.selectToDate ?? DateTime.now());
     }
   }
 
@@ -278,7 +279,8 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
       DialogWidget.instance.openMsgDialog(
           title: 'Cảnh báo', msg: 'Vui lòng kiểm tra lại khoảng thời gian.');
     } else {
-      updateFromDate(widget.selectFromDate ?? date ?? DateTime.now());
+      // updateFromDate(widget.selectFromDate ?? date ?? DateTime.now());
+      updateFromDate(date ?? widget.selectFromDate ?? DateTime.now());
     }
   }
 
@@ -382,11 +384,13 @@ class _DialogExcelWidgetState extends State<DialogExcelWidget> {
 
   void updateFromDate(DateTime dateTime) {
     _fromDate = dateTime;
+    widget.selectFromDate = dateTime;
     updateState();
   }
 
   void updateToDate(DateTime dateTime) {
     _toDate = dateTime;
+    widget.selectToDate = dateTime;
     updateState();
   }
 
