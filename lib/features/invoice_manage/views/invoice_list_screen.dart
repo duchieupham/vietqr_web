@@ -1,7 +1,6 @@
 import 'package:VietQR/commons/enums/check_type.dart';
-import 'package:VietQR/commons/utils/currency_utils.dart';
+import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
-import 'package:VietQR/commons/widgets/%20button_vietqr_widget.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
 import 'package:VietQR/features/invoice_manage/state/invoice_states.dart';
@@ -14,6 +13,7 @@ import 'package:VietQR/features/invoice_manage/widgets/popup_payment_request_wid
 import 'package:VietQR/features/invoice_manage/widgets/popup_qr_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/popup_unpaid_qr_widget.dart';
 import 'package:VietQR/features/invoice_manage/widgets/title_invoice_widget.dart';
+import 'package:VietQR/models/bank_account_dto.dart';
 import 'package:VietQR/models/invoice_detail_dto.dart';
 import 'package:VietQR/models/invoice_detail_qr_dto.dart';
 import 'package:VietQR/models/invoice_excel_dto.dart';
@@ -22,20 +22,17 @@ import 'package:VietQR/models/metadata_dto.dart';
 import 'package:VietQR/services/providers/invoice_provider.dart';
 import 'package:VietQR/services/shared_references/shared_pref.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
-import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../commons/constants/configurations/theme.dart';
 import '../../../commons/utils/custom_scroll.dart';
 import '../../../commons/widgets/dot_dash_widget.dart';
-import '../../../layouts/box_layout.dart';
 import '../../../main.dart';
 import '../../transaction/widgets/dialog_pick_date.dart';
 import '../widgets/item_invoice_widget.dart';
@@ -61,7 +58,7 @@ class _Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<_Screen> {
-  // final verticalController = ScrollController();
+  final hortizonController = ScrollController();
   // final controller1 = ScrollController();
   // final controller2 = ScrollController();
   // final controller3 = ScrollController();
@@ -82,6 +79,7 @@ class _ScreenState extends State<_Screen> {
   List<InvoiceGroup> invoiceGroups = [];
 
   InvoiceFeeDTO? selectInvoiceFee;
+  BankAccountDTO? selectBank;
 
   @override
   void initState() {
@@ -309,7 +307,7 @@ class _ScreenState extends State<_Screen> {
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             return InvoiceListWidget(
-                              width: constraints.maxWidth - 60,
+                              width: constraints.maxWidth,
                               filterWidget: _filterWidget(),
                               invoicelistWidget:
                                   _buildListInvoice(state, provider),
@@ -410,213 +408,237 @@ class _ScreenState extends State<_Screen> {
                     const SizedBox(height: 10),
                     SizedBox(
                       width: 1400,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 90,
-                                alignment: Alignment.center,
-                                child: Checkbox(
-                                  value: provider.invoiceStatus.id == 1
-                                      ? true
-                                      : i.invoices
-                                          .every((element) => element.isSelect),
-                                  onChanged: (value) {
-                                    if (value != null &&
-                                        provider.invoiceStatus.id == 0) {
-                                      List<InvoiceFeeDTO> list = [];
-                                      for (var item in i.invoices) {
-                                        InvoiceFeeDTO dto = item;
-                                        dto.selected(value);
-                                        list.add(dto);
-                                      }
-                                      setState(() {
-                                        invoiceGroups[index] = InvoiceGroup(
-                                            monthYear: i.monthYear,
-                                            invoices: list);
-                                      });
-                                    }
-                                  },
-                                ),
-                              ),
-                              // const SizedBox(width: 8),
-                              Text(
-                                provider.invoiceStatus.id == 0
-                                    ? 'Thanh toán tất cả'
-                                    : 'Đã thanh toán',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    color: AppColor.BLACK,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            'Hóa đơn tháng ${i.monthYear}',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: 1400,
-                      child: Stack(
-                        children: [
-                          ScrollConfiguration(
-                            behavior: MyCustomScrollBehavior(),
-                            child: SingleChildScrollView(
-                              physics: const ClampingScrollPhysics(),
-                              // controller: horizontalController,
-                              scrollDirection: Axis.horizontal,
-                              child: SizedBox(
-                                width: 1700,
-                                child: Column(
-                                  children: [
-                                    const TitleItemInvoiceWidget(),
-                                    ...i.invoices
-                                        .asMap()
-                                        .map(
-                                          (key, e) => MapEntry(
-                                              key,
-                                              ItemInvoiceWidget(
-                                                  onSelect: (select) {
-                                                    int index = listInvoice
-                                                        .indexWhere((element) =>
-                                                            element.invoiceId ==
-                                                            e.invoiceId);
-                                                    InvoiceFeeDTO invoice = e;
-                                                    invoice.selected(select);
-
-                                                    setState(() {
-                                                      listInvoice[index] =
-                                                          invoice;
-                                                    });
-                                                  },
-                                                  index: key + 1,
-                                                  dto: e)),
-                                        )
-                                        .values,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            child: Row(
+                      child: ExpansionTile(
+                        initiallyExpanded: true,
+                        shape: const Border(),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
                               children: [
-                                const Spacer(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColor.WHITE,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColor.GREY_BORDER
-                                            .withOpacity(0.8),
-                                        blurRadius: 5,
-                                        spreadRadius: 1,
-                                        offset: const Offset(0, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          color: AppColor.BLUE_TEXT
-                                              .withOpacity(0.3),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              height: 45,
-                                              width: 120,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: AppColor.GREY_TEXT
-                                                      .withOpacity(0.3),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Trạng thái',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColor.BLACK,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              height: 45,
-                                              width: 180,
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: AppColor.GREY_TEXT
-                                                      .withOpacity(0.3),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Thao tác',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColor.BLACK,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      ...i.invoices
-                                          .map(
-                                            (e) => ItemRightWidget(
-                                              dto: e,
-                                              onCopy: () {
-                                                onCopy(dto: e);
-                                              },
-                                              onShowExcel: () {
+                                if (provider.invoiceStatus.id == 0)
+                                  Container(
+                                      width: 90,
+                                      alignment: Alignment.center,
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Tất cả',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: AppColor.BLACK),
+                                          ),
+                                          Checkbox(
+                                            value: provider.invoiceStatus.id ==
+                                                    1
+                                                ? true
+                                                : i.invoices.every((element) =>
+                                                    element.isSelect),
+                                            onChanged: (value) {
+                                              if (value != null &&
+                                                  provider.invoiceStatus.id ==
+                                                      0) {
+                                                List<InvoiceFeeDTO> list = [];
+                                                for (var item in i.invoices) {
+                                                  InvoiceFeeDTO dto = item;
+                                                  dto.selected(value);
+                                                  list.add(dto);
+                                                }
                                                 setState(() {
-                                                  selectInvoiceFee = e;
+                                                  invoiceGroups[index] =
+                                                      InvoiceGroup(
+                                                          monthYear:
+                                                              i.monthYear,
+                                                          invoices: list);
                                                 });
-                                                _bloc.add(GetInvoiceExcel(
-                                                    e.invoiceId));
-                                              },
-                                              onShowQR: () {
-                                                setState(() {
-                                                  selectInvoiceFee = e;
-                                                });
-                                                _bloc.add(GetInvoiceDetail(
-                                                    e.invoiceId, true));
-                                              },
-                                              onShowDetail: () {
-                                                _provider.onPageChange(
-                                                    PageInvoice.DETAIL,
-                                                    invoiceId: e.invoiceId);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                    ],
-                                  ),
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      )),
+                                Text(
+                                  'Hóa đơn tháng ${i.monthYear}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      color: AppColor.BLACK,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
-                          )
+                          ],
+                        ),
+                        children: <Widget>[
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: 1400,
+                            child: Stack(
+                              children: [
+                                ScrollConfiguration(
+                                  behavior: MyCustomScrollBehavior(),
+                                  child: SingleChildScrollView(
+                                    physics: const ClampingScrollPhysics(),
+                                    // controller: horizontalController,
+                                    scrollDirection: Axis.horizontal,
+                                    child: SizedBox(
+                                      width: 1700,
+                                      child: Column(
+                                        children: [
+                                          const TitleItemInvoiceWidget(),
+                                          ...i.invoices
+                                              .asMap()
+                                              .map(
+                                                (key, e) => MapEntry(
+                                                    key,
+                                                    ItemInvoiceWidget(
+                                                        onSelect: (select) {
+                                                          int index = listInvoice
+                                                              .indexWhere((element) =>
+                                                                  element
+                                                                      .invoiceId ==
+                                                                  e.invoiceId);
+                                                          InvoiceFeeDTO
+                                                              invoice = e;
+                                                          invoice
+                                                              .selected(select);
+
+                                                          setState(() {
+                                                            listInvoice[index] =
+                                                                invoice;
+                                                          });
+                                                        },
+                                                        index: key + 1,
+                                                        dto: e)),
+                                              )
+                                              .values,
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    children: [
+                                      const Spacer(),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColor.WHITE,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColor.GREY_BORDER
+                                                  .withOpacity(0.8),
+                                              blurRadius: 5,
+                                              spreadRadius: 1,
+                                              offset: const Offset(0, 0),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: AppColor.BLUE_TEXT
+                                                    .withOpacity(0.3),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 45,
+                                                    width: 120,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: AppColor
+                                                            .GREY_TEXT
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      'Trạng thái',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: AppColor.BLACK,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 45,
+                                                    width: 180,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color: AppColor
+                                                            .GREY_TEXT
+                                                            .withOpacity(0.3),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      'Thao tác',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: AppColor.BLACK,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            ...i.invoices
+                                                .map(
+                                                  (e) => ItemRightWidget(
+                                                    dto: e,
+                                                    onCopy: () {
+                                                      onCopy(dto: e);
+                                                    },
+                                                    onShowExcel: () {
+                                                      setState(() {
+                                                        selectInvoiceFee = e;
+                                                      });
+                                                      _bloc.add(GetInvoiceExcel(
+                                                          e.invoiceId));
+                                                    },
+                                                    onShowQR: () {
+                                                      setState(() {
+                                                        selectInvoiceFee = e;
+                                                      });
+                                                      _bloc.add(
+                                                          GetInvoiceDetail(
+                                                              e.invoiceId,
+                                                              true));
+                                                    },
+                                                    onShowDetail: () {
+                                                      _provider.onPageChange(
+                                                          PageInvoice.DETAIL,
+                                                          invoiceId:
+                                                              e.invoiceId);
+                                                    },
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -784,90 +806,189 @@ class _ScreenState extends State<_Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Tìm kiếm theo",
+                  "Danh sách TK Ngân hàng",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                 ),
                 const SizedBox(height: 10),
                 Container(
-                  height: 40,
-                  width: type == 9 ? 210 : 500,
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColor.GREY_DADADA)),
+                  height: 50,
+                  width: 700,
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: 180,
-                        child: DropdownButton<int>(
-                          isExpanded: true,
-                          value: type,
-                          underline: const SizedBox.shrink(),
-                          icon: const RotatedBox(
-                            quarterTurns: 5,
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 12,
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectDate = null;
+                            type = 9;
+                          });
+                          _bloc.add(GetInvoiceList(
+                              status: _provider.invoiceStatus.id,
+                              bankId: '',
+                              filterBy: 1,
+                              page: 1));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: type == 9
+                                ? AppColor.BLUE_TEXT.withOpacity(0.3)
+                                : AppColor.WHITE,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppColor.GREY_DADADA.withOpacity(0.5),
                             ),
                           ),
-                          items: const [
-                            DropdownMenuItem<int>(
-                                value: 9,
-                                child: Text(
-                                  "Tất cả (mặc định)",
-                                )),
-                            DropdownMenuItem<int>(
-                                value: 2,
-                                child: Text(
-                                  "TK ngân hàng",
-                                )),
-                          ],
-                          onChanged: (value) {
-                            if (value == 9) {
-                              selectBankId = '';
-                            }
-                            type = value;
-                            setState(() {});
-                          },
+                          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+                          child: const Text('Tất cả',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.normal)),
                         ),
                       ),
-                      if (type == 2)
-                        Expanded(
-                          child: InkWell(
-                            onTap: onPopupBankSelect,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 8),
-                                const SizedBox(
-                                  height: 40,
-                                  child: VerticalDivider(
-                                    thickness: 1,
-                                    color: AppColor.GREY_DADADA,
+                      Consumer<InvoiceProvider>(
+                          builder: (context, provider, child) {
+                        return SizedBox(
+                          width: 600,
+                          child: provider.listBank.isNotEmpty
+                              ? Scrollbar(
+                                  controller: hortizonController,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    controller: hortizonController,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      bool? isSelect = selectBank ==
+                                          provider.listBank[index];
+                                      return _itemBank(
+                                        isSelect: isSelect,
+                                        provider.listBank[index],
+                                        index,
+                                        () {
+                                          setState(() {
+                                            selectDate = null;
+                                            type = 2;
+                                            selectBank =
+                                                provider.listBank[index];
+                                            selectBankId =
+                                                provider.listBank[index].bankId;
+                                          });
+                                          if (selectBank != null) {
+                                            provider
+                                                .selectBankAccount(selectBank!);
+                                            _bloc.add(GetInvoiceList(
+                                                status:
+                                                    _provider.invoiceStatus.id,
+                                                bankId: provider
+                                                    .listBank[index].bankId,
+                                                filterBy: 1,
+                                                page: 1));
+                                          }
+                                        },
+                                      );
+                                    },
+                                    itemCount: provider.listBank.length,
+                                  ),
+                                )
+                              : const SizedBox(
+                                  child: Center(
+                                    child:
+                                        Text('Chưa có TK ngân hàng được thêm'),
                                   ),
                                 ),
-                                Expanded(
-                                    child: Text(
-                                  provider.selectBank != null
-                                      ? '${provider.selectBank!.bankShortName} - ${provider.selectBank!.bankAccount}'
-                                      : 'Chọn tài khoản ngân hàng',
-                                  style: const TextStyle(fontSize: 15),
-                                )),
-                                const RotatedBox(
-                                  quarterTurns: 5,
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        );
+                      })
                     ],
                   ),
                 ),
               ],
             ),
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     const Text(
+            //       "Tìm kiếm theo",
+            //       style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+            //     ),
+            //     const SizedBox(height: 10),
+            //     Container(
+            //       height: 40,
+            //       width: type == 9 ? 210 : 500,
+            //       padding: const EdgeInsets.only(left: 10, right: 10),
+            //       decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(10),
+            //           border: Border.all(color: AppColor.GREY_DADADA)),
+            //       child: Row(
+            //         children: [
+            //           SizedBox(
+            //             width: 180,
+            //             child: DropdownButton<int>(
+            //               isExpanded: true,
+            //               value: type,
+            //               underline: const SizedBox.shrink(),
+            //               icon: const RotatedBox(
+            //                 quarterTurns: 5,
+            //                 child: Icon(
+            //                   Icons.arrow_forward_ios,
+            //                   size: 12,
+            //                 ),
+            //               ),
+            //               items: const [
+            //                 DropdownMenuItem<int>(
+            //                     value: 9,
+            //                     child: Text(
+            //                       "Tất cả (mặc định)",
+            //                     )),
+            //                 DropdownMenuItem<int>(
+            //                     value: 2,
+            //                     child: Text(
+            //                       "TK ngân hàng",
+            //                     )),
+            //               ],
+            //               onChanged: (value) {
+            //                 if (value == 9) {
+            //                   selectBankId = '';
+            //                 }
+            //                 type = value;
+            //                 setState(() {});
+            //               },
+            //             ),
+            //           ),
+            //           if (type == 2)
+            //             Expanded(
+            //               child: InkWell(
+            //                 onTap: onPopupBankSelect,
+            //                 child: Row(
+            //                   children: [
+            //                     const SizedBox(width: 8),
+            //                     const SizedBox(
+            //                       height: 40,
+            //                       child: VerticalDivider(
+            //                         thickness: 1,
+            //                         color: AppColor.GREY_DADADA,
+            //                       ),
+            //                     ),
+            //                     Expanded(
+            //                         child: Text(
+            //                       provider.selectBank != null
+            //                           ? '${provider.selectBank!.bankShortName} - ${provider.selectBank!.bankAccount}'
+            //                           : 'Chọn tài khoản ngân hàng',
+            //                       style: const TextStyle(fontSize: 15),
+            //                     )),
+            //                     const RotatedBox(
+            //                       quarterTurns: 5,
+            //                       child: Icon(
+            //                         Icons.arrow_forward_ios,
+            //                         size: 12,
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1198,6 +1319,31 @@ class _ScreenState extends State<_Screen> {
         fontSize: 15,
         webBgColor: 'rgba(255, 255, 255)',
         webPosition: 'center',
+      ),
+    );
+  }
+
+  Widget _itemBank(BankAccountDTO dto, int index, VoidCallback onTap,
+      {bool? isSelect}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          color: type == 2
+              ? isSelect == true
+                  ? AppColor.BLUE_TEXT.withOpacity(0.3)
+                  : AppColor.WHITE
+              : AppColor.WHITE,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: AppColor.GREY_DADADA.withOpacity(0.5),
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        child: Text('${dto.bankShortName} - ${dto.bankAccount}',
+            style:
+                const TextStyle(fontSize: 15, fontWeight: FontWeight.normal)),
       ),
     );
   }

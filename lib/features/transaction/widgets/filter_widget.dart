@@ -52,7 +52,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   final monthCalculator = MonthCalculator();
   final searchController = TextEditingController();
 
-  DateFormat get _format => DateFormat('yyyy/MM/dd HH:mm:ss');
+  DateFormat get _format => DateFormat('dd/MM/yyyy HH:mm:ss');
 
   DateTime get now => DateTime.now();
 
