@@ -345,16 +345,19 @@ class _ScreenState extends State<_Screen> {
                         ),
                       ),
                     if (provider.pageInvoice == PageInvoice.LIST)
-                      BottomPaymentWidget(
-                        amount: amount,
-                        isDisable: (getListId().isNotEmpty ? amount : 0) == 0,
-                        onTap: () {
-                          _bloc.add(RequestMultiInvoicePaymentEvent(
-                              invoiceIds: getListId()));
-                        },
-                        pagingWidget: _pagingWidget(state),
-                        selected: getListId().length,
-                      ),
+                      provider.invoiceStatus.id == 0
+                          ? BottomPaymentWidget(
+                              amount: amount,
+                              isDisable:
+                                  (getListId().isNotEmpty ? amount : 0) == 0,
+                              onTap: () {
+                                _bloc.add(RequestMultiInvoicePaymentEvent(
+                                    invoiceIds: getListId()));
+                              },
+                              pagingWidget: _pagingWidget(state),
+                              selected: getListId().length,
+                            )
+                          : const SizedBox.shrink()
                   ],
                 ),
               ),
