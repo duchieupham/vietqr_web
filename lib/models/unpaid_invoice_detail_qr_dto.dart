@@ -8,6 +8,7 @@ class UnpaidInvoiceDetailQrDTO {
   String bankShortName;
   String invoiceNumber;
   String userBankName;
+  String urlLink;
   int totalAmount;
   double vat;
   int vatAmount;
@@ -27,6 +28,7 @@ class UnpaidInvoiceDetailQrDTO {
     required this.totalAmount,
     required this.vat,
     required this.vatAmount,
+    required this.urlLink,
     required this.invoiceId,
     required this.expiredTime,
   });
@@ -43,6 +45,7 @@ class UnpaidInvoiceDetailQrDTO {
       invoiceNumber: json['invoiceNumber'],
       userBankName: json['userBankName'],
       totalAmount: json['totalAmount'],
+      urlLink: json['urlLink'],
       vat: json['vat'],
       vatAmount: json['vatAmount'],
       invoiceId: json['invoiceId'],
@@ -62,6 +65,7 @@ class UnpaidInvoiceDetailQrDTO {
     data['invoiceNumber'] = invoiceNumber;
     data['userBankName'] = userBankName;
     data['totalAmount'] = totalAmount;
+    data['urlLink'] = urlLink;
     data['vat'] = vat;
     data['vatAmount'] = vatAmount;
     data['invoiceId'] = invoiceId;
