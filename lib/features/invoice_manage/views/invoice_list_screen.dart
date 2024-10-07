@@ -169,13 +169,12 @@ class _ScreenState extends State<_Screen> {
     );
   }
 
-  void onShowQRPopup(InvoiceDetailQrDTO dto, String urlLink) async {
+  void onShowQRPopup(InvoiceDetailQrDTO dto) async {
     await setDialog(true).then(
       (value) async => await showDialog(
         context: context,
         builder: (context) => PopupQrCodeInvoice(
           dto: dto,
-          urlLink: urlLink,
           showButton: true,
           onPop: (id) {
             _provider.onPageChange(PageInvoice.DETAIL,
@@ -252,7 +251,8 @@ class _ScreenState extends State<_Screen> {
         if (state.request == InvoiceType.REQUEST_PAYMENT &&
             state.status == BlocStatus.SUCCESS) {
           if (state.isShow == true) {
-            onShowQRPopup(state.invoiceDetailQrDTO!, state.unpaidInvoiceDetailQrDTO!.urlLink);
+
+            onShowQRPopup(state.invoiceDetailQrDTO!);
           }
         }
         if (state.request == InvoiceType.PAYMENT &&

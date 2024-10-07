@@ -5,8 +5,10 @@ import 'package:VietQR/commons/widgets/dot_dash_widget.dart';
 import 'package:VietQR/commons/widgets/m_button_widget.dart';
 import 'package:VietQR/commons/widgets/repaint_boundary_widget.dart';
 import 'package:VietQR/models/unpaid_invoice_detail_qr_dto.dart';
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
+import 'dart:js' as js;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -177,7 +179,59 @@ class _PopupUnpaidQrWidgetState extends State<PopupUnpaidQrWidget> {
                           ),
                         ),
                         const SizedBox(
-                          height: 80,
+                          height: 15,
+                        ),
+                        if (widget.dto.urlLink.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                // color: AppColor.WHITE,
+                                gradient: VietQRTheme.gradientColor.lilyLinear),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      js.context.callMethod(
+                                          'open', [widget.dto.urlLink]);
+                                    },
+                                    child: Text(
+                                      widget.dto.urlLink,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: AppColor.BLUE_TEXT,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Clipboard.setData(ClipboardData(
+                                        text: widget.dto.urlLink));
+                                    Fluttertoast.showToast(
+                                      msg: 'Đã sao chép',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      backgroundColor:
+                                          Theme.of(context).cardColor,
+                                      textColor: Theme.of(context).hintColor,
+                                      fontSize: 15,
+                                    );
+                                  },
+                                  child: Image.asset(
+                                    'assets/images/ic-copy-blue.png',
+                                    width: 32,
+                                    height: 32,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         InkWell(
                           onTap: () {
