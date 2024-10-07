@@ -251,6 +251,7 @@ class _ScreenState extends State<_Screen> {
         if (state.request == InvoiceType.REQUEST_PAYMENT &&
             state.status == BlocStatus.SUCCESS) {
           if (state.isShow == true) {
+
             onShowQRPopup(state.invoiceDetailQrDTO!);
           }
         }
@@ -408,71 +409,54 @@ class _ScreenState extends State<_Screen> {
                           color: AppColor.GREY_DADADA,
                         ),
                       ),
-                    const SizedBox(height: 10),
+                    // const SizedBox(height: 10),
                     SizedBox(
                       width: 1400,
                       child: ExpansionTile(
+                        tilePadding: const EdgeInsets.only(left: 0),
                         initiallyExpanded: true,
                         shape: const Border(),
                         title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                if (provider.invoiceStatus.id == 0)
-                                  Container(
-                                      width: 90,
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'Tất cả',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                color: AppColor.BLACK),
-                                          ),
-                                          Checkbox(
-                                            value: provider.invoiceStatus.id ==
-                                                    1
-                                                ? true
-                                                : i.invoices.every((element) =>
-                                                    element.isSelect),
-                                            onChanged: (value) {
-                                              if (value != null &&
-                                                  provider.invoiceStatus.id ==
-                                                      0) {
-                                                List<InvoiceFeeDTO> list = [];
-                                                for (var item in i.invoices) {
-                                                  InvoiceFeeDTO dto = item;
-                                                  dto.selected(value);
-                                                  list.add(dto);
-                                                }
-                                                setState(() {
-                                                  invoiceGroups[index] =
-                                                      InvoiceGroup(
-                                                          monthYear:
-                                                              i.monthYear,
-                                                          invoices: list);
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      )),
-                                Text(
-                                  'Hóa đơn tháng ${i.monthYear}',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      color: AppColor.BLACK,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                            if (provider.invoiceStatus.id == 0)
+                              SizedBox(
+                                  width: 90,
+                                  height: 40,
+                                  // alignment: Alignment.center,
+                                  child: Checkbox(
+                                    value: provider.invoiceStatus.id == 1
+                                        ? true
+                                        : i.invoices.every(
+                                            (element) => element.isSelect),
+                                    onChanged: (value) {
+                                      if (value != null &&
+                                          provider.invoiceStatus.id == 0) {
+                                        List<InvoiceFeeDTO> list = [];
+                                        for (var item in i.invoices) {
+                                          InvoiceFeeDTO dto = item;
+                                          dto.selected(value);
+                                          list.add(dto);
+                                        }
+                                        setState(() {
+                                          invoiceGroups[index] = InvoiceGroup(
+                                              monthYear: i.monthYear,
+                                              invoices: list);
+                                        });
+                                      }
+                                    },
+                                  )),
+                            Text(
+                              'Hóa đơn tháng ${i.monthYear}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: AppColor.BLACK,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
                         children: <Widget>[
-                          const SizedBox(height: 10),
+                          // const SizedBox(height: 10),
                           SizedBox(
                             width: 1400,
                             child: Stack(
