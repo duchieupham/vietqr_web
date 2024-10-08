@@ -301,14 +301,18 @@ class _QrGenerateState extends State<_QrGenerate> {
                 if (transactionQRdto.status == 1) {
                   isSuccess = true;
                 }
-                timeCountDown = DateTime.fromMillisecondsSinceEpoch(
-                            transactionQRdto.timeCreated * 1000)
-                        .add(const Duration(minutes: 15))
-                        .millisecondsSinceEpoch -
-                    DateTime.now().millisecondsSinceEpoch;
-                context
-                    .read<TransactionQRProvider>()
-                    .updateTimeCountDown(timeCountDown);
+                if (qrGeneratedDTO.type != 5) {
+                  timeCountDown = DateTime.fromMillisecondsSinceEpoch(
+                              transactionQRdto.timeCreated * 1000)
+                          .add(const Duration(minutes: 15))
+                          .millisecondsSinceEpoch -
+                      DateTime.now().millisecondsSinceEpoch;
+                  context
+                      .read<TransactionQRProvider>()
+                      .updateTimeCountDown(timeCountDown);
+                } else {
+                  context.read<TransactionQRProvider>().updateTimeCountDown(0);
+                }
               }
               if (state is CancelQRSuccessState) {
                 html.window.close();
@@ -361,15 +365,18 @@ class _QrGenerateState extends State<_QrGenerate> {
 
                 return LayoutBuilder(builder: (context, constraints) {
                   if (constraints.maxWidth > 760) {
-                    if (provider.timeExpires || timeCountDown <= 0) {
-                      timeCountDown = DateTime.now()
-                              .add(const Duration(minutes: 15))
-                              .millisecondsSinceEpoch -
-                          DateTime.now().millisecondsSinceEpoch;
-                      context
-                          .read<TransactionQRProvider>()
-                          .updateTimeCountDown(timeCountDown);
+                    if (qrGeneratedDTO.type != 5) {
+                      if (provider.timeExpires || timeCountDown <= 0) {
+                        timeCountDown = DateTime.now()
+                                .add(const Duration(minutes: 15))
+                                .millisecondsSinceEpoch -
+                            DateTime.now().millisecondsSinceEpoch;
+                        context
+                            .read<TransactionQRProvider>()
+                            .updateTimeCountDown(timeCountDown);
+                      }
                     }
+
                     return Column(
                       children: [
                         _buildCountDown(),
@@ -502,7 +509,7 @@ class _QrGenerateState extends State<_QrGenerate> {
             fit: BoxFit.fitHeight,
           ),
           const Spacer(),
-          if (!isSuccess) _buildTimeCountDown()
+          if (!isSuccess && qrGeneratedDTO.type != 5) _buildTimeCountDown()
         ],
       ),
     );
