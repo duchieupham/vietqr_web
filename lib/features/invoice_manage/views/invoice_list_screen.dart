@@ -1,5 +1,4 @@
 import 'package:VietQR/commons/enums/check_type.dart';
-import 'package:VietQR/commons/utils/image_utils.dart';
 import 'package:VietQR/commons/utils/share_utils.dart';
 import 'package:VietQR/features/invoice_manage/bloc/invoice_bloc.dart';
 import 'package:VietQR/features/invoice_manage/event/invoice_events.dart';
