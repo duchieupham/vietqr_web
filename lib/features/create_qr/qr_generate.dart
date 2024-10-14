@@ -352,6 +352,11 @@ class _QrGenerateState extends State<_QrGenerate> {
 
               return Consumer<TransactionQRProvider>(
                   builder: (context, provider, child) {
+                if (qrGeneratedDTO.type != 5) {
+                  if (provider.timeExpires || timeCountDown <= 0) {
+                    return _buildWidgetTimeExpires();
+                  }
+                }
                 if (provider.isRedirect) {
                   Timer.periodic(const Duration(seconds: 1), (timer) {
                     if (_valueNotifier.value > 0) {
@@ -365,18 +370,6 @@ class _QrGenerateState extends State<_QrGenerate> {
 
                 return LayoutBuilder(builder: (context, constraints) {
                   if (constraints.maxWidth > 760) {
-                    if (qrGeneratedDTO.type != 5) {
-                      if (provider.timeExpires || timeCountDown <= 0) {
-                        timeCountDown = DateTime.now()
-                                .add(const Duration(minutes: 15))
-                                .millisecondsSinceEpoch -
-                            DateTime.now().millisecondsSinceEpoch;
-                        context
-                            .read<TransactionQRProvider>()
-                            .updateTimeCountDown(timeCountDown);
-                      }
-                    }
-
                     return Column(
                       children: [
                         _buildCountDown(),
