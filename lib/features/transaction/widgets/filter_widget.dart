@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
@@ -570,6 +572,9 @@ class _FilterWidgetState extends State<FilterWidget> {
     } else {
       updateFromDate(selectFromDate ?? DateTime.now());
       _onCallBack(fromDate: _fromDate);
+      if (pickFromDate != null) {
+        _pickToDate.call();
+      }
     }
   }
 
@@ -604,7 +609,9 @@ class _FilterWidgetState extends State<FilterWidget> {
             bankId: widget.bankId,
             selectToDate: selectToDate ??
                 DateTime(DateTime.now().year, DateTime.now().month,
-                    DateTime.now().day).add(const Duration(days: 1)).subtract(const Duration(seconds: 1)),
+                        DateTime.now().day)
+                    .add(const Duration(days: 1))
+                    .subtract(const Duration(seconds: 1)),
             selectFromDate: selectFromDate ??
                 DateTime(DateTime.now().year, DateTime.now().month,
                         DateTime.now().day)

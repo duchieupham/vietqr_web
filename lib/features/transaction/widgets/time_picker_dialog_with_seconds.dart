@@ -28,7 +28,7 @@ class _TimePickerDialogWithSecondsState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Chọn thời gian'),
+      title: const Text('Chọn khoảng thời gian'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
