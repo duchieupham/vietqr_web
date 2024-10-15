@@ -430,8 +430,8 @@ class _FilterWidgetState extends State<FilterWidget> {
       child: Container(
         height: 34,
         margin: const EdgeInsets.only(left: 16),
-        child: Row(
-          children: const [
+        child: const Row(
+          children: [
             Icon(Icons.remove_circle_outline,
                 color: AppColor.BLUE_TEXT, size: 18),
             SizedBox(width: 4),
@@ -569,9 +569,9 @@ class _FilterWidgetState extends State<FilterWidget> {
     } else {
       updateFromDate(selectFromDate ?? DateTime.now());
       _onCallBack(fromDate: _fromDate);
-      // if (pickFromDate != null) {
-      //   _pickToDate.call();
-      // }
+      if (pickFromDate != null) {
+        _pickToDate.call();
+      }
     }
   }
 
