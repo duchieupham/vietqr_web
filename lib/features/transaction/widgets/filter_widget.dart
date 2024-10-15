@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-
 import 'package:VietQR/commons/constants/configurations/app_image.dart';
 import 'package:VietQR/commons/constants/configurations/theme.dart';
 import 'package:VietQR/commons/enums/check_type.dart';
@@ -14,7 +12,6 @@ import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
-
 import '../../../models/transaction/data_filter.dart';
 import '../../../services/shared_references/shared_pref.dart';
 import 'dialog_excel_widget.dart';
@@ -572,9 +569,9 @@ class _FilterWidgetState extends State<FilterWidget> {
     } else {
       updateFromDate(selectFromDate ?? DateTime.now());
       _onCallBack(fromDate: _fromDate);
-      if (pickFromDate != null) {
-        _pickToDate.call();
-      }
+      // if (pickFromDate != null) {
+      //   _pickToDate.call();
+      // }
     }
   }
 
