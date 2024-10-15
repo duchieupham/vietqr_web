@@ -12,7 +12,6 @@ import 'package:VietQR/models/transaction/terminal_qr_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
-
 import '../../../models/transaction/data_filter.dart';
 import '../../../services/shared_references/shared_pref.dart';
 import 'dialog_excel_widget.dart';
@@ -570,6 +569,9 @@ class _FilterWidgetState extends State<FilterWidget> {
     } else {
       updateFromDate(selectFromDate ?? DateTime.now());
       _onCallBack(fromDate: _fromDate);
+      // if (pickFromDate != null) {
+      //   _pickToDate.call();
+      // }
     }
   }
 
@@ -604,7 +606,9 @@ class _FilterWidgetState extends State<FilterWidget> {
             bankId: widget.bankId,
             selectToDate: selectToDate ??
                 DateTime(DateTime.now().year, DateTime.now().month,
-                    DateTime.now().day).add(const Duration(days: 1)).subtract(const Duration(seconds: 1)),
+                        DateTime.now().day)
+                    .add(const Duration(days: 1))
+                    .subtract(const Duration(seconds: 1)),
             selectFromDate: selectFromDate ??
                 DateTime(DateTime.now().year, DateTime.now().month,
                         DateTime.now().day)
