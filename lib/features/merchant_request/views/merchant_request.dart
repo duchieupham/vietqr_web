@@ -264,6 +264,7 @@ class _MerchantViewState extends State<MerchantRequest> {
                       param['address'] = provider.address;
                       param['bankAccount'] =
                           provider.bankAccountDTO.bankAccount;
+                      param['bankCode'] = provider.bankAccountDTO.bankCode;
                       param['userBankName'] =
                           provider.bankAccountDTO.userBankName;
                       param['customerUsername'] = provider.username;

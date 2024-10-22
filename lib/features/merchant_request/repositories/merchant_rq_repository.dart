@@ -28,7 +28,6 @@ class MerchantRQRepository {
       LOG.error(e.toString());
       return result;
     }
-    return result;
   }
 
   Future<ResponseMessageDTO> checkValidMerchantName(
