@@ -85,7 +85,7 @@ class _ActiveVhitekState extends State<ActiveVhitek> {
                         const SizedBox(height: 8),
                         InkWell(
                           onTap: () {
-                            context.push('/add-bank/step1');
+                            // context.push('/add-bank/step1');
                           },
                           child: const Text(
                             'Liên kết tài khoản ngân hàng mới',
