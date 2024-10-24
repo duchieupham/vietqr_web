@@ -704,7 +704,7 @@ class _CreateQrScreenState extends State<CreateQrScreen> {
               const SizedBox(height: 32),
               GestureDetector(
                 onTap: () async {
-                  context.go('/add-bank/step1');
+                  // context.go('/add-bank/step1');
                 },
                 child: Container(
                   height: 45,

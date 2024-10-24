@@ -90,7 +90,7 @@ class SelectMyBankAccountWidget extends StatelessWidget {
         else
           GestureDetector(
             onTap: () async {
-              context.go('/add-bank/step1');
+              // context.go('/add-bank/step1');
             },
             child: Container(
               height: 40,
