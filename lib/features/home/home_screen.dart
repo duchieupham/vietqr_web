@@ -281,7 +281,7 @@ class _HomeScreenState extends State<_HomeScreen> {
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () async {
-                  context.go('/add-bank/step1');
+                  // context.go('/add-bank/step1');
                 },
                 child: Container(
                   height: 45,
